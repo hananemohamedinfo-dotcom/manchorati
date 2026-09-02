@@ -1,0 +1,6 @@
+{
+  "name": "A-B Loop Audio Player",
+  "description": "Precision audio player with millisecond-accurate A-B looping, segment repeater, interactive waveform, sleep timer, and library organizer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
