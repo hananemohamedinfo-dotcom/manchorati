@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fffafcf1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- الأيقونة الدائرية للتطبيق -->
+        <ImageView
+            android:id="@+id/ivSplashLogo"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:src="@drawable/icon"/>
+
+        <!-- اسم التطبيق -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="منشوراتي"
+            android:textColor="#bb0000"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="أفضل وأجمل المنشورات والكلمات"
+            android:textColor="#dd0000"
+            android:textSize="13sp" />
+
+        <!-- مؤشر تحميل خفيف أسفل الشعار -->
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="28dp"
+            android:indeterminateTint="#ff0800" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:text="الإصدار 1.0"
+        android:textColor="#000000"
+        android:textSize="11sp" />
+
+</RelativeLayout>

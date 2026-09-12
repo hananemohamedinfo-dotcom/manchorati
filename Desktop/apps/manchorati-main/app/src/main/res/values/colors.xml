@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- الألوان الديناميكية للوضع الفاتح -->
+    <color name="bg_main">#F8F9FB</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_drawer">#FFFFFF</color>
+    <color name="text_primary">#1E293B</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider_color">#E2E8F0</color>
+    <color name="search_bg">#FFFFFF</color>
+</resources>

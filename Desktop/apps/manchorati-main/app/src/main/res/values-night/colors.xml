@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- نفس الأسماء ولكن بدرجات الوضع المظلم الأنيقة -->
+    <color name="bg_main">#0F172A</color>
+    <color name="bg_card">#1E293B</color>
+    <color name="bg_drawer">#1E293B</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider_color">#334155</color>
+    <color name="search_bg">#334155</color>
+</resources>

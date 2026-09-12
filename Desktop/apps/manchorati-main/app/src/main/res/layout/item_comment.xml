@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <!-- أيقونة المستخدم على اليمين -->
+  <FrameLayout
+        android:id="@+id/layoutUserAvatar"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/ivCommentAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
+    </FrameLayout>
+
+    <!-- صندوق محتوى التعليق -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:background="@color/bg_card"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <!-- شريط الاسم والوقت وزر الحذف -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal">
+
+            <!-- اسم المستخدم يلتصق باليمين -->
+            <TextView
+                android:id="@+id/tvCommentAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:textAlignment="viewStart"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="اسم المستخدم" />
+
+            <!-- وقت نشر التعليق بخط صغير بجانب الاسم -->
+            <TextView
+                android:id="@+id/tvCommentTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:textAlignment="viewStart"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                tools:text="منذ 5 دقائق" />
+
+            <!-- زر الحذف يبتعد إلى أقصى اليسار -->
+            <ImageView
+                android:id="@+id/btnDeleteComment"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:visibility="gone"
+                app:tint="@color/text_secondary"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <!-- نص التعليق -->
+        <TextView
+            android:id="@+id/tvCommentContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="right"
+            android:textAlignment="viewStart"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            tools:text="نص التعليق يظهر هنا..." />
+    </LinearLayout>
+</LinearLayout>
