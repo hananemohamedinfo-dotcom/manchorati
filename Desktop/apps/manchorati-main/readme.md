@@ -4,7 +4,8 @@ code ba nxof les class li ghadi utbdlo fi git
 git status
 
 git add .
-git commit -m "gadit dark mod w zdna avatar w zdna menu fi liman m3aha profile  "
+git commit -m "gadit problem image fi comentaire w problem color dyal text fi dark mod  "
 git push
 
+git remote add origin https://github.com/hananemohamedinfo-dotcom/manchorati-main.git
 

@@ -8,4 +8,5 @@
     <color name="text_secondary">#64748B</color>
     <color name="divider_color">#E2E8F0</color>
     <color name="search_bg">#FFFFFF</color>
+    <color name="comment_text_color">#212121</color> <!-- رمادي داكن جداً -->
 </resources>

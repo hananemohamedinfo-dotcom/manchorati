@@ -190,7 +190,7 @@ class UserProfileActivity : AppCompatActivity() {
                     currentUsername = data["username"] as? String ?: ""
                     
                     val photoUrl = data["photoUrl"] as? String ?: ""
-                   ivProfileAvatar.loadUserAvatar(photoUrl)
+                    ivProfileAvatar.loadUserAvatar(photoUrl)
 
                     val followersRaw = data["followers"]
                     val followersList = when (followersRaw) {
@@ -220,8 +220,6 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
     }
-
-   
 
     private fun showSelectAvatarDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_select_avatar, null)
@@ -424,33 +422,46 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             btnSend.isEnabled = false
-           // جلب الصورة أو الأفاتار المختار من الإعدادات المحلية أولاً
-        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val authorPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() } 
-            ?: FirebaseAuth.getInstance().currentUser?.photoUrl?.toString() 
-            ?: ""
-            FirestoreManager.addComment(
-                postId = post.id,
-                authorId = activeUserId,
-                authorName = currentUserName,
-                authorPhotoUrl = authorPhotoUrl,
-                content = text
-            ) { success ->
-                btnSend.isEnabled = true
-                if (success) {
-                    etInput.setText("")
-                    if (post.authorId != activeUserId) {
-                        FirestoreManager.sendNotification(
-                            recipientId = post.authorId,
-                            senderId = activeUserId,
-                            senderName = currentUserName,
-                            type = "COMMENT",
-                            postId = post.id,
-                            message = "علّق $currentUserName على منشورك: \"${text.take(30)}...\""
-                        )
+            
+            // الحل النهائي: جلب أحدث صورة واسم مباشرة من قاعدة البيانات قبل إرسال التعليق
+            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            db.collection("users").document(activeUserId).get()
+                .addOnSuccessListener { document ->
+                    // جلب الصورة الحالية (وإذا لم تكن موجودة نعطيه مساراً فارغاً)
+                    val actualPhotoUrl = document.getString("photoUrl") ?: ""
+                    // جلب الاسم الحالي لتفادي أي أخطاء في الاسم أيضاً
+                    val actualName = document.getString("displayName") 
+                        ?: document.getString("name") 
+                        ?: currentUserName
+
+                    // إضافة التعليق بالبيانات الجديدة
+                    FirestoreManager.addComment(
+                        postId = post.id,
+                        authorId = activeUserId,
+                        authorName = actualName,
+                        authorPhotoUrl = actualPhotoUrl,
+                        content = text
+                    ) { success ->
+                        btnSend.isEnabled = true
+                        if (success) {
+                            etInput.setText("")
+                            if (post.authorId != activeUserId) {
+                                FirestoreManager.sendNotification(
+                                    recipientId = post.authorId,
+                                    senderId = activeUserId,
+                                    senderName = actualName,
+                                    type = "COMMENT",
+                                    postId = post.id,
+                                    message = "علّق $actualName على منشورك: \"${text.take(30)}...\""
+                                )
+                            }
+                        }
                     }
                 }
-            }
+                .addOnFailureListener {
+                    btnSend.isEnabled = true
+                    Toast.makeText(this, "حدث خطأ، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                }
         }
 
         dialog.show()
@@ -471,6 +482,7 @@ class UserProfileActivity : AppCompatActivity() {
                 batch.commit()
             }
     }
+
     private fun updatePhotoInOldPosts(newPhotoUrl: String) {
         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
         if (activeUserId.isEmpty()) return
@@ -487,19 +499,32 @@ class UserProfileActivity : AppCompatActivity() {
                 batch.commit()
             }
 
-        // 2. تحديث الصورة في التعليقات (إذا كانت التعليقات محفوظة في مجموعة منفصلة باسم comments)
-        // قم بإلغاء تعليق هذا الكود إذا كانت تعليقاتك غير متداخلة داخل المنشور
-         
-        db.collection("comments")
+        // 2. تحديث الصورة في التعليقات باستخدام collectionGroup
+        db.collectionGroup("comments")
             .whereEqualTo("authorId", activeUserId)
             .get()
             .addOnSuccessListener { querySnapshot ->
+                
+                // رسالة تأكيد لمعرفة عدد التعليقات التي تم العثور عليها
+                // Toast.makeText(this, "تم العثور على ${querySnapshot.size()} تعليق قديم لتحديث الصورة", Toast.LENGTH_LONG).show()
+
+                if (querySnapshot.isEmpty) return@addOnSuccessListener
+
                 val batch = db.batch()
                 for (document in querySnapshot.documents) {
                     batch.update(document.reference, "authorPhotoUrl", newPhotoUrl)
                 }
+                
                 batch.commit()
+                    .addOnSuccessListener {
+                        // Toast.makeText(this, "تم تحديث صور التعليقات بنجاح", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        // Toast.makeText(this, "فشل حفظ صور التعليقات: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
             }
-        
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "خطأ في  تحديث صور التعليقات: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 }

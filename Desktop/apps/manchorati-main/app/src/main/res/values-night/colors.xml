@@ -8,4 +8,5 @@
     <color name="text_secondary">#94A3B8</color>
     <color name="divider_color">#334155</color>
     <color name="search_bg">#334155</color>
+    <color name="comment_text_color">#F1F1F1</color> <!-- رمادي فاتح جداً -->
 </resources>

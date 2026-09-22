@@ -85,7 +85,7 @@
             android:inputType="textMultiLine"
             android:maxLines="3"
             android:paddingHorizontal="14dp"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/comment_text_color"
             android:textColorHint="@color/text_secondary"
             android:textSize="14sp" />
 

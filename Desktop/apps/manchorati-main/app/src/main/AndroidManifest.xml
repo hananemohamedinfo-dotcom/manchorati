@@ -60,6 +60,11 @@
         <activity 
             android:name=".ContactActivity"
             android:exported="false" />
+            <activity
+                android:name=".CopyActivity"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                android:excludeFromRecents="true"
+                android:exported="false" />
     </application>
     
 

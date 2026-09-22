@@ -522,6 +522,10 @@ class CommunityFragment : Fragment() {
             "#8A2387,#E94057",
             "#11998E,#38EF7D",
             "#232526,#414345",
+            "#00c996,#003d4d",
+            "#9400d3,#4b0082",
+            "#29eac4,#4284db",
+            "#009ffc,#1da1f2",
             "#0F766E",
             "#4338CA",
             "#D97706",
@@ -562,7 +566,8 @@ class CommunityFragment : Fragment() {
             val tvFont = TextView(requireContext()).apply {
                 text = fontTitle
                 textSize = 16f
-                setTextColor(Color.parseColor("#1E293B"))
+                // setTextColor(Color.parseColor("#1E293B"))
+                setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
                 typeface = ThemeHelper.getFontTypeface(requireContext(), fontId)
                 setPadding((12 * density).toInt(), (6 * density).toInt(), (12 * density).toInt(), (6 * density).toInt())
                 background = null

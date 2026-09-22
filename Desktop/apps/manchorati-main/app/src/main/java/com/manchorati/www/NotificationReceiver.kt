@@ -68,6 +68,21 @@ class NotificationReceiver : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
+        // ========================================================
+        // التعديل هنا: توجيه زر النسخ إلى Activity الشفافة
+        // ========================================================
+        val copyIntent = Intent(context, CopyActivity::class.java).apply {
+            putExtra("TEXT_TO_COPY", content)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        
+        val copyPendingIntent = PendingIntent.getActivity(
+            context,
+            content.hashCode(), 
+            copyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0)
+        )
+
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -90,6 +105,7 @@ class NotificationReceiver : BroadcastReceiver() {
             .setVibrate(longArrayOf(0, 350, 200, 350))
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+            .addAction(R.drawable.ic_copy, "نسخ", copyPendingIntent)
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
