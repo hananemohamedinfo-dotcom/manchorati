@@ -154,16 +154,35 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
         }
 
         // ألوان النص
-        view.findViewById<View>(R.id.btnTextColorWhite).setOnClickListener {
-            tvContent.setTextColor(Color.WHITE)
-        }
-        view.findViewById<View>(R.id.btnTextColorYellow).setOnClickListener {
-            tvContent.setTextColor(Color.parseColor("#FACC15"))
-        }
-        view.findViewById<View>(R.id.btnTextColorBlack).setOnClickListener {
-            tvContent.setTextColor(Color.parseColor("#0F172A"))
-        }
+        // view.findViewById<View>(R.id.btnTextColorWhite).setOnClickListener {
+        //     tvContent.setTextColor(Color.WHITE)
+        // }
+        // view.findViewById<View>(R.id.btnTextColorYellow).setOnClickListener {
+        //     tvContent.setTextColor(Color.parseColor("#FACC15"))
+        // }
+        // view.findViewById<View>(R.id.btnTextColorBlack).setOnClickListener {
+        //     tvContent.setTextColor(Color.parseColor("#0F172A"))
+        // }
+        val btnCustomColor = view.findViewById<View>(R.id.btnTextColorCustom) // التأكد من إضافة هذا الزر في ملف XML الخاص بالـ Dialog
+        
+        btnCustomColor?.setOnClickListener {
+            // njibo l'loun lhali dyal text bach tbda bih Color Wheel
+            val currentColor = tvContent.currentTextColor
 
+            // nbdaw AmbilWarnaDialog
+            val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, currentColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {
+                    // l'user brk 3la Cancel, madir walo
+                }
+
+                override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
+                    // l'user khtar loun, nbdlouh l text
+                    tvContent.setTextColor(color)
+                }
+            })
+            
+            colorPickerDialog.show()
+        }
         // تكبير وتصغير الخط
         view.findViewById<TextView>(R.id.btnPreviewBigger).setOnClickListener {
             if (currentTextSize < 30f) {
@@ -187,13 +206,37 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
             cardPreview.setCardBackgroundColor(Color.parseColor(hexBg))
         }
 
-        view.findViewById<View>(R.id.btnColorDark).setOnClickListener { setBgColor("#0F172A") }
-        view.findViewById<View>(R.id.btnColorBlue).setOnClickListener { setBgColor("#1E3A8A") }
-        view.findViewById<View>(R.id.btnColorGreen).setOnClickListener { setBgColor("#064E3B") }
-        view.findViewById<View>(R.id.btnColorPurple).setOnClickListener { setBgColor("#581C87") }
-        view.findViewById<View>(R.id.btnColorDarkRed).setOnClickListener { setBgColor("#7F1D1D") }
-        view.findViewById<View>(R.id.btnColorLight).setOnClickListener { setBgColor("#F1F5F9") }
+        // view.findViewById<View>(R.id.btnColorDark).setOnClickListener { setBgColor("#0F172A") }
+        // view.findViewById<View>(R.id.btnColorBlue).setOnClickListener { setBgColor("#1E3A8A") }
+        // view.findViewById<View>(R.id.btnColorGreen).setOnClickListener { setBgColor("#064E3B") }
+        // view.findViewById<View>(R.id.btnColorPurple).setOnClickListener { setBgColor("#581C87") }
+        // view.findViewById<View>(R.id.btnColorDarkRed).setOnClickListener { setBgColor("#7F1D1D") }
+        // view.findViewById<View>(R.id.btnColorLight).setOnClickListener { setBgColor("#F1F5F9") }
+        // >>> الكود الجديد لفتح عجلة الألوان الخاصة بالخلفية <<<
+        val btnBgColorCustom = view.findViewById<View>(R.id.btnBgColorCustom)
+        btnBgColorCustom?.setOnClickListener {
+            // نجيبو اللون الحالي ديال البطاقة باش نبداو بيه في عجلة الألوان
+            val initialColor = cardPreview.cardBackgroundColor.defaultColor
 
+            val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, initialColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {
+                    // لم يقم باختيار شيء
+                }
+
+                override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
+                    // تطبيق اللون الجديد على الخلفية (نفس منطق setBgColor)
+                    ivBackground.setImageDrawable(null)
+                    ivBackground.visibility = View.GONE
+                    viewOverlay.visibility = View.GONE
+                    btnRemoveImage.visibility = View.GONE
+                    
+                    // تعيين اللون المخصص للبطاقة
+                    cardPreview.setCardBackgroundColor(color)
+                }
+            })
+            
+            colorPickerDialog.show()
+        } 
         btnClose.setOnClickListener { dialog.dismiss() }
         btnCancel.setOnClickListener { dialog.dismiss() }
 
@@ -206,7 +249,7 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
         dialog.show()
     }
 
-    // دالة عرض قائمة الخطوط المنبثقة
+  // دالة عرض قائمة الخطوط المنبثقة
     private data class FontItem(val displayName: String, val fontResId: Int)
 
     private fun showFontSelectionDialog(context: Context, onFontSelected: (Typeface?) -> Unit) {
@@ -221,7 +264,9 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
             FontItem("خط عريض (Oi)", R.font.oi)
         )
 
-        val dialog = Dialog(context)
+        // 1. استخدام BottomSheetDialog بدلاً من Dialog العادي ليعطي شكلاً عصرياً ويتكيف مع الخلفيات تلقائياً
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(context)
+        
         val recyclerView = RecyclerView(context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -229,6 +274,8 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
             )
             layoutManager = LinearLayoutManager(context)
             setPadding(20, 24, 20, 24)
+            // إعطاء RecyclerView خلفية تتناسب مع الـ Theme الحالي للتطبيق
+            setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.bg_main)) 
         }
 
         recyclerView.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -241,6 +288,9 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
                 val item = fontList[position]
                 val tvName = holder.itemView.findViewById<TextView>(R.id.tvFontPreviewName)
                 tvName.text = item.displayName
+                
+                // 2. إجبار النص على أخذ لون يتناسب مع الوضع (أبيض في المظلم، أسود في الفاتح)
+                tvName.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_primary))
 
                 try {
                     val tf = ResourcesCompat.getFont(context, item.fontResId)
@@ -264,11 +314,13 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
         }
 
         dialog.setContentView(recyclerView)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.window?.setBackgroundDrawableResource(android.R.drawable.dialog_holo_light_frame)
+        
+        // 3. إزالة السطر القديم الذي كان يجبر النافذة على اللون الأبيض الثابت (dialog_holo_light_frame)
+        // واستبداله بخلفية شفافة للنافذة نفسها لكي تظهر خلفية الـ RecyclerView (bg_main)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        
         dialog.show()
     }
-
     private fun createBitmapFromView(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
