@@ -377,6 +377,95 @@ class UserProfileActivity : AppCompatActivity() {
             .show()
     }
 
+    // private fun showCommentsDialog(post: CommunityPost) {
+    //     val dialog = BottomSheetDialog(this)
+    //     val view = layoutInflater.inflate(R.layout.dialog_comments, null)
+    //     dialog.setContentView(view)
+
+    //     view.findViewById<TextView?>(R.id.tvCommentPostAuthor)?.text = post.authorName
+    //     view.findViewById<TextView?>(R.id.tvCommentPostContent)?.text = post.content
+
+    //     val rvComments = view.findViewById<RecyclerView>(R.id.rvComments)
+    //     val etInput = view.findViewById<EditText>(R.id.etCommentInput)
+    //     val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
+
+    //     val user = FirebaseAuth.getInstance().currentUser
+    //     val currentUserName = user?.displayName 
+    //         ?: getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("user_name", "فاعل خير") 
+    //         ?: "فاعل خير"
+
+    //     rvComments.layoutManager = LinearLayoutManager(this)
+    //     val commentsAdapter = CommentsAdapter(
+    //         comments = emptyList(),
+    //         currentUserId = activeUserId,
+    //         postAuthorId = post.authorId,
+    //         onDeleteClicked = { comment ->
+    //             FirestoreManager.deleteComment(post.id, comment.id) {}
+    //         }
+    //     )
+    //     rvComments.adapter = commentsAdapter
+
+    //     FirestoreManager.listenToComments(post.id) { list ->
+    //         runOnUiThread {
+    //             commentsAdapter.updateData(list)
+    //             if (list.isNotEmpty()) rvComments.scrollToPosition(list.size - 1)
+    //         }
+    //     }
+
+    //     btnSend.setOnClickListener {
+    //         val text = etInput.text.toString().trim()
+    //         if (text.isEmpty()) return@setOnClickListener
+
+    //         if (BadWordsFilter.containsBadWords(text)) {
+    //             Toast.makeText(this, "التعليق يحتوي على كلمات غير لائقة", Toast.LENGTH_SHORT).show()
+    //             return@setOnClickListener
+    //         }
+
+    //         btnSend.isEnabled = false
+            
+    //         // الحل النهائي: جلب أحدث صورة واسم مباشرة من قاعدة البيانات قبل إرسال التعليق
+    //         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+    //         db.collection("users").document(activeUserId).get()
+    //             .addOnSuccessListener { document ->
+    //                 // جلب الصورة الحالية (وإذا لم تكن موجودة نعطيه مساراً فارغاً)
+    //                 val actualPhotoUrl = document.getString("photoUrl") ?: ""
+    //                 // جلب الاسم الحالي لتفادي أي أخطاء في الاسم أيضاً
+    //                 val actualName = document.getString("displayName") 
+    //                     ?: document.getString("name") 
+    //                     ?: currentUserName
+
+    //                 // إضافة التعليق بالبيانات الجديدة
+    //                 FirestoreManager.addComment(
+    //                     postId = post.id,
+    //                     authorId = activeUserId,
+    //                     authorName = actualName,
+    //                     authorPhotoUrl = actualPhotoUrl,
+    //                     content = text
+    //                 ) { success ->
+    //                     btnSend.isEnabled = true
+    //                     if (success) {
+    //                         etInput.setText("")
+    //                         if (post.authorId != activeUserId) {
+    //                             FirestoreManager.sendNotification(
+    //                                 recipientId = post.authorId,
+    //                                 senderId = activeUserId,
+    //                                 senderName = actualName,
+    //                                 type = "COMMENT",
+    //                                 postId = post.id,
+    //                                 message = "علّق $actualName على منشورك: \"${text.take(30)}...\""
+    //                             )
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             .addOnFailureListener {
+    //                 btnSend.isEnabled = true
+    //                 Toast.makeText(this, "حدث خطأ، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+    //             }
+    //     }
+
+    //     dialog.show()
+    // }
     private fun showCommentsDialog(post: CommunityPost) {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.dialog_comments, null)
@@ -389,16 +478,28 @@ class UserProfileActivity : AppCompatActivity() {
         val etInput = view.findViewById<EditText>(R.id.etCommentInput)
         val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
 
+        // سنحتفظ بهذا كاحتياط، لكننا سنجلب الاسم الفعلي من القاعدة قبل الإرسال
         val user = FirebaseAuth.getInstance().currentUser
         val currentUserName = user?.displayName 
             ?: getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("user_name", "فاعل خير") 
             ?: "فاعل خير"
 
         rvComments.layoutManager = LinearLayoutManager(this)
+        
+        // >>> التعديل الأول: تفعيل النقر لفتح البروفايل <<<
         val commentsAdapter = CommentsAdapter(
             comments = emptyList(),
             currentUserId = activeUserId,
             postAuthorId = post.authorId,
+            onUserClicked = { clickedUserId, clickedUserName ->
+                // فتح صفحة الملف الشخصي عند النقر على صورة أو اسم صاحب التعليق
+                val intent = android.content.Intent(this, UserProfileActivity::class.java).apply {
+                    putExtra("USER_ID", clickedUserId)
+                    putExtra("USER_NAME", clickedUserName)
+                }
+                startActivity(intent)
+                dialog.dismiss() // إغلاق نافذة التعليقات
+            },
             onDeleteClicked = { comment ->
                 FirestoreManager.deleteComment(post.id, comment.id) {}
             }
@@ -423,18 +524,21 @@ class UserProfileActivity : AppCompatActivity() {
 
             btnSend.isEnabled = false
             
-            // الحل النهائي: جلب أحدث صورة واسم مباشرة من قاعدة البيانات قبل إرسال التعليق
+            // >>> التعديل الثاني: جلب أحدث صورة واسم (displayName/name) مباشرة من قاعدة البيانات <<<
             val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
             db.collection("users").document(activeUserId).get()
                 .addOnSuccessListener { document ->
-                    // جلب الصورة الحالية (وإذا لم تكن موجودة نعطيه مساراً فارغاً)
+                    // جلب الصورة الحالية
                     val actualPhotoUrl = document.getString("photoUrl") ?: ""
-                    // جلب الاسم الحالي لتفادي أي أخطاء في الاسم أيضاً
+                    
+                    // جلب الاسم من البروفايل، إذا لم يوجد نجرب حقلاً آخر، ثم نعود للاحتياط
                     val actualName = document.getString("displayName") 
+                        ?.takeIf { it.isNotBlank() }
                         ?: document.getString("name") 
+                        ?.takeIf { it.isNotBlank() }
                         ?: currentUserName
-
-                    // إضافة التعليق بالبيانات الجديدة
+                    
+                    // إضافة التعليق بالبيانات الجديدة الموثوقة
                     FirestoreManager.addComment(
                         postId = post.id,
                         authorId = activeUserId,
@@ -464,9 +568,10 @@ class UserProfileActivity : AppCompatActivity() {
                 }
         }
 
-        dialog.show()
-    }
 
+        dialog.show()
+        
+    }
     private fun updateNameInCommunityPosts(newName: String) {
         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
         if (activeUserId.isEmpty()) return

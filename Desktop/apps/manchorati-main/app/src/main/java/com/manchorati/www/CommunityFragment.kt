@@ -328,6 +328,96 @@ class CommunityFragment : Fragment() {
         }
     }
 
+    // private fun showCommentsDialog(post: CommunityPost) {
+    //     val dialog = BottomSheetDialog(requireContext())
+    //     val view = layoutInflater.inflate(R.layout.dialog_comments, null)
+    //     dialog.setContentView(view)
+
+    //     dialog.setCanceledOnTouchOutside(false)
+
+    //     dialog.setOnShowListener {
+    //         val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+    //         bottomSheet?.let { sheet ->
+    //             val behavior = BottomSheetBehavior.from(sheet)
+    //             behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    //             behavior.skipCollapsed = true
+    //             behavior.isHideable = true
+    //         }
+    //     }
+
+    //     view.findViewById<TextView>(R.id.tvCommentPostAuthor)?.text = post.authorName
+    //     view.findViewById<TextView>(R.id.tvCommentPostContent)?.text = post.content
+
+    //     val rvComments = view.findViewById<RecyclerView>(R.id.rvComments)
+    //     val etInput = view.findViewById<EditText>(R.id.etCommentInput)
+    //     val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
+
+    //     val user = FirebaseAuth.getInstance().currentUser
+    //     val authorId = user?.uid ?: return
+    //     val authorName = user.displayName ?: "فاعل خير"
+
+    //     rvComments.layoutManager = LinearLayoutManager(requireContext())
+    //     val commentsAdapter = CommentsAdapter(
+    //         comments = emptyList(),
+    //         currentUserId = authorId,
+    //         postAuthorId = post.authorId,
+    //         onUserClicked = { userId, userName ->
+    //             dialog.dismiss()
+    //             val intent = Intent(requireContext(), UserProfileActivity::class.java).apply {
+    //                 putExtra("USER_ID", userId)
+    //                 putExtra("USER_NAME", userName)
+    //             }
+    //             startActivity(intent)
+    //         },
+    //         onDeleteClicked = { comment ->
+    //             FirestoreManager.deleteComment(post.id, comment.id) {}
+    //         }
+    //     )
+    //     rvComments.adapter = commentsAdapter
+
+    //     FirestoreManager.listenToComments(post.id) { list ->
+    //         activity?.runOnUiThread {
+    //             commentsAdapter.updateData(list)
+    //             if (list.isNotEmpty()) {
+    //                 rvComments.post {
+    //                     rvComments.scrollToPosition(list.size - 1)
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     btnSend.setOnClickListener {
+    //         val text = etInput.text?.toString()?.trim() ?: ""
+    //         if (text.isEmpty()) return@setOnClickListener
+
+    //         if (BadWordsFilter.containsBadWords(text)) {
+    //             Toast.makeText(requireContext(), "التعليق يحتوي على كلمات غير لائقة", Toast.LENGTH_SHORT).show()
+    //             return@setOnClickListener
+    //         }
+
+    //         btnSend.isEnabled = false
+    //         val authorPhotoUrl = user.photoUrl?.toString() ?: ""
+
+    //         FirestoreManager.addComment(post.id, authorId, authorName, authorPhotoUrl, text) { success ->
+    //             btnSend.isEnabled = true
+    //             if (success) {
+    //                 etInput.setText("")
+    //                 if (post.authorId != authorId) {
+    //                     FirestoreManager.sendNotification(
+    //                         recipientId = post.authorId,
+    //                         senderId = authorId,
+    //                         senderName = authorName,
+    //                         type = "COMMENT",
+    //                         postId = post.id,
+    //                         message = "علّق $authorName على منشورك: \"${text.take(30)}...\""
+    //                     )
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     dialog.show()
+    // }
     private fun showCommentsDialog(post: CommunityPost) {
         val dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.dialog_comments, null)
@@ -354,7 +444,9 @@ class CommunityFragment : Fragment() {
 
         val user = FirebaseAuth.getInstance().currentUser
         val authorId = user?.uid ?: return
-        val authorName = user.displayName ?: "فاعل خير"
+        
+        // احتفظنا بهذا كاسم احتياطي في حال فشل الاتصال بقاعدة البيانات
+        val fallbackAuthorName = user.displayName ?: "فاعل خير"
 
         rvComments.layoutManager = LinearLayoutManager(requireContext())
         val commentsAdapter = CommentsAdapter(
@@ -396,29 +488,53 @@ class CommunityFragment : Fragment() {
             }
 
             btnSend.isEnabled = false
-            val authorPhotoUrl = user.photoUrl?.toString() ?: ""
+            
+            // >>> التعديل: جلب أحدث صورة واسم من قاعدة البيانات قبل النشر <<<
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users").document(authorId).get()
+                .addOnSuccessListener { document ->
+                    // جلب الصورة الحالية من البروفايل
+                    val actualPhotoUrl = document.getString("photoUrl") ?: ""
+                    
+                    // جلب الاسم من البروفايل (displayName ثم name ثم جيميل)
+                    val actualName = document.getString("displayName") 
+                        ?.takeIf { it.isNotBlank() }
+                        ?: document.getString("name") 
+                        ?.takeIf { it.isNotBlank() }
+                        ?: fallbackAuthorName
 
-            FirestoreManager.addComment(post.id, authorId, authorName, authorPhotoUrl, text) { success ->
-                btnSend.isEnabled = true
-                if (success) {
-                    etInput.setText("")
-                    if (post.authorId != authorId) {
-                        FirestoreManager.sendNotification(
-                            recipientId = post.authorId,
-                            senderId = authorId,
-                            senderName = authorName,
-                            type = "COMMENT",
-                            postId = post.id,
-                            message = "علّق $authorName على منشورك: \"${text.take(30)}...\""
-                        )
+                    // إرسال التعليق بالبيانات الموثوقة من قاعدة البيانات
+                    FirestoreManager.addComment(
+                        postId = post.id,
+                        authorId = authorId,
+                        authorName = actualName,
+                        authorPhotoUrl = actualPhotoUrl,
+                        content = text
+                    ) { success ->
+                        btnSend.isEnabled = true
+                        if (success) {
+                            etInput.setText("")
+                            if (post.authorId != authorId) {
+                                FirestoreManager.sendNotification(
+                                    recipientId = post.authorId,
+                                    senderId = authorId,
+                                    senderName = actualName,
+                                    type = "COMMENT",
+                                    postId = post.id,
+                                    message = "علّق $actualName على منشورك: \"${text.take(30)}...\""
+                                )
+                            }
+                        }
                     }
                 }
-            }
+                .addOnFailureListener {
+                    btnSend.isEnabled = true
+                    Toast.makeText(requireContext(), "تعذر الاتصال، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                }
         }
 
         dialog.show()
     }
-
     private fun showEditDialog(post: CommunityPost) {
         val user = FirebaseAuth.getInstance().currentUser ?: return
         val authorId = user.uid
