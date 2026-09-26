@@ -8,37 +8,37 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import android.content.ContentValues
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import android.content.ContentValues
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
-import android.widget.Toast
 
 object ImageUtils {
 
     private var activeCustomImageView: ImageView? = null
     private var activeOverlayView: View? = null
-    private var activeRemoveBtn: Button? = null
 
-    // مسجل اختيار الصورة من المعرض
     fun registerImagePicker(activity: ComponentActivity): ActivityResultLauncher<String> {
         return activity.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
@@ -48,14 +48,294 @@ object ImageUtils {
                     activeCustomImageView?.setImageBitmap(bitmap)
                     activeCustomImageView?.visibility = View.VISIBLE
                     activeOverlayView?.visibility = View.VISIBLE
-                    activeRemoveBtn?.visibility = View.VISIBLE
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
     }
-private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
+
+    private data class FontItem(val displayName: String, val fontResId: Int)
+
+    fun showImageEditorDialog(
+        context: Context,
+        categoryName: String,
+        content: String,
+        onPickImageRequest: (() -> Unit)? = null
+    ) {
+        val dialog = Dialog(context)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_image_preview, null)
+        dialog.setContentView(view)
+
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val cardPreview = view.findViewById<CardView>(R.id.cardPreviewContainer)
+        val ivBackground = view.findViewById<ImageView>(R.id.ivCustomBackground)
+        val viewOverlay = view.findViewById<View>(R.id.viewOverlay)
+        val tvCategory = view.findViewById<TextView>(R.id.tvPreviewCategory)
+        val tvContent = view.findViewById<TextView>(R.id.tvPreviewContent)
+        
+        activeCustomImageView = ivBackground
+        activeOverlayView = viewOverlay
+
+        tvCategory.text = "• $categoryName •"
+        tvContent.text = content
+
+        val toolColors = view.findViewById<HorizontalScrollView>(R.id.toolColors)
+        val toolFonts = view.findViewById<LinearLayout>(R.id.toolFonts) // tbdel l LinearLayout
+        val layoutColorsContainer = view.findViewById<LinearLayout>(R.id.layoutColorsContainer)
+        val layoutFontsContainer = view.findViewById<LinearLayout>(R.id.layoutFontsContainer)
+        
+        val tabBackground = view.findViewById<LinearLayout>(R.id.tabBackground)
+        val tabFont = view.findViewById<LinearLayout>(R.id.tabFont)
+        val btnClose = view.findViewById<ImageView>(R.id.btnCloseDialog)
+        val btnSaveImage = view.findViewById<Button>(R.id.btnSaveImage)
+        val btnConfirmShare = view.findViewById<Button>(R.id.btnConfirmShare)
+
+        // Tbadal bin Tabs
+        tabBackground.setOnClickListener {
+            toolColors.visibility = View.VISIBLE
+            toolFonts.visibility = View.GONE
+            tabBackground.alpha = 1.0f
+            tabFont.alpha = 0.5f
+        }
+        tabFont.setOnClickListener {
+            toolColors.visibility = View.GONE
+            toolFonts.visibility = View.VISIBLE
+            tabBackground.alpha = 0.5f
+            tabFont.alpha = 1.0f
+        }
+        tabFont.alpha = 0.5f
+
+        // =====================================
+        // ADWAT TANSSIQ JDAD (Alignment & Effects)
+        // =====================================
+        val btnAlignRight = view.findViewById<ImageView>(R.id.btnAlignRight)
+        val btnAlignCenter = view.findViewById<ImageView>(R.id.btnAlignCenter)
+        val btnAlignLeft = view.findViewById<ImageView>(R.id.btnAlignLeft)
+        val btnTextShadow = view.findViewById<ImageView>(R.id.btnTextShadow)
+        val btnTextHighlight = view.findViewById<ImageView>(R.id.btnTextHighlight)
+
+        // 1. Mo7adat
+        btnAlignRight?.setOnClickListener { 
+            tvContent.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            btnAlignRight.alpha = 1.0f
+            btnAlignCenter?.alpha = 0.5f
+            btnAlignLeft?.alpha = 0.5f
+        }
+        btnAlignCenter?.setOnClickListener { 
+            tvContent.gravity = Gravity.CENTER
+            btnAlignCenter.alpha = 1.0f
+            btnAlignRight?.alpha = 0.5f
+            btnAlignLeft?.alpha = 0.5f
+        }
+        btnAlignLeft?.setOnClickListener { 
+            tvContent.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            btnAlignLeft.alpha = 1.0f
+            btnAlignCenter?.alpha = 0.5f
+            btnAlignRight?.alpha = 0.5f
+        }
+        // Iftiradyan (Center)
+        btnAlignCenter?.alpha = 1.0f
+        btnAlignRight?.alpha = 0.5f
+        btnAlignLeft?.alpha = 0.5f
+
+        // 2. Dal (Shadow)
+        var isShadowEnabled = true // Iftiradyan f XML fih dal
+        btnTextShadow?.alpha = 1.0f
+        btnTextShadow?.setOnClickListener {
+            isShadowEnabled = !isShadowEnabled
+            if (isShadowEnabled) {
+                tvContent.setShadowLayer(3f, 1.5f, 1.5f, Color.parseColor("#80000000"))
+                btnTextShadow.alpha = 1.0f
+            } else {
+                tvContent.setShadowLayer(0f, 0f, 0f, Color.TRANSPARENT)
+                btnTextShadow.alpha = 0.5f
+            }
+        }
+
+        // 3. Khalfiya (Highlight)
+        var isHighlightEnabled = false
+        btnTextHighlight?.alpha = 0.5f
+        btnTextHighlight?.setOnClickListener {
+            isHighlightEnabled = !isHighlightEnabled
+            if (isHighlightEnabled) {
+                tvContent.setBackgroundColor(Color.parseColor("#66000000")) // k7el chfaf
+                tvContent.setPadding(20, 20, 20, 20)
+                btnTextHighlight.alpha = 1.0f
+            } else {
+                tvContent.background = null
+                tvContent.setPadding(0, 0, 0, 0)
+                btnTextHighlight.alpha = 0.5f
+            }
+        }
+        // =====================================
+
+        
+        val btnPickImage = TextView(context).apply {
+            val padH = (16 * context.resources.displayMetrics.density).toInt()
+            val padV = (8 * context.resources.displayMetrics.density).toInt()
+            val margin = (4 * context.resources.displayMetrics.density).toInt()
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(margin, margin, margin, margin)
+            }
+            setPadding(padH, padV, padH, padV)
+            text = "صورة 📷"
+            setTextColor(Color.WHITE)
+            background = GradientDrawable().apply {
+                cornerRadius = 50f
+                setColor(Color.parseColor("#0284C7"))
+            }
+            setOnClickListener { onPickImageRequest?.invoke() }
+        }
+        layoutColorsContainer.addView(btnPickImage)
+
+        val customBgColorBtn = ImageView(context).apply {
+            val size = (46 * context.resources.displayMetrics.density).toInt()
+            val margin = (4 * context.resources.displayMetrics.density).toInt()
+            layoutParams = LinearLayout.LayoutParams(size, size).apply {
+                setMargins(margin, margin, margin, margin)
+            }
+            setImageResource(R.drawable.ic_color_picker) 
+            setPadding(12, 12, 12, 12)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(Color.parseColor("#1F2937"))
+            }
+            setOnClickListener {
+                val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, cardPreview.cardBackgroundColor.defaultColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
+                    override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {}
+                    override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
+                        ivBackground.visibility = View.GONE
+                        viewOverlay.visibility = View.GONE
+                        cardPreview.setCardBackgroundColor(color)
+                    }
+                })
+                colorPickerDialog.show()
+            }
+        }
+        layoutColorsContainer.addView(customBgColorBtn)
+
+        val colors = arrayOf("#0F172A", "#1E3A8A", "#064E3B", "#581C87", "#7F1D1D", "#F59E0B", "#10B981", "#F1F5F9")
+        for (colorHex in colors) {
+            val colorCircle = View(context).apply {
+                val size = (46 * context.resources.displayMetrics.density).toInt()
+                val margin = (4 * context.resources.displayMetrics.density).toInt()
+                layoutParams = LinearLayout.LayoutParams(size, size).apply {
+                    setMargins(margin, margin, margin, margin)
+                }
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
+                    setColor(Color.parseColor(colorHex))
+                    if (colorHex == "#F1F5F9") setStroke(3, Color.parseColor("#94A3B8"))
+                }
+                setOnClickListener {
+                    ivBackground.visibility = View.GONE
+                    viewOverlay.visibility = View.GONE
+                    cardPreview.setCardBackgroundColor(Color.parseColor(colorHex))
+                    
+                    if (colorHex == "#F1F5F9") {
+                        tvContent.setTextColor(Color.parseColor("#0F172A"))
+                    } else {
+                        tvContent.setTextColor(Color.WHITE)
+                    }
+                }
+            }
+            layoutColorsContainer.addView(colorCircle)
+        }
+
+        val customTextColorBtn = TextView(context).apply {
+            val padH = (16 * context.resources.displayMetrics.density).toInt()
+            val padV = (8 * context.resources.displayMetrics.density).toInt()
+            val margin = (4 * context.resources.displayMetrics.density).toInt()
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(margin, margin, margin, margin)
+            }
+            setPadding(padH, padV, padH, padV)
+            text = "لون النص 🎨"
+            setTextColor(Color.WHITE)
+            background = GradientDrawable().apply {
+                cornerRadius = 50f
+                setColor(Color.parseColor("#1F2937"))
+            }
+            setOnClickListener {
+                val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, tvContent.currentTextColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
+                    override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {}
+                    override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
+                        tvContent.setTextColor(color)
+                    }
+                })
+                colorPickerDialog.show()
+            }
+        }
+        layoutFontsContainer.addView(customTextColorBtn)
+
+        val fontList = listOf(
+            FontItem("الرقعة", R.font.arefruqaa),
+            FontItem("كايرو", R.font.cairoplay),
+            FontItem("كوفام", R.font.kufam),
+            FontItem("مرحي", R.font.marhey),
+            FontItem("تجوّل", R.font.tajawal),
+            FontItem("نستعليق", R.font.notonastaliqurdu),
+            FontItem("بلاكا", R.font.blakahollow),
+            FontItem("عريض", R.font.oi)
+        )
+
+        for (item in fontList) {
+            val tvFont = TextView(context).apply {
+                val padH = (20 * context.resources.displayMetrics.density).toInt()
+                val padV = (8 * context.resources.displayMetrics.density).toInt()
+                val margin = (4 * context.resources.displayMetrics.density).toInt()
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    setMargins(margin, margin, margin, margin)
+                }
+                setPadding(padH, padV, padH, padV)
+                text = item.displayName
+                textSize = 15f
+                setTextColor(Color.WHITE)
+                background = GradientDrawable().apply {
+                    cornerRadius = 50f 
+                    setColor(Color.parseColor("#1F2937"))
+                }
+                
+                try {
+                    typeface = ResourcesCompat.getFont(context, item.fontResId)
+                } catch (e: Exception) {}
+                
+                setOnClickListener {
+                    try {
+                        tvContent.typeface = ResourcesCompat.getFont(context, item.fontResId)
+                    } catch (e: Exception) {}
+                }
+            }
+            layoutFontsContainer.addView(tvFont)
+        }
+
+        btnClose.setOnClickListener { dialog.dismiss() }
+        
+        btnSaveImage.setOnClickListener {
+            val bitmap = createBitmapFromView(cardPreview)
+            saveBitmapToGallery(context, bitmap)
+        }
+
+        btnConfirmShare.setOnClickListener {
+            val bitmap = createBitmapFromView(cardPreview)
+            dialog.dismiss()
+            shareBitmap(context, bitmap)
+        }
+
+        dialog.show()
+    }
+
+    private fun createBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
         val filename = "Manchorati_${System.currentTimeMillis()}.png"
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
@@ -74,258 +354,16 @@ private fun saveBitmapToGallery(context: Context, bitmap: Bitmap) {
                 resolver.openOutputStream(uri)?.use { outputStream ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 }
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     contentValues.clear()
                     contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                     resolver.update(uri, contentValues, null, null)
                 }
-
-                Toast.makeText(context, "تم حفظ البطاقة في المعرض بنجاح بنقاء عالي", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "تم حفظ البطاقة في المعرض", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "حدث خطأ أثناء حفظ الصورة", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(context, "تعذر إنشاء ملف الصورة", Toast.LENGTH_SHORT).show()
-        }
-    }
-    // نافذة محرر الصورة ومعاينتها
-    fun showImageEditorDialog(
-        context: Context,
-        categoryName: String,
-        content: String,
-        onPickImageRequest: (() -> Unit)? = null
-    ) {
-        val dialog = Dialog(context)
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_image_preview, null)
-        dialog.setContentView(view)
-
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        val cardPreview = view.findViewById<CardView>(R.id.cardPreviewContainer)
-        val ivBackground = view.findViewById<ImageView>(R.id.ivCustomBackground)
-        val viewOverlay = view.findViewById<View>(R.id.viewOverlay)
-        val tvCategory = view.findViewById<TextView>(R.id.tvPreviewCategory)
-        val tvContent = view.findViewById<TextView>(R.id.tvPreviewContent)
-
-        val btnPickImage = view.findViewById<Button>(R.id.btnPickImage)
-        val btnRemoveImage = view.findViewById<Button>(R.id.btnRemoveImage)
-        val btnClose = view.findViewById<ImageView>(R.id.btnCloseDialog)
-        val btnCancel = view.findViewById<Button>(R.id.btnCancelPreview)
-        val btnShare = view.findViewById<Button>(R.id.btnConfirmShare)
-        val btnOpenFontPicker = view.findViewById<Button>(R.id.btnOpenFontPicker)
-
-        activeCustomImageView = ivBackground
-        activeOverlayView = viewOverlay
-        activeRemoveBtn = btnRemoveImage
-
-        tvCategory.text = "• $categoryName •"
-        tvContent.text = content
-
-        var currentTextSize = 18f
-
-        // فتح معرض الصور
-        btnPickImage.setOnClickListener {
-            onPickImageRequest?.invoke()
-        }
-
-        // إزالة الصورة المختارة
-        btnRemoveImage.setOnClickListener {
-            ivBackground.setImageDrawable(null)
-            ivBackground.visibility = View.GONE
-            viewOverlay.visibility = View.GONE
-            btnRemoveImage.visibility = View.GONE
-        }
-
-        // فتح نافذة اختيار الخطوط المنبثقة
-        btnOpenFontPicker.setOnClickListener {
-            showFontSelectionDialog(context) { selectedTypeface ->
-                tvContent.typeface = selectedTypeface
             }
         }
-        val btnSaveImage = view.findViewById<Button>(R.id.btnSaveImage)
-
-        // حفظ الصورة في المعرض
-        btnSaveImage.setOnClickListener {
-            val bitmap = createBitmapFromView(cardPreview)
-            saveBitmapToGallery(context, bitmap)
-        }
-
-        // ألوان النص
-        // view.findViewById<View>(R.id.btnTextColorWhite).setOnClickListener {
-        //     tvContent.setTextColor(Color.WHITE)
-        // }
-        // view.findViewById<View>(R.id.btnTextColorYellow).setOnClickListener {
-        //     tvContent.setTextColor(Color.parseColor("#FACC15"))
-        // }
-        // view.findViewById<View>(R.id.btnTextColorBlack).setOnClickListener {
-        //     tvContent.setTextColor(Color.parseColor("#0F172A"))
-        // }
-        val btnCustomColor = view.findViewById<View>(R.id.btnTextColorCustom) // التأكد من إضافة هذا الزر في ملف XML الخاص بالـ Dialog
-        
-        btnCustomColor?.setOnClickListener {
-            // njibo l'loun lhali dyal text bach tbda bih Color Wheel
-            val currentColor = tvContent.currentTextColor
-
-            // nbdaw AmbilWarnaDialog
-            val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, currentColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
-                override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {
-                    // l'user brk 3la Cancel, madir walo
-                }
-
-                override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
-                    // l'user khtar loun, nbdlouh l text
-                    tvContent.setTextColor(color)
-                }
-            })
-            
-            colorPickerDialog.show()
-        }
-        // تكبير وتصغير الخط
-        view.findViewById<TextView>(R.id.btnPreviewBigger).setOnClickListener {
-            if (currentTextSize < 30f) {
-                currentTextSize += 2f
-                tvContent.textSize = currentTextSize
-            }
-        }
-        view.findViewById<TextView>(R.id.btnPreviewSmaller).setOnClickListener {
-            if (currentTextSize > 12f) {
-                currentTextSize -= 2f
-                tvContent.textSize = currentTextSize
-            }
-        }
-
-        // ألوان الخلفيات السادة
-        fun setBgColor(hexBg: String) {
-            ivBackground.setImageDrawable(null)
-            ivBackground.visibility = View.GONE
-            viewOverlay.visibility = View.GONE
-            btnRemoveImage.visibility = View.GONE
-            cardPreview.setCardBackgroundColor(Color.parseColor(hexBg))
-        }
-
-        // view.findViewById<View>(R.id.btnColorDark).setOnClickListener { setBgColor("#0F172A") }
-        // view.findViewById<View>(R.id.btnColorBlue).setOnClickListener { setBgColor("#1E3A8A") }
-        // view.findViewById<View>(R.id.btnColorGreen).setOnClickListener { setBgColor("#064E3B") }
-        // view.findViewById<View>(R.id.btnColorPurple).setOnClickListener { setBgColor("#581C87") }
-        // view.findViewById<View>(R.id.btnColorDarkRed).setOnClickListener { setBgColor("#7F1D1D") }
-        // view.findViewById<View>(R.id.btnColorLight).setOnClickListener { setBgColor("#F1F5F9") }
-        // >>> الكود الجديد لفتح عجلة الألوان الخاصة بالخلفية <<<
-        val btnBgColorCustom = view.findViewById<View>(R.id.btnBgColorCustom)
-        btnBgColorCustom?.setOnClickListener {
-            // نجيبو اللون الحالي ديال البطاقة باش نبداو بيه في عجلة الألوان
-            val initialColor = cardPreview.cardBackgroundColor.defaultColor
-
-            val colorPickerDialog = yuku.ambilwarna.AmbilWarnaDialog(context, initialColor, object : yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener {
-                override fun onCancel(dialog: yuku.ambilwarna.AmbilWarnaDialog?) {
-                    // لم يقم باختيار شيء
-                }
-
-                override fun onOk(dialog: yuku.ambilwarna.AmbilWarnaDialog?, color: Int) {
-                    // تطبيق اللون الجديد على الخلفية (نفس منطق setBgColor)
-                    ivBackground.setImageDrawable(null)
-                    ivBackground.visibility = View.GONE
-                    viewOverlay.visibility = View.GONE
-                    btnRemoveImage.visibility = View.GONE
-                    
-                    // تعيين اللون المخصص للبطاقة
-                    cardPreview.setCardBackgroundColor(color)
-                }
-            })
-            
-            colorPickerDialog.show()
-        } 
-        btnClose.setOnClickListener { dialog.dismiss() }
-        btnCancel.setOnClickListener { dialog.dismiss() }
-
-        btnShare.setOnClickListener {
-            val bitmap = createBitmapFromView(cardPreview)
-            dialog.dismiss()
-            shareBitmap(context, bitmap)
-        }
-
-        dialog.show()
-    }
-
-  // دالة عرض قائمة الخطوط المنبثقة
-    private data class FontItem(val displayName: String, val fontResId: Int)
-
-    private fun showFontSelectionDialog(context: Context, onFontSelected: (Typeface?) -> Unit) {
-        val fontList = listOf(
-            FontItem("خط الرقعة (Aref Ruqaa)", R.font.arefruqaa),
-            FontItem("خط كايرو (Cairo Play)", R.font.cairoplay),
-            FontItem("خط كوفام (Kufam)", R.font.kufam),
-            FontItem("خط مرحي (Marhey)", R.font.marhey),
-            FontItem("خط تجوّل (Tajawal)", R.font.tajawal),
-            FontItem("خط نستعليق (Urdu)", R.font.notonastaliqurdu),
-            FontItem("خط بلاكا (Blaka Hollow)", R.font.blakahollow),
-            FontItem("خط عريض (Oi)", R.font.oi)
-        )
-
-        // 1. استخدام BottomSheetDialog بدلاً من Dialog العادي ليعطي شكلاً عصرياً ويتكيف مع الخلفيات تلقائياً
-        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(context)
-        
-        val recyclerView = RecyclerView(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            layoutManager = LinearLayoutManager(context)
-            setPadding(20, 24, 20, 24)
-            // إعطاء RecyclerView خلفية تتناسب مع الـ Theme الحالي للتطبيق
-            setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.bg_main)) 
-        }
-
-        recyclerView.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-                val rowView = LayoutInflater.from(parent.context).inflate(R.layout.item_font_choice, parent, false)
-                return object : RecyclerView.ViewHolder(rowView) {}
-            }
-
-            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                val item = fontList[position]
-                val tvName = holder.itemView.findViewById<TextView>(R.id.tvFontPreviewName)
-                tvName.text = item.displayName
-                
-                // 2. إجبار النص على أخذ لون يتناسب مع الوضع (أبيض في المظلم، أسود في الفاتح)
-                tvName.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_primary))
-
-                try {
-                    val tf = ResourcesCompat.getFont(context, item.fontResId)
-                    tvName.typeface = tf
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                holder.itemView.setOnClickListener {
-                    try {
-                        val tf = ResourcesCompat.getFont(context, item.fontResId)
-                        onFontSelected(tf)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    dialog.dismiss()
-                }
-            }
-
-            override fun getItemCount(): Int = fontList.size
-        }
-
-        dialog.setContentView(recyclerView)
-        
-        // 3. إزالة السطر القديم الذي كان يجبر النافذة على اللون الأبيض الثابت (dialog_holo_light_frame)
-        // واستبداله بخلفية شفافة للنافذة نفسها لكي تظهر خلفية الـ RecyclerView (bg_main)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        
-        dialog.show()
-    }
-    private fun createBitmapFromView(view: View): Bitmap {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
     }
 
     private fun shareBitmap(context: Context, bitmap: Bitmap) {

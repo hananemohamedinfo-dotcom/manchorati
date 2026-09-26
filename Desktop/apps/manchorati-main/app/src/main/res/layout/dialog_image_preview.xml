@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/bg_main"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- chrit 3olwi -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
-
-        <!-- شريط علوي -->
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp">
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="محرر البطاقة"
+            android:textColor="@color/text_primary"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/btnCloseDialog"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/text_secondary"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="محرر وتصميم البطاقة"
-                android:textColor="@color/text_primary"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/btnCloseDialog"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/text_secondary"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-        </RelativeLayout>
-
-        <!-- مساحة معاينة البطاقة (تبقى بألوان ثابتة لضمان ثبات التصميم عند الحفظ) -->
+    <!-- CardView l'asli dyalek -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="16dp">
+        
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPreviewContainer"
             android:layout_width="match_parent"
@@ -52,7 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- صورة الخلفية المخصصة من الهاتف -->
                 <ImageView
                     android:id="@+id/ivCustomBackground"
                     android:layout_width="match_parent"
@@ -60,7 +59,6 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone" />
 
-                <!-- طبقة تعتيم خفيفة لإبراز النص -->
                 <View
                     android:id="@+id/viewOverlay"
                     android:layout_width="match_parent"
@@ -68,7 +66,6 @@
                     android:background="#66000000"
                     android:visibility="gone" />
 
-                <!-- محتوى البطاقة -->
                 <RelativeLayout
                     android:id="@+id/layoutCardContent"
                     android:layout_width="match_parent"
@@ -81,7 +78,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:text="• حكم وأقوال •"
                         android:textColor="#38BDF8"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -92,7 +88,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
-                        android:text="نص المنشور يظهر هنا"
                         android:textColor="#F8FAFC"
                         android:textSize="18sp"
                         android:lineSpacingExtra="6dp"
@@ -113,187 +108,211 @@
                 </RelativeLayout>
             </FrameLayout>
         </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-        <!-- خيار اختيار صورة من الهاتف -->
-        <LinearLayout
+    <!-- l'blasa dyal أدوات (dynamique) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <HorizontalScrollView
+            android:id="@+id/toolColors"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnPickImage"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="📷 اختيار صورة من الهاتف"
-                android:textSize="12sp"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#0284C7" />
-
-            <Button
-                android:id="@+id/btnRemoveImage"
+            android:layout_height="80dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/layoutColorsContainer"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:text="إزالة الصورة"
-                android:textSize="12sp"
-                android:textColor="#EF4444"
-                android:backgroundTint="@color/search_bg"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
-        <!-- زر اختيار الخط عبر النافذة المنبثقة -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="6dp"
-            android:text="نمط الخط العربي:"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/btnOpenFontPicker"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:text="🔤 اختر نوع الخط من القائمة"
-            android:textSize="13sp"
-            android:textColor="@color/text_primary"
-            android:backgroundTint="@color/search_bg" />
-
-        <!-- ألوان الخلفية السادة (تبقى ثابتة لأنها لوحة ألوان) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="6dp"
-            android:text="ألوان الخلفية السادة:"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-<!-- 
-            <View android:id="@+id/btnColorDark" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#0F172A" />
-            <View android:id="@+id/btnColorBlue" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#1E3A8A" />
-            <View android:id="@+id/btnColorGreen" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#064E3B" />
-            <View android:id="@+id/btnColorPurple" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#581C87" />
-            <View android:id="@+id/btnColorDarkRed" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#7F1D1D" />
-            <View android:id="@+id/btnColorLight" android:layout_width="28dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="#F1F5F9" />
-             -->
-            <!-- الزر الجديد الخاص بعجلة ألوان الخلفية -->
-            <ImageButton
-                android:id="@+id/btnBgColorCustom"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_search_bar" 
-                android:src="@drawable/ic_color_picker" 
-                android:scaleType="centerInside"
-                android:padding="4dp" />
-        </LinearLayout>
-
-        <!-- لون النص والتحكم بالحجم -->
+        <!-- L'blasa jdida dyal Tanssi9 w L'khotot -->
         <LinearLayout
+            android:id="@+id/toolFonts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:visibility="gone">
 
+            <!-- Chrit Tanssi9 (Alignement w Shadow) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnAlignRight"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_sort_by_size" 
+                        app:tint="@color/text_primary"
+                        android:padding="6dp" />
+
+                    <ImageView
+                        android:id="@+id/btnAlignCenter"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_sort_alphabetically" 
+                        app:tint="@color/text_primary"
+                        android:padding="6dp" />
+
+                    <ImageView
+                        android:id="@+id/btnAlignLeft"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_agenda" 
+                        app:tint="@color/text_primary"
+                        android:padding="6dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnTextShadow"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_view" 
+                        app:tint="@color/text_primary"
+                        android:padding="6dp" />
+
+                    <ImageView
+                        android:id="@+id/btnTextHighlight"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_edit" 
+                        app:tint="@color/text_primary"
+                        android:padding="6dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- L'khotot (ScrollView) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/layoutFontsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#2094A3B8" />
+
+    <!-- Tabs lta7t -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/tabBackground"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="?attr/selectableItemBackground">
+            
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                app:tint="@color/text_primary"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="لون النص:"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-
-             <!-- <View android:id="@+id/btnTextColorWhite" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="8dp" android:background="#FFFFFF" />
-            <View android:id="@+id/btnTextColorYellow" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="6dp" android:background="#FACC15" />
-            <View android:id="@+id/btnTextColorBlack" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="6dp" android:background="#0F172A" /> -->
-
-            <!-- الزر الجديد الخاص بعجلة الألوان -->
-            <ImageButton
-                android:id="@+id/btnTextColorCustom"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_search_bar" 
-                android:src="@drawable/ic_color_picker" 
-                android:scaleType="centerInside"
-                android:padding="4dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <!-- زر تكبير الخط -->
-            <TextView
-                android:id="@+id/btnPreviewBigger"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:text="A +"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_search_bar" />
-
-            <!-- زر تصغير الخط -->
-            <TextView
-                android:id="@+id/btnPreviewSmaller"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:text="A -"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_search_bar" />
+                android:text="الخلفية"
+                android:textSize="11sp"
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
-        <!-- أزرار الإجراءات -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnCancelPreview"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text="إلغاء"
-                android:textColor="@color/text_primary"
-                android:backgroundTint="@color/search_bg" />
-
-            <Button
-                android:id="@+id/btnSaveImage"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1.2"
-                android:layout_marginEnd="4dp"
-                android:text=" حفظ بالمعرض"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:backgroundTint="#10B981" />
-
-            <Button
-                android:id="@+id/btnConfirmShare"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1.3"
-                android:text="مشاركة الصورة"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:backgroundTint="#0284C7" />
+            android:id="@+id/tabFont"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="?attr/selectableItemBackground">
+            
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="@color/text_secondary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="الخط والتنسيق"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"/>
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+    <!-- wnzido hna azrar l7ifd wlmocharaka -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/btnSaveImage"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="حفظ"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#10B981" />
+
+        <Button
+            android:id="@+id/btnConfirmShare"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="مشاركة"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#0284C7" />
+    </LinearLayout>
+</LinearLayout>
