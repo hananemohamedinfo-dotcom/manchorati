@@ -3,20 +3,28 @@ package com.manchorati.www
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ListenerRegistration
 import coil.load
 import coil.transform.CircleCropTransformation
+import kotlinx.coroutines.launch
+import java.util.Locale
 
 class UserProfileActivity : AppCompatActivity() {
 
@@ -28,31 +36,78 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var tvBio: TextView
     private lateinit var tvPostsCount: TextView
     private lateinit var tvFollowersCount: TextView
+    private lateinit var tvFollowingCount: TextView
     private lateinit var btnBack: ImageView
-    private lateinit var btnProfileAction: ImageView
+    private lateinit var btnProfileAction: TextView
     private lateinit var ivProfileAvatar: ImageView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var layoutEmpty: View
 
     private var targetUserId: String = ""
     private var targetUserName: String = ""
     private var activeUserId: String = ""
     private var currentUsername: String = ""
     private var isFollowing = false
+    private var currentFollowersCount: Long = 0L
+    private var fabAddPostProfile: View? = null
+    private var postsListener: ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        val deviceFallback = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        activeUserId = FirebaseAuth.getInstance().currentUser?.uid ?: deviceFallback
-
-        val passedId = intent.getStringExtra("USER_ID")
-        targetUserId = if (!passedId.isNullOrEmpty()) passedId else activeUserId
+        val passedId = intent.getStringExtra("USER_ID") ?: ""
+        targetUserId = passedId
         targetUserName = intent.getStringExtra("USER_NAME") ?: "فاعل خير"
 
         initViews()
         setupRecyclerView()
-        loadProfileData()
-        listenToPosts()
+        observeAuthState()
+    }
+
+    private fun observeAuthState() {
+        lifecycleScope.launch {
+            AuthManager.authStateFlow.collect { user ->
+                if (user != null) {
+                    activeUserId = user.uid
+                    val isMyProfile = targetUserId.isEmpty() || targetUserId == user.uid
+                    if (isMyProfile) {
+                        targetUserId = user.uid
+                        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                        val localName = prefs.getString("user_name", user.displayName ?: "مستخدم") ?: (user.displayName ?: "مستخدم")
+                        val localPhoto = prefs.getString("user_photo", user.photoUrl?.toString() ?: "") ?: (user.photoUrl?.toString() ?: "")
+                        targetUserName = localName
+                        tvName.text = targetUserName
+
+                        if (currentUsername.isEmpty()) {
+                            currentUsername = AuthManager.generateBaseUsername(user.displayName, user.email)
+                            tvProfileUsername.visibility = View.VISIBLE
+                            tvProfileUsername.text = "@$currentUsername"
+                        }
+                        if (tvBio.text.isNullOrEmpty() || tvBio.text == "فاعل خير") {
+                            tvBio.text = "لا توجد نبذة شخصية بعد."
+                        }
+                        ivProfileAvatar.loadUserAvatar(localPhoto)
+                    }
+
+                    adapter.updateCurrentUserId(activeUserId)
+                    updateProfileUI()
+
+                    // Execute Firestore queries AFTER currentUser is confirmed not null
+                    loadProfileData()
+                    listenToPosts()
+                } else {
+                    activeUserId = ""
+                    adapter.updateCurrentUserId("")
+                    if (targetUserId.isEmpty()) {
+                        Toast.makeText(this@UserProfileActivity, "يرجى تسجيل الدخول أولاً", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        updateProfileUI()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -61,7 +116,12 @@ class UserProfileActivity : AppCompatActivity() {
             posts = emptyList(),
             currentUserId = activeUserId,
             onLikeClicked = { post, isLiked ->
-                FirestoreManager.toggleLike(post.id, activeUserId, isLiked) {}
+                val uid = if (activeUserId.isNotEmpty()) activeUserId else (AuthManager.currentUser?.uid ?: "")
+                if (uid.isNotEmpty()) {
+                    FirestoreManager.toggleLike(post.id, uid, isLiked) {}
+                } else {
+                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للإعجاب", Toast.LENGTH_SHORT).show()
+                }
             },
             onCommentClicked = { post -> showCommentsDialog(post) },
             onAuthorClicked = { _, _ -> },
@@ -90,25 +150,14 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun showEditPostDialog(post: CommunityPost) {
-        val input = EditText(this).apply {
-            setText(post.content)
-            setSelection(post.content.length)
-        }
-        AlertDialog.Builder(this)
-            .setTitle("تعديل المنشور")
-            .setView(input)
-            .setPositiveButton("حفظ") { _, _ ->
-                val newContent = input.text.toString().trim()
-                if (newContent.isNotEmpty() && newContent != post.content) {
-                    FirestoreManager.updateCommunityPost(post.id, newContent, post.bgId, post.fontId) { success ->
-                        if (success) {
-                            Toast.makeText(this, "تم تعديل المنشور بنجاح", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-            .setNegativeButton("إلغاء", null)
-            .show()
+        val user = AuthManager.currentUser ?: AuthManager.auth.currentUser ?: return
+        CommunityPostDialogHelper.show(
+            context = this,
+            authorId = user.uid,
+            authorName = post.authorName,
+            authorUsername = post.authorUsername,
+            editingPost = post
+        )
     }
 
     private fun initViews() {
@@ -118,23 +167,43 @@ class UserProfileActivity : AppCompatActivity() {
         tvBio = findViewById(R.id.tvProfileBio)
         tvPostsCount = findViewById(R.id.tvPostsCount)
         tvFollowersCount = findViewById(R.id.tvFollowersCount)
+        tvFollowingCount = findViewById(R.id.tvFollowingCount)
         btnProfileAction = findViewById(R.id.btnProfileAction)
         btnBack = findViewById(R.id.btnBack)
         rvPosts = findViewById(R.id.rvUserPosts)
         ivProfileAvatar = findViewById(R.id.ivProfileAvatar)
+        fabAddPostProfile = findViewById(R.id.fabAddPostProfile)
+        swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshUserPosts)
+        layoutEmpty = findViewById<View>(R.id.layoutEmptyUserPosts)
+
+        swipeRefresh.setColorSchemeColors(Color.parseColor("#0284C7"))
+        swipeRefresh.setOnRefreshListener {
+            loadProfileData()
+            listenToPosts()
+        }
+
+        fabAddPostProfile?.setOnClickListener {
+            openAddPostDialog()
+        }
 
         tvName.text = targetUserName
         btnBack.setOnClickListener { finish() }
 
-        val isMyProfile = (targetUserId.isNotEmpty() && targetUserId == activeUserId)
+        updateProfileUI()
+    }
+
+    private fun updateProfileUI() {
+        val isMyProfile = (targetUserId.isNotEmpty() && targetUserId == activeUserId) || targetUserId.isEmpty()
+        fabAddPostProfile?.visibility = if (isMyProfile && activeUserId.isNotEmpty()) View.VISIBLE else View.GONE
 
         if (isMyProfile) {
             ivProfileAvatar.setOnClickListener {
                 showSelectAvatarDialog()
             }
 
-            btnProfileAction.setImageResource(R.drawable.ic_edit)
-            btnProfileAction.setColorFilter(Color.parseColor("#64748B"))
+            btnProfileAction.text = "تعديل ✏️"
+            btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
+            btnProfileAction.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
             btnProfileAction.setOnClickListener { showEditProfileDialog() }
 
             btnLogoutTop.visibility = View.VISIBLE
@@ -143,12 +212,7 @@ class UserProfileActivity : AppCompatActivity() {
                     .setTitle("تسجيل الخروج")
                     .setMessage("هل أنت متأكد من رغبتك في تسجيل الخروج؟")
                     .setPositiveButton("خروج") { _, _ ->
-                        FirebaseAuth.getInstance().signOut()
-                        AuthManager.getGoogleClient(this).signOut().addOnCompleteListener {
-                            getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                                .edit()
-                                .remove("user_name")
-                                .apply()
+                        AuthManager.signOut(this) {
                             Toast.makeText(this, "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show()
                             finish()
                         }
@@ -157,19 +221,27 @@ class UserProfileActivity : AppCompatActivity() {
                     .show()
             }
         } else {
+            ivProfileAvatar.setOnClickListener(null)
             btnLogoutTop.visibility = View.GONE
             updateFollowButtonUI()
 
             btnProfileAction.setOnClickListener {
+                if (activeUserId.isEmpty()) {
+                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للمتابعة", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 btnProfileAction.isEnabled = false
                 FirestoreManager.toggleFollow(activeUserId, targetUserId, isFollowing) { success ->
                     btnProfileAction.isEnabled = true
                     if (success) {
                         isFollowing = !isFollowing
                         updateFollowButtonUI()
-                        val currentCount = tvFollowersCount.text.toString().toLongOrNull() ?: 0L
-                        val newCount = if (isFollowing) currentCount + 1 else maxOf(0L, currentCount - 1)
-                        tvFollowersCount.text = "$newCount"
+                        if (isFollowing) {
+                            currentFollowersCount++
+                        } else {
+                            currentFollowersCount = maxOf(0L, currentFollowersCount - 1)
+                        }
+                        tvFollowersCount.text = currentFollowersCount.formatCount()
                     }
                 }
             }
@@ -187,10 +259,15 @@ class UserProfileActivity : AppCompatActivity() {
                         ?: data["name"] as? String 
                         ?: targetUserName
 
-                    currentUsername = data["username"] as? String ?: ""
+                    val usernameFromDoc = data["username"] as? String ?: ""
+                    if (usernameFromDoc.isNotEmpty()) {
+                        currentUsername = usernameFromDoc
+                    }
                     
                     val photoUrl = data["photoUrl"] as? String ?: ""
-                    ivProfileAvatar.loadUserAvatar(photoUrl)
+                    if (photoUrl.isNotEmpty()) {
+                        ivProfileAvatar.loadUserAvatar(photoUrl)
+                    }
 
                     val followersRaw = data["followers"]
                     val followersList = when (followersRaw) {
@@ -198,23 +275,41 @@ class UserProfileActivity : AppCompatActivity() {
                         else -> emptyList()
                     }
 
-                    val followersCount = (data["followersCount"] as? Number)?.toLong() ?: followersList.size.toLong()
+                    currentFollowersCount = (data["followersCount"] as? Number)?.toLong() ?: followersList.size.toLong()
+                    val followingRaw = data["following"]
+                    val followingCount = (data["followingCount"] as? Number)?.toLong()
+                        ?: when (followingRaw) {
+                            is List<*> -> followingRaw.size.toLong()
+                            else -> 0L
+                        }
 
                     tvName.text = name
 
                     if (currentUsername.isNotEmpty()) {
                         tvProfileUsername.visibility = View.VISIBLE
                         tvProfileUsername.text = "@$currentUsername"
-                    } else {
-                        tvProfileUsername.visibility = View.GONE
                     }
 
                     tvBio.text = bio
-                    tvFollowersCount.text = "$followersCount"
+                    tvFollowersCount.text = currentFollowersCount.formatCount()
+                    tvFollowingCount.text = followingCount.formatCount()
+                    swipeRefresh.isRefreshing = false
 
                     if (targetUserId != activeUserId) {
                         isFollowing = followersList.contains(activeUserId)
                         updateFollowButtonUI()
+                    }
+                } else {
+                    val currentUser = AuthManager.currentUser
+                    if (currentUser != null && targetUserId == currentUser.uid) {
+                        if (currentUsername.isEmpty()) {
+                            currentUsername = AuthManager.generateBaseUsername(currentUser.displayName, currentUser.email)
+                        }
+                        tvProfileUsername.visibility = View.VISIBLE
+                        tvProfileUsername.text = "@$currentUsername"
+                        if (tvBio.text.isNullOrEmpty()) {
+                            tvBio.text = "لا توجد نبذة شخصية بعد."
+                        }
                     }
                 }
             }
@@ -229,7 +324,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         val ivGooglePhoto = dialogView.findViewById<ImageView>(R.id.ivGooglePhoto)
         
-        val googlePhotoUrl = FirebaseAuth.getInstance().currentUser?.photoUrl?.toString() ?: ""
+        val googlePhotoUrl = AuthManager.currentUser?.photoUrl?.toString() ?: ""
         if (googlePhotoUrl.isNotEmpty()) {
             ivGooglePhoto.load(googlePhotoUrl) {
                 crossfade(true)
@@ -286,23 +381,61 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun updateFollowButtonUI() {
         if (isFollowing) {
-            btnProfileAction.setImageResource(R.drawable.ic_user_check)
-            btnProfileAction.setColorFilter(Color.parseColor("#10B981"))
+            btnProfileAction.text = "متابع ✓"
+            btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
+            btnProfileAction.setTextColor(Color.parseColor("#10B981"))
         } else {
-            btnProfileAction.setImageResource(R.drawable.ic_user_follow)
-            btnProfileAction.setColorFilter(Color.parseColor("#EF4444"))
+            btnProfileAction.text = "+ متابعة"
+            btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_active)
+            btnProfileAction.setTextColor(Color.WHITE)
         }
     }
 
     private fun listenToPosts() {
         if (targetUserId.isEmpty()) return
 
-        FirestoreManager.listenToUserPosts(targetUserId) { posts ->
+        postsListener?.remove()
+        postsListener = FirestoreManager.listenToUserPosts(targetUserId) { posts ->
             runOnUiThread {
                 adapter.updateData(posts)
-                tvPostsCount.text = "${posts.size}"
+                tvPostsCount.text = posts.size.formatCount()
+                layoutEmpty.visibility = if (posts.isEmpty()) View.VISIBLE else View.GONE
+                swipeRefresh.isRefreshing = false
             }
         }
+    }
+
+    private fun openAddPostDialog() {
+        val user = AuthManager.currentUser ?: AuthManager.auth.currentUser
+        if (user == null) {
+            Toast.makeText(this, "يرجى تسجيل الدخول أولاً لإضافة منشور", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val authorName = user.displayName ?: (if (targetUserName.isNotEmpty() && targetUserName != "فاعل خير") targetUserName else "مستخدم")
+        val authorUsername = if (currentUsername.isNotEmpty()) currentUsername else AuthManager.generateBaseUsername(user.displayName, user.email)
+
+        showAddPostBottomSheet(user.uid, authorName, authorUsername)
+    }
+
+    private fun showAddPostBottomSheet(
+        authorId: String,
+        authorName: String,
+        authorUsername: String
+    ) {
+        CommunityPostDialogHelper.show(
+            context = this,
+            authorId = authorId,
+            authorName = authorName,
+            authorUsername = authorUsername,
+            editingPost = null
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        postsListener?.remove()
+        postsListener = null
     }
 
     private fun showEditProfileDialog() {
@@ -479,7 +612,7 @@ class UserProfileActivity : AppCompatActivity() {
         val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
 
         // سنحتفظ بهذا كاحتياط، لكننا سنجلب الاسم الفعلي من القاعدة قبل الإرسال
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = AuthManager.currentUser
         val currentUserName = user?.displayName 
             ?: getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("user_name", "فاعل خير") 
             ?: "فاعل خير"
@@ -523,49 +656,42 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             btnSend.isEnabled = false
-            
-            // >>> التعديل الثاني: جلب أحدث صورة واسم (displayName/name) مباشرة من قاعدة البيانات <<<
-            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-            db.collection("users").document(activeUserId).get()
-                .addOnSuccessListener { document ->
-                    // جلب الصورة الحالية
-                    val actualPhotoUrl = document.getString("photoUrl") ?: ""
-                    
-                    // جلب الاسم من البروفايل، إذا لم يوجد نجرب حقلاً آخر، ثم نعود للاحتياط
-                    val actualName = document.getString("displayName") 
-                        ?.takeIf { it.isNotBlank() }
-                        ?: document.getString("name") 
-                        ?.takeIf { it.isNotBlank() }
-                        ?: currentUserName
-                    
-                    // إضافة التعليق بالبيانات الجديدة الموثوقة
-                    FirestoreManager.addComment(
-                        postId = post.id,
-                        authorId = activeUserId,
-                        authorName = actualName,
-                        authorPhotoUrl = actualPhotoUrl,
-                        content = text
-                    ) { success ->
-                        btnSend.isEnabled = true
-                        if (success) {
-                            etInput.setText("")
-                            if (post.authorId != activeUserId) {
-                                FirestoreManager.sendNotification(
-                                    recipientId = post.authorId,
-                                    senderId = activeUserId,
-                                    senderName = actualName,
-                                    type = "COMMENT",
-                                    postId = post.id,
-                                    message = "علّق $actualName على منشورك: \"${text.take(30)}...\""
-                                )
-                            }
-                        }
+
+            val user = AuthManager.currentUser
+            if (user == null) {
+                btnSend.isEnabled = true
+                Toast.makeText(this@UserProfileActivity, "يرجى تسجيل الدخول أولاً للتعليق", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val currentActiveId = user.uid
+            val currentAuthorName = user.displayName ?: currentUserName
+            val currentPhotoUrl = user.photoUrl?.toString() ?: ""
+
+            FirestoreManager.addComment(
+                postId = post.id,
+                authorId = currentActiveId,
+                authorName = currentAuthorName,
+                authorPhotoUrl = currentPhotoUrl,
+                content = text
+            ) { success ->
+                btnSend.isEnabled = true
+                if (success) {
+                    etInput.setText("")
+                    if (post.authorId != currentActiveId) {
+                        FirestoreManager.sendNotification(
+                            recipientId = post.authorId,
+                            senderId = currentActiveId,
+                            senderName = currentAuthorName,
+                            type = "COMMENT",
+                            postId = post.id,
+                            message = "علّق $currentAuthorName على منشورك: \"${text.take(30)}...\""
+                        )
                     }
+                } else {
+                    Toast.makeText(this@UserProfileActivity, "تعذر إرسال التعليق، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
                 }
-                .addOnFailureListener {
-                    btnSend.isEnabled = true
-                    Toast.makeText(this, "حدث خطأ، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
-                }
+            }
         }
 
 

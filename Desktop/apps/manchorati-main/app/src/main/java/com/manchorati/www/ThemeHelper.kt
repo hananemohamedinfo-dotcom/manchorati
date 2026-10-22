@@ -61,9 +61,18 @@ object ThemeHelper {
     }
 
     fun getTextColor(bgCode: String): Int {
-        return if (bgCode.equals("#FFFFFF", ignoreCase = true) || bgCode.equals("white", ignoreCase = true)) {
-            Color.parseColor("#1E293B")
-        } else {
+        if (bgCode.equals("#FFFFFF", ignoreCase = true) || bgCode.equals("white", ignoreCase = true)) {
+            return Color.parseColor("#1E293B")
+        }
+        return try {
+            val color = if (bgCode.contains(",")) {
+                Color.parseColor(bgCode.split(",")[0].trim())
+            } else {
+                Color.parseColor(bgCode)
+            }
+            val luminance = androidx.core.graphics.ColorUtils.calculateLuminance(color)
+            if (luminance > 0.55) Color.parseColor("#0F172A") else Color.WHITE
+        } catch (e: Exception) {
             Color.WHITE
         }
     }

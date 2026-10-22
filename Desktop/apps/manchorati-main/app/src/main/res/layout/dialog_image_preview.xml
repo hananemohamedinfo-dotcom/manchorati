@@ -1,57 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutEditorRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main"
+    android:background="#0B0F19"
+    android:fitsSystemWindows="false"
     android:layoutDirection="rtl"
     android:orientation="vertical">
 
-    <!-- chrit 3olwi -->
+    <!-- 1. الشريط العلوي الاحترافي (Header Bar) -->
     <RelativeLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="محرر البطاقة"
-            android:textColor="@color/text_primary"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+        android:layout_height="56dp"
+        android:paddingHorizontal="14dp">
+
+        <!-- زر الإغلاق والرجوع -->
         <ImageView
             android:id="@+id/btnCloseDialog"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_icon_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="9dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="#CBD5E1" />
+
+        <!-- العنوان الرئيسي والفرعي -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/btnCloseDialog"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvEditorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="محرر البطاقات"
+                android:textColor="#F8FAFC"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEditorSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="استوديو تصميم المنشورات"
+                android:textColor="#94A3B8"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- أزرار الإجراءات السريعة في الهيدر (Theme, Reset, Save, Share) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/text_secondary"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- زر تبديل الوضع الليلي / الفاتح -->
+            <ImageView
+                android:id="@+id/btnThemeToggle"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_icon_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:src="@drawable/ic_theme_toggle"
+                app:tint="#F59E0B" />
+
+            <!-- زر استعادة الإعدادات الأصلية -->
+            <ImageView
+                android:id="@+id/btnResetAll"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_icon_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:src="@drawable/ic_reset"
+                app:tint="#94A3B8" />
+
+            <!-- زر حفظ بالمعرض -->
+            <LinearLayout
+                android:id="@+id/btnSaveImage"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:backgroundTint="#10B981"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_save"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="حفظ"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- زر مشاركة مباشرة -->
+            <LinearLayout
+                android:id="@+id/btnConfirmShare"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:backgroundTint="#0284C7"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_share_card"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مشاركة"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
-    <!-- CardView l'asli dyalek -->
+    <!-- 2. منطقة المعاينة الحية للبطاقة (Viewport Canvas) -->
     <LinearLayout
+        android:id="@+id/layoutCardViewport"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="16dp">
-        
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="6dp">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPreviewContainer"
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#0F172A">
+            android:layout_height="270dp"
+            app:cardBackgroundColor="#1E293B"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="8dp"
+            app:cardMaxElevation="10dp">
 
             <FrameLayout
+                android:id="@+id/layoutCardFrame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <!-- صورة الخلفية المخصصة -->
                 <ImageView
                     android:id="@+id/ivCustomBackground"
                     android:layout_width="match_parent"
@@ -59,6 +186,7 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone" />
 
+                <!-- طبقة التعتيم واللون الأساسية -->
                 <View
                     android:id="@+id/viewOverlay"
                     android:layout_width="match_parent"
@@ -66,163 +194,961 @@
                     android:background="#66000000"
                     android:visibility="gone" />
 
+                <!-- طبقة الفلتر اللوني الإضافية (Photo Tint Filter) -->
+                <View
+                    android:id="@+id/viewFilterTint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:visibility="gone" />
+
+                <!-- طبقة إطار البطاقة المخصص -->
+                <View
+                    android:id="@+id/viewCardBorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <!-- المحتوى النصي للبطاقة -->
                 <RelativeLayout
                     android:id="@+id/layoutCardContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="20dp">
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="16dp">
 
+                    <!-- شارة التصنيف العلوية -->
                     <TextView
                         android:id="@+id/tvPreviewCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp"
                         android:textColor="#38BDF8"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="• حكم وأقوال •" />
 
-                    <TextView
-                        android:id="@+id/tvPreviewContent"
+                    <!-- الحاوية المركزية للاقتباس والنص -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
-                        android:textColor="#F8FAFC"
-                        android:textSize="18sp"
-                        android:lineSpacingExtra="6dp"
-                        android:shadowColor="#80000000"
-                        android:shadowDx="1.5"
-                        android:shadowDy="1.5"
-                        android:shadowRadius="3" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/tvQuoteTop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:text="“"
+                            android:textColor="#38BDF8"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvPreviewContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:lineSpacingExtra="5dp"
+                            android:shadowColor="#99000000"
+                            android:shadowDx="1.5"
+                            android:shadowDy="1.5"
+                            android:shadowRadius="4"
+                            android:textColor="#FFFFFF"
+                            android:textSize="17sp"
+                            tools:text="هنا يتم عرض نص المنشور بتنسيق رائع وجميل جداً" />
+
+                        <TextView
+                            android:id="@+id/tvQuoteBottom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="”"
+                            android:textColor="#38BDF8"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <!-- توقيع الكاتب الاختياري -->
+                        <TextView
+                            android:id="@+id/tvPreviewAuthor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp"
+                            android:textStyle="italic"
+                            android:visibility="gone"
+                            tools:text="— منشوراتي" />
+                    </LinearLayout>
+
+                    <!-- العلامة المائية السفلية -->
                     <TextView
                         android:id="@+id/tvPreviewWatermark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:text="منشوراتي "
+                        android:text="منشوراتي • Manchorati"
                         android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:textSize="11sp" />
                 </RelativeLayout>
             </FrameLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <!-- l'blasa dyal أدوات (dynamique) -->
-    <FrameLayout
+    <!-- فاصل ناعم -->
+    <View
+        android:id="@+id/dividerMiddle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="80dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:layout_height="1dp"
+        android:background="#1E293B" />
 
-        <HorizontalScrollView
-            android:id="@+id/toolColors"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/layoutColorsContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
+    <!-- 3. لوحة خيارات الأداة المحددة (Tool Options Sub-Panel) بتصميم أنيق ومريح -->
+    <FrameLayout
+        android:id="@+id/layoutToolSubPanel"
+        android:layout_width="match_parent"
+        android:layout_height="138dp"
+        android:background="#131C2E"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
 
-        <!-- L'blasa jdida dyal Tanssi9 w L'khotot -->
+        <!-- ================= PANEL 0: أدوات الخلفية ================= -->
         <LinearLayout
-            android:id="@+id/toolFonts"
+            android:id="@+id/panelBackground"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- الصف 1: اختيار الصورة وإزالتها وتدرجات الألوان الفخمة -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutColorsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- الصف 2: أدوات التعتيم والضبابية والفلاتر اللونية السينمائية بتصميم Segmented أنيق -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- تسمية التعتيم -->
+                    <TextView
+                        android:id="@+id/tvDimTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌓 التعتيم:"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <!-- أزرار التعتيم بتصميم Chpis داكن وأنيق -->
+                    <TextView
+                        android:id="@+id/btnDim0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="0%"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnDim30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="30%"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnDim50"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="50%"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnDim75"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="75%"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <!-- فاصل رأسي ناعم -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="18dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="#334155" />
+
+                    <!-- تسمية الضبابية -->
+                    <TextView
+                        android:id="@+id/tvBlurTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌫️ الضبابية:"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnBlurNone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="بدون"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnBlurSoft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="ناعمة"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnBlurDeep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="قوية"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <!-- فاصل رأسي ناعم -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="18dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="#334155" />
+
+                    <!-- الفلاتر اللونية السينمائية للصورة (Photo Tint) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎬 الفلتر:"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnTintNone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="عادي"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnTintWarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="🌅 دافئ"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnTintCold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="🌙 ليلي"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnTintEmerald"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="🌲 زمردي"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnTintRose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="🍷 كلاسيكي"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- ================= PANEL 1: أدوات الخطوط وحجم النص ================= -->
+        <LinearLayout
+            android:id="@+id/panelFont"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <!-- Chrit Tanssi9 (Alignement w Shadow) -->
+            <!-- الصف 1: شريط الخطوط العربية الأصيلة -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutFontsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- الصف 2: صف حجم الخط والسمك وتباعد الأسطر والحروف -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- أزرار تكبير وتصغير الخط A- A+ -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="6dp">
+
+                        <TextView
+                            android:id="@+id/btnFontSizeDown"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="A-"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCurrentFontSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="6dp"
+                            android:text="18"
+                            android:textColor="#38BDF8"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnFontSizeUp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="A+"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- زر الخط العريض Bold -->
+                    <TextView
+                        android:id="@+id/btnToggleBold"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="B"
+                        android:textColor="#CBD5E1"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <!-- زر الخط المائل Italic -->
+                    <TextView
+                        android:id="@+id/btnToggleItalic"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="I"
+                        android:textColor="#CBD5E1"
+                        android:textSize="13sp"
+                        android:textStyle="italic" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- تباعد الأسطر -->
+                    <TextView
+                        android:id="@+id/btnLineSpacingNormal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="أسطر عادية"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnLineSpacingWide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="أسطر متباعدة"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <!-- ميزة تباعد الحروف (Letter Spacing) -->
+                    <TextView
+                        android:id="@+id/btnLetterSpacingToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="تباعد الحروف ↔️"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- ================= PANEL 2: لون النص والتمييز والتدرجات ================= -->
+        <LinearLayout
+            android:id="@+id/panelTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- الصف 1: شريط ألوان النص المنسقة والمنتقي المخصص -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutTextColorsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- الصف 2: تدرجات لونية على النص وظلال النص وشريط التمييز -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- تدرج النص الملكي (Gradient Text Shader) -->
+                    <TextView
+                        android:id="@+id/btnTextGradientToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="تدرج النص: عادي 🎨"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- شريط تمييز النص (Highlight Badge) -->
+                    <TextView
+                        android:id="@+id/btnTextHighlight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="تمييز النص 🏷️"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- ظل النص (Shadow & Glow Mode) -->
+                    <TextView
+                        android:id="@+id/btnTextShadow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="ظل ناعم ✨"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- ================= PANEL 3: الأبعاد والمحاذاة ================= -->
+        <LinearLayout
+            android:id="@+id/panelRatio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- الصف 1: أزرار نسبة الأبعاد بتصميم نقي وواضح -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnRatioSquare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="مربع 1:1 ■"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnRatioPortrait"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="بورتريه 4:5 ▍"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnRatioStory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="ستوري 9:16 ▌"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnRatioLandscape"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="عريض 16:9 ▬"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- الصف 2: أزرار المحاذاة (Alignment) بأيقونات احترافية -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp">
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvAlignTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="المحاذاة:"
+                    android:textColor="#CBD5E1"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:gravity="center">
+                    android:paddingHorizontal="4dp">
 
                     <ImageView
                         android:id="@+id/btnAlignRight"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_menu_sort_by_size" 
-                        app:tint="@color/text_primary"
-                        android:padding="6dp" />
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_align_right"
+                        app:tint="#CBD5E1" />
 
                     <ImageView
                         android:id="@+id/btnAlignCenter"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_menu_sort_alphabetically" 
-                        app:tint="@color/text_primary"
-                        android:padding="6dp" />
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginHorizontal="2dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_align_center"
+                        app:tint="#FFFFFF" />
 
                     <ImageView
                         android:id="@+id/btnAlignLeft"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_menu_agenda" 
-                        app:tint="@color/text_primary"
-                        android:padding="6dp" />
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_align_left"
+                        app:tint="#CBD5E1" />
                 </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+        <!-- ================= PANEL 4: الإطار والزخرفة والتوقيع ================= -->
+        <LinearLayout
+            android:id="@+id/panelFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- الصف 1: استدارة الحواف وإطار البطاقة المضيء -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/btnTextShadow"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_menu_view" 
-                        app:tint="@color/text_primary"
-                        android:padding="6dp" />
+                    <TextView
+                        android:id="@+id/tvRadiusTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="الحواف:"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/btnTextHighlight"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_menu_edit" 
-                        app:tint="@color/text_primary"
-                        android:padding="6dp" />
+                    <TextView
+                        android:id="@+id/btnRadiusSharp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="حادة 0"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/btnRadiusMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="مستديرة 18"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnRadiusPill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="كبسولة 30"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <!-- إطار البطاقة -->
+                    <TextView
+                        android:id="@+id/btnCardBorderToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="إطار البطاقة 🔲"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
                 </LinearLayout>
-            </LinearLayout>
+            </HorizontalScrollView>
 
-            <!-- L'khotot (ScrollView) -->
+            <!-- الصف 2: علامات الاقتباس وتوقيع الكاتب والعلامة المائية -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:scrollbars="none">
+
                 <LinearLayout
-                    android:id="@+id/layoutFontsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- علامات الاقتباس -->
+                    <TextView
+                        android:id="@+id/btnToggleQuotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="اقتباس: بدون"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- توقيع الكاتب / اسم الحساب -->
+                    <TextView
+                        android:id="@+id/btnToggleAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="توقيع الكاتب ✍️"
+                        android:textColor="#CBD5E1"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="1dp" />
+
+                    <!-- العلامة المائية -->
+                    <TextView
+                        android:id="@+id/btnToggleWatermark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="العلامة المائية 💧"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- ================= PANEL 5: القوالب السريعة الجاهزة ================= -->
+        <LinearLayout
+            android:id="@+id/panelPresets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvPresetsSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تطبيق فوري لتنسيق متكامل بنقرة واحدة:"
+                android:textColor="#CBD5E1"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutPresetsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -231,88 +1157,248 @@
         </LinearLayout>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:background="#2094A3B8" />
-
-    <!-- Tabs lta7t -->
+    <!-- 4. حاوية شريط الأدوات السفلي المرتفعة بأمان فوق أزرار النظام (Picsart & CapCut Bottom Bar) -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <LinearLayout
-            android:id="@+id/tabBackground"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="?attr/selectableItemBackground">
-            
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:tint="@color/text_primary"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="الخلفية"
-                android:textSize="11sp"
-                android:textColor="@color/text_primary"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tabFont"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="?attr/selectableItemBackground">
-            
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_edit"
-                app:tint="@color/text_secondary"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="الخط والتنسيق"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- wnzido hna azrar l7ifd wlmocharaka -->
-    <LinearLayout
+        android:id="@+id/layoutBottomDockContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:orientation="horizontal">
-        
-        <Button
-            android:id="@+id/btnSaveImage"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="حفظ"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#10B981" />
+        android:background="#0B0F19"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnConfirmShare"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="مشاركة"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#0284C7" />
+        <!-- خط فاصل علوي أنيق -->
+        <View
+            android:id="@+id/dividerBottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1E293B" />
+
+        <!-- شريط الأدوات السفلي الرئيسي بتوزيع متناسق للأزرار -->
+        <LinearLayout
+            android:id="@+id/bottomToolDock"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:weightSum="6">
+
+            <!-- TAB 0: الخلفية -->
+            <LinearLayout
+                android:id="@+id/tabToolBackground"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconBackground"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_tool_chip_active">
+
+                    <ImageView
+                        android:id="@+id/ivIconBackground"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_background"
+                        app:tint="#FFFFFF" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="الخلفية"
+                    android:textColor="#38BDF8"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- TAB 1: الخط -->
+            <LinearLayout
+                android:id="@+id/tabToolFont"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconFont"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconFont"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_font"
+                        app:tint="#94A3B8" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="الخط"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- TAB 2: لون النص -->
+            <LinearLayout
+                android:id="@+id/tabToolColor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconColor"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconColor"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_color"
+                        app:tint="#94A3B8" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="لون النص"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- TAB 3: المقاس -->
+            <LinearLayout
+                android:id="@+id/tabToolRatio"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconRatio"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconRatio"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_ratio"
+                        app:tint="#94A3B8" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelRatio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="المقاس"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- TAB 4: الإطار -->
+            <LinearLayout
+                android:id="@+id/tabToolFrame"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconFrame"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconFrame"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_frame"
+                        app:tint="#94A3B8" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelFrame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="الإطار"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- TAB 5: قوالب -->
+            <LinearLayout
+                android:id="@+id/tabToolPresets"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/frameIconPresets"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconPresets"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tool_presets"
+                        app:tint="#94A3B8" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvLabelPresets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="قوالب"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- مساحة أمان سفلية لرفع الشريط فوق أزرار نظام الهاتف (Android Soft Keys Spacer) -->
+        <View
+            android:id="@+id/viewBottomInsetSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="28dp" />
     </LinearLayout>
 </LinearLayout>

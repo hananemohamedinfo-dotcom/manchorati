@@ -1,16 +1,19 @@
 package com.manchorati.www
 
-import com.google.firebase.Timestamp
+import com.google.firebase.firestore.IgnoreExtraProperties
 
+@IgnoreExtraProperties
 data class CommunityPost(
     var id: String = "",
     val authorId: String = "",
     val authorName: String = "",
-    val authorUsername: String = "", // الحقل الجديد الثابت
-    val authorPhotoUrl: String = "", // أضف هذا السطر هنا
+    val authorUsername: String = "",
+    val authorPhotoUrl: String = "",
     val content: String = "",
     val bgId: String = "#FFFFFF",
     val fontId: String = "tajawal",
+    val textColor: String = "",
+    val tag: String = "",
     val likesCount: Long = 0,
     val commentsCount: Long = 0,
     val reportCount: Long = 0,

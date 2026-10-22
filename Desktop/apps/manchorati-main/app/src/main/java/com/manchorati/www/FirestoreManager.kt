@@ -1,9 +1,11 @@
 package com.manchorati.www
 
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 
 object FirestoreManager {
 
@@ -57,6 +59,8 @@ fun listenToUserPosts(
         content: String,
         bgId: String,
         fontId: String,
+        textColor: String = "",
+        tag: String = "",
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
@@ -68,6 +72,8 @@ fun listenToUserPosts(
             "content" to content,
             "bgId" to bgId,
             "fontId" to fontId,
+            "textColor" to textColor,
+            "tag" to tag,
             "likesCount" to 0,
             "commentsCount" to 0,
             "likedBy" to emptyList<String>(),
@@ -76,8 +82,79 @@ fun listenToUserPosts(
 
         db.collection("community_posts")
             .add(postMap)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { docRef ->
+                notifyFollowersOfNewPost(authorId, authorName, docRef.id)
+                onSuccess()
+            }
             .addOnFailureListener { onFailure(it) }
+    }
+
+    private fun notifyFollowersOfNewPost(authorId: String, authorName: String, postId: String) {
+        if (authorId.isEmpty() || postId.isEmpty()) return
+        db.collection("users").document(authorId).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null && snapshot.exists()) {
+                    val followersRaw = snapshot.get("followers")
+                    val followersList = when (followersRaw) {
+                        is List<*> -> followersRaw.mapNotNull { it?.toString() }
+                        else -> emptyList()
+                    }
+                    for (followerId in followersList) {
+                        if (followerId.isNotEmpty() && followerId != authorId) {
+                            sendNotification(
+                                recipientId = followerId,
+                                senderId = authorId,
+                                senderName = authorName,
+                                type = "NEW_POST",
+                                postId = postId,
+                                message = "نشر $authorName منشوراً جديداً 📝"
+                            )
+                        }
+                    }
+                }
+            }
+    }
+
+    fun publishCommunityPost(
+        authorId: String,
+        authorName: String,
+        authorUsername: String,
+        authorPhotoUrl: String,
+        content: String,
+        bgId: String,
+        fontId: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        publishCommunityPost(
+            authorId, authorName, authorUsername, authorPhotoUrl,
+            content, bgId, fontId,
+            textColor = "", tag = "",
+            onSuccess = onSuccess, onFailure = onFailure
+        )
+    }
+
+    fun updateCommunityPost(
+        postId: String,
+        content: String,
+        bgId: String,
+        fontId: String,
+        textColor: String = "",
+        tag: String = "",
+        onComplete: (Boolean) -> Unit
+    ) {
+        val updates = mutableMapOf<String, Any>(
+            "content" to content,
+            "bgId" to bgId,
+            "fontId" to fontId
+        )
+        if (textColor.isNotEmpty()) updates["textColor"] = textColor
+        if (tag.isNotEmpty()) updates["tag"] = tag
+
+        db.collection("community_posts").document(postId)
+            .update(updates)
+            .addOnSuccessListener { onComplete(true) }
+            .addOnFailureListener { onComplete(false) }
     }
 
     fun updateCommunityPost(
@@ -87,15 +164,7 @@ fun listenToUserPosts(
         fontId: String,
         onComplete: (Boolean) -> Unit
     ) {
-        val updates = mapOf(
-            "content" to content,
-            "bgId" to bgId,
-            "fontId" to fontId
-        )
-        db.collection("community_posts").document(postId)
-            .update(updates)
-            .addOnSuccessListener { onComplete(true) }
-            .addOnFailureListener { onComplete(false) }
+        updateCommunityPost(postId, content, bgId, fontId, textColor = "", tag = "", onComplete = onComplete)
     }
 
     fun updatePost(postId: String, content: String, onComplete: (Boolean) -> Unit) {
@@ -116,36 +185,34 @@ fun listenToUserPosts(
         deleteCommunityPost(postId, onComplete)
     }
 
-    fun toggleLike(postId: String, userId: String, isLiked: Boolean, onComplete: () -> Unit) {
+    fun toggleLike(postId: String, userId: String, isLiked: Boolean, onComplete: () -> Unit = {}) {
         if (userId.isEmpty() || postId.isEmpty()) return
 
         val docRef = db.collection("community_posts").document(postId)
 
-        db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-            val likedBy = (snapshot.get("likedBy") as? List<*>)?.mapNotNull { it?.toString() }?.toMutableList() 
-                ?: mutableListOf()
-
-            if (isLiked) {
-                // إلغاء الإعجاب: نحذف المستخدم إذا كان موجوداً بالفعل
-                likedBy.remove(userId)
-            } else {
-                // إضافة الإعجاب: نضيف المستخدم إذا لم يكن موجوداً
-                if (!likedBy.contains(userId)) {
-                    likedBy.add(userId)
-                }
-            }
-
-            // حساب العداد مباشرة من عدد المعجبين الفعلي لضمان استحالة النزول تحت الصفر
-            val newLikesCount = likedBy.size.toLong()
-
-            transaction.update(docRef, mapOf(
-                "likedBy" to likedBy,
-                "likesCount" to newLikesCount
-            ))
-        }.addOnCompleteListener {
-            onComplete()
+        val updates: Map<String, Any> = if (isLiked) {
+            mapOf(
+                "likedBy" to FieldValue.arrayRemove(userId),
+                "likesCount" to FieldValue.increment(-1)
+            )
+        } else {
+            mapOf(
+                "likedBy" to FieldValue.arrayUnion(userId),
+                "likesCount" to FieldValue.increment(1)
+            )
         }
+
+        docRef.update(updates)
+            .addOnSuccessListener {
+                onComplete()
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirestoreManager", "update failed for post $postId, falling back to set merge", e)
+                docRef.set(updates, SetOptions.merge())
+                    .addOnCompleteListener {
+                        onComplete()
+                    }
+            }
     }
 
     fun listenToComments(postId: String, onUpdate: (List<Comment>) -> Unit): ListenerRegistration {
@@ -165,6 +232,8 @@ fun listenToUserPosts(
                         val authorName = doc.getString("authorName") ?: "فاعل خير"
                         val authorPhotoUrl = doc.getString("authorPhotoUrl") ?: ""
                         val content = doc.getString("content") ?: ""
+                        val replyToAuthorName = doc.getString("replyToAuthorName") ?: ""
+                        val replyToCommentId = doc.getString("replyToCommentId") ?: ""
 
                         val timeVal = when (val raw = doc.get("timestamp")) {
                             is Number -> raw.toLong()
@@ -178,6 +247,8 @@ fun listenToUserPosts(
                             authorName = authorName,
                             authorPhotoUrl = authorPhotoUrl,
                             content = content,
+                            replyToAuthorName = replyToAuthorName,
+                            replyToCommentId = replyToCommentId,
                             timestamp = timeVal
                         )
                         commentsList.add(comment)
@@ -194,13 +265,17 @@ fun listenToUserPosts(
         authorName: String,
         authorPhotoUrl: String,
         content: String,
+        replyToAuthorName: String = "",
+        replyToCommentId: String = "",
         onComplete: (Boolean) -> Unit
     ) {
-        val commentMap = hashMapOf(
+        val commentMap = hashMapOf<String, Any>(
             "authorId" to authorId,
             "authorName" to authorName,
             "authorPhotoUrl" to authorPhotoUrl,
             "content" to content,
+            "replyToAuthorName" to replyToAuthorName,
+            "replyToCommentId" to replyToCommentId,
             "timestamp" to System.currentTimeMillis()
         )
 
@@ -211,6 +286,17 @@ fun listenToUserPosts(
                 onComplete(true)
             }
             .addOnFailureListener { onComplete(false) }
+    }
+
+    fun addComment(
+        postId: String,
+        authorId: String,
+        authorName: String,
+        authorPhotoUrl: String,
+        content: String,
+        onComplete: (Boolean) -> Unit
+    ) {
+        addComment(postId, authorId, authorName, authorPhotoUrl, content, "", "", onComplete)
     }
 
     fun deleteComment(postId: String, commentId: String, onComplete: (Boolean) -> Unit) {
@@ -306,6 +392,30 @@ fun listenToUserPosts(
                 }
                 batch.commit()
             }
+    }
+
+    fun deleteNotification(notificationId: String, onComplete: ((Boolean) -> Unit)? = null) {
+        if (notificationId.isEmpty()) return
+        db.collection("notifications").document(notificationId)
+            .delete()
+            .addOnSuccessListener { onComplete?.invoke(true) }
+            .addOnFailureListener { onComplete?.invoke(false) }
+    }
+
+    fun clearAllNotifications(userId: String, onComplete: ((Boolean) -> Unit)? = null) {
+        db.collection("notifications")
+            .whereEqualTo("recipientId", userId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val batch = db.batch()
+                for (doc in snapshot.documents) {
+                    batch.delete(doc.reference)
+                }
+                batch.commit()
+                    .addOnSuccessListener { onComplete?.invoke(true) }
+                    .addOnFailureListener { onComplete?.invoke(false) }
+            }
+            .addOnFailureListener { onComplete?.invoke(false) }
     }
 
     fun sendNotification(

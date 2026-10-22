@@ -31,3 +31,25 @@ fun ImageView.loadUserAvatar(photoUrl: String?) {
         }
     }
 }
+
+/**
+ * دالة عالمية لتنسيق الأرقام والعدادات في التطبيق بالكامل
+ * < 1,000 -> الرقم كاملاً (مثل: 950)
+ * >= 1,000 -> بصيغة K (مثل: 1.5k, 12k)
+ * >= 1,000,000 -> بصيغة M (مثل: 1.2M, 5M)
+ */
+fun Long.formatCount(): String {
+    return when {
+        this >= 1_000_000L -> {
+            val formatted = String.format(java.util.Locale.US, "%.1f", this / 1_000_000.0).removeSuffix(".0")
+            "${formatted}M"
+        }
+        this >= 1_000L -> {
+            val formatted = String.format(java.util.Locale.US, "%.1f", this / 1_000.0).removeSuffix(".0")
+            "${formatted}k"
+        }
+        else -> this.toString()
+    }
+}
+
+fun Int.formatCount(): String = this.toLong().formatCount()

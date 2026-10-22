@@ -69,6 +69,22 @@
                 android:textSize="10sp"
                 tools:text="منذ 5 دقائق" />
 
+            <!-- زر الرد على التعليق -->
+            <TextView
+                android:id="@+id/btnReplyComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="2dp"
+                android:text="رد"
+                android:textColor="#0284C7"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
             <!-- زر الحذف يبتعد إلى أقصى اليسار -->
             <ImageView
                 android:id="@+id/btnDeleteComment"
@@ -81,6 +97,34 @@
                 android:visibility="gone"
                 app:tint="@color/text_secondary"
                 tools:visibility="visible" />
+        </LinearLayout>
+
+        <!-- وسم الرد على شخص معين -->
+        <LinearLayout
+            android:id="@+id/layoutReplyHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="↳ رد على "
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvReplyToAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#0284C7"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="أحمد" />
         </LinearLayout>
 
         <!-- نص التعليق -->

@@ -27,7 +27,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.launch
 
 class CommunityFragment : Fragment() {
 
@@ -38,9 +40,10 @@ class CommunityFragment : Fragment() {
     private var allPostsList: List<CommunityPost> = emptyList()
     private var deviceId: String = ""
     private var loginDialog: BottomSheetDialog? = null
+    private var postsListener: ListenerRegistration? = null
 
     private fun getActiveUserId(): String {
-        return FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        return AuthManager.currentUser?.uid ?: ""
     }
 
     private val googleSignInLauncher = registerForActivityResult(
@@ -128,7 +131,7 @@ class CommunityFragment : Fragment() {
             posts = emptyList(),
             currentUserId = getActiveUserId(),
             onLikeClicked = { post, isLiked ->
-                val currentUser = FirebaseAuth.getInstance().currentUser
+                val currentUser = AuthManager.currentUser ?: com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
                     Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للإعجاب بالمنشور", Toast.LENGTH_SHORT).show()
                     showLoginDialog()
@@ -150,7 +153,7 @@ class CommunityFragment : Fragment() {
                 }
             },
             onCommentClicked = { post ->
-                val currentUser = FirebaseAuth.getInstance().currentUser
+                val currentUser = AuthManager.currentUser
                 if (currentUser == null) {
                     Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للتعليق على المنشور", Toast.LENGTH_SHORT).show()
                     showLoginDialog()
@@ -171,21 +174,64 @@ class CommunityFragment : Fragment() {
         )
         rvCommunity.adapter = communityAdapter
 
-        FirestoreManager.listenToCommunityPosts(
-            onUpdate = { list ->
-                activity?.runOnUiThread {
-                    allPostsList = list
-                    communityAdapter.updateData(list)
-                }
-            },
-            onError = {}
-        )
-
         fabAddPost.setOnClickListener {
             checkUserAndOpenPostDialog()
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startListeningToPosts()
+        observeAuthState()
+    }
+
+    private fun observeAuthState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            AuthManager.authStateFlow.collect { user ->
+                val uid = user?.uid ?: ""
+                communityAdapter.updateCurrentUserId(uid)
+            }
+        }
+    }
+
+    private var pendingNotificationPostId: String? = null
+    private var pendingNotificationType: String? = null
+
+    private fun startListeningToPosts() {
+        postsListener?.remove()
+        postsListener = FirestoreManager.listenToCommunityPosts(
+            onUpdate = { list ->
+                activity?.runOnUiThread {
+                    allPostsList = list
+                    communityAdapter.updateData(list)
+
+                    if (pendingNotificationPostId != null) {
+                        val pId = pendingNotificationPostId!!
+                        val pType = pendingNotificationType ?: ""
+                        pendingNotificationPostId = null
+                        pendingNotificationType = null
+                        rvCommunity.postDelayed({
+                            handleNotificationClick(pId, pType)
+                        }, 250)
+                    }
+                }
+            },
+            onError = {}
+        )
+    }
+
+    private fun stopListeningToPosts() {
+        postsListener?.remove()
+        postsListener = null
+        allPostsList = emptyList()
+        communityAdapter.updateData(emptyList())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        stopListeningToPosts()
     }
 
     override fun onResume() {
@@ -213,29 +259,38 @@ class CommunityFragment : Fragment() {
                 }, 150)
             }
         } else {
-            Toast.makeText(requireContext(), "المنشور غير متوفر حالياً", Toast.LENGTH_SHORT).show()
+            pendingNotificationPostId = postId
+            pendingNotificationType = type
         }
     }
 
     private fun checkUserAndOpenPostDialog() {
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = AuthManager.currentUser
         if (user == null) {
+            Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً لإضافة منشور", Toast.LENGTH_SHORT).show()
             showLoginDialog()
             return
         }
 
+        val baseUsername = AuthManager.generateBaseUsername(user.displayName, user.email)
+        val defaultDisplayName = user.displayName ?: "مستخدم"
+
         FirebaseFirestore.getInstance().collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
+                if (!isAdded) return@addOnSuccessListener
                 val username = doc.getString("username")
                 if (doc.exists() && !username.isNullOrEmpty()) {
-                    val displayName = doc.getString("displayName") ?: user.displayName ?: "مستخدم"
+                    val displayName = doc.getString("displayName")
+                        ?.takeIf { it.isNotBlank() }
+                        ?: defaultDisplayName
                     showPostBottomSheet(user.uid, displayName, username, null)
                 } else {
-                    showLoginDialog(showUsernameOnly = true)
+                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null)
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(requireContext(), "تعذر التحقق من الحساب", Toast.LENGTH_SHORT).show()
+                if (!isAdded) return@addOnFailureListener
+                showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null)
             }
     }
 
@@ -268,7 +323,7 @@ class CommunityFragment : Fragment() {
             }
 
             val username = rawName.lowercase().replace(" ", "_")
-            val user = FirebaseAuth.getInstance().currentUser
+            val user = AuthManager.currentUser
             if (user == null) {
                 Toast.makeText(requireContext(), "خطأ: لم يتم تسجيل الدخول", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -442,7 +497,20 @@ class CommunityFragment : Fragment() {
         val etInput = view.findViewById<EditText>(R.id.etCommentInput)
         val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
 
-        val user = FirebaseAuth.getInstance().currentUser
+        // شريط الرد على تعليق محدد
+        val layoutReplyBanner = view.findViewById<View>(R.id.layoutReplyBanner)
+        val tvReplyBannerText = view.findViewById<TextView>(R.id.tvReplyBannerText)
+        val btnCancelReply = view.findViewById<ImageView>(R.id.btnCancelReply)
+
+        var replyingToComment: Comment? = null
+
+        btnCancelReply.setOnClickListener {
+            replyingToComment = null
+            layoutReplyBanner.visibility = View.GONE
+            etInput.hint = "اكتب تعليقاً..."
+        }
+
+        val user = AuthManager.currentUser
         val authorId = user?.uid ?: return
         
         // احتفظنا بهذا كاسم احتياطي في حال فشل الاتصال بقاعدة البيانات
@@ -460,6 +528,15 @@ class CommunityFragment : Fragment() {
                     putExtra("USER_NAME", userName)
                 }
                 startActivity(intent)
+            },
+            onReplyClicked = { comment ->
+                replyingToComment = comment
+                layoutReplyBanner.visibility = View.VISIBLE
+                tvReplyBannerText.text = "↩️ الرد على ${comment.authorName}"
+                etInput.hint = "اكتب ردك على ${comment.authorName}..."
+                etInput.requestFocus()
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
                 FirestoreManager.deleteComment(post.id, comment.id) {}
@@ -488,58 +565,76 @@ class CommunityFragment : Fragment() {
             }
 
             btnSend.isEnabled = false
-            
-            // >>> التعديل: جلب أحدث صورة واسم من قاعدة البيانات قبل النشر <<<
-            val db = FirebaseFirestore.getInstance()
-            db.collection("users").document(authorId).get()
-                .addOnSuccessListener { document ->
-                    // جلب الصورة الحالية من البروفايل
-                    val actualPhotoUrl = document.getString("photoUrl") ?: ""
-                    
-                    // جلب الاسم من البروفايل (displayName ثم name ثم جيميل)
-                    val actualName = document.getString("displayName") 
-                        ?.takeIf { it.isNotBlank() }
-                        ?: document.getString("name") 
-                        ?.takeIf { it.isNotBlank() }
-                        ?: fallbackAuthorName
 
-                    // إرسال التعليق بالبيانات الموثوقة من قاعدة البيانات
-                    FirestoreManager.addComment(
-                        postId = post.id,
-                        authorId = authorId,
-                        authorName = actualName,
-                        authorPhotoUrl = actualPhotoUrl,
-                        content = text
-                    ) { success ->
-                        btnSend.isEnabled = true
-                        if (success) {
-                            etInput.setText("")
-                            if (post.authorId != authorId) {
-                                FirestoreManager.sendNotification(
-                                    recipientId = post.authorId,
-                                    senderId = authorId,
-                                    senderName = actualName,
-                                    type = "COMMENT",
-                                    postId = post.id,
-                                    message = "علّق $actualName على منشورك: \"${text.take(30)}...\""
-                                )
-                            }
-                        }
+            val user = AuthManager.currentUser
+            if (user == null) {
+                btnSend.isEnabled = true
+                Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للتعليق", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val currentAuthorId = user.uid
+            val currentAuthorName = user.displayName ?: fallbackAuthorName
+            val currentPhotoUrl = user.photoUrl?.toString() ?: ""
+
+            val replyAuthorName = replyingToComment?.authorName ?: ""
+            val replyCommentId = replyingToComment?.id ?: ""
+            val targetRepliedComment = replyingToComment
+
+            FirestoreManager.addComment(
+                postId = post.id,
+                authorId = currentAuthorId,
+                authorName = currentAuthorName,
+                authorPhotoUrl = currentPhotoUrl,
+                content = text,
+                replyToAuthorName = replyAuthorName,
+                replyToCommentId = replyCommentId
+            ) { success ->
+                btnSend.isEnabled = true
+                if (success) {
+                    etInput.setText("")
+                    replyingToComment = null
+                    layoutReplyBanner.visibility = View.GONE
+                    etInput.hint = "اكتب تعليقاً..."
+
+                    // إشعار صاحب التعليق المردود عليه
+                    if (targetRepliedComment != null && targetRepliedComment.authorId != currentAuthorId) {
+                        FirestoreManager.sendNotification(
+                            recipientId = targetRepliedComment.authorId,
+                            senderId = currentAuthorId,
+                            senderName = currentAuthorName,
+                            type = "COMMENT",
+                            postId = post.id,
+                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\" 💬"
+                        )
                     }
+
+                    // إشعار كاتب المنشور إذا كان شخصاً آخر
+                    if (post.authorId != currentAuthorId && post.authorId != targetRepliedComment?.authorId) {
+                        FirestoreManager.sendNotification(
+                            recipientId = post.authorId,
+                            senderId = currentAuthorId,
+                            senderName = currentAuthorName,
+                            type = "COMMENT",
+                            postId = post.id,
+                            message = "علّق $currentAuthorName على منشورك: \"${text.take(30)}...\""
+                        )
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "تعذر إرسال التعليق، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
                 }
-                .addOnFailureListener {
-                    btnSend.isEnabled = true
-                    Toast.makeText(requireContext(), "تعذر الاتصال، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
-                }
+            }
         }
 
         dialog.show()
     }
     private fun showEditDialog(post: CommunityPost) {
-        val user = FirebaseAuth.getInstance().currentUser ?: return
-        val authorId = user.uid
-        val authorName = user.displayName ?: post.authorName
-        showPostBottomSheet(authorId, authorName, post.authorUsername, post)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val user = AuthManager.getConfirmedUser() ?: return@launch
+            val authorId = user.uid
+            val authorName = user.displayName ?: post.authorName
+            showPostBottomSheet(authorId, authorName, post.authorUsername, post)
+        }
     }
 
     private fun confirmDelete(postId: String) {
@@ -557,12 +652,15 @@ class CommunityFragment : Fragment() {
     }
 
     private fun showReportDialog(postId: String) {
-        val reporterId = getActiveUserId()
-        if (reporterId.isEmpty()) {
-            Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للإبلاغ", Toast.LENGTH_SHORT).show()
-            showLoginDialog()
-            return
-        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            val user = AuthManager.getConfirmedUser(timeoutMs = 500)
+            if (user == null) {
+                Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للإبلاغ", Toast.LENGTH_SHORT).show()
+                showLoginDialog()
+                return@launch
+            }
+
+            val reporterId = user.uid
 
         val reasons = arrayOf(
             "محتوى غير لائق أو إباحي",
@@ -590,6 +688,7 @@ class CommunityFragment : Fragment() {
             }
             .setNegativeButton("إلغاء", null)
             .show()
+        }
     }
     private fun showPostBottomSheet(
         authorId: String,
@@ -597,145 +696,13 @@ class CommunityFragment : Fragment() {
         authorUsername: String,
         editingPost: CommunityPost?
     ) {
-        val dialog = BottomSheetDialog(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_post, null)
-        dialog.setContentView(dialogView)
-
-        dialog.setOnShowListener {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
-            }
-        }
-
-        val previewContainer = dialogView.findViewById<LinearLayout>(R.id.previewContainer)
-        val etContent = dialogView.findViewById<EditText>(R.id.etPostContent)
-        val btnPublish = dialogView.findViewById<Button>(R.id.btnPublish)
-        val layoutColors = dialogView.findViewById<LinearLayout>(R.id.layoutColorsContainer)
-        val layoutFonts = dialogView.findViewById<LinearLayout>(R.id.layoutFontsContainer)
-
-        var selectedBg = editingPost?.bgId ?: "#FFFFFF"
-        var selectedFont = editingPost?.fontId ?: "tajawal"
-
-        if (editingPost != null) {
-            etContent.setText(editingPost.content)
-            btnPublish.text = "حفظ التعديل"
-        }
-
-        fun updatePreview() {
-            ThemeHelper.applyBackground(previewContainer, selectedBg, 16f)
-            etContent.typeface = ThemeHelper.getFontTypeface(requireContext(), selectedFont)
-            etContent.setTextColor(ThemeHelper.getTextColor(selectedBg))
-        }
-        updatePreview()
-
-        val colorsList = listOf(
-            "#FFFFFF",
-            "#FF512F,#DD2476",
-            "#2193B0,#6DD5ED",
-            "#8A2387,#E94057",
-            "#11998E,#38EF7D",
-            "#232526,#414345",
-            "#00c996,#003d4d",
-            "#9400d3,#4b0082",
-            "#29eac4,#4284db",
-            "#009ffc,#1da1f2",
-            "#0F766E",
-            "#4338CA",
-            "#D97706",
-            "#7C3AED",
-            "#BE123C"
+        CommunityPostDialogHelper.show(
+            context = requireContext(),
+            authorId = authorId,
+            authorName = authorName,
+            authorUsername = authorUsername,
+            editingPost = editingPost,
+            onAuthRequired = { showLoginDialog() }
         )
-
-        layoutColors.removeAllViews()
-        val density = resources.displayMetrics.density
-        val sizePx = (38 * density).toInt()
-        val marginPx = (8 * density).toInt()
-
-        for (colorCode in colorsList) {
-            val colorView = View(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(sizePx, sizePx).apply {
-                    marginEnd = marginPx
-                }
-                ThemeHelper.applyBackground(this, colorCode, 10f)
-                setOnClickListener {
-                    selectedBg = colorCode
-                    updatePreview()
-                }
-            }
-            layoutColors.addView(colorView)
-        }
-
-        val fontsList = listOf(
-            Pair("tajawal", "تجوال"),
-            Pair("cairoplay", "كايرو"),
-            Pair("arefruqaa", "رقعة"),
-            Pair("kufam", "كوفام"),
-            Pair("marhey", "مرحي"),
-            Pair("notonastaliqurdu", "نستعليق")
-        )
-
-        layoutFonts.removeAllViews()
-        for ((fontId, fontTitle) in fontsList) {
-            val tvFont = TextView(requireContext()).apply {
-                text = fontTitle
-                textSize = 16f
-                // setTextColor(Color.parseColor("#1E293B"))
-                setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
-                typeface = ThemeHelper.getFontTypeface(requireContext(), fontId)
-                setPadding((12 * density).toInt(), (6 * density).toInt(), (12 * density).toInt(), (6 * density).toInt())
-                background = null
-                setOnClickListener {
-                    selectedFont = fontId
-                    updatePreview()
-                }
-            }
-            layoutFonts.addView(tvFont)
-        }
-
-        btnPublish.setOnClickListener {
-            val content = etContent.text.toString().trim()
-            if (content.isEmpty()) {
-                etContent.error = "اكتب كلمات المنشور"
-                return@setOnClickListener
-            }
-
-            if (BadWordsFilter.containsBadWords(content)) {
-                Toast.makeText(requireContext(), "عذراً، يحتوي النص على كلمات مخالفة لسياسة النشر", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            btnPublish.isEnabled = false
-            if (editingPost == null) {
-                val prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                val authorPhotoUrl = prefs.getString("user_photo", "") ?: FirebaseAuth.getInstance().currentUser?.photoUrl?.toString() ?: ""
-                FirestoreManager.publishCommunityPost(
-                    authorId = authorId,
-                    authorName = authorName,
-                    authorUsername = authorUsername,
-                    authorPhotoUrl = authorPhotoUrl,
-                    content = content,
-                    bgId = selectedBg,
-                    fontId = selectedFont,
-                    onSuccess = {
-                        dialog.dismiss()
-                        Toast.makeText(requireContext(), "تم النشر بنجاح!", Toast.LENGTH_SHORT).show()
-                    },
-                    onFailure = {
-                        btnPublish.isEnabled = true
-                        Toast.makeText(requireContext(), "فشل النشر", Toast.LENGTH_SHORT).show()
-                    }
-                )
-            } else {
-                FirestoreManager.updateCommunityPost(editingPost.id, content, selectedBg, selectedFont) { ok ->
-                    dialog.dismiss()
-                    Toast.makeText(requireContext(), if (ok) "تم التعديل" else "فشل التعديل", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        dialog.show()
     }
 }

@@ -10,14 +10,28 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class NotificationsAdapter(
-    private var items: List<AppNotification>,
+    initialItems: List<AppNotification>,
     private val onItemClicked: (AppNotification) -> Unit
 ) : RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder>() {
 
+    private val items: MutableList<AppNotification> = initialItems.toMutableList()
+
     fun updateData(newItems: List<AppNotification>) {
-        items = newItems
+        items.clear()
+        items.addAll(newItems)
         notifyDataSetChanged()
     }
+
+    fun removeItem(position: Int): AppNotification? {
+        if (position in 0 until items.size) {
+            val removed = items.removeAt(position)
+            notifyItemRemoved(position)
+            return removed
+        }
+        return null
+    }
+
+    fun getItems(): List<AppNotification> = items
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -52,12 +66,28 @@ class NotificationsAdapter(
                 if (notification.isRead) Color.TRANSPARENT else Color.parseColor("#F1F5F9")
             )
 
-            // تخصيص الأيقونة حسب نوع الإشعار
+            // تخصيص الأيقونة واللون حسب نوع الإشعار
             when (notification.type) {
-                "LIKE" -> ivIcon.setColorFilter(Color.parseColor("#EF4444"))
-                "COMMENT" -> ivIcon.setColorFilter(Color.parseColor("#2563EB"))
-                "FOLLOW" -> ivIcon.setColorFilter(Color.parseColor("#10B981"))
-                else -> ivIcon.setColorFilter(Color.parseColor("#64748B"))
+                "LIKE" -> {
+                    ivIcon.setImageResource(R.drawable.ic_heart_filled)
+                    ivIcon.setColorFilter(Color.parseColor("#EF4444"))
+                }
+                "COMMENT" -> {
+                    ivIcon.setImageResource(android.R.drawable.stat_notify_chat)
+                    ivIcon.setColorFilter(Color.parseColor("#2563EB"))
+                }
+                "FOLLOW" -> {
+                    ivIcon.setImageResource(R.drawable.ic_profile)
+                    ivIcon.setColorFilter(Color.parseColor("#10B981"))
+                }
+                "NEW_POST" -> {
+                    ivIcon.setImageResource(R.drawable.ic_edit)
+                    ivIcon.setColorFilter(Color.parseColor("#F59E0B"))
+                }
+                else -> {
+                    ivIcon.setImageResource(android.R.drawable.ic_popup_reminder)
+                    ivIcon.setColorFilter(Color.parseColor("#64748B"))
+                }
             }
 
             itemView.setOnClickListener {

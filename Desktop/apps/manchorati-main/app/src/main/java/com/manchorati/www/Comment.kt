@@ -9,7 +9,9 @@ data class Comment(
     val authorName: String = "",
     val authorPhotoUrl: String = "",
     val content: String = "",
+    val replyToAuthorName: String = "",
+    val replyToCommentId: String = "",
     var timestamp: Long = 0L
 ) {
-    constructor() : this("", "", "", "", "", 0L)
+    constructor() : this("", "", "", "", "", "", "", 0L)
 }

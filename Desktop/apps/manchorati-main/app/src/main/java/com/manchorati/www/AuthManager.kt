@@ -6,14 +6,76 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.random.Random
 
 object AuthManager {
 
     val auth: FirebaseAuth get() = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore get() = FirebaseFirestore.getInstance()
+
+    val currentUser: FirebaseUser? get() = auth.currentUser
+
+    /**
+     * Flow that actively observes the authentication state of FirebaseAuth.
+     * Emits the current [FirebaseUser] whenever the auth state changes (login, logout, session restoration).
+     */
+    val authStateFlow: Flow<FirebaseUser?> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            trySend(firebaseAuth.currentUser)
+        }
+        auth.addAuthStateListener(listener)
+        awaitClose {
+            auth.removeAuthStateListener(listener)
+        }
+    }
+
+    /**
+     * Registers a [FirebaseAuth.AuthStateListener] to observe auth changes.
+     */
+    fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
+        auth.addAuthStateListener(listener)
+    }
+
+    /**
+     * Removes a previously registered [FirebaseAuth.AuthStateListener].
+     */
+    fun removeAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
+        auth.removeAuthStateListener(listener)
+    }
+
+    /**
+     * Convenience method to observe auth state using a callback and [FirebaseAuth.AuthStateListener].
+     */
+    fun observeAuthState(onAuthChanged: (FirebaseUser?) -> Unit): FirebaseAuth.AuthStateListener {
+        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            onAuthChanged(firebaseAuth.currentUser)
+        }
+        auth.addAuthStateListener(listener)
+        return listener
+    }
+
+    /**
+     * Waits for a confirmed non-null [FirebaseUser].
+     * If [currentUser] is already non-null, returns it immediately.
+     * Otherwise, awaits session restoration via [authStateFlow] up to [timeoutMs].
+     */
+    suspend fun getConfirmedUser(timeoutMs: Long = 2000): FirebaseUser? {
+        val immediate = auth.currentUser
+        if (immediate != null) return immediate
+
+        return withTimeoutOrNull(timeoutMs) {
+            authStateFlow.filterNotNull().first()
+        }
+    }
 
     fun getGoogleClient(context: Context): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

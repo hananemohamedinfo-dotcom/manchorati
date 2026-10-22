@@ -22,8 +22,14 @@ class CommunityAdapter(
     private val onReportClicked: (post: CommunityPost) -> Unit
 ) : RecyclerView.Adapter<CommunityAdapter.PostViewHolder>() {
 
+    private var postsList: MutableList<CommunityPost> = posts.toMutableList()
+
+    fun getEffectiveUserId(): String {
+        return if (currentUserId.isNotEmpty()) currentUserId else (AuthManager.currentUser?.uid ?: "")
+    }
+
     fun updateData(newPosts: List<CommunityPost>) {
-        posts = newPosts
+        postsList = newPosts.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -38,16 +44,17 @@ class CommunityAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position])
+        holder.bind(postsList[position])
     }
 
-    override fun getItemCount(): Int = posts.size
+    override fun getItemCount(): Int = postsList.size
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val layoutAuthorProfile: LinearLayout = itemView.findViewById(R.id.layoutAuthorProfile)
         private val ivAuthorAvatar: ImageView = itemView.findViewById(R.id.ivAuthorAvatar) // تم تغييرها إلى ImageView لدعم صور جوجل والأفاتارات
         private val tvAuthor: TextView = itemView.findViewById(R.id.tvAuthor)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvPostUsername)
+        private val tvPostTag: TextView = itemView.findViewById(R.id.tvPostTag)
         private val btnPostMenu: ImageView = itemView.findViewById(R.id.btnPostMenu)
 
         private val layoutPostCard: FrameLayout = itemView.findViewById(R.id.layoutPostCard)
@@ -69,17 +76,35 @@ class CommunityAdapter(
             // تحميل الصورة الشخصية (سواء كانت صورة جوجل أو أحد الأفاتارات الـ 8)
             ivAuthorAvatar.loadUserAvatar(post.authorPhotoUrl)
 
+            // شارة التصنيف / الوسم
+            if (!post.tag.isNullOrEmpty()) {
+                tvPostTag.visibility = View.VISIBLE
+                tvPostTag.text = post.tag
+            } else {
+                tvPostTag.visibility = View.GONE
+            }
+
             // تلوين بطاقة المنشور المركزية فقط
             ThemeHelper.applyBackground(layoutPostCard, post.bgId, 12f)
             tvContent.typeface = ThemeHelper.getFontTypeface(itemView.context, post.fontId)
-            tvContent.setTextColor(ThemeHelper.getTextColor(post.bgId))
+            if (!post.textColor.isNullOrEmpty()) {
+                try {
+                    tvContent.setTextColor(Color.parseColor(post.textColor))
+                } catch (e: Exception) {
+                    tvContent.setTextColor(ThemeHelper.getTextColor(post.bgId))
+                }
+            } else {
+                tvContent.setTextColor(ThemeHelper.getTextColor(post.bgId))
+            }
 
             // العدادات السفلية
-            tvLikesCount.text = post.likesCount.toString()
-            tvCommentsCount.text = post.commentsCount.toString()
+            tvLikesCount.text = post.likesCount.formatCount()
+            tvCommentsCount.text = post.commentsCount.formatCount()
+
+            val effectiveUid = getEffectiveUserId()
 
             // حالة الإعجاب
-            val isLiked = currentUserId.isNotEmpty() && post.likedBy.contains(currentUserId)
+            val isLiked = effectiveUid.isNotEmpty() && post.likedBy.contains(effectiveUid)
             if (isLiked) {
                 btnLike.setImageResource(R.drawable.ic_heart_filled)
                 btnLike.setColorFilter(Color.parseColor("#EF4444"))
@@ -90,12 +115,63 @@ class CommunityAdapter(
                 tvLikesCount.setTextColor(Color.parseColor("#64748B"))
             }
 
-            // أحداث الضغط
+            // أحداث الضغط مع تحديث فوري (Optimistic Update)
             val likeClickListener = View.OnClickListener {
-                onLikeClicked(post, isLiked)
+                val currentUid = getEffectiveUserId()
+                if (currentUid.isEmpty()) {
+                    onLikeClicked(post, false)
+                    return@OnClickListener
+                }
+
+                val currentlyLiked = post.likedBy.contains(currentUid)
+                val willBeLiked = !currentlyLiked
+
+                // تحديث العداد والمصفوفة محلياً في الذاكرة
+                val updatedLikedBy = post.likedBy.toMutableList().apply {
+                    if (willBeLiked) {
+                        if (!contains(currentUid)) add(currentUid)
+                    } else {
+                        remove(currentUid)
+                    }
+                }
+                val updatedLikesCount = if (willBeLiked) post.likesCount + 1 else maxOf(0L, post.likesCount - 1)
+                val updatedPost = post.copy(
+                    likedBy = updatedLikedBy,
+                    likesCount = updatedLikesCount
+                )
+
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION && pos < postsList.size) {
+                    postsList[pos] = updatedPost
+                }
+
+                // تفاعل بصري فوري للأيقونة واللون
+                if (willBeLiked) {
+                    btnLike.setImageResource(R.drawable.ic_heart_filled)
+                    btnLike.setColorFilter(Color.parseColor("#EF4444"))
+                    tvLikesCount.setTextColor(Color.parseColor("#EF4444"))
+                } else {
+                    btnLike.setImageResource(R.drawable.ic_heart_outline)
+                    btnLike.setColorFilter(Color.parseColor("#64748B"))
+                    tvLikesCount.setTextColor(Color.parseColor("#64748B"))
+                }
+                tvLikesCount.text = updatedLikesCount.formatCount()
+
+                // أنيميشن نبض القلب
+                btnLike.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(120)
+                    .withEndAction {
+                        btnLike.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+                    }.start()
+
+                // إرسال التحديث إلى Firebase
+                onLikeClicked(post, currentlyLiked)
             }
             btnLikeContainer.setOnClickListener(likeClickListener)
             btnLike.setOnClickListener(likeClickListener)
+            tvLikesCount.setOnClickListener(likeClickListener)
 
             val commentClickListener = View.OnClickListener {
                 onCommentClicked(post)
@@ -108,7 +184,7 @@ class CommunityAdapter(
             }
 
             // زر الخيارات (الثلاث نقاط الموحد)
-            val isMyPost = currentUserId.isNotEmpty() && post.authorId == currentUserId
+            val isMyPost = effectiveUid.isNotEmpty() && post.authorId == effectiveUid
             btnPostMenu.setOnClickListener { view ->
                 val popup = PopupMenu(view.context, view)
                 if (isMyPost) {

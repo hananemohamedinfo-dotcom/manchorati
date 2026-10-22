@@ -12,6 +12,7 @@ class CommentsAdapter(
     private val currentUserId: String,
     private val postAuthorId: String,
     private val onUserClicked: (userId: String, userName: String) -> Unit = { _, _ -> },
+    private val onReplyClicked: (Comment) -> Unit = {},
     private val onDeleteClicked: (Comment) -> Unit
 ) : RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
@@ -33,16 +34,61 @@ class CommentsAdapter(
 
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAuthor: TextView = itemView.findViewById(R.id.tvCommentAuthor)
+        private val tvTime: TextView = itemView.findViewById(R.id.tvCommentTime)
         private val tvContent: TextView = itemView.findViewById(R.id.tvCommentContent)
+        private val btnReply: TextView = itemView.findViewById(R.id.btnReplyComment)
+        private val layoutReplyHeader: View = itemView.findViewById(R.id.layoutReplyHeader)
+        private val tvReplyToAuthor: TextView = itemView.findViewById(R.id.tvReplyToAuthor)
         private val btnDelete: ImageView = itemView.findViewById(R.id.btnDeleteComment)
         private val layoutAvatar: View = itemView.findViewById(R.id.layoutUserAvatar)
         private val ivAvatar: ImageView = itemView.findViewById(R.id.ivCommentAvatar)
+
+        private fun formatTimeAgo(timeMillis: Long): String {
+            if (timeMillis <= 0L) return ""
+            val diff = System.currentTimeMillis() - timeMillis
+            if (diff < 0L) return "الآن"
+            val seconds = diff / 1000
+            val minutes = seconds / 60
+            val hours = minutes / 60
+            val days = hours / 24
+
+            return when {
+                seconds < 60 -> "الآن"
+                minutes < 60 -> "منذ $minutes د"
+                hours < 24 -> "منذ $hours س"
+                days < 7 -> "منذ $days يوم"
+                else -> {
+                    val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+                    sdf.format(java.util.Date(timeMillis))
+                }
+            }
+        }
 
         fun bind(comment: Comment) {
             tvAuthor.text = comment.authorName
             tvContent.text = comment.content
 
-            // استخدام الدالة الموحدة لتحميل صورة البروفايل أو الأفاتار المحلي بسلاسة
+            if (comment.timestamp > 0L) {
+                tvTime.text = formatTimeAgo(comment.timestamp)
+                tvTime.visibility = View.VISIBLE
+            } else {
+                tvTime.visibility = View.GONE
+            }
+
+            // وسم الرد على تعليق
+            if (comment.replyToAuthorName.isNotEmpty()) {
+                layoutReplyHeader.visibility = View.VISIBLE
+                tvReplyToAuthor.text = comment.replyToAuthorName
+            } else {
+                layoutReplyHeader.visibility = View.GONE
+            }
+
+            // زر الرد
+            btnReply.setOnClickListener {
+                onReplyClicked(comment)
+            }
+
+            // تحميل الصورة الشخصية أو الأفاتار
             try {
                 ivAvatar.loadUserAvatar(comment.authorPhotoUrl)
             } catch (e: Exception) {
