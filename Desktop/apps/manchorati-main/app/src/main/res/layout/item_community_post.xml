@@ -35,7 +35,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- تم التبديل إلى ImageView لعرض الصورة الشخصية أو الأفاتار -->
                 <ImageView
                     android:id="@+id/ivAuthorAvatar"
                     android:layout_width="40dp"
@@ -49,14 +48,34 @@
                     android:layout_marginStart="10dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvAuthor"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="اسم الكاتب"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvAuthor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="اسم الكاتب"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <!-- شارة المستخدم (مشرف أو كاتب متميز) -->
+                        <TextView
+                            android:id="@+id/tvAuthorBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/bg_badge_writer"
+                            android:text="⭐ متميز"
+                            android:textColor="#FBBF24"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvPostUsername"
@@ -114,8 +133,20 @@
                 android:textColor="@color/text_primary"
                 android:textDirection="rtl"
                 android:textSize="18sp" />
+
+            <!-- أيقونة القلب المنبثقة عند النقر المزدوج -->
+            <ImageView
+                android:id="@+id/ivDoubleTapHeart"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center"
+                android:elevation="6dp"
+                android:src="@drawable/ic_heart_filled"
+                android:visibility="gone"
+                app:tint="#EF4444" />
         </FrameLayout>
 
+        <!-- شريط التفاعل السفلي -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="46dp"
@@ -123,6 +154,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="14dp">
 
+            <!-- الإعجاب -->
             <LinearLayout
                 android:id="@+id/btnLikeContainer"
                 android:layout_width="wrap_content"
@@ -132,7 +164,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="6dp">
 
                 <ImageView
                     android:id="@+id/btnLike"
@@ -150,17 +182,18 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
+            <!-- التعليقات -->
             <LinearLayout
                 android:id="@+id/btnCommentContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="14dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="6dp">
 
                 <ImageView
                     android:id="@+id/btnComment"
@@ -177,6 +210,61 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
+
+            <!-- فراغ ممتد لدفع أزرار الحفظ والمشاركة إلى الطرف الآخر -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <!-- زر مشاركة ستوري 9:16 -->
+            <LinearLayout
+                android:id="@+id/btnShareStoryContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <ImageView
+                    android:id="@+id/ivShareStory"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_share_card"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="ستوري"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- زر حفظ المنشور (Bookmark) -->
+            <LinearLayout
+                android:id="@+id/btnBookmarkContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="6dp">
+
+                <ImageView
+                    android:id="@+id/ivBookmark"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_bookmark_outline"
+                    app:tint="@color/text_secondary" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>    
+</androidx.cardview.widget.CardView>

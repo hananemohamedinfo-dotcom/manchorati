@@ -327,20 +327,46 @@ fun listenToUserPosts(
     }
 
     fun toggleFollow(currentUserId: String, targetUserId: String, isFollowing: Boolean, onComplete: (Boolean) -> Unit) {
-        val userRef = db.collection("users").document(targetUserId)
+        val targetUserRef = db.collection("users").document(targetUserId)
+        val currentUserRef = db.collection("users").document(currentUserId)
+
         db.runTransaction { transaction ->
-            val snapshot = transaction.get(userRef)
-            val followers = (snapshot.get("followers") as? List<*>)?.mapNotNull { it?.toString() }?.toMutableList() ?: mutableListOf()
+            val targetSnapshot = transaction.get(targetUserRef)
+            val followers = (targetSnapshot.get("followers") as? List<*>)?.mapNotNull { it?.toString() }?.toMutableList() ?: mutableListOf()
+
+            val currentSnapshot = transaction.get(currentUserRef)
+            val following = (currentSnapshot.get("following") as? List<*>)?.mapNotNull { it?.toString() }?.toMutableList() ?: mutableListOf()
 
             if (isFollowing) {
                 followers.remove(currentUserId)
+                following.remove(targetUserId)
             } else {
                 if (!followers.contains(currentUserId)) followers.add(currentUserId)
+                if (!following.contains(targetUserId)) following.add(targetUserId)
             }
-            transaction.update(userRef, "followers", followers)
-            transaction.update(userRef, "followersCount", followers.size.toLong())
+
+            transaction.update(targetUserRef, "followers", followers)
+            transaction.update(targetUserRef, "followersCount", followers.size.toLong())
+
+            transaction.update(currentUserRef, "following", following)
+            transaction.update(currentUserRef, "followingCount", following.size.toLong())
         }.addOnSuccessListener { onComplete(true) }
-            .addOnFailureListener { onComplete(false) }
+            .addOnFailureListener {
+                // If current user doc doesn't have following field or transaction fails, update individually
+                val targetUpdates = if (isFollowing) {
+                    mapOf("followers" to FieldValue.arrayRemove(currentUserId), "followersCount" to FieldValue.increment(-1))
+                } else {
+                    mapOf("followers" to FieldValue.arrayUnion(currentUserId), "followersCount" to FieldValue.increment(1))
+                }
+                val currentUpdates = if (isFollowing) {
+                    mapOf("following" to FieldValue.arrayRemove(targetUserId), "followingCount" to FieldValue.increment(-1))
+                } else {
+                    mapOf("following" to FieldValue.arrayUnion(targetUserId), "followingCount" to FieldValue.increment(1))
+                }
+                targetUserRef.set(targetUpdates, SetOptions.merge())
+                currentUserRef.set(currentUpdates, SetOptions.merge())
+                onComplete(true)
+            }
     }
 
     fun listenToUserNotifications(userId: String, onUpdate: (List<AppNotification>) -> Unit): ListenerRegistration {

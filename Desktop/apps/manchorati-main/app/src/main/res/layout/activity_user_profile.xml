@@ -101,15 +101,36 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <!-- الاسم الشخصي Display Name -->
-                    <TextView
-                        android:id="@+id/tvProfileName"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        tools:text="محمد علي" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- الاسم الشخصي Display Name -->
+                        <TextView
+                            android:id="@+id/tvProfileName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            tools:text="محمد علي" />
+
+                        <!-- شارة المستخدم -->
+                        <TextView
+                            android:id="@+id/tvProfileBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_badge_writer"
+                            android:text="⭐ كاتب متميز"
+                            android:textColor="#FBBF24"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </LinearLayout>
 
                     <!-- اسم المستخدم الفريد (@username) -->
                     <TextView
@@ -194,11 +215,16 @@
 
                 <!-- متابعون -->
                 <LinearLayout
+                    android:id="@+id/layoutFollowersContainer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingVertical="4dp">
 
                     <TextView
                         android:id="@+id/tvFollowersCount"
@@ -225,11 +251,16 @@
 
                 <!-- يتابعهم -->
                 <LinearLayout
+                    android:id="@+id/layoutFollowingContainer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingVertical="4dp">
 
                     <TextView
                         android:id="@+id/tvFollowingCount"

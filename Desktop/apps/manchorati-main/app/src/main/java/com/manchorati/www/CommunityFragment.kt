@@ -36,6 +36,17 @@ class CommunityFragment : Fragment() {
     private lateinit var rvCommunity: RecyclerView
     private lateinit var fabAddPost: FloatingActionButton
     private lateinit var communityAdapter: CommunityAdapter
+    private lateinit var swipeRefreshCommunity: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    private lateinit var layoutEmptyCommunity: View
+    private lateinit var tvEmptyTitle: TextView
+    private lateinit var tvEmptySubtitle: TextView
+
+    private lateinit var btnSortLatest: TextView
+    private lateinit var btnSortTrending: TextView
+
+    private var currentTagFilter: String = "🌟 الكل"
+    private var isTrendingSort: Boolean = false
+    private val tagChips = mutableListOf<TextView>()
 
     private var allPostsList: List<CommunityPost> = emptyList()
     private var deviceId: String = ""
@@ -124,6 +135,20 @@ class CommunityFragment : Fragment() {
 
         rvCommunity = view.findViewById(R.id.rvCommunity)
         fabAddPost = view.findViewById(R.id.fabAddPost)
+        swipeRefreshCommunity = view.findViewById(R.id.swipeRefreshCommunity)
+        layoutEmptyCommunity = view.findViewById(R.id.layoutEmptyCommunity)
+        tvEmptyTitle = view.findViewById(R.id.tvEmptyTitle)
+        tvEmptySubtitle = view.findViewById(R.id.tvEmptySubtitle)
+        btnSortLatest = view.findViewById(R.id.btnSortLatest)
+        btnSortTrending = view.findViewById(R.id.btnSortTrending)
+
+        swipeRefreshCommunity.setColorSchemeColors(Color.parseColor("#0284C7"))
+        swipeRefreshCommunity.setOnRefreshListener {
+            startListeningToPosts()
+        }
+
+        setupSortButtons()
+        setupTagChips(view)
 
         rvCommunity.layoutManager = LinearLayoutManager(requireContext())
 
@@ -181,6 +206,121 @@ class CommunityFragment : Fragment() {
         return view
     }
 
+    private fun setupSortButtons() {
+        btnSortLatest.setOnClickListener {
+            if (!isTrendingSort) return@setOnClickListener
+            isTrendingSort = false
+            btnSortLatest.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnSortLatest.setTextColor(Color.WHITE)
+            btnSortTrending.setBackgroundColor(Color.TRANSPARENT)
+            btnSortTrending.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            applyFilterAndSort()
+        }
+
+        btnSortTrending.setOnClickListener {
+            if (isTrendingSort) return@setOnClickListener
+            isTrendingSort = true
+            btnSortTrending.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnSortTrending.setTextColor(Color.WHITE)
+            btnSortLatest.setBackgroundColor(Color.TRANSPARENT)
+            btnSortLatest.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            applyFilterAndSort()
+        }
+    }
+
+    private fun setupTagChips(view: View) {
+        val hsvTags = view.findViewById<android.widget.HorizontalScrollView>(R.id.hsvTags)
+        hsvTags?.setOnTouchListener { v, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false
+        }
+
+        val chipIds = listOf(
+            R.id.chipTagAll to "🌟 الكل",
+            R.id.chipTagWisdom to "💭 حكم وأقوال",
+            R.id.chipTagThoughts to "❤️ خواطر",
+            R.id.chipTagDua to "🌿 أدعية وأذكار",
+            R.id.chipTagMotivation to "💡 تحفيز وتطوير",
+            R.id.chipTagHumor to "🎭 فكاهة وضحك",
+            R.id.chipTagPoetry to "📜 شعر وأدب",
+            R.id.chipTagCoffee to "☕ قهوة ومساء",
+            R.id.chipTagGeneral to "🌸 عام",
+            R.id.chipTagSaved to "🔖 المحفوظات"
+        )
+
+        tagChips.clear()
+        for ((chipId, tagLabel) in chipIds) {
+            val chip = view.findViewById<TextView>(chipId) ?: continue
+            tagChips.add(chip)
+            chip.setOnClickListener {
+                currentTagFilter = tagLabel
+                updateTagChipsUI()
+                applyFilterAndSort()
+            }
+        }
+        updateTagChipsUI()
+    }
+
+    private fun updateTagChipsUI() {
+        for (chip in tagChips) {
+            val isSelected = chip.text.toString() == currentTagFilter
+            if (isSelected) {
+                chip.setBackgroundResource(R.drawable.bg_category_chip_active)
+                chip.setTextColor(Color.WHITE)
+                chip.setTypeface(null, android.graphics.Typeface.BOLD)
+            } else {
+                chip.setBackgroundResource(R.drawable.bg_category_chip_idle)
+                chip.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+                chip.setTypeface(null, android.graphics.Typeface.NORMAL)
+            }
+        }
+    }
+
+    private fun applyFilterAndSort() {
+        var list = allPostsList
+
+        // Tag filter
+        if (currentTagFilter == "🔖 المحفوظات") {
+            val savedIds = BookmarkManager.getBookmarkedPostIds(requireContext())
+            list = list.filter { savedIds.contains(it.id) }
+        } else if (currentTagFilter != "🌟 الكل") {
+            list = list.filter { it.tag == currentTagFilter }
+        }
+
+        // Sort
+        list = if (isTrendingSort) {
+            list.sortedWith(compareByDescending<CommunityPost> { it.likesCount }.thenByDescending { it.getTimeMillis() })
+        } else {
+            list.sortedByDescending { it.getTimeMillis() }
+        }
+
+        communityAdapter.updateData(list)
+
+        // Empty state UI
+        if (list.isEmpty()) {
+            layoutEmptyCommunity.visibility = View.VISIBLE
+            if (currentTagFilter == "🔖 المحفوظات") {
+                tvEmptyTitle.text = "لا توجد منشورات محفوظة"
+                tvEmptySubtitle.text = "احفظ المنشورات التي تنال إعجابك بالضغط على أيقونة 🔖 للرجوع إليها في أي وقت!"
+            } else if (currentTagFilter != "🌟 الكل") {
+                tvEmptyTitle.text = "لا توجد منشورات في قسم ($currentTagFilter)"
+                tvEmptySubtitle.text = "كن أول من ينشر في هذا القسم وشارك أفكارك مع الجميع!"
+            } else {
+                tvEmptyTitle.text = "لا توجد منشورات حالياً"
+                tvEmptySubtitle.text = "كن أول من ينشر في المجتمع وتفاعل مع الآخرين!"
+            }
+        } else {
+            layoutEmptyCommunity.visibility = View.GONE
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startListeningToPosts()
@@ -204,8 +344,9 @@ class CommunityFragment : Fragment() {
         postsListener = FirestoreManager.listenToCommunityPosts(
             onUpdate = { list ->
                 activity?.runOnUiThread {
+                    swipeRefreshCommunity.isRefreshing = false
                     allPostsList = list
-                    communityAdapter.updateData(list)
+                    applyFilterAndSort()
 
                     if (pendingNotificationPostId != null) {
                         val pId = pendingNotificationPostId!!
@@ -218,7 +359,11 @@ class CommunityFragment : Fragment() {
                     }
                 }
             },
-            onError = {}
+            onError = {
+                activity?.runOnUiThread {
+                    swipeRefreshCommunity.isRefreshing = false
+                }
+            }
         )
     }
 
@@ -226,7 +371,7 @@ class CommunityFragment : Fragment() {
         postsListener?.remove()
         postsListener = null
         allPostsList = emptyList()
-        communityAdapter.updateData(emptyList())
+        applyFilterAndSort()
     }
 
     override fun onDestroyView() {
@@ -238,6 +383,9 @@ class CommunityFragment : Fragment() {
         super.onResume()
         // تحديث معرّف المستخدم في الـ Adapter لضمان تلوين القلوب حسب الحساب المتصل حالياً أو تفريغها عند الخروج
         communityAdapter.updateCurrentUserId(getActiveUserId())
+        if (currentTagFilter == "🔖 المحفوظات") {
+            applyFilterAndSort()
+        }
     }
 
     fun handleNotificationClick(postId: String, type: String) {

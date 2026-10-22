@@ -1,6 +1,7 @@
 package com.manchorati.www
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -31,12 +34,15 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var rvPosts: RecyclerView
     private lateinit var adapter: CommunityAdapter
     private lateinit var tvName: TextView
+    private lateinit var tvProfileBadge: TextView
     private lateinit var tvProfileUsername: TextView
     private lateinit var btnLogoutTop: TextView
     private lateinit var tvBio: TextView
     private lateinit var tvPostsCount: TextView
     private lateinit var tvFollowersCount: TextView
     private lateinit var tvFollowingCount: TextView
+    private lateinit var layoutFollowersContainer: LinearLayout
+    private lateinit var layoutFollowingContainer: LinearLayout
     private lateinit var btnBack: ImageView
     private lateinit var btnProfileAction: TextView
     private lateinit var ivProfileAvatar: ImageView
@@ -162,12 +168,15 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun initViews() {
         tvName = findViewById(R.id.tvProfileName)
+        tvProfileBadge = findViewById(R.id.tvProfileBadge)
         tvProfileUsername = findViewById(R.id.tvProfileUsername)
         btnLogoutTop = findViewById(R.id.btnLogoutTop)
         tvBio = findViewById(R.id.tvProfileBio)
         tvPostsCount = findViewById(R.id.tvPostsCount)
         tvFollowersCount = findViewById(R.id.tvFollowersCount)
         tvFollowingCount = findViewById(R.id.tvFollowingCount)
+        layoutFollowersContainer = findViewById(R.id.layoutFollowersContainer)
+        layoutFollowingContainer = findViewById(R.id.layoutFollowingContainer)
         btnProfileAction = findViewById(R.id.btnProfileAction)
         btnBack = findViewById(R.id.btnBack)
         rvPosts = findViewById(R.id.rvUserPosts)
@@ -175,6 +184,13 @@ class UserProfileActivity : AppCompatActivity() {
         fabAddPostProfile = findViewById(R.id.fabAddPostProfile)
         swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshUserPosts)
         layoutEmpty = findViewById<View>(R.id.layoutEmptyUserPosts)
+
+        layoutFollowersContainer.setOnClickListener {
+            showFollowersOrFollowingDialog(isFollowers = true)
+        }
+        layoutFollowingContainer.setOnClickListener {
+            showFollowersOrFollowingDialog(isFollowers = false)
+        }
 
         swipeRefresh.setColorSchemeColors(Color.parseColor("#0284C7"))
         swipeRefresh.setOnRefreshListener {
@@ -295,6 +311,19 @@ class UserProfileActivity : AppCompatActivity() {
                     tvFollowingCount.text = followingCount.formatCount()
                     swipeRefresh.isRefreshing = false
 
+                    // شارة المستخدم
+                    val email = data["email"] as? String ?: (if (targetUserId == AuthManager.currentUser?.uid) AuthManager.currentUser?.email else null)
+                    val totalLikes = (data["totalLikes"] as? Number)?.toLong() ?: 0L
+                    val badge = BadgeHelper.getBadgeForProfile(email, totalLikes, currentFollowersCount)
+                    if (badge != null) {
+                        tvProfileBadge.visibility = View.VISIBLE
+                        tvProfileBadge.text = badge.title
+                        tvProfileBadge.setBackgroundResource(badge.bgResId)
+                        tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
+                    } else {
+                        tvProfileBadge.visibility = View.GONE
+                    }
+
                     if (targetUserId != activeUserId) {
                         isFollowing = followersList.contains(activeUserId)
                         updateFollowButtonUI()
@@ -310,10 +339,171 @@ class UserProfileActivity : AppCompatActivity() {
                         if (tvBio.text.isNullOrEmpty()) {
                             tvBio.text = "لا توجد نبذة شخصية بعد."
                         }
+                        val badge = BadgeHelper.getBadgeForProfile(currentUser.email, 0L, currentFollowersCount)
+                        if (badge != null) {
+                            tvProfileBadge.visibility = View.VISIBLE
+                            tvProfileBadge.text = badge.title
+                            tvProfileBadge.setBackgroundResource(badge.bgResId)
+                            tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
+                        } else {
+                            tvProfileBadge.visibility = View.GONE
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun showFollowersOrFollowingDialog(isFollowers: Boolean) {
+        if (targetUserId.isEmpty()) return
+
+        val dialog = BottomSheetDialog(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_user_list, null)
+        dialog.setContentView(dialogView)
+
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
+        }
+
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvUserListTitle)
+        val btnClose = dialogView.findViewById<ImageView>(R.id.btnCloseUserList)
+        val pbLoading = dialogView.findViewById<ProgressBar>(R.id.pbUserListLoading)
+        val layoutEmptyView = dialogView.findViewById<View>(R.id.layoutUserListEmpty)
+        val tvEmptyText = dialogView.findViewById<TextView>(R.id.tvUserListEmptyText)
+        val rvUsers = dialogView.findViewById<RecyclerView>(R.id.rvUserList)
+
+        tvTitle.text = if (isFollowers) "المتابعون" else "يتابعهم"
+        tvEmptyText.text = if (isFollowers) "لا يوجد متابعون بعد" else "لا يتابع أحداً بعد"
+
+        btnClose.setOnClickListener { dialog.dismiss() }
+
+        rvUsers.layoutManager = LinearLayoutManager(this)
+        var userFollowAdapter: UserFollowAdapter? = null
+
+        userFollowAdapter = UserFollowAdapter(
+            users = emptyList(),
+            currentUserId = activeUserId,
+            onUserClicked = { userId, userName ->
+                dialog.dismiss()
+                if (userId != targetUserId) {
+                    val intent = Intent(this, UserProfileActivity::class.java).apply {
+                        putExtra("USER_ID", userId)
+                        putExtra("USER_NAME", userName)
+                    }
+                    startActivity(intent)
+                }
+            },
+            onFollowToggle = { userItem, pos ->
+                if (activeUserId.isEmpty()) {
+                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للمتابعة", Toast.LENGTH_SHORT).show()
+                    return@UserFollowAdapter
+                }
+                val currentlyFollowing = userItem.isFollowing
+                val willFollow = !currentlyFollowing
+                userItem.isFollowing = willFollow
+                userFollowAdapter?.notifyItemChanged(pos)
+
+                FirestoreManager.toggleFollow(activeUserId, userItem.userId, currentlyFollowing) { success ->
+                    if (!success) {
+                        userItem.isFollowing = currentlyFollowing
+                        userFollowAdapter?.notifyItemChanged(pos)
+                        Toast.makeText(this, "تعذر تحديث المتابعة", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        )
+        rvUsers.adapter = userFollowAdapter
+
+        dialog.show()
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users").document(targetUserId).get()
+            .addOnSuccessListener { doc ->
+                val fieldKey = if (isFollowers) "followers" else "following"
+                val rawIds = doc.get(fieldKey)
+                val userIds = when (rawIds) {
+                    is List<*> -> rawIds.mapNotNull { it?.toString() }
+                    else -> emptyList()
+                }
+
+                if (userIds.isEmpty()) {
+                    pbLoading.visibility = View.GONE
+                    layoutEmptyView.visibility = View.VISIBLE
+                    return@addOnSuccessListener
+                }
+
+                tvTitle.text = "${if (isFollowers) "المتابعون" else "يتابعهم"} (${userIds.size})"
+
+                val myFollowingSet = mutableSetOf<String>()
+                fun loadUsersDetails() {
+                    val usersList = mutableListOf<UserFollowItem>()
+                    var fetchedCount = 0
+
+                    for (uid in userIds) {
+                        db.collection("users").document(uid).get()
+                            .addOnSuccessListener { uDoc ->
+                                val dName = uDoc.getString("displayName") ?: uDoc.getString("name") ?: "مستخدم"
+                                val uName = uDoc.getString("username") ?: ""
+                                val pUrl = uDoc.getString("photoUrl") ?: ""
+                                val isF = myFollowingSet.contains(uid)
+                                usersList.add(
+                                    UserFollowItem(
+                                        userId = uid,
+                                        displayName = dName,
+                                        username = uName,
+                                        photoUrl = pUrl,
+                                        isFollowing = isF
+                                    )
+                                )
+                                fetchedCount++
+                                if (fetchedCount == userIds.size) {
+                                    pbLoading.visibility = View.GONE
+                                    if (usersList.isEmpty()) {
+                                        layoutEmptyView.visibility = View.VISIBLE
+                                    } else {
+                                        userFollowAdapter?.updateData(usersList)
+                                    }
+                                }
+                            }
+                            .addOnFailureListener {
+                                fetchedCount++
+                                if (fetchedCount == userIds.size) {
+                                    pbLoading.visibility = View.GONE
+                                    if (usersList.isEmpty()) {
+                                        layoutEmptyView.visibility = View.VISIBLE
+                                    } else {
+                                        userFollowAdapter?.updateData(usersList)
+                                    }
+                                }
+                            }
+                    }
+                }
+
+                if (activeUserId.isNotEmpty()) {
+                    db.collection("users").document(activeUserId).get()
+                        .addOnSuccessListener { myDoc ->
+                            val myF = myDoc.get("following")
+                            if (myF is List<*>) {
+                                myFollowingSet.addAll(myF.mapNotNull { it?.toString() })
+                            }
+                            loadUsersDetails()
+                        }
+                        .addOnFailureListener {
+                            loadUsersDetails()
+                        }
+                } else {
+                    loadUsersDetails()
+                }
+            }
+            .addOnFailureListener {
+                pbLoading.visibility = View.GONE
+                layoutEmptyView.visibility = View.VISIBLE
+            }
     }
 
     private fun showSelectAvatarDialog() {

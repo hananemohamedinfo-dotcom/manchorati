@@ -453,10 +453,16 @@ class MainActivity : AppCompatActivity() {
         currentTab = index
         val activeColor = Color.parseColor("#EF4444")
         val transparent = Color.TRANSPARENT
+        val primaryText = ContextCompat.getColor(this, R.color.text_primary)
+        val secondaryText = ContextCompat.getColor(this, R.color.text_secondary)
 
         indicatorCategories.setBackgroundColor(if (index == 0) activeColor else transparent)
         indicatorFeatured.setBackgroundColor(if (index == 1) activeColor else transparent)
         indicatorFavorites.setBackgroundColor(if (index == 2) activeColor else transparent)
+
+        findViewById<TextView>(R.id.tvTabCategories)?.setTextColor(if (index == 0) primaryText else secondaryText)
+        findViewById<TextView>(R.id.tvTabFeatured)?.setTextColor(if (index == 1) primaryText else secondaryText)
+        findViewById<TextView>(R.id.tvTabFavorites)?.setTextColor(if (index == 2) primaryText else secondaryText)
     }
 
     private fun setupSearch() {

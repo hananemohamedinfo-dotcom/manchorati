@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:background="@color/bg_main">
 
         <androidx.cardview.widget.CardView
@@ -154,6 +156,7 @@
                         android:focusable="true">
 
                         <TextView
+                            android:id="@+id/tvTabCategories"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -181,6 +184,7 @@
                         android:focusable="true">
 
                         <TextView
+                            android:id="@+id/tvTabFeatured"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -208,6 +212,7 @@
                         android:focusable="true">
 
                         <TextView
+                            android:id="@+id/tvTabFavorites"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"

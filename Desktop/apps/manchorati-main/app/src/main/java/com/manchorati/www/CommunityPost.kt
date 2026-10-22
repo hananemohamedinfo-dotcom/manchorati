@@ -20,3 +20,11 @@ data class CommunityPost(
     val likedBy: List<String> = emptyList(),
     val timestamp: Any? = null
 )
+
+fun CommunityPost.getTimeMillis(): Long {
+    return when (val t = timestamp) {
+        is Number -> t.toLong()
+        is com.google.firebase.Timestamp -> t.toDate().time
+        else -> 0L
+    }
+}
