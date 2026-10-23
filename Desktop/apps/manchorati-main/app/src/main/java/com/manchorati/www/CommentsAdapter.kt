@@ -3,6 +3,7 @@ package com.manchorati.www
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -33,15 +34,17 @@ class CommentsAdapter(
     override fun getItemCount(): Int = comments.size
 
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val viewReplyIndent: View = itemView.findViewById(R.id.viewReplyIndent)
+        private val layoutAvatar: FrameLayout = itemView.findViewById(R.id.layoutUserAvatar)
+        private val ivAvatar: ImageView = itemView.findViewById(R.id.ivCommentAvatar)
         private val tvAuthor: TextView = itemView.findViewById(R.id.tvCommentAuthor)
-        private val tvTime: TextView = itemView.findViewById(R.id.tvCommentTime)
-        private val tvContent: TextView = itemView.findViewById(R.id.tvCommentContent)
-        private val btnReply: TextView = itemView.findViewById(R.id.btnReplyComment)
         private val layoutReplyHeader: View = itemView.findViewById(R.id.layoutReplyHeader)
         private val tvReplyToAuthor: TextView = itemView.findViewById(R.id.tvReplyToAuthor)
-        private val btnDelete: ImageView = itemView.findViewById(R.id.btnDeleteComment)
-        private val layoutAvatar: View = itemView.findViewById(R.id.layoutUserAvatar)
-        private val ivAvatar: ImageView = itemView.findViewById(R.id.ivCommentAvatar)
+        private val tvContent: TextView = itemView.findViewById(R.id.tvCommentContent)
+        private val tvTime: TextView = itemView.findViewById(R.id.tvCommentTime)
+        private val btnReply: TextView = itemView.findViewById(R.id.btnReplyComment)
+        private val tvDeleteSeparator: View = itemView.findViewById(R.id.tvDeleteSeparator)
+        private val btnDelete: View = itemView.findViewById(R.id.btnDeleteComment)
 
         private fun formatTimeAgo(timeMillis: Long): String {
             if (timeMillis <= 0L) return ""
@@ -65,6 +68,29 @@ class CommentsAdapter(
         }
 
         fun bind(comment: Comment) {
+            val isReply = comment.replyToAuthorName.isNotEmpty() || comment.replyToCommentId.isNotEmpty()
+            val density = itemView.context.resources.displayMetrics.density
+
+            // تدرج وإزاحة الردود على طريقة فيسبوك (Facebook-style indent & nested avatar)
+            if (isReply) {
+                viewReplyIndent.visibility = View.VISIBLE
+                val avatarSize = (28 * density).toInt()
+                layoutAvatar.layoutParams = layoutAvatar.layoutParams.apply {
+                    width = avatarSize
+                    height = avatarSize
+                }
+                layoutReplyHeader.visibility = View.VISIBLE
+                tvReplyToAuthor.text = "@${comment.replyToAuthorName}"
+            } else {
+                viewReplyIndent.visibility = View.GONE
+                val avatarSize = (36 * density).toInt()
+                layoutAvatar.layoutParams = layoutAvatar.layoutParams.apply {
+                    width = avatarSize
+                    height = avatarSize
+                }
+                layoutReplyHeader.visibility = View.GONE
+            }
+
             tvAuthor.text = comment.authorName
             tvContent.text = comment.content
 
@@ -75,20 +101,12 @@ class CommentsAdapter(
                 tvTime.visibility = View.GONE
             }
 
-            // وسم الرد على تعليق
-            if (comment.replyToAuthorName.isNotEmpty()) {
-                layoutReplyHeader.visibility = View.VISIBLE
-                tvReplyToAuthor.text = comment.replyToAuthorName
-            } else {
-                layoutReplyHeader.visibility = View.GONE
-            }
-
             // زر الرد
             btnReply.setOnClickListener {
                 onReplyClicked(comment)
             }
 
-            // تحميل الصورة الشخصية أو الأفاتار
+            // تحميل الصورة الشخصية
             try {
                 ivAvatar.loadUserAvatar(comment.authorPhotoUrl)
             } catch (e: Exception) {
@@ -103,10 +121,13 @@ class CommentsAdapter(
             tvAuthor.setOnClickListener(openProfileListener)
             layoutAvatar.setOnClickListener(openProfileListener)
 
+            // إمكانية الحذف لصاحب التعليق أو صاحب المنشور
             if (comment.authorId == currentUserId || currentUserId == postAuthorId) {
+                tvDeleteSeparator.visibility = View.VISIBLE
                 btnDelete.visibility = View.VISIBLE
                 btnDelete.setOnClickListener { onDeleteClicked(comment) }
             } else {
+                tvDeleteSeparator.visibility = View.GONE
                 btnDelete.visibility = View.GONE
             }
         }

@@ -77,7 +77,8 @@ object StoryShareHelper {
 
             // Badge / Tag chip on the left
             if (!post.tag.isNullOrEmpty()) {
-                val tagText = "# ${post.tag}"
+                val cleanTag = post.tag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                val tagText = "# ${cleanTag.ifEmpty { post.tag }}"
                 val tagTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#38BDF8")
                     textSize = 28f

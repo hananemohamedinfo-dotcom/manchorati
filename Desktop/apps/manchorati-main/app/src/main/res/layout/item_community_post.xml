@@ -227,7 +227,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="6dp">
 
                 <ImageView
                     android:id="@+id/ivShareStory"
@@ -235,14 +235,6 @@
                     android:layout_height="20dp"
                     android:src="@drawable/ic_share_card"
                     app:tint="@color/text_secondary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="ستوري"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
             </LinearLayout>
 
             <!-- زر حفظ المنشور (Bookmark) -->

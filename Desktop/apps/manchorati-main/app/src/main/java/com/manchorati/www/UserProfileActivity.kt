@@ -31,6 +31,10 @@ import java.util.Locale
 
 class UserProfileActivity : AppCompatActivity() {
 
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     private lateinit var rvPosts: RecyclerView
     private lateinit var adapter: CommunityAdapter
     private lateinit var tvName: TextView

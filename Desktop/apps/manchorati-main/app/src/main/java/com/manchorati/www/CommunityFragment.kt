@@ -44,7 +44,7 @@ class CommunityFragment : Fragment() {
     private lateinit var btnSortLatest: TextView
     private lateinit var btnSortTrending: TextView
 
-    private var currentTagFilter: String = "🌟 الكل"
+    private var currentTagFilter: String = "الكل"
     private var isTrendingSort: Boolean = false
     private val tagChips = mutableListOf<TextView>()
 
@@ -243,16 +243,16 @@ class CommunityFragment : Fragment() {
         }
 
         val chipIds = listOf(
-            R.id.chipTagAll to "🌟 الكل",
-            R.id.chipTagWisdom to "💭 حكم وأقوال",
-            R.id.chipTagThoughts to "❤️ خواطر",
-            R.id.chipTagDua to "🌿 أدعية وأذكار",
-            R.id.chipTagMotivation to "💡 تحفيز وتطوير",
-            R.id.chipTagHumor to "🎭 فكاهة وضحك",
-            R.id.chipTagPoetry to "📜 شعر وأدب",
-            R.id.chipTagCoffee to "☕ قهوة ومساء",
-            R.id.chipTagGeneral to "🌸 عام",
-            R.id.chipTagSaved to "🔖 المحفوظات"
+            R.id.chipTagAll to "الكل",
+            R.id.chipTagWisdom to "حكم وأقوال",
+            R.id.chipTagThoughts to "خواطر",
+            R.id.chipTagDua to "أدعية وأذكار",
+            R.id.chipTagMotivation to "تحفيز وتطوير",
+            R.id.chipTagHumor to "فكاهة وضحك",
+            R.id.chipTagPoetry to "شعر وأدب",
+            R.id.chipTagCoffee to "قهوة ومساء",
+            R.id.chipTagGeneral to "عام",
+            R.id.chipTagSaved to "المحفوظات"
         )
 
         tagChips.clear()
@@ -287,11 +287,15 @@ class CommunityFragment : Fragment() {
         var list = allPostsList
 
         // Tag filter
-        if (currentTagFilter == "🔖 المحفوظات") {
+        if (currentTagFilter == "المحفوظات") {
             val savedIds = BookmarkManager.getBookmarkedPostIds(requireContext())
             list = list.filter { savedIds.contains(it.id) }
-        } else if (currentTagFilter != "🌟 الكل") {
-            list = list.filter { it.tag == currentTagFilter }
+        } else if (currentTagFilter != "الكل") {
+            val cleanCurrent = currentTagFilter.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+            list = list.filter { post ->
+                val cleanPostTag = (post.tag ?: "").replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                cleanPostTag.contains(cleanCurrent) || cleanCurrent.contains(cleanPostTag)
+            }
         }
 
         // Sort
@@ -306,10 +310,10 @@ class CommunityFragment : Fragment() {
         // Empty state UI
         if (list.isEmpty()) {
             layoutEmptyCommunity.visibility = View.VISIBLE
-            if (currentTagFilter == "🔖 المحفوظات") {
+            if (currentTagFilter == "المحفوظات") {
                 tvEmptyTitle.text = "لا توجد منشورات محفوظة"
-                tvEmptySubtitle.text = "احفظ المنشورات التي تنال إعجابك بالضغط على أيقونة 🔖 للرجوع إليها في أي وقت!"
-            } else if (currentTagFilter != "🌟 الكل") {
+                tvEmptySubtitle.text = "احفظ المنشورات التي تنال إعجابك للرجوع إليها في أي وقت!"
+            } else if (currentTagFilter != "الكل") {
                 tvEmptyTitle.text = "لا توجد منشورات في قسم ($currentTagFilter)"
                 tvEmptySubtitle.text = "كن أول من ينشر في هذا القسم وشارك أفكارك مع الجميع!"
             } else {
@@ -680,7 +684,7 @@ class CommunityFragment : Fragment() {
             onReplyClicked = { comment ->
                 replyingToComment = comment
                 layoutReplyBanner.visibility = View.VISIBLE
-                tvReplyBannerText.text = "↩️ الرد على ${comment.authorName}"
+                tvReplyBannerText.text = "الرد على ${comment.authorName}"
                 etInput.hint = "اكتب ردك على ${comment.authorName}..."
                 etInput.requestFocus()
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager

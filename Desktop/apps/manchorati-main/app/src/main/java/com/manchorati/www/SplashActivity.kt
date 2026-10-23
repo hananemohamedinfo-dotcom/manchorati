@@ -13,6 +13,10 @@ class SplashActivity : AppCompatActivity() {
     // مدة الانتظار بالمللي ثانية (2500 تعني ثانيتين ونصف)
     private val splashDuration: Long = 800
 
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)

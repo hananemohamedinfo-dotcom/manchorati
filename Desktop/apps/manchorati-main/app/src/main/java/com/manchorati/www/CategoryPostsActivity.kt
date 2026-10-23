@@ -23,6 +23,10 @@ class CategoryPostsActivity : AppCompatActivity() {
 
     private val imagePickerLauncher: ActivityResultLauncher<String> = ImageUtils.registerImagePicker(this)
 
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category_posts)

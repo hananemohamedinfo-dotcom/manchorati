@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">manchorati</string>
+    <string name="app_name">منشوراتي</string>
+    <string name="tab_community">المجتمع</string>
+    <string name="tab_categories">الأقسام</string>
+    <string name="tab_favorites">المفضلة</string>
+    <string name="search_hint">ابحث عن كلمة في المنشورات...</string>
+    <string name="sort_by">ترتيب المنشورات:</string>
+    <string name="sort_latest">الأحدث</string>
+    <string name="sort_trending">الأكثر تفاعلاً</string>
+    <string name="drawer_dark_mode">الوضع الليلي</string>
+    <string name="drawer_language">لغة التطبيق</string>
+    <string name="drawer_contact">تواصل معنا واقترح منشوراً</string>
+    <string name="drawer_notifications">إعدادات الإشعارات والتنبيهات</string>
+    <string name="drawer_rate">تقييم التطبيق</string>
+    <string name="drawer_share">مشاركة التطبيق</string>
+    <string name="drawer_more_apps">المزيد من التطبيقات</string>
+    <string name="drawer_logout">تسجيل الخروج</string>
+    <string name="comment_hint">اكتب تعليقاً...</string>
+    <string name="reply_button">رد</string>
+    <string name="delete_button">حذف</string>
+    <string name="saved_posts">المحفوظات</string>
+    <string name="tag_all">الكل</string>
+    <string name="tag_wisdom">حكم وأقوال</string>
+    <string name="tag_thoughts">خواطر</string>
+    <string name="tag_dua">أدعية وأذكار</string>
+    <string name="tag_motivation">تحفيز وتطوير</string>
+    <string name="tag_humor">فكاهة وضحك</string>
+    <string name="tag_poetry">شعر وأدب</string>
+    <string name="tag_coffee">قهوة ومساء</string>
+    <string name="tag_general">عام</string>
+    <string name="select_language">اختر لغة التطبيق</string>
+    <string name="lang_ar">العربية (RTL)</string>
+    <string name="lang_fr">Français (LTR)</string>
+    <string name="lang_en">English (LTR)</string>
 </resources>

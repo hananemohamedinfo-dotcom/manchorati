@@ -50,13 +50,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
     private lateinit var drawerLayout: DrawerLayout
 
-    private lateinit var tabCategories: LinearLayout
-    private lateinit var tabFeatured: LinearLayout
-    private lateinit var tabFavorites: LinearLayout
+    private lateinit var navItemCommunity: LinearLayout
+    private lateinit var navItemCategories: LinearLayout
+    private lateinit var navItemFavorites: LinearLayout
+    private lateinit var navItemProfile: LinearLayout
 
-    private lateinit var indicatorCategories: View
-    private lateinit var indicatorFeatured: View
-    private lateinit var indicatorFavorites: View
+    private lateinit var ivNavCommunity: ImageView
+    private lateinit var tvNavCommunity: TextView
+    private lateinit var ivNavCategories: ImageView
+    private lateinit var tvNavCategories: TextView
+    private lateinit var ivNavFavorites: ImageView
+    private lateinit var tvNavFavorites: TextView
+    private lateinit var ivNavProfile: ImageView
+    private lateinit var tvNavProfile: TextView
 
     private lateinit var tvToolbarTitle: TextView
     private lateinit var btnOptionsMenu: ImageView
@@ -81,6 +87,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // قراءة حالة الوضع الليلي وتطبيقها قبل استدعاء setContentView
         val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
@@ -90,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         setContentView(R.layout.activity_main)
 
         checkAndRequestNotificationPermission()
@@ -101,6 +112,8 @@ class MainActivity : AppCompatActivity() {
         initViews()
         setupViewPager()
         setupTabs()
+        viewPager.setCurrentItem(0, false)
+        highlightTab(0)
         setupSearch()
         setupDrawerNavigation()
         setupBackNavigation()
@@ -159,13 +172,20 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         drawerLayout = findViewById(R.id.drawerLayout)
         viewPager = findViewById(R.id.viewPager)
-        tabCategories = findViewById(R.id.tabCategories)
-        tabFeatured = findViewById(R.id.tabFeatured)
-        tabFavorites = findViewById(R.id.tabFavorites)
 
-        indicatorCategories = findViewById(R.id.indicatorCategories)
-        indicatorFeatured = findViewById(R.id.indicatorFeatured)
-        indicatorFavorites = findViewById(R.id.indicatorFavorites)
+        navItemCommunity = findViewById(R.id.navItemCommunity)
+        navItemCategories = findViewById(R.id.navItemCategories)
+        navItemFavorites = findViewById(R.id.navItemFavorites)
+        navItemProfile = findViewById(R.id.navItemProfile)
+
+        ivNavCommunity = findViewById(R.id.ivNavCommunity)
+        tvNavCommunity = findViewById(R.id.tvNavCommunity)
+        ivNavCategories = findViewById(R.id.ivNavCategories)
+        tvNavCategories = findViewById(R.id.tvNavCategories)
+        ivNavFavorites = findViewById(R.id.ivNavFavorites)
+        tvNavFavorites = findViewById(R.id.tvNavFavorites)
+        ivNavProfile = findViewById(R.id.ivNavProfile)
+        tvNavProfile = findViewById(R.id.tvNavProfile)
 
         tvToolbarTitle = findViewById(R.id.tvToolbarTitle)
         btnOptionsMenu = findViewById(R.id.btnOptionsMenu)
@@ -293,7 +313,7 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(profileIntent)
         } else if (postId.isNotEmpty()) {
-            viewPager.currentItem = 1
+            viewPager.currentItem = 0
             viewPager.postDelayed({
                 supportFragmentManager.fragments.forEach { fragment ->
                     if (fragment is CommunityFragment) {
@@ -339,7 +359,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 "LIKE", "COMMENT", "NEW_POST" -> {
-                    viewPager.currentItem = 1
+                    viewPager.currentItem = 0
                     viewPager.postDelayed({
                         supportFragmentManager.fragments.forEach { fragment ->
                             if (fragment is CommunityFragment) {
@@ -432,10 +452,10 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 highlightTab(position)
                 tvToolbarTitle.text = when (position) {
-                    0 -> "منشوراتي"
-                    1 -> "المجتمع"
-                    2 -> "المفضلة"
-                    else -> "منشوراتي"
+                    0 -> getString(R.string.tab_community)
+                    1 -> getString(R.string.tab_categories)
+                    2 -> getString(R.string.tab_favorites)
+                    else -> getString(R.string.app_name)
                 }
                 val currentText = etSearch.text.toString()
                 notifySearchToFragments(currentText)
@@ -444,25 +464,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupTabs() {
-        tabCategories.setOnClickListener { viewPager.currentItem = 0 }
-        tabFeatured.setOnClickListener { viewPager.currentItem = 1 }
-        tabFavorites.setOnClickListener { viewPager.currentItem = 2 }
+        navItemCommunity.setOnClickListener { viewPager.currentItem = 0 }
+        navItemCategories.setOnClickListener { viewPager.currentItem = 1 }
+        navItemFavorites.setOnClickListener { viewPager.currentItem = 2 }
+        navItemProfile.setOnClickListener {
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user == null) {
+                Toast.makeText(this, "يرجى تسجيل الدخول لعرض حسابك", Toast.LENGTH_SHORT).show()
+                viewPager.currentItem = 0
+                viewPager.postDelayed({
+                    supportFragmentManager.fragments.forEach { fragment ->
+                        if (fragment is CommunityFragment) {
+                            fragment.showLoginDialog()
+                        }
+                    }
+                }, 200)
+            } else {
+                val intent = Intent(this, UserProfileActivity::class.java).apply {
+                    putExtra("USER_ID", user.uid)
+                    putExtra("USER_NAME", user.displayName ?: "مستخدم")
+                }
+                startActivity(intent)
+            }
+        }
     }
 
     private fun highlightTab(index: Int) {
         currentTab = index
         val activeColor = Color.parseColor("#EF4444")
-        val transparent = Color.TRANSPARENT
-        val primaryText = ContextCompat.getColor(this, R.color.text_primary)
-        val secondaryText = ContextCompat.getColor(this, R.color.text_secondary)
+        val inactiveColor = ContextCompat.getColor(this, R.color.text_secondary)
 
-        indicatorCategories.setBackgroundColor(if (index == 0) activeColor else transparent)
-        indicatorFeatured.setBackgroundColor(if (index == 1) activeColor else transparent)
-        indicatorFavorites.setBackgroundColor(if (index == 2) activeColor else transparent)
+        ivNavCommunity.imageTintList = android.content.res.ColorStateList.valueOf(if (index == 0) activeColor else inactiveColor)
+        tvNavCommunity.setTextColor(if (index == 0) activeColor else inactiveColor)
+        tvNavCommunity.typeface = if (index == 0) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
 
-        findViewById<TextView>(R.id.tvTabCategories)?.setTextColor(if (index == 0) primaryText else secondaryText)
-        findViewById<TextView>(R.id.tvTabFeatured)?.setTextColor(if (index == 1) primaryText else secondaryText)
-        findViewById<TextView>(R.id.tvTabFavorites)?.setTextColor(if (index == 2) primaryText else secondaryText)
+        ivNavCategories.imageTintList = android.content.res.ColorStateList.valueOf(if (index == 1) activeColor else inactiveColor)
+        tvNavCategories.setTextColor(if (index == 1) activeColor else inactiveColor)
+        tvNavCategories.typeface = if (index == 1) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+
+        ivNavFavorites.imageTintList = android.content.res.ColorStateList.valueOf(if (index == 2) activeColor else inactiveColor)
+        tvNavFavorites.setTextColor(if (index == 2) activeColor else inactiveColor)
+        tvNavFavorites.typeface = if (index == 2) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+
+        ivNavProfile.imageTintList = android.content.res.ColorStateList.valueOf(inactiveColor)
+        tvNavProfile.setTextColor(inactiveColor)
+        tvNavProfile.typeface = android.graphics.Typeface.DEFAULT
     }
 
     private fun setupSearch() {
@@ -500,6 +546,50 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             )
+        }
+
+        val tvDrawerCurrentLang = findViewById<TextView>(R.id.tvDrawerCurrentLang)
+        fun updateLangDisplay() {
+            val curr = LocaleHelper.getSelectedLanguage(this)
+            tvDrawerCurrentLang?.text = when (curr) {
+                LocaleHelper.LANG_FR -> "Français"
+                LocaleHelper.LANG_EN -> "English"
+                else -> "العربية"
+            }
+        }
+        updateLangDisplay()
+
+        findViewById<View>(R.id.btnDrawerLanguage)?.setOnClickListener {
+            val languages = arrayOf(
+                getString(R.string.lang_ar),
+                getString(R.string.lang_fr),
+                getString(R.string.lang_en)
+            )
+            val langCodes = arrayOf(
+                LocaleHelper.LANG_AR,
+                LocaleHelper.LANG_FR,
+                LocaleHelper.LANG_EN
+            )
+            val currentLang = LocaleHelper.getSelectedLanguage(this)
+            val checkedIndex = langCodes.indexOf(currentLang).coerceAtLeast(0)
+
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(getString(R.string.select_language))
+                .setSingleChoiceItems(languages, checkedIndex) { dialog, which ->
+                    dialog.dismiss()
+                    val selectedCode = langCodes[which]
+                    if (selectedCode != currentLang) {
+                        LocaleHelper.setLocale(this, selectedCode)
+                        drawerLayout.closeDrawers()
+                        val intent = Intent(this, MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
 
         findViewById<View>(R.id.btnDrawerContact)?.setOnClickListener {
@@ -540,6 +630,13 @@ class MainActivity : AppCompatActivity() {
         val ivAvatar = findViewById<ImageView>(R.id.ivDrawerAvatar)
         val btnLogout = findViewById<View>(R.id.btnDrawerLogout)
 
+        val currLang = LocaleHelper.getSelectedLanguage(this)
+        findViewById<TextView>(R.id.tvDrawerCurrentLang)?.text = when (currLang) {
+            LocaleHelper.LANG_FR -> "Français"
+            LocaleHelper.LANG_EN -> "English"
+            else -> "العربية"
+        }
+
         if (user != null) {
             // جلب الاسم المحدث من SharedPreferences
             val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -579,7 +676,7 @@ class MainActivity : AppCompatActivity() {
 
             val loginAction = View.OnClickListener {
                 drawerLayout.closeDrawer(GravityCompat.END) // أو androidx.core.view.GravityCompat.END حسب استيراداتك
-                viewPager.currentItem = 1
+                viewPager.currentItem = 0
                 viewPager.postDelayed({
                     supportFragmentManager.fragments.forEach { fragment ->
                         if (fragment is CommunityFragment) {

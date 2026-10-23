@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Manchorati</string>
+    <string name="tab_community">Communauté</string>
+    <string name="tab_categories">Catégories</string>
+    <string name="tab_favorites">Favoris</string>
+    <string name="search_hint">Rechercher dans les publications...</string>
+    <string name="sort_by">Trier par :</string>
+    <string name="sort_latest">Récents</string>
+    <string name="sort_trending">Tendances</string>
+    <string name="drawer_dark_mode">Mode sombre</string>
+    <string name="drawer_language">Langue de l\'application</string>
+    <string name="drawer_contact">Contactez-nous &amp; Suggestions</string>
+    <string name="drawer_notifications">Paramètres des notifications</string>
+    <string name="drawer_rate">Noter l\'application</string>
+    <string name="drawer_share">Partager l\'application</string>
+    <string name="drawer_more_apps">Plus d\'applications</string>
+    <string name="drawer_logout">Déconnexion</string>
+    <string name="comment_hint">Écrire un commentaire...</string>
+    <string name="reply_button">Répondre</string>
+    <string name="delete_button">Supprimer</string>
+    <string name="saved_posts">Enregistrements</string>
+    <string name="tag_all">Tout</string>
+    <string name="tag_wisdom">Sagesse &amp; Citations</string>
+    <string name="tag_thoughts">Pensées</string>
+    <string name="tag_dua">Invocations</string>
+    <string name="tag_motivation">Motivation</string>
+    <string name="tag_humor">Humour</string>
+    <string name="tag_poetry">Poésie &amp; Lettres</string>
+    <string name="tag_coffee">Café &amp; Soirée</string>
+    <string name="tag_general">Général</string>
+    <string name="select_language">Choisir la langue</string>
+    <string name="lang_ar">العربية (RTL)</string>
+    <string name="lang_fr">Français (LTR)</string>
+    <string name="lang_en">English (LTR)</string>
+</resources>

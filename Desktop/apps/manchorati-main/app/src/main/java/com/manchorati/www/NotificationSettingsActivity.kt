@@ -44,6 +44,10 @@ class NotificationSettingsActivity : AppCompatActivity() {
 
     private var categories: List<String> = emptyList()
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification_settings)

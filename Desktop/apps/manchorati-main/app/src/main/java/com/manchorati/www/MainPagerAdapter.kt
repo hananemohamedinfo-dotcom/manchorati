@@ -9,10 +9,10 @@ class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> CategoriesFragment()
-            1 -> CommunityFragment()
+            0 -> CommunityFragment()
+            1 -> CategoriesFragment()
             2 -> FavoritesFragment()
-            else -> CategoriesFragment()
+            else -> CommunityFragment()
         }
     }
 }

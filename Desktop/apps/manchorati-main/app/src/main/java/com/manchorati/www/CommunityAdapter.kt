@@ -103,7 +103,8 @@ class CommunityAdapter(
             // شارة التصنيف / الوسم
             if (!post.tag.isNullOrEmpty()) {
                 tvPostTag.visibility = View.VISIBLE
-                tvPostTag.text = post.tag
+                val cleanTag = post.tag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                tvPostTag.text = cleanTag.ifEmpty { post.tag }
             } else {
                 tvPostTag.visibility = View.GONE
             }
