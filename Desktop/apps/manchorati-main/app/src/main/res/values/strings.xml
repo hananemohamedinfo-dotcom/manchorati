@@ -345,4 +345,13 @@
     <string name="letter_spacing_wide">حروف: متباعدة</string>
     <string name="color_custom">لون مخصص</string>
     <string name="no_bio_yet">لا توجد نبذة شخصية بعد.</string>
+
+    <!-- سياسة الخصوصية وشروط الاستخدام وفق معايير GDPR و Google Play -->
+    <string name="drawer_privacy_policy">سياسة الخصوصية وشروط الاستخدام</string>
+    <string name="privacy_dialog_title">سياسة الخصوصية وشروط الاستخدام</string>
+    <string name="privacy_dialog_subtitle">معايير حماية البيانات واللائحة الأوروبية (GDPR) وسياسات Google Play</string>
+    <string name="privacy_checkbox_consent">أقر بأنني قرأت وأوافق على سياسة الخصوصية وشروط الاستخدام</string>
+    <string name="privacy_btn_agree_continue">أوافق وأتابع</string>
+    <string name="privacy_btn_close">إغلاق</string>
+    <string name="privacy_toast_must_accept">يرجى تأكيد الموافقة على الشروط للمتابعة</string>
 </resources>

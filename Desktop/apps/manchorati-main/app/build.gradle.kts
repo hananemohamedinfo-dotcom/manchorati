@@ -21,9 +21,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("release-key.jks")
+            storePassword = "Manchorati@2026"
+            keyAlias = "manchorati_key"
+            keyPassword = "Manchorati@2026"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,6 +46,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 

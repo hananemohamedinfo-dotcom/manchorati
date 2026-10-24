@@ -345,4 +345,13 @@
     <string name="letter_spacing_wide">Spacing: wide</string>
     <string name="color_custom">Custom color</string>
     <string name="no_bio_yet">No bio yet.</string>
+
+    <!-- Privacy Policy and Terms of Service (GDPR & Google Play Standards) -->
+    <string name="drawer_privacy_policy">Privacy Policy &amp; Terms</string>
+    <string name="privacy_dialog_title">Privacy Policy &amp; Terms of Service</string>
+    <string name="privacy_dialog_subtitle">Compliant with EU GDPR standards and Google Play Developer Policies</string>
+    <string name="privacy_checkbox_consent">I acknowledge that I have read and agree to the Privacy Policy and Terms of Service</string>
+    <string name="privacy_btn_agree_continue">Agree &amp; Continue</string>
+    <string name="privacy_btn_close">Close</string>
+    <string name="privacy_toast_must_accept">Please agree to the terms to continue</string>
 </resources>

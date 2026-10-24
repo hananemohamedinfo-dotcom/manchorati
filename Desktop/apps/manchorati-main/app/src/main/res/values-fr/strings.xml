@@ -345,4 +345,13 @@
     <string name="letter_spacing_wide">Lettres : espacées</string>
     <string name="color_custom">Couleur personnalisée</string>
     <string name="no_bio_yet">Aucune bio pour le moment.</string>
+
+    <!-- Politique de confidentialité et conditions (RGPD & Google Play) -->
+    <string name="drawer_privacy_policy">Confidentialité &amp; Conditions</string>
+    <string name="privacy_dialog_title">Politique de confidentialité &amp; Conditions</string>
+    <string name="privacy_dialog_subtitle">Conforme aux normes RGPD (UE) et aux politiques de Google Play</string>
+    <string name="privacy_checkbox_consent">J\'atteste avoir lu et j\'accepte la politique de confidentialité et les conditions d\'utilisation</string>
+    <string name="privacy_btn_agree_continue">Accepter et continuer</string>
+    <string name="privacy_btn_close">Fermer</string>
+    <string name="privacy_toast_must_accept">Veuillez accepter les conditions pour continuer</string>
 </resources>

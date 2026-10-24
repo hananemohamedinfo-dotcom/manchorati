@@ -125,6 +125,10 @@ class MainActivity : AppCompatActivity() {
         setupHeaderActions()
         setupAuthWatcher()
 
+        if (!PrivacyPolicyHelper.hasAcceptedPrivacy(this)) {
+            PrivacyPolicyHelper.showPrivacyDialog(this, isFirstLaunch = true)
+        }
+
         lifecycleScope.launch {
             syncManager.checkAndUpdatePosts()
         }
@@ -663,6 +667,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnDrawerMoreApps)?.setOnClickListener {
             drawerLayout.closeDrawers()
             openMoreApps()
+        }
+
+        findViewById<View>(R.id.btnDrawerPrivacy)?.setOnClickListener {
+            drawerLayout.closeDrawers()
+            PrivacyPolicyHelper.showPrivacyDialog(this, isFirstLaunch = false)
         }
 
         findViewById<View>(R.id.btnDrawerLogout)?.setOnClickListener {

@@ -259,6 +259,32 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
+            <!-- زر سياسة الخصوصية وشروط الاستخدام -->
+            <LinearLayout
+                android:id="@+id/btnDrawerPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_info_details"
+                    app:tint="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_privacy_policy"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

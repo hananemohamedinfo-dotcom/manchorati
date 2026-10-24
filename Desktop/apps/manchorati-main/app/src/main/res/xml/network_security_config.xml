@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- فرض التشفير التام (HTTPS) ومنع أي حركة مرور بنص صريح (Cleartext HTTP) لحماية بيانات المستخدم والامتثال لسياسات Google Play -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
