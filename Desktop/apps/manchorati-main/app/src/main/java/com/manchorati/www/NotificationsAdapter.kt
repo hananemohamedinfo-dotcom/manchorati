@@ -52,7 +52,17 @@ class NotificationsAdapter(
         private val dot: View = itemView.findViewById(R.id.viewUnreadDot)
 
         fun bind(notification: AppNotification) {
-            tvText.text = notification.message
+            val context = itemView.context
+            val sender = if (notification.senderName.isNotBlank()) notification.senderName else context.getString(R.string.app_name)
+            val localizedMessage = when (notification.type) {
+                "LIKE" -> context.getString(R.string.notif_liked_post, sender)
+                "COMMENT" -> context.getString(R.string.notif_commented_post, sender)
+                "FOLLOW" -> context.getString(R.string.notif_followed_you, sender)
+                "NEW_POST" -> context.getString(R.string.notif_new_post, sender)
+                "REPLY" -> context.getString(R.string.notif_replied_comment, sender)
+                else -> notification.message.ifEmpty { context.getString(R.string.app_name) }
+            }
+            tvText.text = localizedMessage
 
             val relativeTime = DateUtils.getRelativeTimeSpanString(
                 notification.timestamp,

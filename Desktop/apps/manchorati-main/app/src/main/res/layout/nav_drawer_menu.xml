@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_drawer"
-    android:layoutDirection="rtl"
     android:orientation="vertical">
 
     <!-- Header: الملف الشخصي -->
@@ -13,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#EF4444"
-        android:gravity="right|center_vertical"
+        android:gravity="start|center_vertical"
         android:orientation="vertical"
         android:padding="20dp">
 
@@ -21,7 +20,7 @@
             android:id="@+id/ivDrawerAvatar"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="right"
+            android:layout_gravity="start"
             android:layout_marginBottom="10dp"
             android:src="@drawable/ic_profile" />
 
@@ -29,9 +28,9 @@
             android:id="@+id/tvDrawerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:gravity="right"
-            android:text="منشوراتي"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/app_name"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -40,8 +39,8 @@
             android:id="@+id/tvDrawerUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:gravity="right"
+            android:layout_gravity="start"
+            android:gravity="start"
             android:text="@string/app_name"
             android:textColor="#FEE2E2"
             android:textSize="14sp" />
@@ -56,11 +55,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layoutDirection="rtl"
             android:orientation="vertical"
             android:paddingTop="10dp">
 
-            <!-- خيار الوضع الليلي -->
+            <!-- خيار الوضع الليلي: هلال / hilal -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
@@ -72,16 +70,16 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_day"
+                    android:src="@drawable/ic_theme_toggle"
                     app:tint="@color/text_primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="الوضع الليلي"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_dark_mode"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
 
@@ -114,7 +112,8 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
                     android:text="@string/drawer_language"
@@ -137,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -150,9 +149,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="تواصل معنا واقترح منشوراً"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_contact"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -163,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -176,9 +175,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="إعدادات الإشعارات والتنبيهات"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_notifications"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -189,7 +188,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -201,9 +200,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="تقييم التطبيق"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_rate"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -214,7 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -227,9 +226,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="مشاركة التطبيق"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_share"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -240,7 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -253,9 +252,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="المزيد من التطبيقات"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_more_apps"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -273,7 +272,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="right|center_vertical"
+                android:gravity="start|center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
@@ -285,9 +284,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:gravity="right"
-                    android:text="تسجيل الخروج"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_logout"
                     android:textColor="#DC2626"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -301,7 +300,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
-        android:text="الإصدار 1.0.0"
+        android:text="@string/drawer_version"
         android:textColor="@color/text_secondary"
         android:textSize="12sp" />
 

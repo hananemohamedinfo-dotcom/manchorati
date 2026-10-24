@@ -1,25 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- اسم التطبيق -->
     <string name="app_name">منشوراتي</string>
+
+    <!-- التبويبات السفلية -->
     <string name="tab_community">المجتمع</string>
     <string name="tab_categories">الأقسام</string>
     <string name="tab_favorites">المفضلة</string>
+    <string name="tab_profile">حسابي</string>
+
+    <!-- البحث والترتيب والفلترة -->
     <string name="search_hint">ابحث عن كلمة في المنشورات...</string>
     <string name="sort_by">ترتيب المنشورات:</string>
     <string name="sort_latest">الأحدث</string>
     <string name="sort_trending">الأكثر تفاعلاً</string>
-    <string name="drawer_dark_mode">الوضع الليلي</string>
-    <string name="drawer_language">لغة التطبيق</string>
-    <string name="drawer_contact">تواصل معنا واقترح منشوراً</string>
-    <string name="drawer_notifications">إعدادات الإشعارات والتنبيهات</string>
-    <string name="drawer_rate">تقييم التطبيق</string>
-    <string name="drawer_share">مشاركة التطبيق</string>
-    <string name="drawer_more_apps">المزيد من التطبيقات</string>
-    <string name="drawer_logout">تسجيل الخروج</string>
-    <string name="comment_hint">اكتب تعليقاً...</string>
-    <string name="reply_button">رد</string>
-    <string name="delete_button">حذف</string>
-    <string name="saved_posts">المحفوظات</string>
     <string name="tag_all">الكل</string>
+    <string name="saved_posts">المحفوظات</string>
+    <string name="choose_category">اختر التصنيف</string>
+
+    <!-- وسوم المنشورات الافتراضية -->
     <string name="tag_wisdom">حكم وأقوال</string>
     <string name="tag_thoughts">خواطر</string>
     <string name="tag_dua">أدعية وأذكار</string>
@@ -28,8 +27,321 @@
     <string name="tag_poetry">شعر وأدب</string>
     <string name="tag_coffee">قهوة ومساء</string>
     <string name="tag_general">عام</string>
+
+    <!-- القائمة الجانبية (Drawer Menu) -->
+    <string name="drawer_dark_mode">الوضع الليلي</string>
+    <string name="drawer_language">لغة التطبيق</string>
+    <string name="drawer_contact">تواصل معنا واقترح منشوراً</string>
+    <string name="drawer_notifications">إعدادات الإشعارات والتنبيهات</string>
+    <string name="drawer_rate">تقييم التطبيق</string>
+    <string name="drawer_share">مشاركة التطبيق</string>
+    <string name="drawer_more_apps">المزيد من التطبيقات</string>
+    <string name="drawer_logout">تسجيل الخروج</string>
+    <string name="drawer_version">الإصدار 1.0.0</string>
+
+    <!-- التعليقات والتفاعل -->
+    <string name="comment_hint">اكتب تعليقاً...</string>
+    <string name="edit_comment_hint">عدّل تعليقك...</string>
+    <string name="reply_button">رد</string>
+    <string name="edit_button">تعديل</string>
+    <string name="delete_button">حذف</string>
+    <string name="edited_badge">(معدّل)</string>
+    <string name="reply_prefix">رد على</string>
+    <string name="edit_comment_title">تعديل تعليقك</string>
+    <string name="reply_to_user">الرد على %s</string>
+    <string name="comments_dialog_title">التعليقات</string>
+    <string name="no_comments_title">لا توجد تعليقات بعد</string>
+    <string name="no_comments_subtitle">كن أول من يشارك برأيه في هذا المنشور!</string>
+    <string name="time_just_now">الآن</string>
+    <string name="comment_edited_success">تم تعديل التعليق بنجاح</string>
+    <string name="comment_error">تعذر إرسال التعليق، يرجى المحاولة لاحقاً</string>
+    <string name="comment_edit_error">تعذر تعديل التعليق، يرجى المحاولة لاحقاً</string>
+    <string name="comment_bad_words">التعليق يحتوي على كلمات غير لائقة</string>
+    <string name="login_required_to_comment">يرجى تسجيل الدخول أولاً للتعليق</string>
+    <string name="comments_count_format">%d تعليق</string>
+
+    <!-- إجراءات المنشورات -->
+    <string name="post_action_like">إعجاب</string>
+    <string name="post_action_comment">تعليق</string>
+    <string name="post_action_share_story">مشاركة ستوري / بطاقة</string>
+    <string name="post_action_bookmark">حفظ المنشور</string>
+    <string name="post_action_remove_bookmark">إزالة من المحفوظات</string>
+    <string name="post_action_copy">نسخ النص</string>
+    <string name="post_action_edit">تعديل</string>
+    <string name="post_action_delete">حذف</string>
+    <string name="post_action_report">إبلاغ عن المنشور</string>
+    <string name="post_copied_toast">تم نسخ نص المنشور بنجاح</string>
+    <string name="confirm_delete_post">هل أنت متأكد من رغبتك في حذف هذا المنشور؟</string>
+    <string name="confirm_delete_comment">هل أنت متأكد من رغبتك في حذف هذا التعليق؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">إلغاء</string>
+    <string name="confirm">تأكيد</string>
+
+    <!-- الملف الشخصي وإعدادات الحساب -->
+    <string name="profile_title">الملف الشخصي</string>
+    <string name="account_settings_title">إعدادات الحساب</string>
+    <string name="change_profile_photo">تغيير الصورة الشخصية</string>
+    <string name="select_avatar_title">اختر صورة الملف الشخصي</string>
+    <string name="display_name_label">الاسم الظاهر</string>
+    <string name="display_name_hint">أدخل اسمك الشخصي أو المستعار</string>
+    <string name="username_label">اسم المستخدم الفريد</string>
+    <string name="username_desc">معرّف فريد لحسابك يظهر مع @ ولا يمكن لأحد غيرك استخدامه.</string>
+    <string name="username_available">اسم المستخدم متاح للاستخدام ✓</string>
+    <string name="username_current">اسم المستخدم الحالي الخاص بك</string>
+    <string name="username_too_short">يجب أن يتكون اسم المستخدم من 3 أحرف على الأقل</string>
+    <string name="username_invalid_chars">يسمح فقط بالحروف الإنجليزية، الأرقام، _ و .</string>
+    <string name="username_taken">اسم المستخدم مأخوذ بالفعل، يرجى اختيار اسم آخر</string>
+    <string name="username_checking">جاري التحقق من التوفر...</string>
+    <string name="bio_label">النبذة التعريفية (Bio)</string>
+    <string name="bio_hint">اكتب نبذة قصيرة عن نفسك، اهتماماتك أو اقتباسك المفضل...</string>
+    <string name="bio_default">لا توجد نبذة شخصية بعد.</string>
+    <string name="save_changes">حفظ التغييرات</string>
+    <string name="profile_saved_success">تم حفظ إعدادات الحساب بنجاح</string>
+    <string name="photo_updated_success">تم تحديث الصورة الشخصية بنجاح</string>
+    <string name="save_error">تعذر حفظ البيانات، يرجى المحاولة لاحقاً</string>
+    <string name="edit_profile_btn">تعديل</string>
+    <string name="follow">+ متابعة</string>
+    <string name="following">متابع ✓</string>
+    <string name="posts_count_label">المنشورات</string>
+    <string name="followers_label">متابعون</string>
+    <string name="following_label">يتابعهم</string>
+    <string name="shared_posts_label">المنشورات المشاركة</string>
+    <string name="no_posts_yet">لا توجد منشورات لهذا المستخدم حتى الآن</string>
+    <string name="share_first_post">شارك أول منشور لك في المجتمع</string>
+    <string name="logout">تسجيل خروج</string>
+    <string name="confirm_logout">هل أنت متأكد من رغبتك في تسجيل الخروج؟</string>
+
+    <!-- إعدادات الإشعارات والتنبيهات -->
+    <string name="notification_settings_title">إعدادات التنبيهات</string>
+    <string name="enable_daily_notifications">تفعيل التنبيهات اليومية</string>
+    <string name="daily_notifications_desc">استلام إشعارين يومياً بأجمل وأحدث المنشورات</string>
+    <string name="morning_post_title">منشور الصباح</string>
+    <string name="evening_post_title">منشور المساء</string>
+    <string name="random_post_title">منشور عشوائي إضافي</string>
+    <string name="random_post_desc">إشعار مفاجئ في وقت عشوائي خلال اليوم</string>
+    <string name="alarm_time_label">وقت الإشعار:</string>
+    <string name="post_category_label">تصنيف المنشور:</string>
+    <string name="save_notification_settings">حفظ إعدادات التنبيهات</string>
+    <string name="settings_saved_success">تم حفظ إعدادات الإشعارات بنجاح</string>
+    <string name="default_all">افتراضي (الكل)</string>
+
+    <!-- إضافة وتعديل منشور -->
+    <string name="add_post_title">إضافة منشور جديد</string>
+    <string name="edit_post_title">تعديل المنشور</string>
+    <string name="add_post_hint">ما الذي يدور في ذهنك؟ اكتب حكمتك، خواطرك، أو ما يجول في خاطرك...</string>
+    <string name="publish">نشر في المجتمع</string>
+    <string name="save_edit_post">حفظ التعديلات</string>
+    <string name="tab_background">الخلفية</string>
+    <string name="tab_tag">القسم</string>
+    <string name="tab_text_color">لون الخط</string>
+    <string name="tab_font">نوع الخط</string>
+    <string name="post_published_success">تم نشر منشورك بنجاح</string>
+    <string name="post_updated_success">تم تعديل المنشور بنجاح</string>
+
+    <!-- اللغات -->
     <string name="select_language">اختر لغة التطبيق</string>
-    <string name="lang_ar">العربية (RTL)</string>
-    <string name="lang_fr">Français (LTR)</string>
-    <string name="lang_en">English (LTR)</string>
+    <string name="lang_ar">العربية</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_en">English</string>
+
+    <!-- محرر البطاقات والستوري -->
+    <string name="editor_title">محرر البطاقات</string>
+    <string name="editor_subtitle">استوديو تصميم المنشورات</string>
+    <string name="save_btn">حفظ</string>
+    <string name="share_btn">مشاركة</string>
+    <string name="dimming_label">التعتيم:</string>
+    <string name="blur_label">الضبابية:</string>
+    <string name="blur_none">بدون</string>
+    <string name="blur_soft">ناعمة</string>
+    <string name="blur_strong">قوية</string>
+    <string name="filter_label">الفلتر:</string>
+    <string name="filter_normal">عادي</string>
+    <string name="filter_warm">دافئ</string>
+    <string name="filter_night">ليلي</string>
+    <string name="filter_emerald">زمردي</string>
+    <string name="filter_classic">كلاسيكي</string>
+    <string name="lines_normal">أسطر عادية</string>
+    <string name="lines_loose">أسطر متباعدة</string>
+    <string name="letter_spacing">تباعد الحروف ↔️</string>
+    <string name="text_gradient_normal">تدرج النص: عادي</string>
+    <string name="text_gradient_gold">تدرج: ذهبي ملكي</string>
+    <string name="text_gradient_neon">تدرج: نيون سايبر</string>
+    <string name="text_gradient_sunset">تدرج: غروب ساحر</string>
+    <string name="text_gradient_emerald">تدرج: زمردي ناصع</string>
+    <string name="text_highlight">تمييز النص</string>
+    <string name="text_shadow_none">بدون ظل</string>
+    <string name="text_shadow_soft">ظل ناعم</string>
+    <string name="text_shadow_deep">ظل عميق</string>
+    <string name="text_shadow_glow">توهج نيون</string>
+    <string name="ratio_square">مربع 1:1 ■</string>
+    <string name="ratio_portrait">بورتريه 4:5 ▍</string>
+    <string name="ratio_story">ستوري 9:16 ▌</string>
+    <string name="ratio_landscape">عريض 16:9 ▬</string>
+    <string name="alignment_label">المحاذاة:</string>
+    <string name="corners_label">الحواف:</string>
+    <string name="corner_sharp">حادة 0</string>
+    <string name="corner_rounded">مستديرة 18</string>
+    <string name="corner_pill">كبسولة 30</string>
+    <string name="card_border">إطار البطاقة</string>
+    <string name="card_border_none">إطار: بدون</string>
+    <string name="card_border_soft">إطار: ناعم</string>
+    <string name="card_border_gold">إطار: ذهبي</string>
+    <string name="card_border_neon">إطار: نيون</string>
+    <string name="quote_none">اقتباس: بدون</string>
+    <string name="quote_quotes">اقتباس: “ ”</string>
+    <string name="quote_guillemets">اقتباس: « »</string>
+    <string name="quote_brackets">اقتباس: ❝ ❞</string>
+    <string name="author_signature">توقيع الكاتب</string>
+    <string name="watermark_label">العلامة المائية</string>
+    <string name="instant_presets_subtitle">تطبيق فوري لتنسيق متكامل بنقرة واحدة:</string>
+    <string name="tab_size">المقاس</string>
+    <string name="tab_border">الإطار</string>
+    <string name="tab_templates">قوالب</string>
+    <string name="my_photo">صورتي</string>
+    <string name="remove_photo">إزالة</string>
+    <string name="pick_photo_not_supported">خاصية اختيار الصور غير مفعلة هنا</string>
+    <string name="bg_applied_success">تم تطبيق صورة الخلفية بنجاح</string>
+    <string name="bg_removed">تمت إزالة صورة الخلفية</string>
+    <string name="template_applied">تم تطبيق قالب: %s</string>
+    <string name="reset_design_success">تمت استعادة التصميم الأصلي</string>
+    <string name="image_saved_success">تم حفظ البطاقة في المعرض بنجاح</string>
+    <string name="image_save_error">تعذر حفظ الصورة</string>
+    <string name="share_card_via">مشاركة البطاقة عبر</string>
+
+    <!-- أسماء القوالب -->
+    <string name="template_dark_luxury">فخامة داكنة</string>
+    <string name="template_classic_paper">ورق كلاسيكي</string>
+    <string name="template_neon_cyber">نيون سايبر</string>
+    <string name="template_calm_sunset">غروب هادئ</string>
+    <string name="template_glass">زجاجي شفاف</string>
+    <string name="template_pure_minimal">مينيمال ناصع</string>
+
+    <!-- أسماء الخطوط -->
+    <string name="font_tajawal">تجوّل</string>
+    <string name="font_cairo">كايرو</string>
+    <string name="font_ruqaa">الرقعة</string>
+    <string name="font_kufam">كوفام</string>
+    <string name="font_marhey">مرحي</string>
+    <string name="font_nastaliq">نستعليق</string>
+    <string name="font_blaka">بلاكا</string>
+    <string name="font_bold">عريض</string>
+
+    <!-- إضافة وتعديل المنشورات الإضافية -->
+    <string name="you_author">أنت</string>
+    <string name="clear_text">مسح النص</string>
+    <string name="tag_none">بدون وسم</string>
+    <string name="color_auto">تلقائي</string>
+    <string name="color_white">أبيض</string>
+    <string name="color_dark">داكن</string>
+    <string name="color_gold">ذهبي</string>
+    <string name="color_cyan">سماوي</string>
+    <string name="color_green">أخضر</string>
+    <string name="color_pink">وردي</string>
+    <string name="color_purple">بنفسجي</string>
+    <string name="custom_color">مخصص A</string>
+    <string name="font_size_label">حجم الخط:</string>
+    <string name="write_post_error">اكتب كلمات المنشور</string>
+    <string name="post_bad_words">عذراً، يحتوي النص على كلمات مخالفة لسياسة النشر</string>
+    <string name="login_required_to_post">تعذر التحقق من الحساب، يرجى تسجيل الدخول</string>
+    <string name="post_failed">فشل النشر، يرجى المحاولة لاحقاً</string>
+    <string name="post_edit_failed">فشل التعديل، حاول مجدداً</string>
+
+    <!-- شاشة التواصل والاقتراحات -->
+    <string name="contact_us_title">تواصل معنا واقتراحات</string>
+    <string name="feedback_type_label">نوع الرسالة</string>
+    <string name="feedback_type_suggest_quote">اقتراح منشور أو حكمة جديدة</string>
+    <string name="feedback_type_suggest_feature">اقتراح فكرة أو تحسين للتطبيق</string>
+    <string name="feedback_type_report_bug">الإبلاغ عن مشكلة فنية</string>
+    <string name="feedback_type_general">رسالة عامة للإدارة</string>
+    <string name="feedback_message_title">رسالتك أو المنشور المقترح</string>
+    <string name="feedback_message_hint">اكتب تفاصيل اقتراحك، ملاحظتك أو العبارة التي تريد إضافتها للأقسام...</string>
+    <string name="send_feedback">إرسال الاقتراح</string>
+    <string name="feedback_empty_error">الرجاء كتابة نص الرسالة</string>
+    <string name="feedback_sent_success">شكراً لك! تم إرسال رسالتك بنجاح</string>
+    <string name="feedback_send_failed">تعذر الإرسال، حاول لاحقاً</string>
+
+    <!-- الإشعارات والتنبيهات -->
+    <string name="notifications_title">الإشعارات</string>
+    <string name="swipe_to_dismiss">اسحب الإشعار لليمين أو اليسار للحذف</string>
+    <string name="clear_all">مسح الكل</string>
+    <string name="no_notifications_yet">لا توجد إشعارات حالياً</string>
+    <string name="login_required_notifications">سجل دخولك لعرض الإشعارات</string>
+    <string name="clear_notifications_title">مسح الإشعارات</string>
+    <string name="clear_notifications_confirm">هل تريد مسح جميع الإشعارات نهائياً؟</string>
+    <string name="notifications_cleared">تم مسح جميع الإشعارات</string>
+    <string name="notif_liked_post">%s أعجب بمنشورك</string>
+    <string name="notif_commented_post">%s علّق على منشورك</string>
+    <string name="notif_followed_you">%s بدأ بمتابعتك</string>
+    <string name="notif_new_post">%s نشر منشوراً جديداً</string>
+    <string name="notif_replied_comment">%s ردّ على تعليقك</string>
+
+    <!-- عناصر إضافية في الملف الشخصي والواجهات -->
+    <string name="featured_writer">⭐ كاتب متميز</string>
+    <string name="badge_admin">👑 المشرف</string>
+    <string name="badge_writer">⭐ كاتب متميز</string>
+    <string name="user_shared_posts_desc">الخواطر والكلمات التي تتم مشاركتها ستظهر هنا</string>
+    <string name="select_profile_picture_title">اختر صورة الملف الشخصي</string>
+    <string name="followers_title">المتابعون</string>
+    <string name="no_users_found">لا يوجد مستخدمون هنا بعد</string>
+
+    <!-- نافذة تسجيل الدخول بجوجل -->
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="login_desc">سجّل دخولك بحساب Google لتتمكن من النشر بهويتك الثابتة.</string>
+    <string name="continue_with_google">متابعة باستخدام حساب Google</string>
+    <string name="choose_username_title">اختر اسم مستخدم فريد (Username):</string>
+    <string name="username_example_hint">مثال: mohamed_95</string>
+    <string name="confirm_and_continue">تأكيد ومتابعة</string>
+
+    <!-- سلاسل إضافية للترجمة والرسائل -->
+    <string name="post_added_to_favorites">تمت الإضافة إلى المفضلة</string>
+    <string name="post_removed_from_favorites">تمت الإزالة من المفضلة</string>
+    <string name="post_text_copied">تم نسخ النص</string>
+    <string name="share_post_chooser">مشاركة المنشور عبر</string>
+    <string name="guest_user">زائر كريم</string>
+    <string name="tap_to_login">اضغط لتسجيل الدخول</string>
+    <string name="logout_confirm_title">تسجيل الخروج</string>
+    <string name="logout_confirm_msg">هل أنت متأكد من رغبتك في تسجيل الخروج؟</string>
+    <string name="logout_success">تم تسجيل الخروج بنجاح</string>
+    <string name="press_back_again_to_exit">اضغط مرة أخرى للخروج</string>
+    <string name="login_required_profile">يرجى تسجيل الدخول لعرض حسابك</string>
+    <string name="login_required_post">يرجى تسجيل الدخول أولاً لإضافة منشور</string>
+    <string name="login_required_like">يرجى تسجيل الدخول أولاً للإعجاب بالمنشور</string>
+    <string name="login_required_comment">يرجى تسجيل الدخول أولاً للتعليق</string>
+    <string name="login_required_follow">يرجى تسجيل الدخول أولاً للمتابعة</string>
+    <string name="login_required_report">يرجى تسجيل الدخول أولاً للإبلاغ</string>
+    <string name="delete_post_title">حذف المنشور</string>
+    <string name="delete_post_confirm">هل أنت متأكد من رغبتك في حذف هذا المنشور نهائياً؟</string>
+    <string name="post_deleted_success">تم حذف المنشور بنجاح</string>
+    <string name="preparing_story">جارٍ تجهيز الحالة للمشاركة...</string>
+    <string name="share_story_chooser">مشاركة كحالة / ستوري</string>
+    <string name="report_post_title">سبب الإبلاغ عن هذا المنشور</string>
+    <string name="send_report">إرسال البلاغ</string>
+    <string name="report_received_success">تم استلام البلاغ، شكراً لحرصك على أمان المجتمع</string>
+    <string name="report_error">حدث خطأ أثناء الإبلاغ</string>
+    <string name="report_reason_inappropriate">محتوى غير لائق أو إباحي</string>
+    <string name="report_reason_profanity">ألفاظ نابية وشتائم</string>
+    <string name="report_reason_religion">إساءة دينية أو ازدراء أديان</string>
+    <string name="report_reason_hate">خطاب كراهية وتنمر</string>
+    <string name="report_reason_spam">محتوى مضلل أو احتيال أو سبام</string>
+    <string name="report_reason_other">أخرى</string>
+    <string name="following_title">يتابعهم</string>
+    <string name="profile_picture_updated">تم تحديث الصورة الشخصية بنجاح</string>
+    <string name="profile_picture_update_failed">فشل تحديث الصورة الشخصية</string>
+    <string name="username_change_failed">تعذر تغيير اسم المستخدم</string>
+    <string name="comment_inappropriate_words">التعليق يحتوي على كلمات غير لائقة</string>
+    <string name="comments_count_zero">0 تعليقات</string>
+    <string name="default_user_name">مستخدم</string>
+    <string name="share_app_text">حمل تطبيق منشوراتي لأجمل الكلمات والمنشورات: https://play.google.com/store/apps/details?id=%s</string>
+    <string name="share_app_chooser">مشاركة التطبيق عبر</string>
+    <string name="notif_friday">جمعة مباركة</string>
+    <string name="notif_morning">صباح الخير</string>
+    <string name="notif_evening">مساء الخير</string>
+    <string name="notif_daily_quote">رسالة لك اليوم</string>
+    <string name="copy">نسخ</string>
+    <string name="daily_notifications_channel">إشعارات يومية</string>
+    <string name="notif_default_body">ابتسم وتفاءل، يومك مبارك وسعيد بإذن الله.</string>
+    <string name="letter_spacing_medium">حروف: متوسطة</string>
+    <string name="letter_spacing_wide">حروف: متباعدة</string>
+    <string name="color_custom">لون مخصص</string>
+    <string name="no_bio_yet">لا توجد نبذة شخصية بعد.</string>
 </resources>

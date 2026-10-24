@@ -16,7 +16,7 @@ object StoryShareHelper {
 
     fun sharePostAsStory(context: Context, post: CommunityPost) {
         try {
-            Toast.makeText(context, "جارٍ تجهيز الحالة للمشاركة 📸...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.preparing_story), Toast.LENGTH_SHORT).show()
 
             val width = 1080
             val height = 1920
@@ -162,7 +162,7 @@ object StoryShareHelper {
                 textSize = 24f
                 textAlign = Paint.Align.CENTER
             }
-            canvas.drawText("من منشوراتي ✨", width / 2f, 1750f, brandPaint)
+            canvas.drawText("من منشوراتي", width / 2f, 1750f, brandPaint)
             canvas.drawText("تطبيق منشوراتي للاقتباسات والخواطر", width / 2f, 1795f, subBrandPaint)
 
             // 7. Save and Share
@@ -183,7 +183,7 @@ object StoryShareHelper {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 
-            context.startActivity(Intent.createChooser(shareIntent, "مشاركة كحالة / ستوري 📸"))
+            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_story_chooser)))
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(context, "حدث خطأ أثناء تجهيز الصورة: ${e.message}", Toast.LENGTH_SHORT).show()

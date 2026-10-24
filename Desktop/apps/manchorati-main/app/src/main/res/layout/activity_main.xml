@@ -23,15 +23,15 @@
             app:cardCornerRadius="0dp"
             app:cardBackgroundColor="@color/bg_card">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="56dp">
 
-                <!-- شريط العنوان وأزرار التحكم العلوية -->
+                <!-- 1. شريط العنوان وأزرار التحكم العلوية العادية -->
                 <RelativeLayout
+                    android:id="@+id/layoutNormalHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="match_parent"
                     android:paddingHorizontal="16dp">
 
                     <TextView
@@ -40,7 +40,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentStart="true"
-                        android:text="منشوراتي"
+                        android:text="@string/app_name"
                         android:textColor="@color/text_primary"
                         android:textSize="19sp"
                         android:textStyle="bold" />
@@ -52,20 +52,33 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <!-- زر فتح البحث المصغر -->
+                        <ImageView
+                            android:id="@+id/btnSearchToggle"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:padding="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="بحث"
+                            android:src="@android:drawable/ic_menu_search"
+                            app:tint="@color/text_secondary" />
+
                         <!-- أيقونة جرس الإشعارات -->
                         <FrameLayout
                             android:id="@+id/btnMainNotificationsContainer"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginStart="4dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_marginStart="2dp"
                             android:padding="6dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
                             android:focusable="true">
 
                             <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="15dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:layout_gravity="center"
                                 android:src="@android:drawable/ic_popup_reminder"
                                 app:tint="@color/text_secondary" />
@@ -75,22 +88,20 @@
                                 android:layout_width="8dp"
                                 android:layout_height="8dp"
                                 android:layout_gravity="top|end"
-                                android:layout_marginTop="6dp"
-                                android:layout_marginEnd="6dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:background="@drawable/bg_search_bar"
                                 android:backgroundTint="#EF4444"
                                 android:visibility="gone" />
                         </FrameLayout>
 
-                        <!-- أيقونة الملف الشخصي -->
-
                         <!-- زر القائمة الجانبية -->
                         <ImageView
                             android:id="@+id/btnOptionsMenu"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             android:layout_marginStart="2dp"
-                            android:padding="6dp"
+                            android:padding="7dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="القائمة"
                             android:src="@drawable/ic_menu_hamburger"
@@ -98,46 +109,80 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <!-- حقل البحث -->
-                <androidx.cardview.widget.CardView
+                <!-- 2. شريط البحث المنبثق عند النقر (Expandable Search Bar) -->
+                <LinearLayout
+                    android:id="@+id/layoutSearchHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="10dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/search_bg">
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="14dp">
+                    <ImageView
+                        android:id="@+id/btnSearchClose"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/text_primary" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@android:drawable/ic_menu_search"
-                            app:tint="@color/text_secondary" />
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/search_bg">
 
-                        <EditText
-                            android:id="@+id/etSearch"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
-                            android:background="@android:color/transparent"
-                            android:gravity="start|center_vertical"
-                            android:hint="ابحث عن كلمة في المنشورات..."
-                            android:imeOptions="actionSearch"
-                            android:inputType="text"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@android:drawable/ic_menu_search"
+                                app:tint="@color/text_secondary" />
+
+                            <EditText
+                                android:id="@+id/etSearch"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:layout_marginStart="8dp"
+                                android:background="@android:color/transparent"
+                                android:gravity="start|center_vertical"
+                                android:hint="@string/search_hint"
+                                android:imeOptions="actionSearch"
+                                android:inputType="text"
+                                android:textColor="@color/text_primary"
+                                android:textColorHint="@color/text_secondary"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/btnSearchClear"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:padding="6dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:src="@drawable/ic_close_small"
+                                android:visibility="gone"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+            </FrameLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.viewpager2.widget.ViewPager2
@@ -156,7 +201,6 @@
             app:cardBackgroundColor="@color/bg_card">
 
             <LinearLayout
-                android:id="@+id/bottomNavigation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -271,7 +315,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="حسابي"
+                        android:text="@string/tab_profile"
                         android:textColor="@color/text_secondary"
                         android:textSize="11sp" />
                 </LinearLayout>

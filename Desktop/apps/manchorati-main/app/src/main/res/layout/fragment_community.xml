@@ -5,234 +5,105 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
-    android:layoutDirection="rtl"
     android:orientation="vertical">
 
-    <!-- شريط علوي أنيق للفلترة والترتيب -->
-    <LinearLayout
+    <!-- شريط علوي عصري ومضغوط للترتيب والفلترة -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_card"
-        android:elevation="1dp"
-        android:orientation="vertical"
-        android:paddingTop="6dp"
-        android:paddingBottom="8dp">
+        android:layout_height="46dp"
+        app:cardElevation="1dp"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/bg_card">
 
-        <!-- سطر الترتيب: الأحدث / الأكثر تفاعلاً -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="14dp"
-            android:paddingBottom="6dp">
+            android:paddingHorizontal="14dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ترتيب المنشورات:"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-
+            <!-- 1. زر ترتيب المنشورات (أيقونة فقط مع خيارات عند النقر) -->
             <LinearLayout
+                android:id="@+id/btnSortContainer"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/bg_segment_container"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="2dp">
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:id="@+id/ivSortIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_sort"
+                    app:tint="@color/text_primary" />
 
                 <TextView
-                    android:id="@+id/btnSortLatest"
+                    android:id="@+id/tvActiveSortLabel"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_segment_btn_active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="14dp"
-                    android:text="الأحدث"
-                    android:textColor="#FFFFFF"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/sort_latest"
+                    android:textColor="@color/text_primary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="3dp"
+                    android:src="@drawable/ic_chevron_down"
+                    app:tint="@color/text_secondary" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- 2. زر اختيار التصنيف / الوسم (مخفي وينبثق عند النقر ويبقى ظاهراً عند الاختيار) -->
+            <LinearLayout
+                android:id="@+id/btnTagSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
+
                 <TextView
-                    android:id="@+id/btnSortTrending"
+                    android:id="@+id/tvActiveTagLabel"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="14dp"
-                    android:text="الأكثر تفاعلاً"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_all"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/ivTagChevron"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_chevron_down"
+                    app:tint="@color/text_secondary" />
+
+                <ImageView
+                    android:id="@+id/btnClearTag"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_close_small"
+                    android:visibility="gone"
+                    app:tint="#FFFFFF" />
             </LinearLayout>
         </LinearLayout>
-
-        <!-- شريط الوسوم / التصنيفات الأفقي القابل للتمرير -->
-        <HorizontalScrollView
-            android:id="@+id/hsvTags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingHorizontal="10dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/layoutTagsContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <!-- الأزرار تتم إضافتها أو إدارتها ديناميكياً أو ثابتاً -->
-                <TextView
-                    android:id="@+id/chipTagAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="14dp"
-                    android:text="الكل"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/chipTagWisdom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="حكم وأقوال"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagThoughts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="خواطر"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagDua"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="أدعية وأذكار"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagMotivation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="تحفيز وتطوير"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagHumor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="فكاهة وضحك"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagPoetry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="شعر وأدب"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagCoffee"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="قهوة ومساء"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagGeneral"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="عام"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/chipTagSaved"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_category_chip_idle"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:text="المحفوظات"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <!-- مساحة المنشورات الرئيسية مع سحب للتحديث وزر إضافة عائم -->
     <FrameLayout
@@ -275,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="لا توجد منشورات في هذا التصنيف حالياً"
+                android:text="@string/no_posts_yet"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -285,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="كن أول من ينشر في هذا القسم وشارك أفكارك!"
+                android:text="@string/share_first_post"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
         </LinearLayout>

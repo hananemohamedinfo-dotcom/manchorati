@@ -19,6 +19,7 @@ class ContactActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         setContentView(R.layout.activity_contact)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbarContact)
@@ -29,10 +30,10 @@ class ContactActivity : AppCompatActivity() {
         val btnSend = findViewById<Button>(R.id.btnSendFeedback)
 
         val options = arrayOf(
-            "✍️ اقتراح منشور أو حكمة جديدة",
-            "💡 اقتراح فكرة أو تحسين للتطبيق",
-            "⚠️ الإبلاغ عن مشكلة فنية",
-            "📩 رسالة عامة للإدارة"
+            getString(R.string.feedback_type_suggest_quote),
+            getString(R.string.feedback_type_suggest_feature),
+            getString(R.string.feedback_type_report_bug),
+            getString(R.string.feedback_type_general)
         )
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, options)
         spType.adapter = adapter
@@ -40,7 +41,7 @@ class ContactActivity : AppCompatActivity() {
         btnSend.setOnClickListener {
             val message = etMessage.text.toString().trim()
             if (message.isEmpty()) {
-                etMessage.error = "الرجاء كتابة نص الرسالة"
+                etMessage.error = getString(R.string.feedback_empty_error)
                 return@setOnClickListener
             }
 
@@ -48,7 +49,7 @@ class ContactActivity : AppCompatActivity() {
             val user = FirebaseAuth.getInstance().currentUser
             val feedbackData = hashMapOf(
                 "userId" to (user?.uid ?: "anonymous"),
-                "userName" to (user?.displayName ?: "فاعل خير"),
+                "userName" to (user?.displayName ?: "User"),
                 "userEmail" to (user?.email ?: ""),
                 "type" to spType.selectedItem.toString(),
                 "message" to message,
@@ -58,12 +59,12 @@ class ContactActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance().collection("feedback")
                 .add(feedbackData)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "شكراً لك! تم إرسال رسالتك بنجاح 🌟", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.feedback_sent_success), Toast.LENGTH_LONG).show()
                     finish()
                 }
                 .addOnFailureListener { e ->
                     btnSend.isEnabled = true
-                    Toast.makeText(this, "تعذر الإرسال، حاول لاحقاً: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "${getString(R.string.feedback_send_failed)}: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }

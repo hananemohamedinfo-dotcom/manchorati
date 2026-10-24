@@ -30,7 +30,7 @@
             android:id="@+id/tvUserRowName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="اسم المستخدم"
+            android:text="@string/display_name_label"
             android:textColor="@color/text_primary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -54,7 +54,7 @@
         android:focusable="true"
         android:gravity="center"
         android:paddingHorizontal="14dp"
-        android:text="+ متابعة"
+        android:text="@string/follow"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold" />

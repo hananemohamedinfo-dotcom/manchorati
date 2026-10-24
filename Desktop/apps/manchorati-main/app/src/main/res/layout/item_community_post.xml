@@ -70,7 +70,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/bg_badge_writer"
-                            android:text="⭐ متميز"
+                            android:text="@string/featured_writer"
                             android:textColor="#FBBF24"
                             android:textSize="10sp"
                             android:textStyle="bold"

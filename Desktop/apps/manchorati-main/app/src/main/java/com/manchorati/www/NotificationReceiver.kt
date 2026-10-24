@@ -28,18 +28,19 @@ class NotificationReceiver : BroadcastReceiver() {
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
 
+        val localizedContext = LocaleHelper.applyLocale(context)
         val type = intent.getStringExtra("TYPE") ?: "DEFAULT"
         val categoryName = intent.getStringExtra("CATEGORY") ?: ""
 
         val title = when {
-            dayOfWeek == Calendar.FRIDAY && hour < 12 -> "جمعة مباركة 🕌"
-            type == "MORNING" || hour < 14 -> "صباح الخير ☀️"
-            type == "EVENING" || hour >= 14 -> "مساء الخير 🌙"
-            else -> "رسالة لك اليوم 🌿"
+            dayOfWeek == Calendar.FRIDAY && hour < 12 -> localizedContext.getString(R.string.notif_friday)
+            type == "MORNING" || hour < 14 -> localizedContext.getString(R.string.notif_morning)
+            type == "EVENING" || hour >= 14 -> localizedContext.getString(R.string.notif_evening)
+            else -> localizedContext.getString(R.string.notif_daily_quote)
         }
 
         var targetId: Int? = null
-        if (categoryName.isNotEmpty() && categoryName != "افتراضي (الكل)") {
+        if (categoryName.isNotEmpty() && categoryName != "افتراضي (الكل)" && categoryName != "Default (All)" && categoryName != "Par défaut (Tous)") {
             try {
                 targetId = dbHelper.getCategoryIdByName(categoryName.trim())
             } catch (_: Exception) {}
@@ -53,7 +54,7 @@ class NotificationReceiver : BroadcastReceiver() {
             ?: dbHelper.getRandomPostByCategoryId(13)
             ?: dbHelper.getRandomPostByCategoryId(14)
 
-        val content = post?.content ?: "ابتسم وتفاءل، يومك مبارك وسعيد بإذن الله."
+        val content = post?.content ?: localizedContext.getString(R.string.notif_default_body)
         showNotification(context, title, content)
 
         DailyNotificationHelper.rescheduleFromPreferences(context)
@@ -83,10 +84,11 @@ class NotificationReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0)
         )
 
+        val localizedContext = LocaleHelper.applyLocale(context)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, "إشعارات يومية", NotificationManager.IMPORTANCE_HIGH).apply {
+            val channel = NotificationChannel(CHANNEL_ID, localizedContext.getString(R.string.daily_notifications_channel), NotificationManager.IMPORTANCE_HIGH).apply {
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 350, 200, 350)
             }
@@ -105,7 +107,7 @@ class NotificationReceiver : BroadcastReceiver() {
             .setVibrate(longArrayOf(0, 350, 200, 350))
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .addAction(R.drawable.ic_copy, "نسخ", copyPendingIntent)
+            .addAction(R.drawable.ic_copy, localizedContext.getString(R.string.copy), copyPendingIntent)
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }

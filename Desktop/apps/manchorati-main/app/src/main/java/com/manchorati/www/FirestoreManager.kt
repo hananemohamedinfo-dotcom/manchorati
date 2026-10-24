@@ -107,7 +107,7 @@ fun listenToUserPosts(
                                 senderName = authorName,
                                 type = "NEW_POST",
                                 postId = postId,
-                                message = "نشر $authorName منشوراً جديداً 📝"
+                                message = "نشر $authorName منشوراً جديداً"
                             )
                         }
                     }
@@ -241,6 +241,8 @@ fun listenToUserPosts(
                             else -> System.currentTimeMillis()
                         }
 
+                        val isEdited = doc.getBoolean("isEdited") ?: false
+
                         val comment = Comment(
                             id = doc.id,
                             authorId = authorId,
@@ -249,7 +251,8 @@ fun listenToUserPosts(
                             content = content,
                             replyToAuthorName = replyToAuthorName,
                             replyToCommentId = replyToCommentId,
-                            timestamp = timeVal
+                            timestamp = timeVal,
+                            isEdited = isEdited
                         )
                         commentsList.add(comment)
                     } catch (_: Exception) {
@@ -306,6 +309,19 @@ fun listenToUserPosts(
                 postRef.update("commentsCount", FieldValue.increment(-1))
                 onComplete(true)
             }
+            .addOnFailureListener { onComplete(false) }
+    }
+
+    fun updateComment(postId: String, commentId: String, newContent: String, onComplete: (Boolean) -> Unit) {
+        val postRef = db.collection("community_posts").document(postId)
+        postRef.collection("comments").document(commentId)
+            .update(
+                mapOf(
+                    "content" to newContent,
+                    "isEdited" to true
+                )
+            )
+            .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
     }
 

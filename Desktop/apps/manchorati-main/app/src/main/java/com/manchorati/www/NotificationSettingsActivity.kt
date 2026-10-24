@@ -37,10 +37,10 @@ class NotificationSettingsActivity : AppCompatActivity() {
     private lateinit var btnSave: Button
     private lateinit var btnBack: ImageView
 
-    private var morningHour = 8
-    private var morningMinute = 30
-    private var eveningHour = 20
-    private var eveningMinute = 30
+    private var morningHour = 7
+    private var morningMinute = 0
+    private var eveningHour = 19
+    private var eveningMinute = 0
 
     private var categories: List<String> = emptyList()
 
@@ -50,6 +50,7 @@ class NotificationSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         setContentView(R.layout.activity_notification_settings)
 
         prefs = getSharedPreferences("app_notification_settings", Context.MODE_PRIVATE)
@@ -82,7 +83,7 @@ class NotificationSettingsActivity : AppCompatActivity() {
     private fun setupSpinners() {
         val dbHelper = DatabaseHelper(this)
         val dbCategories = dbHelper.getAllCategoryNames()
-        categories = listOf("افتراضي (الكل)") + dbCategories
+        categories = listOf(getString(R.string.default_all)) + dbCategories
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
         spinnerMorningCategory.adapter = adapter
@@ -96,8 +97,8 @@ class NotificationSettingsActivity : AppCompatActivity() {
 
         // صباح
         val isMorningEnabled = prefs.getBoolean("morning_enabled", true)
-        morningHour = prefs.getInt("morning_hour", 8)
-        morningMinute = prefs.getInt("morning_minute", 30)
+        morningHour = prefs.getInt("morning_hour", 7)
+        morningMinute = prefs.getInt("morning_minute", 0)
         switchMorning.isChecked = isMorningEnabled
         layoutMorningDetails.visibility = if (isMorningEnabled) View.VISIBLE else View.GONE
         tvMorningTime.text = formatTime(morningHour, morningMinute)
@@ -108,8 +109,8 @@ class NotificationSettingsActivity : AppCompatActivity() {
 
         // مساء
         val isEveningEnabled = prefs.getBoolean("evening_enabled", true)
-        eveningHour = prefs.getInt("evening_hour", 20)
-        eveningMinute = prefs.getInt("evening_minute", 30)
+        eveningHour = prefs.getInt("evening_hour", 19)
+        eveningMinute = prefs.getInt("evening_minute", 0)
         switchEvening.isChecked = isEveningEnabled
         layoutEveningDetails.visibility = if (isEveningEnabled) View.VISIBLE else View.GONE
         tvEveningTime.text = formatTime(eveningHour, eveningMinute)
@@ -159,7 +160,11 @@ class NotificationSettingsActivity : AppCompatActivity() {
     }
 
     private fun formatTime(hour: Int, minute: Int): String {
-        val amPm = if (hour >= 12) "م" else "ص"
+        val amPm = if (LocaleHelper.isRtl(this)) {
+            if (hour >= 12) "م" else "ص"
+        } else {
+            if (hour >= 12) "PM" else "AM"
+        }
         val h = if (hour % 12 == 0) 12 else hour % 12
         return String.format(Locale.getDefault(), "%02d:%02d %s", h, minute, amPm)
     }
@@ -168,8 +173,9 @@ class NotificationSettingsActivity : AppCompatActivity() {
         val morningSelectedPos = spinnerMorningCategory.selectedItemPosition
         val eveningSelectedPos = spinnerEveningCategory.selectedItemPosition
 
-        val morningCategoryName = if (morningSelectedPos in categories.indices) categories[morningSelectedPos] else "افتراضي (الكل)"
-        val eveningCategoryName = if (eveningSelectedPos in categories.indices) categories[eveningSelectedPos] else "افتراضي (الكل)"
+        val defaultAll = getString(R.string.default_all)
+        val morningCategoryName = if (morningSelectedPos in categories.indices) categories[morningSelectedPos] else defaultAll
+        val eveningCategoryName = if (eveningSelectedPos in categories.indices) categories[eveningSelectedPos] else defaultAll
 
         prefs.edit().apply {
             putBoolean("master_enabled", switchMaster.isChecked)
@@ -191,7 +197,7 @@ class NotificationSettingsActivity : AppCompatActivity() {
         }
 
         DailyNotificationHelper.rescheduleFromPreferences(this)
-        Toast.makeText(this, "تم حفظ وتفعيل إعدادات الإشعارات بنجاح", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.settings_saved_success), Toast.LENGTH_SHORT).show()
         finish()
     }
 }

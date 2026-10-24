@@ -29,10 +29,11 @@ class CategoryPostsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         setContentView(R.layout.activity_category_posts)
 
         val categoryId = intent.getIntExtra("CATEGORY_ID", -1)
-        val categoryTitle = intent.getStringExtra("CATEGORY_TITLE") ?: "المنشورات"
+        val categoryTitle = intent.getStringExtra("CATEGORY_TITLE") ?: getString(R.string.posts_count_label)
 
         dbHelper = DatabaseHelper(this)
         dbHelper.clearCategoryNewBadge(categoryId)

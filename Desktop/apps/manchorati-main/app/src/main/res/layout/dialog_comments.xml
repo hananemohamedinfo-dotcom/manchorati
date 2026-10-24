@@ -5,46 +5,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="vertical"
-    android:paddingTop="12dp">
+    android:paddingTop="10dp">
 
-    <!-- المؤشر العلوي للسحب -->
+    <!-- المؤشر العلوي للسحب السلس -->
     <View
-        android:layout_width="40dp"
+        android:layout_width="38dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="12dp"
-        android:background="@color/divider_color" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_sheet_handle" />
 
-    <!-- معاينة المنشور -->
+    <!-- رأس نافذة التعليقات مع معاينة المنشور -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_card"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp">
+        android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/tvCommentPostAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="اسم الناشر" />
-
-        <TextView
-            android:id="@+id/tvCommentPostContent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            tools:text="معاينة محتوى المنشور الأصلي..." />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvCommentsDialogTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/comments_dialog_title"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCommentsCountHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                tools:text="3 تعليقات" />
+        </LinearLayout>
+
+        <!-- كارت معاينة محتوى المنشور الأصلي -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_comment_bubble"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/tvCommentPostAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="اسم الناشر" />
+
+            <TextView
+                android:id="@+id/tvCommentPostContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                tools:text="معاينة محتوى المنشور الأصلي..." />
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -52,90 +87,185 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <!-- قائمة التعليقات: تم تغيير الطول الثابت إلى 0dp مع weight لترتفع وتنخفض بسلاسة مع الكيبورد -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvComments"
+    <!-- منطقة التعليقات + الحالة الفارغة -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingVertical="8dp" />
+        android:layout_weight="1">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_color" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="8dp" />
 
-    <!-- شريط الرد على تعليق محدد -->
+        <!-- واجهة عدم وجود تعليقات (Empty State) أنيقة واحترافية -->
+        <LinearLayout
+            android:id="@+id/layoutEmptyComments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:alpha="0.45"
+                android:src="@drawable/ic_comments_empty"
+                app:tint="@color/text_secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/no_comments_title"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/no_comments_subtitle"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- شريط تنبيه الرد أو التعديل (Reply/Edit Banner) -->
     <LinearLayout
         android:id="@+id/layoutReplyBanner"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/bg_tool_chip_idle"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/tvReplyBannerText"
+        <View
+            android:id="@+id/viewActionIndicator"
+            android:layout_width="3dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="8dp"
+            android:background="#0284C7" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#0284C7"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="↩️ الرد على أحمد" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvReplyBannerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#0284C7"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="الرد على أحمد" />
+
+            <TextView
+                android:id="@+id/tvActionBannerSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:text="نص التعليق..." />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/btnCancelReply"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:padding="3dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:padding="5dp"
+            android:src="@drawable/ic_close_small"
             app:tint="@color/text_secondary" />
     </LinearLayout>
 
-    <!-- شريط الإرسال (سيبقى دائماً ملتصقاً فوق الكيبورد) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <!-- شريط إدخال التعليق المطور والمحدث -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_main"
+        android:background="@color/bg_card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp">
 
-        <EditText
-            android:id="@+id/etCommentInput"
+        <!-- صورة حساب المستخدم الحالي -->
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:id="@+id/ivCurrentUserCommentAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
+        </FrameLayout>
+
+        <!-- حقل الكتابة الأنيق مع زر الإرسال المدمج -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_search_bar"
-            android:hint="اكتب تعليقاً..."
-            android:inputType="textMultiLine"
-            android:maxLines="3"
-            android:paddingHorizontal="14dp"
-            android:textColor="@color/comment_text_color"
-            android:textColorHint="@color/text_secondary"
-            android:textSize="14sp" />
+            android:background="@drawable/bg_comment_input_box"
+            android:gravity="center_vertical"
+            android:minHeight="42dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
 
-        <ImageView
-            android:id="@+id/btnSendComment"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_search_bar"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="9dp"
-            android:rotation="180"
-            android:src="@drawable/ic_send"
-            app:tint="#3484FC" />
+            <EditText
+                android:id="@+id/etCommentInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/comment_hint"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="4"
+                android:minHeight="38dp"
+                android:paddingVertical="8dp"
+                android:textColor="@color/comment_text_color"
+                android:textColorHint="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/btnSendComment"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="6dp"
+                android:alpha="0.4"
+                android:background="@drawable/bg_send_comment_circle"
+                android:clickable="false"
+                android:focusable="true"
+                android:padding="7dp"
+                android:src="@drawable/ic_send"
+                app:tint="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

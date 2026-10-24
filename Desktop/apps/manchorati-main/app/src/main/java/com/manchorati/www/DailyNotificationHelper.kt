@@ -13,6 +13,19 @@ object DailyNotificationHelper {
     private const val REQ_EVENING = 4002
 
     fun setupDailyNotifications(context: Context) {
+        val prefs = context.getSharedPreferences("app_notification_settings", Context.MODE_PRIVATE)
+        if (!prefs.contains("morning_hour")) {
+            prefs.edit().apply {
+                putBoolean("master_enabled", true)
+                putBoolean("morning_enabled", true)
+                putInt("morning_hour", 7)
+                putInt("morning_minute", 0)
+                putBoolean("evening_enabled", true)
+                putInt("evening_hour", 19)
+                putInt("evening_minute", 0)
+                apply()
+            }
+        }
         rescheduleFromPreferences(context)
     }
 
@@ -26,20 +39,20 @@ object DailyNotificationHelper {
             return
         }
 
-        // إشعار الصباح
+        // إشعار الصباح: 7:00 صباحاً افتراضياً
         if (prefs.getBoolean("morning_enabled", true)) {
-            val hour = prefs.getInt("morning_hour", 8)
-            val minute = prefs.getInt("morning_minute", 30)
+            val hour = prefs.getInt("morning_hour", 7)
+            val minute = prefs.getInt("morning_minute", 0)
             val category = prefs.getString("morning_category_name", "افتراضي (الكل)") ?: "افتراضي (الكل)"
             scheduleAlarm(context, hour, minute, REQ_MORNING, "MORNING", category)
         } else {
             cancelAlarm(context, REQ_MORNING)
         }
 
-        // إشعار المساء
+        // إشعار المساء: 7:00 مساءً (19:00) افتراضياً
         if (prefs.getBoolean("evening_enabled", true)) {
-            val hour = prefs.getInt("evening_hour", 20)
-            val minute = prefs.getInt("evening_minute", 30)
+            val hour = prefs.getInt("evening_hour", 19)
+            val minute = prefs.getInt("evening_minute", 0)
             val category = prefs.getString("evening_category_name", "افتراضي (الكل)") ?: "افتراضي (الكل)"
             scheduleAlarm(context, hour, minute, REQ_EVENING, "EVENING", category)
         } else {

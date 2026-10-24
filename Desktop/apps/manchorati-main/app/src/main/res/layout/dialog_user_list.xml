@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="المتابعون"
+            android:text="@string/followers_title"
             android:textColor="@color/text_primary"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="لا يوجد مستخدمون هنا بعد"
+            android:text="@string/no_users_found"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
     </LinearLayout>

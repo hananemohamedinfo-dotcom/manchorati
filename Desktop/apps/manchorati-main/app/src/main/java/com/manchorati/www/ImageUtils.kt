@@ -300,7 +300,7 @@ object ImageUtils {
             tvContent.setTextColor(Color.WHITE)
             tvCategory.setTextColor(Color.parseColor("#38BDF8"))
             tvWatermark.setTextColor(Color.parseColor("#CBD5E1"))
-            Toast.makeText(context, "تم تطبيق صورة الخلفية بنجاح 📷", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "تم تطبيق صورة الخلفية بنجاح", Toast.LENGTH_SHORT).show()
         }
 
         dialog.setOnDismissListener {
@@ -318,7 +318,7 @@ object ImageUtils {
                 setMargins(margin, margin, margin, margin)
             }
             setPadding(padH, padV, padH, padV)
-            text = "📷 صورتي"
+            text = context.getString(R.string.my_photo)
             textSize = 12f
             setTextColor(Color.WHITE)
             typeface = Typeface.DEFAULT_BOLD
@@ -328,7 +328,7 @@ object ImageUtils {
                 if (onPickImageRequest != null) {
                     onPickImageRequest.invoke()
                 } else {
-                    Toast.makeText(context, "خاصية اختيار الصور غير مفعلة هنا", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.pick_photo_not_supported), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -343,7 +343,7 @@ object ImageUtils {
                 setMargins(margin, margin, margin, margin)
             }
             setPadding(padH, padV, padH, padV)
-            text = "❌ إزالة"
+            text = context.getString(R.string.remove_photo)
             textSize = 11f
             setTextColor(Color.parseColor("#CBD5E1"))
             setBackgroundResource(R.drawable.bg_tool_chip_idle)
@@ -356,7 +356,7 @@ object ImageUtils {
                 cardPreview.background = null
                 cardPreview.setCardBackgroundColor(Color.parseColor("#1E293B"))
                 tvContent.setTextColor(Color.WHITE)
-                Toast.makeText(context, "تمت إزالة صورة الخلفية", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.bg_removed), Toast.LENGTH_SHORT).show()
             }
         }
         layoutColorsContainer.addView(btnRemoveImage)
@@ -531,14 +531,14 @@ object ImageUtils {
         // ==============================================================
         val layoutFontsContainer = view.findViewById<LinearLayout>(R.id.layoutFontsContainer)
         val fontList = listOf(
-            FontItem("تجوّل", R.font.tajawal),
-            FontItem("كايرو", R.font.cairoplay),
-            FontItem("الرقعة", R.font.arefruqaa),
-            FontItem("كوفام", R.font.kufam),
-            FontItem("مرحي", R.font.marhey),
-            FontItem("نستعليق", R.font.notonastaliqurdu),
-            FontItem("بلاكا", R.font.blakahollow),
-            FontItem("عريض", R.font.oi)
+            FontItem(context.getString(R.string.font_tajawal), R.font.tajawal),
+            FontItem(context.getString(R.string.font_cairo), R.font.cairoplay),
+            FontItem(context.getString(R.string.font_ruqaa), R.font.arefruqaa),
+            FontItem(context.getString(R.string.font_kufam), R.font.kufam),
+            FontItem(context.getString(R.string.font_marhey), R.font.marhey),
+            FontItem(context.getString(R.string.font_nastaliq), R.font.notonastaliqurdu),
+            FontItem(context.getString(R.string.font_blaka), R.font.blakahollow),
+            FontItem(context.getString(R.string.font_bold), R.font.oi)
         )
 
         var currentSelectedTypeface: Typeface? = null
@@ -570,8 +570,8 @@ object ImageUtils {
                 setPadding(padH, padV, padH, padV)
                 text = item.displayName
                 textSize = 12f
-                setTextColor(if (item.displayName == "تجوّل") Color.WHITE else Color.parseColor("#CBD5E1"))
-                setBackgroundResource(if (item.displayName == "تجوّل") R.drawable.bg_tool_chip_active else R.drawable.bg_tool_chip_idle)
+                setTextColor(if (item.fontResId == R.font.tajawal) Color.WHITE else Color.parseColor("#CBD5E1"))
+                setBackgroundResource(if (item.fontResId == R.font.tajawal) R.drawable.bg_tool_chip_active else R.drawable.bg_tool_chip_idle)
 
                 try {
                     typeface = ResourcesCompat.getFont(context, item.fontResId)
@@ -668,19 +668,19 @@ object ImageUtils {
             when (letterSpacingMode) {
                 0 -> {
                     tvContent.letterSpacing = 0f
-                    btnLetterSpacingToggle.text = "تباعد الحروف ↔️"
+                    btnLetterSpacingToggle.text = context.getString(R.string.letter_spacing)
                     btnLetterSpacingToggle.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnLetterSpacingToggle.setTextColor(Color.parseColor("#CBD5E1"))
                 }
                 1 -> {
                     tvContent.letterSpacing = 0.04f
-                    btnLetterSpacingToggle.text = "حروف: متوسطة"
+                    btnLetterSpacingToggle.text = context.getString(R.string.letter_spacing_medium)
                     btnLetterSpacingToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnLetterSpacingToggle.setTextColor(Color.WHITE)
                 }
                 2 -> {
                     tvContent.letterSpacing = 0.08f
-                    btnLetterSpacingToggle.text = "حروف: متباعدة"
+                    btnLetterSpacingToggle.text = context.getString(R.string.letter_spacing_wide)
                     btnLetterSpacingToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnLetterSpacingToggle.setTextColor(Color.WHITE)
                 }
@@ -700,7 +700,7 @@ object ImageUtils {
                 setMargins(margin, margin, margin, margin)
             }
             setPadding(padH, padV, padH, padV)
-            text = "🎨 لون مخصص"
+            text = context.getString(R.string.color_custom)
             textSize = 11f
             setTextColor(Color.WHITE)
             setBackgroundResource(R.drawable.bg_tool_chip_idle)
@@ -753,7 +753,7 @@ object ImageUtils {
                 0 -> {
                     tvContent.paint.shader = null
                     tvContent.invalidate()
-                    btnTextGradientToggle.text = "تدرج النص: عادي 🎨"
+                    btnTextGradientToggle.text = context.getString(R.string.text_gradient_normal)
                     btnTextGradientToggle.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnTextGradientToggle.setTextColor(Color.parseColor("#CBD5E1"))
                 }
@@ -765,7 +765,7 @@ object ImageUtils {
                     )
                     tvContent.paint.shader = shader
                     tvContent.invalidate()
-                    btnTextGradientToggle.text = "تدرج: ذهبي ملكي 👑"
+                    btnTextGradientToggle.text = context.getString(R.string.text_gradient_gold)
                     btnTextGradientToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextGradientToggle.setTextColor(Color.WHITE)
                 }
@@ -777,7 +777,7 @@ object ImageUtils {
                     )
                     tvContent.paint.shader = shader
                     tvContent.invalidate()
-                    btnTextGradientToggle.text = "تدرج: نيون سايبر ⚡"
+                    btnTextGradientToggle.text = context.getString(R.string.text_gradient_neon)
                     btnTextGradientToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextGradientToggle.setTextColor(Color.WHITE)
                 }
@@ -789,7 +789,7 @@ object ImageUtils {
                     )
                     tvContent.paint.shader = shader
                     tvContent.invalidate()
-                    btnTextGradientToggle.text = "تدرج: غروب ساحر 🌅"
+                    btnTextGradientToggle.text = context.getString(R.string.text_gradient_sunset)
                     btnTextGradientToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextGradientToggle.setTextColor(Color.WHITE)
                 }
@@ -801,7 +801,7 @@ object ImageUtils {
                     )
                     tvContent.paint.shader = shader
                     tvContent.invalidate()
-                    btnTextGradientToggle.text = "تدرج: زمردي ناصع 💎"
+                    btnTextGradientToggle.text = context.getString(R.string.text_gradient_emerald)
                     btnTextGradientToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextGradientToggle.setTextColor(Color.WHITE)
                 }
@@ -841,25 +841,25 @@ object ImageUtils {
                     tvContent.setShadowLayer(0f, 0f, 0f, Color.TRANSPARENT)
                     btnTextShadow.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnTextShadow.setTextColor(Color.parseColor("#CBD5E1"))
-                    btnTextShadow.text = "بدون ظل"
+                    btnTextShadow.text = context.getString(R.string.text_shadow_none)
                 }
                 1 -> {
                     tvContent.setShadowLayer(4f, 1.5f, 1.5f, Color.parseColor("#99000000"))
                     btnTextShadow.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextShadow.setTextColor(Color.WHITE)
-                    btnTextShadow.text = "ظل ناعم ✨"
+                    btnTextShadow.text = context.getString(R.string.text_shadow_soft)
                 }
                 2 -> {
                     tvContent.setShadowLayer(8f, 2.5f, 2.5f, Color.parseColor("#E6000000"))
                     btnTextShadow.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextShadow.setTextColor(Color.WHITE)
-                    btnTextShadow.text = "ظل عميق 🔥"
+                    btnTextShadow.text = context.getString(R.string.text_shadow_deep)
                 }
                 3 -> {
                     tvContent.setShadowLayer(10f, 0f, 0f, Color.parseColor("#800284C7"))
                     btnTextShadow.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnTextShadow.setTextColor(Color.WHITE)
-                    btnTextShadow.text = "توهج نيون ⚡"
+                    btnTextShadow.text = context.getString(R.string.text_shadow_glow)
                 }
             }
         }
@@ -947,7 +947,7 @@ object ImageUtils {
                     viewCardBorder.visibility = View.GONE
                     btnCardBorderToggle.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnCardBorderToggle.setTextColor(Color.parseColor("#CBD5E1"))
-                    btnCardBorderToggle.text = "إطار: بدون"
+                    btnCardBorderToggle.text = context.getString(R.string.card_border_none)
                 }
                 1 -> {
                     viewCardBorder.visibility = View.VISIBLE
@@ -957,7 +957,7 @@ object ImageUtils {
                     }
                     btnCardBorderToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnCardBorderToggle.setTextColor(Color.WHITE)
-                    btnCardBorderToggle.text = "إطار: ناعم ⚪"
+                    btnCardBorderToggle.text = context.getString(R.string.card_border_soft)
                 }
                 2 -> {
                     viewCardBorder.visibility = View.VISIBLE
@@ -967,7 +967,7 @@ object ImageUtils {
                     }
                     btnCardBorderToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnCardBorderToggle.setTextColor(Color.WHITE)
-                    btnCardBorderToggle.text = "إطار: ذهبي 🟡"
+                    btnCardBorderToggle.text = context.getString(R.string.card_border_gold)
                 }
                 3 -> {
                     viewCardBorder.visibility = View.VISIBLE
@@ -977,7 +977,7 @@ object ImageUtils {
                     }
                     btnCardBorderToggle.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnCardBorderToggle.setTextColor(Color.WHITE)
-                    btnCardBorderToggle.text = "إطار: نيون ⚡"
+                    btnCardBorderToggle.text = context.getString(R.string.card_border_neon)
                 }
             }
         }
@@ -999,7 +999,7 @@ object ImageUtils {
                     tvQuoteBottom.visibility = View.GONE
                     btnToggleQuotes.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnToggleQuotes.setTextColor(Color.parseColor("#CBD5E1"))
-                    btnToggleQuotes.text = "اقتباس: بدون"
+                    btnToggleQuotes.text = context.getString(R.string.quote_none)
                 }
                 1 -> {
                     tvQuoteTop.text = "“"
@@ -1008,7 +1008,7 @@ object ImageUtils {
                     tvQuoteBottom.visibility = View.VISIBLE
                     btnToggleQuotes.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleQuotes.setTextColor(Color.WHITE)
-                    btnToggleQuotes.text = "اقتباس: “ ”"
+                    btnToggleQuotes.text = context.getString(R.string.quote_quotes)
                 }
                 2 -> {
                     tvQuoteTop.text = "«"
@@ -1017,7 +1017,7 @@ object ImageUtils {
                     tvQuoteBottom.visibility = View.VISIBLE
                     btnToggleQuotes.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleQuotes.setTextColor(Color.WHITE)
-                    btnToggleQuotes.text = "اقتباس: « »"
+                    btnToggleQuotes.text = context.getString(R.string.quote_guillemets)
                 }
                 3 -> {
                     tvQuoteTop.text = "❝"
@@ -1026,7 +1026,7 @@ object ImageUtils {
                     tvQuoteBottom.visibility = View.VISIBLE
                     btnToggleQuotes.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleQuotes.setTextColor(Color.WHITE)
-                    btnToggleQuotes.text = "اقتباس: ❝ ❞"
+                    btnToggleQuotes.text = context.getString(R.string.quote_brackets)
                 }
             }
         }
@@ -1041,28 +1041,28 @@ object ImageUtils {
                     tvPreviewAuthor.visibility = View.GONE
                     btnToggleAuthor.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     btnToggleAuthor.setTextColor(Color.parseColor("#CBD5E1"))
-                    btnToggleAuthor.text = "توقيع الكاتب ✍️"
+                    btnToggleAuthor.text = context.getString(R.string.author_signature)
                 }
                 1 -> {
                     tvPreviewAuthor.visibility = View.VISIBLE
-                    tvPreviewAuthor.text = "— منشوراتي"
+                    tvPreviewAuthor.text = "— Manchorati"
                     btnToggleAuthor.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleAuthor.setTextColor(Color.WHITE)
-                    btnToggleAuthor.text = "توقيع: منشوراتي"
+                    btnToggleAuthor.text = "${context.getString(R.string.author_signature)}: Manchorati"
                 }
                 2 -> {
                     tvPreviewAuthor.visibility = View.VISIBLE
-                    tvPreviewAuthor.text = "— حكمة اليوم"
+                    tvPreviewAuthor.text = "— ${context.getString(R.string.tag_wisdom)}"
                     btnToggleAuthor.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleAuthor.setTextColor(Color.WHITE)
-                    btnToggleAuthor.text = "توقيع: حكمة اليوم"
+                    btnToggleAuthor.text = "${context.getString(R.string.author_signature)}: ${context.getString(R.string.tag_wisdom)}"
                 }
                 3 -> {
                     tvPreviewAuthor.visibility = View.VISIBLE
-                    tvPreviewAuthor.text = "— بقلم الكاتب"
+                    tvPreviewAuthor.text = "— ${context.getString(R.string.featured_writer)}"
                     btnToggleAuthor.setBackgroundResource(R.drawable.bg_tool_chip_active)
                     btnToggleAuthor.setTextColor(Color.WHITE)
-                    btnToggleAuthor.text = "توقيع: بقلم الكاتب"
+                    btnToggleAuthor.text = "${context.getString(R.string.author_signature)}: ${context.getString(R.string.featured_writer)}"
                 }
             }
         }
@@ -1091,12 +1091,12 @@ object ImageUtils {
         )
 
         val templates = listOf(
-            ProTemplate("👑 فخامة داكنة", intArrayOf(Color.parseColor("#0B0F19"), Color.parseColor("#1E293B")), "#F8FAFC", R.font.tajawal, hasBorder = 2),
-            ProTemplate("📜 ورق كلاسيكي", intArrayOf(Color.parseColor("#F6F0EA"), Color.parseColor("#DFD2C0")), "#1E293B", R.font.arefruqaa, isLight = true, hasBorder = 1),
-            ProTemplate("⚡ نيون سايبر", intArrayOf(Color.parseColor("#091A28"), Color.parseColor("#022C43")), "#38BDF8", R.font.blakahollow, hasBorder = 3),
-            ProTemplate("🌅 غروب هادئ", intArrayOf(Color.parseColor("#4A0E2E"), Color.parseColor("#9A3412")), "#FFFFFF", R.font.cairoplay),
-            ProTemplate("💎 زجاجي شفاف", intArrayOf(Color.parseColor("#1E1B4B"), Color.parseColor("#312E81")), "#FFFFFF", R.font.kufam, hasBorder = 1),
-            ProTemplate("🤍 مينيمال ناصع", intArrayOf(Color.parseColor("#FFFFFF"), Color.parseColor("#F8FAFC")), "#0F172A", R.font.tajawal, isLight = true, hasBorder = 1)
+            ProTemplate(context.getString(R.string.template_dark_luxury), intArrayOf(Color.parseColor("#0B0F19"), Color.parseColor("#1E293B")), "#F8FAFC", R.font.tajawal, hasBorder = 2),
+            ProTemplate(context.getString(R.string.template_classic_paper), intArrayOf(Color.parseColor("#F6F0EA"), Color.parseColor("#DFD2C0")), "#1E293B", R.font.arefruqaa, isLight = true, hasBorder = 1),
+            ProTemplate(context.getString(R.string.template_neon_cyber), intArrayOf(Color.parseColor("#091A28"), Color.parseColor("#022C43")), "#38BDF8", R.font.blakahollow, hasBorder = 3),
+            ProTemplate(context.getString(R.string.template_calm_sunset), intArrayOf(Color.parseColor("#4A0E2E"), Color.parseColor("#9A3412")), "#FFFFFF", R.font.cairoplay),
+            ProTemplate(context.getString(R.string.template_glass), intArrayOf(Color.parseColor("#1E1B4B"), Color.parseColor("#312E81")), "#FFFFFF", R.font.kufam, hasBorder = 1),
+            ProTemplate(context.getString(R.string.template_pure_minimal), intArrayOf(Color.parseColor("#FFFFFF"), Color.parseColor("#F8FAFC")), "#0F172A", R.font.tajawal, isLight = true, hasBorder = 1)
         )
 
         for (tmpl in templates) {
@@ -1142,7 +1142,7 @@ object ImageUtils {
                     borderIndex = tmpl.hasBorder
                     applyCardBorder()
 
-                    Toast.makeText(context, "تم تطبيق قالب: ${tmpl.title}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.template_applied, tmpl.title), Toast.LENGTH_SHORT).show()
                 }
             }
             layoutPresetsContainer.addView(btnTmpl)
@@ -1184,7 +1184,7 @@ object ImageUtils {
             tvWatermark.visibility = View.VISIBLE
 
             updateRatio(btnRatioSquare, 270)
-            Toast.makeText(context, "تمت استعادة التصميم الأصلي", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.reset_design_success), Toast.LENGTH_SHORT).show()
         }
 
         btnClose.setOnClickListener { dialog.dismiss() }
@@ -1447,10 +1447,10 @@ object ImageUtils {
                     contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                     resolver.update(uri, contentValues, null, null)
                 }
-                Toast.makeText(context, "تم حفظ البطاقة في المعرض بنجاح ✨", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.image_saved_success), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "تعذر حفظ الصورة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.image_save_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -1470,7 +1470,7 @@ object ImageUtils {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(Intent.createChooser(intent, "مشاركة البطاقة عبر"))
+            context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_card_via)))
         } catch (e: Exception) {
             e.printStackTrace()
         }

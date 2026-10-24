@@ -90,7 +90,7 @@ class CommunityAdapter(
             val badge = BadgeHelper.getBadgeForPost(post)
             if (badge != null) {
                 tvAuthorBadge.visibility = View.VISIBLE
-                tvAuthorBadge.text = badge.title
+                tvAuthorBadge.setText(badge.titleResId)
                 tvAuthorBadge.setBackgroundResource(badge.bgResId)
                 tvAuthorBadge.setTextColor(Color.parseColor(badge.textColorHex))
             } else {
@@ -232,23 +232,24 @@ class CommunityAdapter(
                         ivBookmark.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
                     }.start()
 
-                val msg = if (newSavedState) "تم حفظ المنشور في المحفوظات 🔖" else "تمت إزالة المنشور من المحفوظات"
+                val msg = if (newSavedState) context.getString(R.string.post_action_bookmark) else context.getString(R.string.post_action_remove_bookmark)
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
             }
 
             // 6. زر الخيارات (الثلاث نقاط الموحد الشامل)
             val isMyPost = effectiveUid.isNotEmpty() && post.authorId == effectiveUid
             btnPostMenu.setOnClickListener { view ->
-                val popup = PopupMenu(view.context, view)
-                popup.menu.add(0, 10, 0, "مشاركة كحالة / ستوري 📸")
-                popup.menu.add(0, 11, 1, if (BookmarkManager.isBookmarked(view.context, post.id)) "إزالة من المحفوظات 🔖" else "حفظ المنشور 🔖")
-                popup.menu.add(0, 12, 2, "نسخ النص 📋")
+                val ctx = view.context
+                val popup = PopupMenu(ctx, view)
+                popup.menu.add(0, 10, 0, ctx.getString(R.string.post_action_share_story))
+                popup.menu.add(0, 11, 1, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
+                popup.menu.add(0, 12, 2, ctx.getString(R.string.post_action_copy))
 
                 if (isMyPost) {
-                    popup.menu.add(0, 1, 3, "تعديل ✏️")
-                    popup.menu.add(0, 2, 4, "حذف 🗑️")
+                    popup.menu.add(0, 1, 3, ctx.getString(R.string.post_action_edit))
+                    popup.menu.add(0, 2, 4, ctx.getString(R.string.post_action_delete))
                 } else {
-                    popup.menu.add(0, 3, 5, "إبلاغ عن المنشور ⚠️")
+                    popup.menu.add(0, 3, 5, ctx.getString(R.string.post_action_report))
                 }
 
                 popup.setOnMenuItemClickListener { item ->
@@ -257,14 +258,14 @@ class CommunityAdapter(
                         11 -> {
                             val saved = BookmarkManager.toggleBookmark(view.context, post.id)
                             updateBookmarkUI(saved)
-                            val msg = if (saved) "تم حفظ المنشور في المحفوظات 🔖" else "تمت إزالة المنشور من المحفوظات"
-                            Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
+                            val toastMsg = if (saved) ctx.getString(R.string.post_action_bookmark) else ctx.getString(R.string.post_action_remove_bookmark)
+                            Toast.makeText(view.context, toastMsg, Toast.LENGTH_SHORT).show()
                         }
                         12 -> {
                             val clipboard = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val clip = ClipData.newPlainText("منشوراتي", post.content)
+                            val clip = ClipData.newPlainText(ctx.getString(R.string.app_name), post.content)
                             clipboard.setPrimaryClip(clip)
-                            Toast.makeText(view.context, "تم نسخ النص إلى الحافظة 📋", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(view.context, ctx.getString(R.string.post_copied_toast), Toast.LENGTH_SHORT).show()
                         }
                         1 -> onEditClicked(post)
                         2 -> onDeleteClicked(post)

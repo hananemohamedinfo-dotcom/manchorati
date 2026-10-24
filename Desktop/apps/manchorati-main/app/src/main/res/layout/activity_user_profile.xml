@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main"
     android:fitsSystemWindows="true"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="vertical">
 
     <!-- شريط علوي مودرن مع زر تسجيل خروج بارز وأنيق -->
@@ -37,7 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/btnBack"
-            android:text="الملف الشخصي"
+            android:text="@string/profile_title"
             android:textColor="@color/text_primary"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -54,7 +54,7 @@
             android:focusable="true"
             android:gravity="center"
             android:paddingHorizontal="14dp"
-            android:text="تسجيل خروج"
+            android:text="@string/logout"
             android:textColor="#EF4444"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -124,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:background="@drawable/bg_badge_writer"
-                            android:text="⭐ كاتب متميز"
+                            android:text="@string/featured_writer"
                             android:textColor="#FBBF24"
                             android:textSize="10sp"
                             android:textStyle="bold"
@@ -155,7 +155,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
-                    android:text="تعديل ✏️"
+                    android:text="@string/edit_profile_btn"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:lineSpacingExtra="2dp"
-                android:text="لا توجد نبذة شخصية بعد."
+                android:text="@string/bio_default"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
@@ -203,7 +203,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
-                        android:text="المنشورات"
+                        android:text="@string/posts_count_label"
                         android:textColor="@color/text_secondary"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -239,7 +239,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
-                        android:text="متابعون"
+                        android:text="@string/followers_label"
                         android:textColor="@color/text_secondary"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -275,7 +275,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
-                        android:text="يتابعهم"
+                        android:text="@string/following_label"
                         android:textColor="@color/text_secondary"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -291,7 +291,7 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="6dp"
-        android:text="المنشورات المشاركة"
+        android:text="@string/shared_posts_label"
         android:textColor="@color/text_secondary"
         android:textSize="13sp"
         android:textStyle="bold" />
@@ -326,17 +326,18 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✍️"
-                android:textSize="36sp" />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:alpha="0.4"
+                android:src="@drawable/ic_quotes"
+                app:tint="@color/text_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="لا توجد منشورات حتى الآن"
+                android:text="@string/no_posts_yet"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -346,23 +347,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="الخواطر والكلمات التي تتم مشاركتها ستظهر هنا"
+                android:text="@string/user_shared_posts_desc"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddPostProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
-            android:layout_margin="16dp"
-            android:text="إضافة منشور"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#0284C7"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconTint="#FFFFFF"
+            android:layout_margin="20dp"
+            android:backgroundTint="#EF4444"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="#FFFFFF"
+            app:elevation="6dp"
             android:visibility="gone"
             tools:visibility="visible" />
     </FrameLayout>

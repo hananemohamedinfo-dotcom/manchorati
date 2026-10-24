@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,12 +42,15 @@ class CommunityFragment : Fragment() {
     private lateinit var tvEmptyTitle: TextView
     private lateinit var tvEmptySubtitle: TextView
 
-    private lateinit var btnSortLatest: TextView
-    private lateinit var btnSortTrending: TextView
+    private lateinit var btnSortContainer: View
+    private lateinit var tvActiveSortLabel: TextView
+    private lateinit var btnTagSelector: View
+    private lateinit var tvActiveTagLabel: TextView
+    private lateinit var ivTagChevron: ImageView
+    private lateinit var btnClearTag: ImageView
 
     private var currentTagFilter: String = "الكل"
     private var isTrendingSort: Boolean = false
-    private val tagChips = mutableListOf<TextView>()
 
     private var allPostsList: List<CommunityPost> = emptyList()
     private var deviceId: String = ""
@@ -139,16 +143,13 @@ class CommunityFragment : Fragment() {
         layoutEmptyCommunity = view.findViewById(R.id.layoutEmptyCommunity)
         tvEmptyTitle = view.findViewById(R.id.tvEmptyTitle)
         tvEmptySubtitle = view.findViewById(R.id.tvEmptySubtitle)
-        btnSortLatest = view.findViewById(R.id.btnSortLatest)
-        btnSortTrending = view.findViewById(R.id.btnSortTrending)
-
         swipeRefreshCommunity.setColorSchemeColors(Color.parseColor("#0284C7"))
         swipeRefreshCommunity.setOnRefreshListener {
             startListeningToPosts()
         }
 
-        setupSortButtons()
-        setupTagChips(view)
+        setupSortControls(view)
+        setupTagSelector(view)
 
         rvCommunity.layoutManager = LinearLayoutManager(requireContext())
 
@@ -158,20 +159,20 @@ class CommunityFragment : Fragment() {
             onLikeClicked = { post, isLiked ->
                 val currentUser = AuthManager.currentUser ?: com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
-                    Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للإعجاب بالمنشور", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.login_required_like), Toast.LENGTH_SHORT).show()
                     showLoginDialog()
                 } else {
                     val uid = currentUser.uid
                     FirestoreManager.toggleLike(post.id, uid, isLiked) {
                         if (!isLiked && post.authorId != uid) {
-                            val senderName = currentUser.displayName ?: "فاعل خير"
+                            val senderName = currentUser.displayName ?: getString(R.string.default_user_name)
                             FirestoreManager.sendNotification(
                                 recipientId = post.authorId,
                                 senderId = uid,
                                 senderName = senderName,
                                 type = "LIKE",
                                 postId = post.id,
-                                message = "أعجب $senderName بمنشورك"
+                                message = getString(R.string.notif_liked_post, senderName)
                             )
                         }
                     }
@@ -180,7 +181,7 @@ class CommunityFragment : Fragment() {
             onCommentClicked = { post ->
                 val currentUser = AuthManager.currentUser
                 if (currentUser == null) {
-                    Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للتعليق على المنشور", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.login_required_comment), Toast.LENGTH_SHORT).show()
                     showLoginDialog()
                 } else {
                     showCommentsDialog(post)
@@ -206,81 +207,184 @@ class CommunityFragment : Fragment() {
         return view
     }
 
-    private fun setupSortButtons() {
-        btnSortLatest.setOnClickListener {
-            if (!isTrendingSort) return@setOnClickListener
-            isTrendingSort = false
-            btnSortLatest.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnSortLatest.setTextColor(Color.WHITE)
-            btnSortTrending.setBackgroundColor(Color.TRANSPARENT)
-            btnSortTrending.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
-            applyFilterAndSort()
+    private fun setupSortControls(view: View) {
+        btnSortContainer = view.findViewById(R.id.btnSortContainer)
+        tvActiveSortLabel = view.findViewById(R.id.tvActiveSortLabel)
+
+        fun updateSortUI() {
+            tvActiveSortLabel.text = if (isTrendingSort) {
+                getString(R.string.sort_trending)
+            } else {
+                getString(R.string.sort_latest)
+            }
+        }
+        updateSortUI()
+
+        btnSortContainer.setOnClickListener {
+            val popup = androidx.appcompat.widget.PopupMenu(requireContext(), btnSortContainer)
+            popup.menu.add(0, 1, 0, getString(R.string.sort_latest)).apply {
+                isCheckable = true
+                isChecked = !isTrendingSort
+            }
+            popup.menu.add(0, 2, 1, getString(R.string.sort_trending)).apply {
+                isCheckable = true
+                isChecked = isTrendingSort
+            }
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    1 -> {
+                        if (isTrendingSort) {
+                            isTrendingSort = false
+                            updateSortUI()
+                            applyFilterAndSort()
+                        }
+                        true
+                    }
+                    2 -> {
+                        if (!isTrendingSort) {
+                            isTrendingSort = true
+                            updateSortUI()
+                            applyFilterAndSort()
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
+    }
+
+    private fun setupTagSelector(view: View) {
+        btnTagSelector = view.findViewById(R.id.btnTagSelector)
+        tvActiveTagLabel = view.findViewById(R.id.tvActiveTagLabel)
+        ivTagChevron = view.findViewById(R.id.ivTagChevron)
+        btnClearTag = view.findViewById(R.id.btnClearTag)
+
+        updateTagSelectorUI()
+
+        btnTagSelector.setOnClickListener {
+            showCategorySelectionDialog()
         }
 
-        btnSortTrending.setOnClickListener {
-            if (isTrendingSort) return@setOnClickListener
-            isTrendingSort = true
-            btnSortTrending.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnSortTrending.setTextColor(Color.WHITE)
-            btnSortLatest.setBackgroundColor(Color.TRANSPARENT)
-            btnSortLatest.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+        btnClearTag.setOnClickListener {
+            currentTagFilter = "الكل"
+            updateTagSelectorUI()
             applyFilterAndSort()
         }
     }
 
-    private fun setupTagChips(view: View) {
-        val hsvTags = view.findViewById<android.widget.HorizontalScrollView>(R.id.hsvTags)
-        hsvTags?.setOnTouchListener { v, event ->
-            when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE -> {
-                    v.parent?.requestDisallowInterceptTouchEvent(true)
-                }
-                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
-                    v.parent?.requestDisallowInterceptTouchEvent(false)
-                }
-            }
-            false
+    private fun getLocalizedTagLabel(tag: String): String {
+        return when (tag) {
+            "الكل" -> getString(R.string.tag_all)
+            "المحفوظات" -> getString(R.string.saved_posts)
+            "حكم وأقوال" -> getString(R.string.tag_wisdom)
+            "خواطر" -> getString(R.string.tag_thoughts)
+            "أدعية وأذكار" -> getString(R.string.tag_dua)
+            "تحفيز وتطوير" -> getString(R.string.tag_motivation)
+            "فكاهة وضحك" -> getString(R.string.tag_humor)
+            "شعر وأدب" -> getString(R.string.tag_poetry)
+            "قهوة ومساء" -> getString(R.string.tag_coffee)
+            "عام" -> getString(R.string.tag_general)
+            else -> tag
         }
+    }
 
-        val chipIds = listOf(
-            R.id.chipTagAll to "الكل",
-            R.id.chipTagWisdom to "حكم وأقوال",
-            R.id.chipTagThoughts to "خواطر",
-            R.id.chipTagDua to "أدعية وأذكار",
-            R.id.chipTagMotivation to "تحفيز وتطوير",
-            R.id.chipTagHumor to "فكاهة وضحك",
-            R.id.chipTagPoetry to "شعر وأدب",
-            R.id.chipTagCoffee to "قهوة ومساء",
-            R.id.chipTagGeneral to "عام",
-            R.id.chipTagSaved to "المحفوظات"
+    private fun updateTagSelectorUI() {
+        val isAll = currentTagFilter == "الكل" || currentTagFilter.isEmpty()
+        if (isAll) {
+            btnTagSelector.setBackgroundResource(R.drawable.bg_tool_chip_idle)
+            tvActiveTagLabel.text = getString(R.string.tag_all)
+            tvActiveTagLabel.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            tvActiveTagLabel.typeface = android.graphics.Typeface.DEFAULT
+            ivTagChevron.visibility = View.VISIBLE
+            btnClearTag.visibility = View.GONE
+        } else {
+            btnTagSelector.setBackgroundResource(R.drawable.bg_tool_chip_active)
+            tvActiveTagLabel.text = getLocalizedTagLabel(currentTagFilter)
+            tvActiveTagLabel.setTextColor(Color.WHITE)
+            tvActiveTagLabel.typeface = android.graphics.Typeface.DEFAULT_BOLD
+            ivTagChevron.visibility = View.GONE
+            btnClearTag.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showCategorySelectionDialog() {
+        val dialog = BottomSheetDialog(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_select_category, null)
+        dialog.setContentView(dialogView)
+
+        val btnClose = dialogView.findViewById<ImageView>(R.id.btnCloseCategoryDialog)
+        val layoutCategoryList = dialogView.findViewById<LinearLayout>(R.id.layoutCategoryList)
+
+        btnClose.setOnClickListener { dialog.dismiss() }
+
+        val categories = listOf(
+            "الكل" to getString(R.string.tag_all),
+            "المحفوظات" to getString(R.string.saved_posts),
+            "حكم وأقوال" to getString(R.string.tag_wisdom),
+            "خواطر" to getString(R.string.tag_thoughts),
+            "أدعية وأذكار" to getString(R.string.tag_dua),
+            "تحفيز وتطوير" to getString(R.string.tag_motivation),
+            "فكاهة وضحك" to getString(R.string.tag_humor),
+            "شعر وأدب" to getString(R.string.tag_poetry),
+            "قهوة ومساء" to getString(R.string.tag_coffee),
+            "عام" to getString(R.string.tag_general)
         )
 
-        tagChips.clear()
-        for ((chipId, tagLabel) in chipIds) {
-            val chip = view.findViewById<TextView>(chipId) ?: continue
-            tagChips.add(chip)
-            chip.setOnClickListener {
-                currentTagFilter = tagLabel
-                updateTagChipsUI()
-                applyFilterAndSort()
-            }
-        }
-        updateTagChipsUI()
-    }
+        val density = resources.displayMetrics.density
 
-    private fun updateTagChipsUI() {
-        for (chip in tagChips) {
-            val isSelected = chip.text.toString() == currentTagFilter
-            if (isSelected) {
-                chip.setBackgroundResource(R.drawable.bg_category_chip_active)
-                chip.setTextColor(Color.WHITE)
-                chip.setTypeface(null, android.graphics.Typeface.BOLD)
-            } else {
-                chip.setBackgroundResource(R.drawable.bg_category_chip_idle)
-                chip.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
-                chip.setTypeface(null, android.graphics.Typeface.NORMAL)
+        for ((tagValue, tagLabel) in categories) {
+            val isSelected = if (tagValue == "الكل") (currentTagFilter == "الكل" || currentTagFilter.isEmpty()) else currentTagFilter == tagValue
+
+            val row = LinearLayout(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    (48 * density).toInt()
+                )
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding((12 * density).toInt(), 0, (12 * density).toInt(), 0)
+                background = androidx.core.content.ContextCompat.getDrawable(
+                    requireContext(),
+                    if (isSelected) R.drawable.bg_category_chip_idle else android.R.color.transparent
+                )
+                isClickable = true
+                isFocusable = true
             }
+
+            val tvTitle = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                text = tagLabel
+                textSize = 14f
+                setTextColor(
+                    if (isSelected) Color.parseColor("#0284C7")
+                    else androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_primary)
+                )
+                typeface = if (isSelected) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+            }
+            row.addView(tvTitle)
+
+            if (isSelected) {
+                val ivCheck = ImageView(requireContext()).apply {
+                    layoutParams = LinearLayout.LayoutParams((18 * density).toInt(), (18 * density).toInt())
+                    setImageResource(R.drawable.ic_check)
+                    setColorFilter(Color.parseColor("#0284C7"))
+                }
+                row.addView(ivCheck)
+            }
+
+            row.setOnClickListener {
+                currentTagFilter = tagValue
+                updateTagSelectorUI()
+                applyFilterAndSort()
+                dialog.dismiss()
+            }
+
+            layoutCategoryList.addView(row)
         }
+
+        dialog.show()
     }
 
     private fun applyFilterAndSort() {
@@ -311,14 +415,14 @@ class CommunityFragment : Fragment() {
         if (list.isEmpty()) {
             layoutEmptyCommunity.visibility = View.VISIBLE
             if (currentTagFilter == "المحفوظات") {
-                tvEmptyTitle.text = "لا توجد منشورات محفوظة"
-                tvEmptySubtitle.text = "احفظ المنشورات التي تنال إعجابك للرجوع إليها في أي وقت!"
+                tvEmptyTitle.text = getString(R.string.saved_posts)
+                tvEmptySubtitle.text = getString(R.string.no_posts_yet)
             } else if (currentTagFilter != "الكل") {
-                tvEmptyTitle.text = "لا توجد منشورات في قسم ($currentTagFilter)"
-                tvEmptySubtitle.text = "كن أول من ينشر في هذا القسم وشارك أفكارك مع الجميع!"
+                tvEmptyTitle.text = "${getString(R.string.no_posts_yet)} (${getLocalizedTagLabel(currentTagFilter)})"
+                tvEmptySubtitle.text = getString(R.string.share_first_post)
             } else {
-                tvEmptyTitle.text = "لا توجد منشورات حالياً"
-                tvEmptySubtitle.text = "كن أول من ينشر في المجتمع وتفاعل مع الآخرين!"
+                tvEmptyTitle.text = getString(R.string.no_posts_yet)
+                tvEmptySubtitle.text = getString(R.string.share_first_post)
             }
         } else {
             layoutEmptyCommunity.visibility = View.GONE
@@ -387,7 +491,7 @@ class CommunityFragment : Fragment() {
         super.onResume()
         // تحديث معرّف المستخدم في الـ Adapter لضمان تلوين القلوب حسب الحساب المتصل حالياً أو تفريغها عند الخروج
         communityAdapter.updateCurrentUserId(getActiveUserId())
-        if (currentTagFilter == "🔖 المحفوظات") {
+        if (currentTagFilter == "المحفوظات") {
             applyFilterAndSort()
         }
     }
@@ -419,13 +523,13 @@ class CommunityFragment : Fragment() {
     private fun checkUserAndOpenPostDialog() {
         val user = AuthManager.currentUser
         if (user == null) {
-            Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً لإضافة منشور", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.login_required_post), Toast.LENGTH_SHORT).show()
             showLoginDialog()
             return
         }
 
         val baseUsername = AuthManager.generateBaseUsername(user.displayName, user.email)
-        val defaultDisplayName = user.displayName ?: "مستخدم"
+        val defaultDisplayName = user.displayName ?: getString(R.string.default_user_name)
 
         FirebaseFirestore.getInstance().collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
@@ -470,14 +574,14 @@ class CommunityFragment : Fragment() {
         btnConfirm.setOnClickListener {
             val rawName = etUsername.text.toString().trim()
             if (rawName.isEmpty()) {
-                etUsername.error = "الرجاء كتابة اسم المستخدم"
+                etUsername.error = getString(R.string.username_example_hint)
                 return@setOnClickListener
             }
 
             val username = rawName.lowercase().replace(" ", "_")
             val user = AuthManager.currentUser
             if (user == null) {
-                Toast.makeText(requireContext(), "خطأ: لم يتم تسجيل الدخول", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -485,7 +589,7 @@ class CommunityFragment : Fragment() {
             AuthManager.isUsernameAvailable(username) { available ->
                 if (!available) {
                     btnConfirm.isEnabled = true
-                    etUsername.error = "اسم المستخدم مأخوذ بالفعل، جرب غيره"
+                    etUsername.error = getString(R.string.username_change_failed)
                     return@isUsernameAvailable
                 }
 
@@ -495,11 +599,11 @@ class CommunityFragment : Fragment() {
                 AuthManager.registerUsername(user.uid, username, displayName, email) { ok, err ->
                     btnConfirm.isEnabled = true
                     if (ok) {
-                        Toast.makeText(requireContext(), "تم إعداد الحساب بنجاح!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.photo_updated_success), Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                         showPostBottomSheet(user.uid, displayName, username, null)
                     } else {
-                        Toast.makeText(requireContext(), err ?: "فشل حفظ الاسم", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), err ?: getString(R.string.save_error), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -648,25 +752,58 @@ class CommunityFragment : Fragment() {
         val rvComments = view.findViewById<RecyclerView>(R.id.rvComments)
         val etInput = view.findViewById<EditText>(R.id.etCommentInput)
         val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
+        val ivCurrentUserAvatar = view.findViewById<ImageView>(R.id.ivCurrentUserCommentAvatar)
+        val layoutEmptyComments = view.findViewById<View>(R.id.layoutEmptyComments)
+        val tvCommentsCountHeader = view.findViewById<TextView>(R.id.tvCommentsCountHeader)
 
-        // شريط الرد على تعليق محدد
+        // شريط الرد / التعديل
         val layoutReplyBanner = view.findViewById<View>(R.id.layoutReplyBanner)
         val tvReplyBannerText = view.findViewById<TextView>(R.id.tvReplyBannerText)
+        val tvActionBannerSubtitle = view.findViewById<TextView>(R.id.tvActionBannerSubtitle)
         val btnCancelReply = view.findViewById<ImageView>(R.id.btnCancelReply)
 
         var replyingToComment: Comment? = null
-
-        btnCancelReply.setOnClickListener {
-            replyingToComment = null
-            layoutReplyBanner.visibility = View.GONE
-            etInput.hint = "اكتب تعليقاً..."
-        }
+        var editingComment: Comment? = null
 
         val user = AuthManager.currentUser
         val authorId = user?.uid ?: return
-        
-        // احتفظنا بهذا كاسم احتياطي في حال فشل الاتصال بقاعدة البيانات
         val fallbackAuthorName = user.displayName ?: "فاعل خير"
+
+        // تحميل صورة المستخدم في شريط التعليق
+        val prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val currentPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            ?: user.photoUrl?.toString() ?: ""
+        ivCurrentUserAvatar?.loadUserAvatar(currentPhotoUrl)
+
+        val resetBannerState = {
+            replyingToComment = null
+            editingComment = null
+            layoutReplyBanner.visibility = View.GONE
+            tvActionBannerSubtitle?.visibility = View.GONE
+            etInput.hint = getString(R.string.comment_hint)
+            btnSend.setImageResource(R.drawable.ic_send)
+        }
+
+        btnCancelReply.setOnClickListener {
+            resetBannerState()
+            etInput.setText("")
+        }
+
+        // تفاعل زر الإرسال مع الكتابة
+        val updateSendButtonState = {
+            val hasText = etInput.text?.toString()?.trim()?.isNotEmpty() == true
+            btnSend.alpha = if (hasText) 1.0f else 0.4f
+            btnSend.isClickable = hasText
+        }
+        updateSendButtonState()
+
+        etInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateSendButtonState()
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
 
         rvComments.layoutManager = LinearLayoutManager(requireContext())
         val commentsAdapter = CommentsAdapter(
@@ -683,15 +820,41 @@ class CommunityFragment : Fragment() {
             },
             onReplyClicked = { comment ->
                 replyingToComment = comment
+                editingComment = null
                 layoutReplyBanner.visibility = View.VISIBLE
-                tvReplyBannerText.text = "الرد على ${comment.authorName}"
-                etInput.hint = "اكتب ردك على ${comment.authorName}..."
+                tvReplyBannerText.text = getString(R.string.reply_to_user, comment.authorName)
+                tvActionBannerSubtitle?.text = comment.content
+                tvActionBannerSubtitle?.visibility = View.VISIBLE
+                etInput.hint = getString(R.string.reply_to_user, comment.authorName)
+                btnSend.setImageResource(R.drawable.ic_send)
+                etInput.requestFocus()
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            },
+            onEditClicked = { comment ->
+                editingComment = comment
+                replyingToComment = null
+                layoutReplyBanner.visibility = View.VISIBLE
+                tvReplyBannerText.text = getString(R.string.edit_comment_title)
+                tvActionBannerSubtitle?.text = comment.content
+                tvActionBannerSubtitle?.visibility = View.VISIBLE
+                etInput.setText(comment.content)
+                etInput.setSelection(comment.content.length)
+                etInput.hint = getString(R.string.edit_comment_hint)
+                btnSend.setImageResource(R.drawable.ic_check)
                 etInput.requestFocus()
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
                 imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
-                FirestoreManager.deleteComment(post.id, comment.id) {}
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.delete_button)
+                    .setMessage(R.string.confirm_delete_comment)
+                    .setPositiveButton(R.string.delete_button) { _, _ ->
+                        FirestoreManager.deleteComment(post.id, comment.id) {}
+                    }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
             }
         )
         rvComments.adapter = commentsAdapter
@@ -699,7 +862,12 @@ class CommunityFragment : Fragment() {
         FirestoreManager.listenToComments(post.id) { list ->
             activity?.runOnUiThread {
                 commentsAdapter.updateData(list)
-                if (list.isNotEmpty()) {
+                if (list.isEmpty()) {
+                    layoutEmptyComments?.visibility = View.VISIBLE
+                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), 0)
+                } else {
+                    layoutEmptyComments?.visibility = View.GONE
+                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), list.size)
                     rvComments.post {
                         rvComments.scrollToPosition(list.size - 1)
                     }
@@ -712,22 +880,40 @@ class CommunityFragment : Fragment() {
             if (text.isEmpty()) return@setOnClickListener
 
             if (BadWordsFilter.containsBadWords(text)) {
-                Toast.makeText(requireContext(), "التعليق يحتوي على كلمات غير لائقة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.comment_bad_words), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             btnSend.isEnabled = false
 
-            val user = AuthManager.currentUser
-            if (user == null) {
+            val currentUser = AuthManager.currentUser
+            if (currentUser == null) {
                 btnSend.isEnabled = true
-                Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للتعليق", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.login_required_to_comment), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val currentAuthorId = user.uid
-            val currentAuthorName = user.displayName ?: fallbackAuthorName
-            val currentPhotoUrl = user.photoUrl?.toString() ?: ""
+            // حالة تعديل التعليق
+            val targetEditing = editingComment
+            if (targetEditing != null) {
+                FirestoreManager.updateComment(post.id, targetEditing.id, text) { success ->
+                    btnSend.isEnabled = true
+                    if (success) {
+                        etInput.setText("")
+                        resetBannerState()
+                        Toast.makeText(requireContext(), getString(R.string.comment_edited_success), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), getString(R.string.comment_edit_error), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                return@setOnClickListener
+            }
+
+            // حالة إضافة تعليق جديد (أو رد)
+            val currentAuthorId = currentUser.uid
+            val currentAuthorName = currentUser.displayName ?: fallbackAuthorName
+            val currentPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+                ?: currentUser.photoUrl?.toString() ?: ""
 
             val replyAuthorName = replyingToComment?.authorName ?: ""
             val replyCommentId = replyingToComment?.id ?: ""
@@ -737,7 +923,7 @@ class CommunityFragment : Fragment() {
                 postId = post.id,
                 authorId = currentAuthorId,
                 authorName = currentAuthorName,
-                authorPhotoUrl = currentPhotoUrl,
+                authorPhotoUrl = currentPhoto,
                 content = text,
                 replyToAuthorName = replyAuthorName,
                 replyToCommentId = replyCommentId
@@ -745,9 +931,7 @@ class CommunityFragment : Fragment() {
                 btnSend.isEnabled = true
                 if (success) {
                     etInput.setText("")
-                    replyingToComment = null
-                    layoutReplyBanner.visibility = View.GONE
-                    etInput.hint = "اكتب تعليقاً..."
+                    resetBannerState()
 
                     // إشعار صاحب التعليق المردود عليه
                     if (targetRepliedComment != null && targetRepliedComment.authorId != currentAuthorId) {
@@ -757,7 +941,7 @@ class CommunityFragment : Fragment() {
                             senderName = currentAuthorName,
                             type = "COMMENT",
                             postId = post.id,
-                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\" 💬"
+                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\""
                         )
                     }
 
@@ -773,7 +957,7 @@ class CommunityFragment : Fragment() {
                         )
                     }
                 } else {
-                    Toast.makeText(requireContext(), "تعذر إرسال التعليق، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.comment_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -791,15 +975,15 @@ class CommunityFragment : Fragment() {
 
     private fun confirmDelete(postId: String) {
         AlertDialog.Builder(requireContext())
-            .setTitle("حذف المنشور")
-            .setMessage("هل أنت متأكد من حذف هذا المنشور؟")
-            .setPositiveButton("حذف") { _, _ ->
+            .setTitle(R.string.post_action_delete)
+            .setMessage(R.string.confirm_delete_post)
+            .setPositiveButton(R.string.post_action_delete) { _, _ ->
                 FirestoreManager.deleteCommunityPost(postId) { success ->
-                    val msg = if (success) "تم الحذف بنجاح" else "فشل حذف المنشور"
+                    val msg = if (success) getString(R.string.delete_button) else getString(R.string.save_error)
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("إلغاء", null)
+            .setNegativeButton(R.string.no, null)
             .show()
     }
 
@@ -807,7 +991,7 @@ class CommunityFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val user = AuthManager.getConfirmedUser(timeoutMs = 500)
             if (user == null) {
-                Toast.makeText(requireContext(), "يرجى تسجيل الدخول أولاً للإبلاغ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.login_required_report), Toast.LENGTH_SHORT).show()
                 showLoginDialog()
                 return@launch
             }
@@ -815,30 +999,33 @@ class CommunityFragment : Fragment() {
             val reporterId = user.uid
 
         val reasons = arrayOf(
-            "محتوى غير لائق أو إباحي",
-            "ألفاظ نابية وشتائم",
-            "إساءة دينية أو ازدراء أديان",
-            "خطاب كراهية وتنمر",
-            "نشر محتوى مضلل أو احتيال",
-            "محتوى مزعج (سبام)",
-            "أخرى"
+            getString(R.string.report_reason_inappropriate),
+            getString(R.string.report_reason_profanity),
+            getString(R.string.report_reason_religion),
+            getString(R.string.report_reason_hate),
+            getString(R.string.report_reason_spam),
+            getString(R.string.report_reason_other)
         )
 
         var selectedReasonIndex = 0
 
         AlertDialog.Builder(requireContext())
-            .setTitle("سبب الإبلاغ عن هذا المنشور")
+            .setTitle(getString(R.string.report_post_title))
             .setSingleChoiceItems(reasons, selectedReasonIndex) { _, which ->
                 selectedReasonIndex = which
             }
-            .setPositiveButton("إرسال البلاغ") { _, _ ->
+            .setPositiveButton(getString(R.string.send_report)) { _, _ ->
                 val chosenReason = reasons[selectedReasonIndex]
                 FirestoreManager.reportCommunityPost(postId, reporterId, chosenReason) { success ->
-                    val msg = if (success) "تم استلام البلاغ، شكراً لحرصك على أمان المجتمع" else "حدث خطأ أثناء الإبلاغ"
+                    val msg = if (success) {
+                        getString(R.string.report_received_success)
+                    } else {
+                        getString(R.string.report_error)
+                    }
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("إلغاء", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
         }
     }

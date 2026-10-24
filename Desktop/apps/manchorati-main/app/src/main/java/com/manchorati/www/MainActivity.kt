@@ -68,6 +68,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnOptionsMenu: ImageView
     private lateinit var btnMainNotificationsContainer: View
     private lateinit var mainBadgeNotificationDot: View
+    private lateinit var layoutNormalHeader: View
+    private lateinit var layoutSearchHeader: View
+    private lateinit var btnSearchToggle: ImageView
+    private lateinit var btnSearchClose: ImageView
+    private lateinit var btnSearchClear: ImageView
     private lateinit var etSearch: EditText
 
     private var currentTab = 0
@@ -83,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            Toast.makeText(this, "تم تفعيل إشعارات منشور اليوم 🌟", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "تم تفعيل إشعارات منشور اليوم", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -191,6 +196,11 @@ class MainActivity : AppCompatActivity() {
         btnOptionsMenu = findViewById(R.id.btnOptionsMenu)
         btnMainNotificationsContainer = findViewById(R.id.btnMainNotificationsContainer)
         mainBadgeNotificationDot = findViewById(R.id.mainBadgeNotificationDot)
+        layoutNormalHeader = findViewById(R.id.layoutNormalHeader)
+        layoutSearchHeader = findViewById(R.id.layoutSearchHeader)
+        btnSearchToggle = findViewById(R.id.btnSearchToggle)
+        btnSearchClose = findViewById(R.id.btnSearchClose)
+        btnSearchClear = findViewById(R.id.btnSearchClear)
         etSearch = findViewById(R.id.etSearch)
     }
 
@@ -199,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         btnMainNotificationsContainer.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
-                Toast.makeText(this, "سجل دخولك لعرض الإشعارات", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_required_notifications), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             showNotificationsBottomSheet()
@@ -285,12 +295,21 @@ class MainActivity : AppCompatActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val title = if (notif.senderName.isNotEmpty()) notif.senderName else "منشوراتي"
+        val sender = if (notif.senderName.isNotEmpty()) notif.senderName else getString(R.string.app_name)
+        val title = sender
+        val body = when (notif.type) {
+            "LIKE" -> getString(R.string.notif_liked_post, sender)
+            "COMMENT" -> getString(R.string.notif_commented_post, sender)
+            "FOLLOW" -> getString(R.string.notif_followed_you, sender)
+            "NEW_POST" -> getString(R.string.notif_new_post, sender)
+            "REPLY" -> getString(R.string.notif_replied_comment, sender)
+            else -> notif.message.ifEmpty { getString(R.string.app_name) }
+        }
         val builder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
-            .setContentText(notif.message)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notif.message))
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -381,17 +400,17 @@ class MainActivity : AppCompatActivity() {
 
         btnClearAll?.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("مسح الإشعارات")
-                .setMessage("هل تريد مسح جميع الإشعارات نهائياً؟")
-                .setPositiveButton("مسح الكل") { _, _ ->
+                .setTitle(getString(R.string.clear_notifications_title))
+                .setMessage(getString(R.string.clear_notifications_confirm))
+                .setPositiveButton(getString(R.string.clear_all)) { _, _ ->
                     FirestoreManager.clearAllNotifications(currentUid) {
                         userNotifications = emptyList()
                         notifAdapter.updateData(emptyList())
                         updateEmptyState()
-                        Toast.makeText(this, "تم مسح جميع الإشعارات 🧹", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.notifications_cleared), Toast.LENGTH_SHORT).show()
                     }
                 }
-                .setNegativeButton("إلغاء", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show()
         }
 
@@ -411,7 +430,7 @@ class MainActivity : AppCompatActivity() {
                         FirestoreManager.deleteNotification(removed.id)
                         userNotifications = userNotifications.filter { it.id != removed.id }
                         updateEmptyState()
-                        Toast.makeText(this@MainActivity, "تم حذف الإشعار 🗑️", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "تم حذف الإشعار", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -470,7 +489,7 @@ class MainActivity : AppCompatActivity() {
         navItemProfile.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
-                Toast.makeText(this, "يرجى تسجيل الدخول لعرض حسابك", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show()
                 viewPager.currentItem = 0
                 viewPager.postDelayed({
                     supportFragmentManager.fragments.forEach { fragment ->
@@ -482,7 +501,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val intent = Intent(this, UserProfileActivity::class.java).apply {
                     putExtra("USER_ID", user.uid)
-                    putExtra("USER_NAME", user.displayName ?: "مستخدم")
+                    putExtra("USER_NAME", user.displayName ?: getString(R.string.default_user_name))
                 }
                 startActivity(intent)
             }
@@ -512,14 +531,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearch() {
+        btnSearchToggle.setOnClickListener {
+            openSearch()
+        }
+
+        btnSearchClose.setOnClickListener {
+            closeSearch()
+        }
+
+        btnSearchClear.setOnClickListener {
+            etSearch.setText("")
+        }
+
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s?.toString() ?: ""
+                btnSearchClear.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
                 notifySearchToFragments(query)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun openSearch() {
+        layoutNormalHeader.visibility = View.GONE
+        layoutSearchHeader.visibility = View.VISIBLE
+        etSearch.requestFocus()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        imm?.showSoftInput(etSearch, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun closeSearch() {
+        etSearch.setText("")
+        layoutSearchHeader.visibility = View.GONE
+        layoutNormalHeader.visibility = View.VISIBLE
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        imm?.hideSoftInputFromWindow(etSearch.windowToken, 0)
     }
 
     private fun notifySearchToFragments(query: String) {
@@ -593,32 +641,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.btnDrawerContact)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             startActivity(Intent(this, ContactActivity::class.java))
         }
 
         findViewById<View>(R.id.btnDrawerNotifications)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             startActivity(Intent(this, NotificationSettingsActivity::class.java))
         }
 
         findViewById<View>(R.id.btnDrawerRate)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             openPlayStore()
         }
 
         findViewById<View>(R.id.btnDrawerShare)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             shareApp()
         }
 
         findViewById<View>(R.id.btnDrawerMoreApps)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             openMoreApps()
         }
 
         findViewById<View>(R.id.btnDrawerLogout)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.closeDrawers()
             performLogout()
         }
     }
@@ -669,13 +717,13 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             // ---- كود الزائر ----
-            tvName?.text = "زائر كريم"
-            tvUsername?.text = "اضغط لتسجيل الدخول"
+            tvName?.text = getString(R.string.guest_user)
+            tvUsername?.text = getString(R.string.tap_to_login)
             btnLogout?.visibility = View.GONE
             ivAvatar?.setImageResource(R.drawable.ic_profile)
 
             val loginAction = View.OnClickListener {
-                drawerLayout.closeDrawer(GravityCompat.END) // أو androidx.core.view.GravityCompat.END حسب استيراداتك
+                drawerLayout.closeDrawers()
                 viewPager.currentItem = 0
                 viewPager.postDelayed({
                     supportFragmentManager.fragments.forEach { fragment ->
@@ -695,9 +743,9 @@ class MainActivity : AppCompatActivity() {
     
     private fun performLogout() {
         AlertDialog.Builder(this)
-            .setTitle("تسجيل الخروج")
-            .setMessage("هل أنت متأكد من رغبتك في تسجيل الخروج؟")
-            .setPositiveButton("خروج") { _, _ ->
+            .setTitle(getString(R.string.logout_confirm_title))
+            .setMessage(getString(R.string.logout_confirm_msg))
+            .setPositiveButton(getString(R.string.drawer_logout)) { _, _ ->
                 FirebaseAuth.getInstance().signOut()
                 AuthManager.getGoogleClient(this).signOut().addOnCompleteListener {
                     getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -705,10 +753,10 @@ class MainActivity : AppCompatActivity() {
                         .remove("user_name")
                         .apply()
                     updateDrawerHeader()
-                    Toast.makeText(this, "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("إلغاء", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
@@ -725,21 +773,23 @@ class MainActivity : AppCompatActivity() {
     private fun shareApp() {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "حمل تطبيق منشوراتي لأجمل الكلمات والمنشورات: https://play.google.com/store/apps/details?id=$packageName")
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text, packageName))
         }
-        startActivity(Intent.createChooser(shareIntent, "مشاركة التطبيق عبر"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_chooser)))
     }
 
     private fun openMoreApps() {
         val uri = Uri.parse("https://play.google.com/store/apps/developer?id=hanane")
-        startActivity(Intent.createChooser(Intent(Intent.ACTION_VIEW, uri), "فتح عبر"))
+        startActivity(Intent.createChooser(Intent(Intent.ACTION_VIEW, uri), getString(R.string.share_post_chooser)))
     }
 
     private fun setupBackNavigation() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    drawerLayout.closeDrawer(GravityCompat.END)
+                if (drawerLayout.isDrawerOpen(GravityCompat.END) || drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawers()
+                } else if (layoutSearchHeader.visibility == View.VISIBLE) {
+                    closeSearch()
                 } else if (viewPager.currentItem != 0) {
                     viewPager.currentItem = 0
                 } else {
@@ -747,7 +797,7 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     } else {
                         backPressedTime = System.currentTimeMillis()
-                        Toast.makeText(this@MainActivity, "اضغط مرة أخرى للخروج", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

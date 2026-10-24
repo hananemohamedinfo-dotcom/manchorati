@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#0B0F19"
     android:fitsSystemWindows="false"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="vertical">
 
     <!-- 1. الشريط العلوي الاحترافي (Header Bar) -->
@@ -33,33 +33,40 @@
 
         <!-- العنوان الرئيسي والفرعي -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="6dp"
             android:layout_toEndOf="@id/btnCloseDialog"
+            android:layout_toStartOf="@+id/layoutEditorHeaderActions"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvEditorTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="محرر البطاقات"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="@string/editor_title"
                 android:textColor="#F8FAFC"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvEditorSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="استوديو تصميم المنشورات"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="@string/editor_subtitle"
                 android:textColor="#94A3B8"
                 android:textSize="10sp" />
         </LinearLayout>
 
         <!-- أزرار الإجراءات السريعة في الهيدر (Theme, Reset, Save, Share) -->
         <LinearLayout
+            android:id="@+id/layoutEditorHeaderActions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -117,7 +124,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="حفظ"
+                    android:text="@string/save_btn"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -146,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="مشاركة"
+                    android:text="@string/share_btn"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -359,7 +366,7 @@
                         android:id="@+id/tvDimTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌓 التعتيم:"
+                        android:text="@string/dimming_label"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -434,7 +441,7 @@
                         android:id="@+id/tvBlurTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌫️ الضبابية:"
+                        android:text="@string/blur_label"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -449,7 +456,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="بدون"
+                        android:text="@string/blur_none"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -464,7 +471,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="ناعمة"
+                        android:text="@string/blur_soft"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -478,7 +485,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="قوية"
+                        android:text="@string/blur_strong"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -493,7 +500,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🎬 الفلتر:"
+                        android:text="@string/filter_label"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -508,7 +515,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="عادي"
+                        android:text="@string/filter_normal"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -523,7 +530,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="🌅 دافئ"
+                        android:text="@string/filter_warm"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -537,7 +544,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="🌙 ليلي"
+                        android:text="@string/filter_night"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -551,7 +558,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="🌲 زمردي"
+                        android:text="@string/filter_emerald"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -565,7 +572,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="🍷 كلاسيكي"
+                        android:text="@string/filter_classic"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -698,7 +705,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="أسطر عادية"
+                        android:text="@string/lines_normal"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -713,7 +720,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="أسطر متباعدة"
+                        android:text="@string/lines_loose"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -728,7 +735,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="تباعد الحروف ↔️"
+                        android:text="@string/letter_spacing"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -780,7 +787,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="تدرج النص: عادي 🎨"
+                        android:text="@string/text_gradient_normal"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -798,7 +805,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="تمييز النص 🏷️"
+                        android:text="@string/text_highlight"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -816,7 +823,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="ظل ناعم ✨"
+                        android:text="@string/text_shadow_soft"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -853,7 +860,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
-                        android:text="مربع 1:1 ■"
+                        android:text="@string/ratio_square"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -868,7 +875,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
-                        android:text="بورتريه 4:5 ▍"
+                        android:text="@string/ratio_portrait"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -882,7 +889,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
-                        android:text="ستوري 9:16 ▌"
+                        android:text="@string/ratio_story"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -896,7 +903,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
-                        android:text="عريض 16:9 ▬"
+                        android:text="@string/ratio_landscape"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -914,7 +921,7 @@
                     android:id="@+id/tvAlignTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="المحاذاة:"
+                    android:text="@string/alignment_label"
                     android:textColor="#CBD5E1"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -989,7 +996,7 @@
                         android:id="@+id/tvRadiusTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="الحواف:"
+                        android:text="@string/corners_label"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -1004,7 +1011,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="حادة 0"
+                        android:text="@string/corner_sharp"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -1018,7 +1025,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="مستديرة 18"
+                        android:text="@string/corner_rounded"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -1033,7 +1040,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
-                        android:text="كبسولة 30"
+                        android:text="@string/corner_pill"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -1051,7 +1058,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="إطار البطاقة 🔲"
+                        android:text="@string/card_border"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -1080,7 +1087,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="اقتباس: بدون"
+                        android:text="@string/quote_none"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -1098,7 +1105,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="توقيع الكاتب ✍️"
+                        android:text="@string/author_signature"
                         android:textColor="#CBD5E1"
                         android:textSize="11sp" />
 
@@ -1116,7 +1123,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="العلامة المائية 💧"
+                        android:text="@string/watermark_label"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -1136,7 +1143,7 @@
                 android:id="@+id/tvPresetsSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="تطبيق فوري لتنسيق متكامل بنقرة واحدة:"
+                android:text="@string/instant_presets_subtitle"
                 android:textColor="#CBD5E1"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -1213,7 +1220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="الخلفية"
+                    android:text="@string/tab_background"
                     android:textColor="#38BDF8"
                     android:textSize="10sp"
                     android:textStyle="bold" />
@@ -1249,7 +1256,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="الخط"
+                    android:text="@string/tab_font"
                     android:textColor="#94A3B8"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -1284,7 +1291,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="لون النص"
+                    android:text="@string/tab_text_color"
                     android:textColor="#94A3B8"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -1319,7 +1326,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="المقاس"
+                    android:text="@string/tab_size"
                     android:textColor="#94A3B8"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -1354,7 +1361,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="الإطار"
+                    android:text="@string/tab_border"
                     android:textColor="#94A3B8"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -1389,7 +1396,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="قوالب"
+                    android:text="@string/tab_templates"
                     android:textColor="#94A3B8"
                     android:textSize="10sp" />
             </LinearLayout>

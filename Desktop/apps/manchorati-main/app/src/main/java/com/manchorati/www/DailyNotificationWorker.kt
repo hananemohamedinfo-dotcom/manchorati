@@ -27,20 +27,21 @@ class DailyNotificationWorker(
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
 
+        val localizedContext = LocaleHelper.applyLocale(applicationContext)
         val type = inputData.getString("TYPE") ?: "DEFAULT"
         val categoryName = inputData.getString("CATEGORY") ?: ""
 
         // 1. تحديد العنوان
         val title = when {
-            dayOfWeek == Calendar.FRIDAY && hour < 12 -> "جمعة مباركة 🕌"
-            type == "MORNING" || hour < 14 -> "صباح الخير ☀️"
-            type == "EVENING" || hour >= 14 -> "مساء الخير 🌙"
-            else -> "رسالة لك اليوم 🌿"
+            dayOfWeek == Calendar.FRIDAY && hour < 12 -> localizedContext.getString(R.string.notif_friday)
+            type == "MORNING" || hour < 14 -> localizedContext.getString(R.string.notif_morning)
+            type == "EVENING" || hour >= 14 -> localizedContext.getString(R.string.notif_evening)
+            else -> localizedContext.getString(R.string.notif_daily_quote)
         }
 
         // 2. محاولة جلب ID القسم المختار
         var targetId: Int? = null
-        if (categoryName.isNotEmpty() && categoryName != "افتراضي (الكل)") {
+        if (categoryName.isNotEmpty() && categoryName != "افتراضي (الكل)" && categoryName != "Default (All)" && categoryName != "Par défaut (Tous)") {
             try {
                 targetId = dbHelper.getCategoryIdByName(categoryName.trim())
             } catch (e: Exception) {
@@ -60,7 +61,7 @@ class DailyNotificationWorker(
         if (post != null) {
             showNotification(title, post.content)
         } else {
-            showNotification(title, "ابتسم وتفاءل، يومك مبارك وسعيد بإذن الله.")
+            showNotification(title, localizedContext.getString(R.string.notif_default_body))
         }
 
         // إعادة جدولة اليوم التالي للمحافظة على استمرار الإشعارات
@@ -82,9 +83,10 @@ class DailyNotificationWorker(
 
         // إعداد القناة مع الصوت والاهتزاز
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "إشعارات منشوراتي اليومية"
+            val localizedContext = LocaleHelper.applyLocale(applicationContext)
+            val name = localizedContext.getString(R.string.daily_notifications_channel)
             val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "إشعارات يومية صباحية ومسائية مخصصة"
+                description = localizedContext.getString(R.string.daily_notifications_desc)
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 300, 200, 300)
             }

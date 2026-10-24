@@ -14,6 +14,7 @@ class CommentsAdapter(
     private val postAuthorId: String,
     private val onUserClicked: (userId: String, userName: String) -> Unit = { _, _ -> },
     private val onReplyClicked: (Comment) -> Unit = {},
+    private val onEditClicked: (Comment) -> Unit = {},
     private val onDeleteClicked: (Comment) -> Unit
 ) : RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
@@ -42,24 +43,29 @@ class CommentsAdapter(
         private val tvReplyToAuthor: TextView = itemView.findViewById(R.id.tvReplyToAuthor)
         private val tvContent: TextView = itemView.findViewById(R.id.tvCommentContent)
         private val tvTime: TextView = itemView.findViewById(R.id.tvCommentTime)
+        private val tvEditedBadge: TextView? = itemView.findViewById(R.id.tvEditedBadge)
         private val btnReply: TextView = itemView.findViewById(R.id.btnReplyComment)
+        private val tvEditSeparator: View? = itemView.findViewById(R.id.tvEditSeparator)
+        private val btnEdit: TextView? = itemView.findViewById(R.id.btnEditComment)
         private val tvDeleteSeparator: View = itemView.findViewById(R.id.tvDeleteSeparator)
         private val btnDelete: View = itemView.findViewById(R.id.btnDeleteComment)
 
         private fun formatTimeAgo(timeMillis: Long): String {
             if (timeMillis <= 0L) return ""
             val diff = System.currentTimeMillis() - timeMillis
-            if (diff < 0L) return "الآن"
+            val justNow = itemView.context.getString(R.string.time_just_now)
+            if (diff < 0L) return justNow
             val seconds = diff / 1000
             val minutes = seconds / 60
             val hours = minutes / 60
             val days = hours / 24
 
+            val isRtl = LocaleHelper.isRtl(itemView.context)
             return when {
-                seconds < 60 -> "الآن"
-                minutes < 60 -> "منذ $minutes د"
-                hours < 24 -> "منذ $hours س"
-                days < 7 -> "منذ $days يوم"
+                seconds < 60 -> justNow
+                minutes < 60 -> if (isRtl) "منذ $minutes د" else "${minutes}m"
+                hours < 24 -> if (isRtl) "منذ $hours س" else "${hours}h"
+                days < 7 -> if (isRtl) "منذ $days يوم" else "${days}d"
                 else -> {
                     val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
                     sdf.format(java.util.Date(timeMillis))
@@ -101,9 +107,26 @@ class CommentsAdapter(
                 tvTime.visibility = View.GONE
             }
 
+            // شارة (معدّل)
+            if (comment.isEdited) {
+                tvEditedBadge?.visibility = View.VISIBLE
+            } else {
+                tvEditedBadge?.visibility = View.GONE
+            }
+
             // زر الرد
             btnReply.setOnClickListener {
                 onReplyClicked(comment)
+            }
+
+            // إمكانية التعديل لصاحب التعليق فقط
+            if (comment.authorId.isNotEmpty() && comment.authorId == currentUserId) {
+                tvEditSeparator?.visibility = View.VISIBLE
+                btnEdit?.visibility = View.VISIBLE
+                btnEdit?.setOnClickListener { onEditClicked(comment) }
+            } else {
+                tvEditSeparator?.visibility = View.GONE
+                btnEdit?.visibility = View.GONE
             }
 
             // تحميل الصورة الشخصية

@@ -5,7 +5,7 @@
     android:id="@+id/layoutCommentRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="horizontal"
     android:paddingHorizontal="14dp"
     android:paddingVertical="5dp">
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_weight="1"
-        android:layoutDirection="rtl"
+        android:layoutDirection="locale"
         android:orientation="vertical">
 
         <!-- فقاعة التعليق (Facebook Bubble) -->
@@ -80,7 +80,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="رد على "
+                    android:text="@string/reply_prefix"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
 
@@ -107,7 +107,7 @@
                 tools:text="نص التعليق الجميل يظهر هنا داخل فقاعة احترافية..." />
         </LinearLayout>
 
-        <!-- سطر الإجراءات أسفل الفقاعة: الوقت • رد • حذف -->
+        <!-- سطر الإجراءات أسفل الفقاعة: الوقت • معدل • رد • تعديل • حذف -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -123,6 +123,18 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 tools:text="منذ 5 د" />
+
+            <!-- علامة (معدّل) -->
+            <TextView
+                android:id="@+id/tvEditedBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/edited_badge"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -142,10 +154,39 @@
                 android:focusable="true"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="1dp"
-                android:text="رد"
+                android:text="@string/reply_button"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
+
+            <!-- نقطة فاصلة لزر التعديل -->
+            <TextView
+                android:id="@+id/tvEditSeparator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="5dp"
+                android:text="•"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- زر التعديل -->
+            <TextView
+                android:id="@+id/btnEditComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="1dp"
+                android:text="@string/edit_button"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <!-- نقطة فاصلة لزر الحذف -->
             <TextView
@@ -169,7 +210,7 @@
                 android:focusable="true"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="1dp"
-                android:text="حذف"
+                android:text="@string/delete_button"
                 android:textColor="#EF4444"
                 android:textSize="11sp"
                 android:textStyle="bold"

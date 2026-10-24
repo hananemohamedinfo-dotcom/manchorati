@@ -47,7 +47,7 @@ class UserFollowAdapter(
         private val btnFollow: TextView = itemView.findViewById(R.id.btnUserRowFollow)
 
         fun bind(user: UserFollowItem, position: Int) {
-            tvName.text = if (user.displayName.isNotEmpty()) user.displayName else "مستخدم"
+            tvName.text = if (user.displayName.isNotEmpty()) user.displayName else itemView.context.getString(R.string.default_user_name)
             tvUsername.text = if (user.username.isNotEmpty()) "@${user.username}" else ""
             ivAvatar.loadUserAvatar(user.photoUrl)
 
@@ -71,11 +71,11 @@ class UserFollowAdapter(
         private fun updateFollowButtonUI(isFollowing: Boolean) {
             val context = itemView.context
             if (isFollowing) {
-                btnFollow.text = "متابع ✓"
+                btnFollow.text = context.getString(R.string.following)
                 btnFollow.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                 btnFollow.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
             } else {
-                btnFollow.text = "+ متابعة"
+                btnFollow.text = context.getString(R.string.follow)
                 btnFollow.setBackgroundResource(R.drawable.bg_tool_chip_active)
                 btnFollow.setTextColor(Color.WHITE)
             }

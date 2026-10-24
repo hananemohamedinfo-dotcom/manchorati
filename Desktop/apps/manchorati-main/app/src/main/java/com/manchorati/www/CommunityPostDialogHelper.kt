@@ -59,6 +59,7 @@ object CommunityPostDialogHelper {
         val tvPreviewTagBadge = dialogView.findViewById<TextView>(R.id.tvPreviewTagBadge)
         val etContent = dialogView.findViewById<EditText>(R.id.etPostContent)
         val tvCharCounter = dialogView.findViewById<TextView>(R.id.tvCharCounter)
+        val btnClearContent = dialogView.findViewById<TextView>(R.id.btnClearContent)
 
         // Menu Tabs
         val tabBg = dialogView.findViewById<TextView>(R.id.tabBg)
@@ -96,16 +97,32 @@ object CommunityPostDialogHelper {
             ?: editingPost?.authorPhotoUrl
             ?: ""
         ivPreviewAvatar.loadUserAvatar(authorPhoto)
-        tvPreviewAuthorName.text = if (authorName.isNotEmpty()) authorName else "أنت"
+        tvPreviewAuthorName.text = if (authorName.isNotEmpty()) authorName else context.getString(R.string.you_author)
 
         btnCloseDialog.setOnClickListener { dialog.dismiss() }
 
         if (editingPost != null) {
-            tvDialogTitle.text = "تعديل المنشور"
+            tvDialogTitle.text = context.getString(R.string.edit_post_title)
             etContent.setText(editingPost.content)
             etContent.setSelection(etContent.text.length)
-            btnPublish.text = "حفظ التعديل 💾"
+            btnPublish.text = context.getString(R.string.save_edit_post)
         }
+
+        btnClearContent?.setOnClickListener {
+            etContent.setText("")
+        }
+
+        val tagsList = listOf(
+            Pair("", context.getString(R.string.tag_none)),
+            Pair("حكم وأقوال", context.getString(R.string.tag_wisdom)),
+            Pair("خواطر", context.getString(R.string.tag_thoughts)),
+            Pair("أدعية وأذكار", context.getString(R.string.tag_dua)),
+            Pair("تحفيز وتطوير", context.getString(R.string.tag_motivation)),
+            Pair("فكاهة وضحك", context.getString(R.string.tag_humor)),
+            Pair("شعر وأدب", context.getString(R.string.tag_poetry)),
+            Pair("قهوة ومساء", context.getString(R.string.tag_coffee)),
+            Pair("عام", context.getString(R.string.tag_general))
+        )
 
         // Live Preview Updater
         fun updatePreview() {
@@ -133,7 +150,7 @@ object CommunityPostDialogHelper {
 
             if (selectedTag.isNotEmpty()) {
                 tvPreviewTagBadge.visibility = View.VISIBLE
-                tvPreviewTagBadge.text = selectedTag
+                tvPreviewTagBadge.text = tagsList.find { it.first == selectedTag }?.second ?: selectedTag
             } else {
                 tvPreviewTagBadge.visibility = View.GONE
             }
@@ -141,14 +158,19 @@ object CommunityPostDialogHelper {
         updatePreview()
 
         // Character counter watcher
+        fun updateCharCounterState(len: Int) {
+            tvCharCounter.text = "$len / 280"
+            btnClearContent?.visibility = if (len > 0) View.VISIBLE else View.GONE
+        }
+        updateCharCounterState(etContent.text.length)
+
         etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                tvCharCounter.text = "${s?.length ?: 0} / 280"
+                updateCharCounterState(s?.length ?: 0)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-        tvCharCounter.text = "${etContent.text.length} / 280"
 
         // 1. Tab Menu Navigation
         fun switchTab(activeTab: TextView, activeScroll: View) {
@@ -354,18 +376,6 @@ object CommunityPostDialogHelper {
         renderBgColors()
 
         // 3. Tags Section
-        val tagsList = listOf(
-            Pair("", "بدون وسم"),
-            Pair("حكم وأقوال", "حكم وأقوال"),
-            Pair("خواطر", "خواطر"),
-            Pair("أدعية وأذكار", "أدعية وأذكار"),
-            Pair("تحفيز وتطوير", "تحفيز وتطوير"),
-            Pair("فكاهة وضحك", "فكاهة وضحك"),
-            Pair("شعر وأدب", "شعر وأدب"),
-            Pair("قهوة ومساء", "قهوة ومساء"),
-            Pair("عام", "عام")
-        )
-
         fun renderTags() {
             layoutTags.removeAllViews()
             val chipPadH = (12 * density).toInt()
@@ -409,14 +419,14 @@ object CommunityPostDialogHelper {
 
         // 4. Text Colors Section
         val curatedTextColors = listOf(
-            Pair("", "تلقائي"),
-            Pair("#FFFFFF", "أبيض"),
-            Pair("#0F172A", "داكن"),
-            Pair("#FBBF24", "ذهبي"),
-            Pair("#38BDF8", "سماوي"),
-            Pair("#34D399", "أخضر"),
-            Pair("#FB7185", "وردي"),
-            Pair("#A855F7", "بنفسجي")
+            Pair("", context.getString(R.string.color_auto)),
+            Pair("#FFFFFF", context.getString(R.string.color_white)),
+            Pair("#0F172A", context.getString(R.string.color_dark)),
+            Pair("#FBBF24", context.getString(R.string.color_gold)),
+            Pair("#38BDF8", context.getString(R.string.color_cyan)),
+            Pair("#34D399", context.getString(R.string.color_green)),
+            Pair("#FB7185", context.getString(R.string.color_pink)),
+            Pair("#A855F7", context.getString(R.string.color_purple))
         )
 
         fun renderTextColors() {
@@ -428,7 +438,7 @@ object CommunityPostDialogHelper {
                     // Auto Chip
                     val isSelected = selectedTextColor.isEmpty()
                     val autoChip = TextView(context).apply {
-                        text = "تلقائي A"
+                        text = "${context.getString(R.string.color_auto)} A"
                         textSize = 12f
                         gravity = Gravity.CENTER
                         setPadding((12 * density).toInt(), (4 * density).toInt(), (12 * density).toInt(), (4 * density).toInt())
@@ -585,14 +595,14 @@ object CommunityPostDialogHelper {
 
         // 5. Fonts Section
         val fontsList = listOf(
-            Pair("tajawal", "تجوال"),
-            Pair("cairoplay", "كايرو"),
-            Pair("arefruqaa", "رقعة"),
-            Pair("kufam", "كوفام"),
-            Pair("marhey", "مرحي"),
-            Pair("notonastaliqurdu", "نستعليق"),
-            Pair("blakahollow", "بلاك"),
-            Pair("oi", "عريض")
+            Pair("tajawal", context.getString(R.string.font_tajawal)),
+            Pair("cairoplay", context.getString(R.string.font_cairo)),
+            Pair("arefruqaa", context.getString(R.string.font_ruqaa)),
+            Pair("kufam", context.getString(R.string.font_kufam)),
+            Pair("marhey", context.getString(R.string.font_marhey)),
+            Pair("notonastaliqurdu", context.getString(R.string.font_nastaliq)),
+            Pair("blakahollow", context.getString(R.string.font_blaka)),
+            Pair("oi", context.getString(R.string.font_bold))
         )
 
         fun renderFonts() {
@@ -638,19 +648,19 @@ object CommunityPostDialogHelper {
         btnPublish.setOnClickListener {
             val content = etContent.text.toString().trim()
             if (content.isEmpty()) {
-                etContent.error = "اكتب كلمات المنشور"
+                etContent.error = context.getString(R.string.write_post_error)
                 etContent.requestFocus()
                 return@setOnClickListener
             }
 
             if (BadWordsFilter.containsBadWords(content)) {
-                Toast.makeText(context, "عذراً، يحتوي النص على كلمات مخالفة لسياسة النشر", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.post_bad_words), Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
             val currentUser = AuthManager.currentUser ?: AuthManager.auth.currentUser
             if (currentUser == null) {
-                Toast.makeText(context, "تعذر التحقق من الحساب، يرجى تسجيل الدخول", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.login_required_to_post), Toast.LENGTH_SHORT).show()
                 onAuthRequired?.invoke()
                 return@setOnClickListener
             }
@@ -672,14 +682,14 @@ object CommunityPostDialogHelper {
                     tag = selectedTag,
                     onSuccess = {
                         dialog.dismiss()
-                        Toast.makeText(context, "تم النشر في المجتمع بنجاح! 🚀", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.post_published_success), Toast.LENGTH_SHORT).show()
                         onSuccess?.invoke()
                     },
                     onFailure = {
                         btnPublish.isEnabled = true
-                        btnPublish.text = "نشر في المجتمع 🚀"
+                        btnPublish.text = context.getString(R.string.publish)
                         pbPublishing.visibility = View.GONE
-                        Toast.makeText(context, "فشل النشر، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.post_failed), Toast.LENGTH_SHORT).show()
                     }
                 )
             } else {
@@ -693,13 +703,13 @@ object CommunityPostDialogHelper {
                 ) { ok ->
                     if (ok) {
                         dialog.dismiss()
-                        Toast.makeText(context, "تم حفظ التعديل بنجاح! 💾", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.post_updated_success), Toast.LENGTH_SHORT).show()
                         onSuccess?.invoke()
                     } else {
                         btnPublish.isEnabled = true
-                        btnPublish.text = "حفظ التعديل 💾"
+                        btnPublish.text = context.getString(R.string.save_edit_post)
                         pbPublishing.visibility = View.GONE
-                        Toast.makeText(context, "فشل التعديل، حاول مجدداً", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.post_edit_failed), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

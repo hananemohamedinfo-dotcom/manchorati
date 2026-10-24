@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_card"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="vertical"
     android:padding="24dp">
 
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="8dp"
-        android:text="تسجيل الدخول"
+        android:text="@string/login_title"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:text="سجّل دخولك بحساب Google لتتمكن من النشر بهويتك الثابتة."
+        android:text="@string/login_desc"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
@@ -35,7 +35,7 @@
         android:layout_height="52dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#4285F4"
-        android:text="متابعة باستخدام حساب Google"
+        android:text="@string/continue_with_google"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:text="اختر اسم مستخدم فريد (Username):"
+            android:text="@string/choose_username_title"
             android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/search_bg"
-            android:hint="مثال: mohamed_95"
+            android:hint="@string/username_example_hint"
             android:inputType="textNoSuggestions"
             android:padding="10dp"
             android:textColor="@color/text_primary"
@@ -73,7 +73,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="14dp"
             android:backgroundTint="#BE123C"
-            android:text="تأكيد ومتابعة"
+            android:text="@string/confirm_and_continue"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

@@ -64,6 +64,7 @@ class UserProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         setContentView(R.layout.activity_user_profile)
 
         val passedId = intent.getStringExtra("USER_ID") ?: ""
@@ -95,7 +96,7 @@ class UserProfileActivity : AppCompatActivity() {
                             tvProfileUsername.text = "@$currentUsername"
                         }
                         if (tvBio.text.isNullOrEmpty() || tvBio.text == "فاعل خير") {
-                            tvBio.text = "لا توجد نبذة شخصية بعد."
+                            tvBio.text = getString(R.string.no_bio_yet)
                         }
                         ivProfileAvatar.loadUserAvatar(localPhoto)
                     }
@@ -110,7 +111,7 @@ class UserProfileActivity : AppCompatActivity() {
                     activeUserId = ""
                     adapter.updateCurrentUserId("")
                     if (targetUserId.isEmpty()) {
-                        Toast.makeText(this@UserProfileActivity, "يرجى تسجيل الدخول أولاً", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@UserProfileActivity, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show()
                         finish()
                     } else {
                         updateProfileUI()
@@ -130,7 +131,7 @@ class UserProfileActivity : AppCompatActivity() {
                 if (uid.isNotEmpty()) {
                     FirestoreManager.toggleLike(post.id, uid, isLiked) {}
                 } else {
-                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للإعجاب", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.login_required_like), Toast.LENGTH_SHORT).show()
                 }
             },
             onCommentClicked = { post -> showCommentsDialog(post) },
@@ -138,21 +139,21 @@ class UserProfileActivity : AppCompatActivity() {
             onEditClicked = { post -> showEditPostDialog(post) },
             onDeleteClicked = { post ->
                 AlertDialog.Builder(this)
-                    .setTitle("حذف المنشور")
-                    .setMessage("هل أنت متأكد من رغبتك في حذف هذا المنشور نهائياً؟")
-                    .setPositiveButton("حذف") { _, _ ->
+                    .setTitle(getString(R.string.delete_post_title))
+                    .setMessage(getString(R.string.delete_post_confirm))
+                    .setPositiveButton(getString(R.string.delete_button)) { _, _ ->
                         FirestoreManager.deleteCommunityPost(post.id) { success ->
                             if (success) {
-                                Toast.makeText(this, "تم حذف المنشور بنجاح", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, getString(R.string.post_deleted_success), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
-                    .setNegativeButton("إلغاء", null)
+                    .setNegativeButton(android.R.string.cancel, null)
                     .show()
             },
             onReportClicked = { post ->
-                FirestoreManager.reportPost(post.id, "إبلاغ من صفحة الملف الشخصي") {
-                    Toast.makeText(this, "تم إرسال البلاغ للإدارة", Toast.LENGTH_SHORT).show()
+                FirestoreManager.reportPost(post.id, "Profile report") {
+                    Toast.makeText(this, getString(R.string.report_received_success), Toast.LENGTH_SHORT).show()
                 }
             }
         )
@@ -218,10 +219,10 @@ class UserProfileActivity : AppCompatActivity() {
 
         if (isMyProfile) {
             ivProfileAvatar.setOnClickListener {
-                showSelectAvatarDialog()
+                showEditProfileDialog()
             }
 
-            btnProfileAction.text = "تعديل ✏️"
+            btnProfileAction.text = getString(R.string.edit_profile_btn)
             btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
             btnProfileAction.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
             btnProfileAction.setOnClickListener { showEditProfileDialog() }
@@ -229,15 +230,15 @@ class UserProfileActivity : AppCompatActivity() {
             btnLogoutTop.visibility = View.VISIBLE
             btnLogoutTop.setOnClickListener {
                 AlertDialog.Builder(this)
-                    .setTitle("تسجيل الخروج")
-                    .setMessage("هل أنت متأكد من رغبتك في تسجيل الخروج؟")
-                    .setPositiveButton("خروج") { _, _ ->
+                    .setTitle(R.string.logout)
+                    .setMessage(R.string.confirm_logout)
+                    .setPositiveButton(R.string.logout) { _, _ ->
                         AuthManager.signOut(this) {
-                            Toast.makeText(this, "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.confirm_logout, Toast.LENGTH_SHORT).show()
                             finish()
                         }
                     }
-                    .setNegativeButton("إلغاء", null)
+                    .setNegativeButton(R.string.no, null)
                     .show()
             }
         } else {
@@ -247,7 +248,7 @@ class UserProfileActivity : AppCompatActivity() {
 
             btnProfileAction.setOnClickListener {
                 if (activeUserId.isEmpty()) {
-                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للمتابعة", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.login_required_follow), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 btnProfileAction.isEnabled = false
@@ -274,7 +275,7 @@ class UserProfileActivity : AppCompatActivity() {
         FirestoreManager.getUserProfile(targetUserId) { data ->
             runOnUiThread {
                 if (data != null) {
-                    val bio = data["bio"] as? String ?: "لا توجد نبذة شخصية بعد."
+                    val bio = data["bio"] as? String ?: getString(R.string.no_bio_yet)
                     val name = data["displayName"] as? String 
                         ?: data["name"] as? String 
                         ?: targetUserName
@@ -321,7 +322,7 @@ class UserProfileActivity : AppCompatActivity() {
                     val badge = BadgeHelper.getBadgeForProfile(email, totalLikes, currentFollowersCount)
                     if (badge != null) {
                         tvProfileBadge.visibility = View.VISIBLE
-                        tvProfileBadge.text = badge.title
+                        tvProfileBadge.setText(badge.titleResId)
                         tvProfileBadge.setBackgroundResource(badge.bgResId)
                         tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
                     } else {
@@ -341,12 +342,12 @@ class UserProfileActivity : AppCompatActivity() {
                         tvProfileUsername.visibility = View.VISIBLE
                         tvProfileUsername.text = "@$currentUsername"
                         if (tvBio.text.isNullOrEmpty()) {
-                            tvBio.text = "لا توجد نبذة شخصية بعد."
+                            tvBio.text = getString(R.string.no_bio_yet)
                         }
                         val badge = BadgeHelper.getBadgeForProfile(currentUser.email, 0L, currentFollowersCount)
                         if (badge != null) {
                             tvProfileBadge.visibility = View.VISIBLE
-                            tvProfileBadge.text = badge.title
+                            tvProfileBadge.setText(badge.titleResId)
                             tvProfileBadge.setBackgroundResource(badge.bgResId)
                             tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
                         } else {
@@ -381,8 +382,8 @@ class UserProfileActivity : AppCompatActivity() {
         val tvEmptyText = dialogView.findViewById<TextView>(R.id.tvUserListEmptyText)
         val rvUsers = dialogView.findViewById<RecyclerView>(R.id.rvUserList)
 
-        tvTitle.text = if (isFollowers) "المتابعون" else "يتابعهم"
-        tvEmptyText.text = if (isFollowers) "لا يوجد متابعون بعد" else "لا يتابع أحداً بعد"
+        tvTitle.text = if (isFollowers) getString(R.string.followers_label) else getString(R.string.following_label)
+        tvEmptyText.text = if (isFollowers) getString(R.string.no_users_found) else getString(R.string.no_users_found)
 
         btnClose.setOnClickListener { dialog.dismiss() }
 
@@ -404,7 +405,7 @@ class UserProfileActivity : AppCompatActivity() {
             },
             onFollowToggle = { userItem, pos ->
                 if (activeUserId.isEmpty()) {
-                    Toast.makeText(this, "يرجى تسجيل الدخول أولاً للمتابعة", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.login_required_follow), Toast.LENGTH_SHORT).show()
                     return@UserFollowAdapter
                 }
                 val currentlyFollowing = userItem.isFollowing
@@ -416,7 +417,7 @@ class UserProfileActivity : AppCompatActivity() {
                     if (!success) {
                         userItem.isFollowing = currentlyFollowing
                         userFollowAdapter?.notifyItemChanged(pos)
-                        Toast.makeText(this, "تعذر تحديث المتابعة", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.save_error), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -441,7 +442,7 @@ class UserProfileActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                tvTitle.text = "${if (isFollowers) "المتابعون" else "يتابعهم"} (${userIds.size})"
+                tvTitle.text = "${if (isFollowers) getString(R.string.followers_title) else getString(R.string.following_title)} (${userIds.size})"
 
                 val myFollowingSet = mutableSetOf<String>()
                 fun loadUsersDetails() {
@@ -510,7 +511,7 @@ class UserProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun showSelectAvatarDialog() {
+    private fun showSelectAvatarDialog(onAvatarSelected: ((String) -> Unit)? = null) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_select_avatar, null)
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -529,7 +530,11 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         ivGooglePhoto.setOnClickListener {
-            updateUserProfilePhoto(googlePhotoUrl)
+            if (onAvatarSelected != null) {
+                onAvatarSelected(googlePhotoUrl)
+            } else {
+                updateUserProfilePhoto(googlePhotoUrl)
+            }
             dialog.dismiss()
         }
 
@@ -552,7 +557,11 @@ class UserProfileActivity : AppCompatActivity() {
                 }
                 
                 setOnClickListener {
-                    updateUserProfilePhoto(avatarName)
+                    if (onAvatarSelected != null) {
+                        onAvatarSelected(avatarName)
+                    } else {
+                        updateUserProfilePhoto(avatarName)
+                    }
                     dialog.dismiss()
                 }
             }
@@ -564,22 +573,22 @@ class UserProfileActivity : AppCompatActivity() {
     private fun updateUserProfilePhoto(photoUrl: String) {
         FirestoreManager.updateUserProfilePhoto(this, activeUserId, photoUrl) { success ->
             if (success) {
-                Toast.makeText(this, "تم تحديث الصورة الشخصية بنجاح", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.profile_picture_updated), Toast.LENGTH_SHORT).show()
                 updatePhotoInOldPosts(photoUrl)
                 loadProfileData()
             } else {
-                Toast.makeText(this, "فشل تحديث الصورة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.profile_picture_update_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun updateFollowButtonUI() {
         if (isFollowing) {
-            btnProfileAction.text = "متابع ✓"
+            btnProfileAction.text = getString(R.string.following)
             btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
             btnProfileAction.setTextColor(Color.parseColor("#10B981"))
         } else {
-            btnProfileAction.text = "+ متابعة"
+            btnProfileAction.text = getString(R.string.follow)
             btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_active)
             btnProfileAction.setTextColor(Color.WHITE)
         }
@@ -602,7 +611,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun openAddPostDialog() {
         val user = AuthManager.currentUser ?: AuthManager.auth.currentUser
         if (user == null) {
-            Toast.makeText(this, "يرجى تسجيل الدخول أولاً لإضافة منشور", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.login_required_post), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -633,75 +642,236 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun showEditProfileDialog() {
+        val dialog = BottomSheetDialog(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_edit_profile, null)
+        dialog.setContentView(dialogView)
+
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { sheet ->
+                val behavior = BottomSheetBehavior.from(sheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
+        }
+
+        val btnClose = dialogView.findViewById<ImageView>(R.id.btnCloseEditProfile)
+        val btnChangeAvatar = dialogView.findViewById<View>(R.id.btnChangeAvatar)
+        val btnChangeAvatarText = dialogView.findViewById<View>(R.id.btnChangeAvatarText)
+        val ivEditAvatarPreview = dialogView.findViewById<ImageView>(R.id.ivEditAvatarPreview)
         val etName = dialogView.findViewById<EditText>(R.id.etEditName)
+        val etUsername = dialogView.findViewById<EditText>(R.id.etEditUsername)
+        val ivUsernameStatus = dialogView.findViewById<ImageView>(R.id.ivUsernameStatus)
+        val pbUsernameChecking = dialogView.findViewById<ProgressBar>(R.id.pbUsernameChecking)
+        val tvUsernameStatus = dialogView.findViewById<TextView>(R.id.tvUsernameStatus)
         val etBio = dialogView.findViewById<EditText>(R.id.etEditBio)
+        val tvBioCounter = dialogView.findViewById<TextView>(R.id.tvBioCounter)
+        val btnSave = dialogView.findViewById<TextView>(R.id.btnSaveProfile)
+        val pbSave = dialogView.findViewById<ProgressBar>(R.id.pbSaveProfile)
 
+        btnClose.setOnClickListener { dialog.dismiss() }
+
+        // تحميل صورة المستخدم الحالية
+        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        var selectedPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            ?: (AuthManager.currentUser?.photoUrl?.toString() ?: "")
+        ivEditAvatarPreview.loadUserAvatar(selectedPhotoUrl)
+
+        val openAvatarPicker = {
+            showSelectAvatarDialog { chosenAvatar ->
+                selectedPhotoUrl = chosenAvatar
+                ivEditAvatarPreview.loadUserAvatar(chosenAvatar)
+            }
+        }
+        btnChangeAvatar.setOnClickListener { openAvatarPicker() }
+        btnChangeAvatarText.setOnClickListener { openAvatarPicker() }
+
+        // الاسم والنبذة
         etName.setText(tvName.text.toString())
-        etBio.setText(if (tvBio.text.toString() == "لا توجد نبذة شخصية بعد.") "" else tvBio.text.toString())
+        val initialBio = if (tvBio.text.toString() == "لا توجد نبذة شخصية بعد." || tvBio.text.toString() == "فاعل خير") "" else tvBio.text.toString()
+        etBio.setText(initialBio)
+        tvBioCounter.text = "${initialBio.length}/150"
 
-        AlertDialog.Builder(this)
-            .setTitle("إعدادات الحساب")
-            .setView(dialogView)
-            .setNeutralButton("تغيير الصورة الشخصية") { _, _ ->
-                showSelectAvatarDialog()
+        etBio.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                tvBioCounter.text = "${s?.length ?: 0}/150"
             }
-            .setNegativeButton("تغيير اسم المستخدم (@)") { _, _ ->
-                showChangeUsernameDialog()
-            }
-            .setPositiveButton("حفظ") { _, _ ->
-                val newName = etName.text.toString().trim().ifEmpty { "فاعل خير" }
-                val newBio = etBio.text.toString().trim()
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
 
+        // اسم المستخدم الفريد (@)
+        val initialUsername = currentUsername.removePrefix("@").trim()
+        etUsername.setText(initialUsername)
+        var isUsernameValid = true
+
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        var checkRunnable: Runnable? = null
+
+        etUsername.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                checkRunnable?.let { handler.removeCallbacks(it) }
+
+                val inputVal = s?.toString()?.trim()?.lowercase() ?: ""
+
+                if (inputVal.isEmpty()) {
+                    isUsernameValid = false
+                    pbUsernameChecking.visibility = View.GONE
+                    ivUsernameStatus.visibility = View.GONE
+                    tvUsernameStatus.visibility = View.GONE
+                    return
+                }
+
+                if (inputVal == initialUsername.lowercase()) {
+                    isUsernameValid = true
+                    pbUsernameChecking.visibility = View.GONE
+                    ivUsernameStatus.visibility = View.VISIBLE
+                    ivUsernameStatus.setImageResource(R.drawable.ic_check)
+                    ivUsernameStatus.imageTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#0284C7"))
+                    tvUsernameStatus.visibility = View.VISIBLE
+                    tvUsernameStatus.text = getString(R.string.username_current)
+                    tvUsernameStatus.setTextColor(Color.parseColor("#0284C7"))
+                    return
+                }
+
+                if (inputVal.length < 3) {
+                    isUsernameValid = false
+                    pbUsernameChecking.visibility = View.GONE
+                    ivUsernameStatus.visibility = View.VISIBLE
+                    ivUsernameStatus.setImageResource(R.drawable.ic_close_small)
+                    ivUsernameStatus.imageTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#EF4444"))
+                    tvUsernameStatus.visibility = View.VISIBLE
+                    tvUsernameStatus.text = getString(R.string.username_too_short)
+                    tvUsernameStatus.setTextColor(Color.parseColor("#EF4444"))
+                    return
+                }
+
+                val validRegex = "^[a-z0-9_.]+$".toRegex()
+                if (!inputVal.matches(validRegex)) {
+                    isUsernameValid = false
+                    pbUsernameChecking.visibility = View.GONE
+                    ivUsernameStatus.visibility = View.VISIBLE
+                    ivUsernameStatus.setImageResource(R.drawable.ic_close_small)
+                    ivUsernameStatus.imageTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#EF4444"))
+                    tvUsernameStatus.visibility = View.VISIBLE
+                    tvUsernameStatus.text = getString(R.string.username_invalid_chars)
+                    tvUsernameStatus.setTextColor(Color.parseColor("#EF4444"))
+                    return
+                }
+
+                // جاري الفحص مع تأخير 400ms لتفادي ضغط الشبكة
+                pbUsernameChecking.visibility = View.VISIBLE
+                ivUsernameStatus.visibility = View.GONE
+                tvUsernameStatus.visibility = View.VISIBLE
+                tvUsernameStatus.text = getString(R.string.username_checking)
+                tvUsernameStatus.setTextColor(Color.parseColor("#64748B"))
+
+                checkRunnable = Runnable {
+                    AuthManager.isUsernameAvailable(inputVal) { available ->
+                        runOnUiThread {
+                            if (etUsername.text.toString().trim().lowercase() != inputVal) return@runOnUiThread
+                            pbUsernameChecking.visibility = View.GONE
+                            ivUsernameStatus.visibility = View.VISIBLE
+                            if (available) {
+                                isUsernameValid = true
+                                ivUsernameStatus.setImageResource(R.drawable.ic_check)
+                                ivUsernameStatus.imageTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#10B981"))
+                                tvUsernameStatus.text = getString(R.string.username_available)
+                                tvUsernameStatus.setTextColor(Color.parseColor("#10B981"))
+                            } else {
+                                isUsernameValid = false
+                                ivUsernameStatus.setImageResource(R.drawable.ic_close_small)
+                                ivUsernameStatus.imageTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#EF4444"))
+                                tvUsernameStatus.text = getString(R.string.username_taken)
+                                tvUsernameStatus.setTextColor(Color.parseColor("#EF4444"))
+                            }
+                        }
+                    }
+                }
+                handler.postDelayed(checkRunnable!!, 400)
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+
+        // عند النقر على حفظ التغييرات
+        btnSave.setOnClickListener {
+            val newName = etName.text.toString().trim().ifEmpty { "فاعل خير" }
+            val newBio = etBio.text.toString().trim()
+            val newUsername = etUsername.text.toString().trim().lowercase()
+
+            if (!isUsernameValid) {
+                Toast.makeText(this, R.string.username_invalid_chars, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            btnSave.text = ""
+            pbSave.visibility = View.VISIBLE
+            btnSave.isClickable = false
+
+            val completeProfileSave = {
                 FirestoreManager.updateUserProfile(activeUserId, newName, newBio) { success ->
                     if (success) {
                         tvName.text = newName
-                        tvBio.text = newBio.ifEmpty { "لا توجد نبذة شخصية بعد." }
-                        getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                            .edit().putString("user_name", newName).apply()
-                        Toast.makeText(this, "تم تحديث البيانات بنجاح", Toast.LENGTH_SHORT).show()
+                        tvBio.text = newBio.ifEmpty { getString(R.string.bio_default) }
+                        prefs.edit().putString("user_name", newName).apply()
                         updateNameInCommunityPosts(newName)
-                    }
-                }
-            }
-            .setNegativeButton("إلغاء", null)
-            .show()
-    }
 
-    private fun showChangeUsernameDialog() {
-        val input = EditText(this).apply {
-            hint = "أدخل اسم مستخدم جديد (مثال: ahmed_99)"
-            setText(currentUsername)
-            setSingleLine()
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle("تعديل اسم المستخدم (@)")
-            .setMessage("اسم المستخدم يجب أن يكون فريداً ولا يحتوي إلا على حروف إنجليزية، أرقام، أو _")
-            .setView(input)
-            .setPositiveButton("فحص وحفظ") { _, _ ->
-                val requestedUsername = input.text.toString().trim()
-                if (requestedUsername.isEmpty()) return@setPositiveButton
-
-                AuthManager.changeUsername(
-                    userId = activeUserId,
-                    oldUsername = currentUsername,
-                    newUsername = requestedUsername
-                ) { success, errorMsg ->
-                    runOnUiThread {
-                        if (success) {
-                            currentUsername = requestedUsername.lowercase()
-                            tvProfileUsername.visibility = View.VISIBLE
-                            tvProfileUsername.text = "@$currentUsername"
-                            Toast.makeText(this, "تم تغيير اسم المستخدم بنجاح إلى @$currentUsername", Toast.LENGTH_LONG).show()
+                        // تحديث الصورة الشخصية إذا تم اختيار صورة جديدة
+                        val oldPhoto = prefs.getString("user_photo", "") ?: ""
+                        if (selectedPhotoUrl.isNotEmpty() && selectedPhotoUrl != oldPhoto) {
+                            updateUserProfilePhoto(selectedPhotoUrl)
                         } else {
-                            Toast.makeText(this, errorMsg ?: "تعذر تغيير اسم المستخدم", Toast.LENGTH_LONG).show()
+                            ivProfileAvatar.loadUserAvatar(selectedPhotoUrl)
+                        }
+
+                        runOnUiThread {
+                            btnSave.text = getString(R.string.save_changes)
+                            pbSave.visibility = View.GONE
+                            btnSave.isClickable = true
+                            dialog.dismiss()
+                            Toast.makeText(this@UserProfileActivity, R.string.profile_saved_success, Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        runOnUiThread {
+                            btnSave.text = getString(R.string.save_changes)
+                            pbSave.visibility = View.GONE
+                            btnSave.isClickable = true
+                            Toast.makeText(this@UserProfileActivity, R.string.save_error, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
-            .setNegativeButton("إلغاء", null)
-            .show()
+
+            // إذا تغير اسم المستخدم، نحدثه أولاً عبر المعاملة الذرية في AuthManager
+            if (newUsername.isNotEmpty() && newUsername != initialUsername.lowercase()) {
+                AuthManager.changeUsername(
+                    userId = activeUserId,
+                    oldUsername = currentUsername,
+                    newUsername = newUsername
+                ) { success, errorMsg ->
+                    if (success) {
+                        currentUsername = newUsername
+                        runOnUiThread {
+                            tvProfileUsername.visibility = View.VISIBLE
+                            tvProfileUsername.text = "@$currentUsername"
+                        }
+                        completeProfileSave()
+                    } else {
+                        runOnUiThread {
+                            btnSave.text = getString(R.string.save_changes)
+                            pbSave.visibility = View.GONE
+                            btnSave.isClickable = true
+                            Toast.makeText(this@UserProfileActivity, errorMsg ?: getString(R.string.username_change_failed), Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            } else {
+                completeProfileSave()
+            }
+        }
+
+        dialog.show()
     }
 
     // private fun showCommentsDialog(post: CommunityPost) {
@@ -804,28 +974,100 @@ class UserProfileActivity : AppCompatActivity() {
         val rvComments = view.findViewById<RecyclerView>(R.id.rvComments)
         val etInput = view.findViewById<EditText>(R.id.etCommentInput)
         val btnSend = view.findViewById<ImageView>(R.id.btnSendComment)
+        val ivCurrentUserAvatar = view.findViewById<ImageView>(R.id.ivCurrentUserCommentAvatar)
+        val layoutEmptyComments = view.findViewById<View>(R.id.layoutEmptyComments)
+        val tvCommentsCountHeader = view.findViewById<TextView>(R.id.tvCommentsCountHeader)
 
-        // سنحتفظ بهذا كاحتياط، لكننا سنجلب الاسم الفعلي من القاعدة قبل الإرسال
+        // شريط الرد / التعديل
+        val layoutReplyBanner = view.findViewById<View>(R.id.layoutReplyBanner)
+        val tvReplyBannerText = view.findViewById<TextView>(R.id.tvReplyBannerText)
+        val tvActionBannerSubtitle = view.findViewById<TextView>(R.id.tvActionBannerSubtitle)
+        val btnCancelReply = view.findViewById<ImageView>(R.id.btnCancelReply)
+
+        var replyingToComment: Comment? = null
+        var editingComment: Comment? = null
+
         val user = AuthManager.currentUser
+        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUserName = user?.displayName 
-            ?: getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("user_name", "فاعل خير") 
+            ?: prefs.getString("user_name", "فاعل خير") 
             ?: "فاعل خير"
+
+        // تحميل صورة المستخدم في شريط التعليق
+        val currentPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            ?: user?.photoUrl?.toString() ?: ""
+        ivCurrentUserAvatar?.loadUserAvatar(currentPhoto)
+
+        val resetBannerState = {
+            replyingToComment = null
+            editingComment = null
+            layoutReplyBanner.visibility = View.GONE
+            tvActionBannerSubtitle?.visibility = View.GONE
+            etInput.hint = getString(R.string.comment_hint)
+            btnSend.setImageResource(R.drawable.ic_send)
+        }
+
+        btnCancelReply.setOnClickListener {
+            resetBannerState()
+            etInput.setText("")
+        }
+
+        val updateSendButtonState = {
+            val hasText = etInput.text?.toString()?.trim()?.isNotEmpty() == true
+            btnSend.alpha = if (hasText) 1.0f else 0.4f
+            btnSend.isClickable = hasText
+        }
+        updateSendButtonState()
+
+        etInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateSendButtonState()
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
 
         rvComments.layoutManager = LinearLayoutManager(this)
         
-        // >>> التعديل الأول: تفعيل النقر لفتح البروفايل <<<
         val commentsAdapter = CommentsAdapter(
             comments = emptyList(),
             currentUserId = activeUserId,
             postAuthorId = post.authorId,
             onUserClicked = { clickedUserId, clickedUserName ->
-                // فتح صفحة الملف الشخصي عند النقر على صورة أو اسم صاحب التعليق
                 val intent = android.content.Intent(this, UserProfileActivity::class.java).apply {
                     putExtra("USER_ID", clickedUserId)
                     putExtra("USER_NAME", clickedUserName)
                 }
                 startActivity(intent)
-                dialog.dismiss() // إغلاق نافذة التعليقات
+                dialog.dismiss()
+            },
+            onReplyClicked = { comment ->
+                replyingToComment = comment
+                editingComment = null
+                layoutReplyBanner.visibility = View.VISIBLE
+                tvReplyBannerText.text = getString(R.string.reply_to_user, comment.authorName)
+                tvActionBannerSubtitle?.text = comment.content
+                tvActionBannerSubtitle?.visibility = View.VISIBLE
+                etInput.hint = getString(R.string.reply_to_user, comment.authorName)
+                btnSend.setImageResource(R.drawable.ic_send)
+                etInput.requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            },
+            onEditClicked = { comment ->
+                editingComment = comment
+                replyingToComment = null
+                layoutReplyBanner.visibility = View.VISIBLE
+                tvReplyBannerText.text = getString(R.string.edit_comment_title)
+                tvActionBannerSubtitle?.text = comment.content
+                tvActionBannerSubtitle?.visibility = View.VISIBLE
+                etInput.setText(comment.content)
+                etInput.setSelection(comment.content.length)
+                etInput.hint = getString(R.string.edit_comment_hint)
+                btnSend.setImageResource(R.drawable.ic_check)
+                etInput.requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
                 FirestoreManager.deleteComment(post.id, comment.id) {}
@@ -836,7 +1078,14 @@ class UserProfileActivity : AppCompatActivity() {
         FirestoreManager.listenToComments(post.id) { list ->
             runOnUiThread {
                 commentsAdapter.updateData(list)
-                if (list.isNotEmpty()) rvComments.scrollToPosition(list.size - 1)
+                if (list.isEmpty()) {
+                    layoutEmptyComments?.visibility = View.VISIBLE
+                    tvCommentsCountHeader?.text = getString(R.string.comments_count_zero)
+                } else {
+                    layoutEmptyComments?.visibility = View.GONE
+                    tvCommentsCountHeader?.text = getString(R.string.comments_count_format, list.size)
+                    rvComments.scrollToPosition(list.size - 1)
+                }
             }
         }
 
@@ -845,34 +1094,71 @@ class UserProfileActivity : AppCompatActivity() {
             if (text.isEmpty()) return@setOnClickListener
 
             if (BadWordsFilter.containsBadWords(text)) {
-                Toast.makeText(this, "التعليق يحتوي على كلمات غير لائقة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.comment_inappropriate_words), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             btnSend.isEnabled = false
 
-            val user = AuthManager.currentUser
-            if (user == null) {
+            val currentUser = AuthManager.currentUser
+            if (currentUser == null) {
                 btnSend.isEnabled = true
-                Toast.makeText(this@UserProfileActivity, "يرجى تسجيل الدخول أولاً للتعليق", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@UserProfileActivity, getString(R.string.login_required_comment), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val currentActiveId = user.uid
-            val currentAuthorName = user.displayName ?: currentUserName
-            val currentPhotoUrl = user.photoUrl?.toString() ?: ""
+            // تعديل التعليق
+            val targetEditing = editingComment
+            if (targetEditing != null) {
+                FirestoreManager.updateComment(post.id, targetEditing.id, text) { success ->
+                    btnSend.isEnabled = true
+                    if (success) {
+                        etInput.setText("")
+                        resetBannerState()
+                        Toast.makeText(this@UserProfileActivity, getString(R.string.comment_edited_success), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@UserProfileActivity, getString(R.string.comment_edit_error), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                return@setOnClickListener
+            }
+
+            val currentActiveId = currentUser.uid
+            val currentAuthorName = currentUser.displayName ?: currentUserName
+            val currentPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+                ?: currentUser.photoUrl?.toString() ?: ""
+
+            val replyAuthorName = replyingToComment?.authorName ?: ""
+            val replyCommentId = replyingToComment?.id ?: ""
+            val targetRepliedComment = replyingToComment
 
             FirestoreManager.addComment(
                 postId = post.id,
                 authorId = currentActiveId,
                 authorName = currentAuthorName,
                 authorPhotoUrl = currentPhotoUrl,
-                content = text
+                content = text,
+                replyToAuthorName = replyAuthorName,
+                replyToCommentId = replyCommentId
             ) { success ->
                 btnSend.isEnabled = true
                 if (success) {
                     etInput.setText("")
-                    if (post.authorId != currentActiveId) {
+                    resetBannerState()
+
+                    // إشعار صاحب التعليق المردود عليه
+                    if (targetRepliedComment != null && targetRepliedComment.authorId != currentActiveId) {
+                        FirestoreManager.sendNotification(
+                            recipientId = targetRepliedComment.authorId,
+                            senderId = currentActiveId,
+                            senderName = currentAuthorName,
+                            type = "COMMENT",
+                            postId = post.id,
+                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\""
+                        )
+                    }
+
+                    if (post.authorId != currentActiveId && post.authorId != targetRepliedComment?.authorId) {
                         FirestoreManager.sendNotification(
                             recipientId = post.authorId,
                             senderId = currentActiveId,
@@ -883,14 +1169,12 @@ class UserProfileActivity : AppCompatActivity() {
                         )
                     }
                 } else {
-                    Toast.makeText(this@UserProfileActivity, "تعذر إرسال التعليق، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@UserProfileActivity, getString(R.string.comment_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-
         dialog.show()
-        
     }
     private fun updateNameInCommunityPosts(newName: String) {
         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()

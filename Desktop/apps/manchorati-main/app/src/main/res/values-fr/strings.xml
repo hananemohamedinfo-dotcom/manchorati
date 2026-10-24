@@ -1,35 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Nom de l'application -->
     <string name="app_name">Manchorati</string>
+
+    <!-- Onglets de navigation inférieure -->
     <string name="tab_community">Communauté</string>
     <string name="tab_categories">Catégories</string>
     <string name="tab_favorites">Favoris</string>
+    <string name="tab_profile">Mon profil</string>
+
+    <!-- Recherche, Tri et Filtres -->
     <string name="search_hint">Rechercher dans les publications...</string>
     <string name="sort_by">Trier par :</string>
-    <string name="sort_latest">Récents</string>
-    <string name="sort_trending">Tendances</string>
+    <string name="sort_latest">Plus récents</string>
+    <string name="sort_trending">Plus populaires</string>
+    <string name="tag_all">Tous</string>
+    <string name="saved_posts">Enregistrements</string>
+    <string name="choose_category">Choisir une catégorie</string>
+
+    <!-- Tags prédéfinis -->
+    <string name="tag_wisdom">Sagesse &amp; Citations</string>
+    <string name="tag_thoughts">Pensées</string>
+    <string name="tag_dua">Invocations &amp; Douas</string>
+    <string name="tag_motivation">Motivation &amp; Succès</string>
+    <string name="tag_humor">Humour &amp; Rires</string>
+    <string name="tag_poetry">Poésie &amp; Littérature</string>
+    <string name="tag_coffee">Café &amp; Soirée</string>
+    <string name="tag_general">Général</string>
+
+    <!-- Menu latéral (Drawer) -->
     <string name="drawer_dark_mode">Mode sombre</string>
     <string name="drawer_language">Langue de l\'application</string>
     <string name="drawer_contact">Contactez-nous &amp; Suggestions</string>
     <string name="drawer_notifications">Paramètres des notifications</string>
-    <string name="drawer_rate">Noter l\'application</string>
+    <string name="drawer_rate">Évaluer l\'application</string>
     <string name="drawer_share">Partager l\'application</string>
     <string name="drawer_more_apps">Plus d\'applications</string>
     <string name="drawer_logout">Déconnexion</string>
+    <string name="drawer_version">Version 1.0.0</string>
+
+    <!-- Commentaires & Interactions -->
     <string name="comment_hint">Écrire un commentaire...</string>
+    <string name="edit_comment_hint">Modifiez votre commentaire...</string>
     <string name="reply_button">Répondre</string>
+    <string name="edit_button">Modifier</string>
     <string name="delete_button">Supprimer</string>
-    <string name="saved_posts">Enregistrements</string>
-    <string name="tag_all">Tout</string>
-    <string name="tag_wisdom">Sagesse &amp; Citations</string>
-    <string name="tag_thoughts">Pensées</string>
-    <string name="tag_dua">Invocations</string>
-    <string name="tag_motivation">Motivation</string>
-    <string name="tag_humor">Humour</string>
-    <string name="tag_poetry">Poésie &amp; Lettres</string>
-    <string name="tag_coffee">Café &amp; Soirée</string>
-    <string name="tag_general">Général</string>
+    <string name="edited_badge">(Modifié)</string>
+    <string name="reply_prefix">Réponse à</string>
+    <string name="edit_comment_title">Modifier votre commentaire</string>
+    <string name="reply_to_user">Répondre à %s</string>
+    <string name="comments_dialog_title">Commentaires</string>
+    <string name="no_comments_title">Aucun commentaire pour le moment</string>
+    <string name="no_comments_subtitle">Soyez le premier à commenter !</string>
+    <string name="time_just_now">À l\'instant</string>
+    <string name="comment_edited_success">Commentaire modifié avec succès</string>
+    <string name="comment_error">Échec de l\'envoi du commentaire, réessayez plus tard</string>
+    <string name="comment_edit_error">Échec de la modification du commentaire</string>
+    <string name="comment_bad_words">Le commentaire contient des mots inappropriés</string>
+    <string name="login_required_to_comment">Veuillez vous connecter pour commenter</string>
+    <string name="comments_count_format">%d commentaires</string>
+
+    <!-- Actions sur les publications -->
+    <string name="post_action_like">J\'aime</string>
+    <string name="post_action_comment">Commenter</string>
+    <string name="post_action_share_story">Partager en Story / Carte</string>
+    <string name="post_action_bookmark">Enregistrer la publication</string>
+    <string name="post_action_remove_bookmark">Retirer des enregistrements</string>
+    <string name="post_action_copy">Copier le texte</string>
+    <string name="post_action_edit">Modifier</string>
+    <string name="post_action_delete">Supprimer</string>
+    <string name="post_action_report">Signaler la publication</string>
+    <string name="post_copied_toast">Texte copié dans le presse-papiers</string>
+    <string name="confirm_delete_post">Voulez-vous vraiment supprimer cette publication ?</string>
+    <string name="confirm_delete_comment">Voulez-vous vraiment supprimer ce commentaire ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Annuler</string>
+    <string name="confirm">Confirmer</string>
+
+    <!-- Profil et Paramètres du compte -->
+    <string name="profile_title">Profil</string>
+    <string name="account_settings_title">Paramètres du compte</string>
+    <string name="change_profile_photo">Changer la photo de profil</string>
+    <string name="select_avatar_title">Choisir une photo de profil</string>
+    <string name="display_name_label">Nom d\'affichage</string>
+    <string name="display_name_hint">Entrez votre nom ou pseudonyme</string>
+    <string name="username_label">Nom d\'utilisateur unique</string>
+    <string name="username_desc">Identifiant unique avec @ qui ne peut être utilisé par personne d\'autre.</string>
+    <string name="username_available">Nom d\'utilisateur disponible ✓</string>
+    <string name="username_current">Votre nom d\'utilisateur actuel</string>
+    <string name="username_too_short">Le nom d\'utilisateur doit contenir au moins 3 caractères</string>
+    <string name="username_invalid_chars">Uniquement lettres anglaises, chiffres, _ et .</string>
+    <string name="username_taken">Nom d\'utilisateur déjà pris, veuillez en choisir un autre</string>
+    <string name="username_checking">Vérification de la disponibilité...</string>
+    <string name="bio_label">Biographie (Bio)</string>
+    <string name="bio_hint">Écrivez une courte biographie, vos centres d\'intérêt ou citation...</string>
+    <string name="bio_default">Aucune biographie pour le moment.</string>
+    <string name="save_changes">Enregistrer les modifications</string>
+    <string name="profile_saved_success">Paramètres du compte enregistrés avec succès</string>
+    <string name="photo_updated_success">Photo de profil mise à jour avec succès</string>
+    <string name="save_error">Échec de l\'enregistrement, veuillez réessayer</string>
+    <string name="edit_profile_btn">Modifier</string>
+    <string name="follow">+ Suivre</string>
+    <string name="following">Abonné ✓</string>
+    <string name="posts_count_label">Publications</string>
+    <string name="followers_label">Abonnés</string>
+    <string name="following_label">Abonnements</string>
+    <string name="shared_posts_label">Publications partagées</string>
+    <string name="no_posts_yet">Aucune publication pour cet utilisateur pour le moment</string>
+    <string name="share_first_post">Partagez votre première publication dans la communauté</string>
+    <string name="logout">Déconnexion</string>
+    <string name="confirm_logout">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+
+    <!-- Paramètres des notifications -->
+    <string name="notification_settings_title">Paramètres des notifications</string>
+    <string name="enable_daily_notifications">Activer les notifications quotidiennes</string>
+    <string name="daily_notifications_desc">Recevez deux notifications quotidiennes des meilleures publications</string>
+    <string name="morning_post_title">Publication du matin</string>
+    <string name="evening_post_title">Publication du soir</string>
+    <string name="random_post_title">Publication aléatoire supplémentaire</string>
+    <string name="random_post_desc">Notification surprise à un moment aléatoire de la journée</string>
+    <string name="alarm_time_label">Heure de notification :</string>
+    <string name="post_category_label">Catégorie de publication :</string>
+    <string name="save_notification_settings">Enregistrer les paramètres</string>
+    <string name="settings_saved_success">Paramètres de notification enregistrés avec succès</string>
+    <string name="default_all">Par défaut (Tous)</string>
+
+    <!-- Ajouter et Modifier une publication -->
+    <string name="add_post_title">Nouvelle publication</string>
+    <string name="edit_post_title">Modifier la publication</string>
+    <string name="add_post_hint">Que voulez-vous partager ? Écrivez votre pensée, citation...</string>
+    <string name="publish">Publier</string>
+    <string name="save_edit_post">Enregistrer</string>
+    <string name="tab_background">Arrière-plan</string>
+    <string name="tab_tag">Catégorie</string>
+    <string name="tab_text_color">Couleur</string>
+    <string name="tab_font">Police</string>
+    <string name="post_published_success">Publication partagée avec succès</string>
+    <string name="post_updated_success">Publication modifiée avec succès</string>
+
+    <!-- Langues -->
     <string name="select_language">Choisir la langue</string>
-    <string name="lang_ar">العربية (RTL)</string>
-    <string name="lang_fr">Français (LTR)</string>
-    <string name="lang_en">English (LTR)</string>
+    <string name="lang_ar">العربية</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_en">English</string>
+
+    <!-- Éditeur de cartes et Story -->
+    <string name="editor_title">Éditeur de cartes</string>
+    <string name="editor_subtitle">Studio de création</string>
+    <string name="save_btn">Enregistrer</string>
+    <string name="share_btn">Partager</string>
+    <string name="dimming_label">Assombrissement :</string>
+    <string name="blur_label">Flou :</string>
+    <string name="blur_none">Aucun</string>
+    <string name="blur_soft">Léger</string>
+    <string name="blur_strong">Intense</string>
+    <string name="filter_label">Filtre :</string>
+    <string name="filter_normal">Normal</string>
+    <string name="filter_warm">Chaud</string>
+    <string name="filter_night">Nuit</string>
+    <string name="filter_emerald">Émeraude</string>
+    <string name="filter_classic">Classique</string>
+    <string name="lines_normal">Lignes normales</string>
+    <string name="lines_loose">Lignes espacées</string>
+    <string name="letter_spacing">Espacement lettres ↔️</string>
+    <string name="text_gradient_normal">Dégradé texte : Normal</string>
+    <string name="text_gradient_gold">Dégradé : Or royal</string>
+    <string name="text_gradient_neon">Dégradé : Cyber néon</string>
+    <string name="text_gradient_sunset">Dégradé : Coucher magique</string>
+    <string name="text_gradient_emerald">Dégradé : Émeraude vif</string>
+    <string name="text_highlight">Surlignage</string>
+    <string name="text_shadow_none">Sans ombre</string>
+    <string name="text_shadow_soft">Ombre douce</string>
+    <string name="text_shadow_deep">Ombre marquée</string>
+    <string name="text_shadow_glow">Lueur néon</string>
+    <string name="ratio_square">Carré 1:1 ■</string>
+    <string name="ratio_portrait">Portrait 4:5 ▍</string>
+    <string name="ratio_story">Story 9:16 ▌</string>
+    <string name="ratio_landscape">Paysage 16:9 ▬</string>
+    <string name="alignment_label">Alignement :</string>
+    <string name="corners_label">Bords :</string>
+    <string name="corner_sharp">Droits 0</string>
+    <string name="corner_rounded">Arrondis 18</string>
+    <string name="corner_pill">Pilule 30</string>
+    <string name="card_border">Bordure</string>
+    <string name="card_border_none">Cadre : Aucun</string>
+    <string name="card_border_soft">Cadre : Discret</string>
+    <string name="card_border_gold">Cadre : Doré</string>
+    <string name="card_border_neon">Cadre : Néon</string>
+    <string name="quote_none">Guillemets : Aucun</string>
+    <string name="quote_quotes">Guillemets : “ ”</string>
+    <string name="quote_guillemets">Guillemets : « »</string>
+    <string name="quote_brackets">Guillemets : ❝ ❞</string>
+    <string name="author_signature">Signature auteur</string>
+    <string name="watermark_label">Filigrane</string>
+    <string name="instant_presets_subtitle">Modèles prêts en un clic :</string>
+    <string name="tab_size">Format</string>
+    <string name="tab_border">Cadre</string>
+    <string name="tab_templates">Modèles</string>
+    <string name="my_photo">Ma photo</string>
+    <string name="remove_photo">Supprimer</string>
+    <string name="pick_photo_not_supported">Sélection d\'image non disponible</string>
+    <string name="bg_applied_success">Image d\'arrière-plan appliquée</string>
+    <string name="bg_removed">Arrière-plan supprimé</string>
+    <string name="template_applied">Modèle appliqué : %s</string>
+    <string name="reset_design_success">Style d\'origine restauré</string>
+    <string name="image_saved_success">Carte enregistrée dans la galerie</string>
+    <string name="image_save_error">Impossible d\'enregistrer l\'image</string>
+    <string name="share_card_via">Partager la carte via</string>
+
+    <!-- Noms des modèles -->
+    <string name="template_dark_luxury">Luxe sombre</string>
+    <string name="template_classic_paper">Papier classique</string>
+    <string name="template_neon_cyber">Néo-cyber</string>
+    <string name="template_calm_sunset">Coucher doux</string>
+    <string name="template_glass">Effet verre</string>
+    <string name="template_pure_minimal">Minimaliste pur</string>
+
+    <!-- Noms des polices -->
+    <string name="font_tajawal">Tajawal</string>
+    <string name="font_cairo">Cairo</string>
+    <string name="font_ruqaa">Ruqaa</string>
+    <string name="font_kufam">Kufam</string>
+    <string name="font_marhey">Marhey</string>
+    <string name="font_nastaliq">Nastaliq</string>
+    <string name="font_blaka">Blaka</string>
+    <string name="font_bold">Gras</string>
+
+    <!-- Ajouter et Modifier une publication additionnels -->
+    <string name="you_author">Vous</string>
+    <string name="clear_text">Effacer le texte</string>
+    <string name="tag_none">Sans tag</string>
+    <string name="color_auto">Automatique</string>
+    <string name="color_white">Blanc</string>
+    <string name="color_dark">Sombre</string>
+    <string name="color_gold">Doré</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_green">Vert</string>
+    <string name="color_pink">Rose</string>
+    <string name="color_purple">Violet</string>
+    <string name="custom_color">Personnalisé A</string>
+    <string name="font_size_label">Taille de police :</string>
+    <string name="write_post_error">Veuillez écrire votre publication</string>
+    <string name="post_bad_words">Le texte contient des mots non conformes</string>
+    <string name="login_required_to_post">Veuillez vous connecter pour publier</string>
+    <string name="post_failed">Échec de la publication, réessayez plus tard</string>
+    <string name="post_edit_failed">Échec de la modification, réessayez</string>
+
+    <!-- Page Contact et Suggestions -->
+    <string name="contact_us_title">Contactez-nous &amp; Suggestions</string>
+    <string name="feedback_type_label">Type de message</string>
+    <string name="feedback_type_suggest_quote">Suggérer une citation ou un post</string>
+    <string name="feedback_type_suggest_feature">Idée ou amélioration de l\'application</string>
+    <string name="feedback_type_report_bug">Signaler un problème technique</string>
+    <string name="feedback_type_general">Message général à l\'administration</string>
+    <string name="feedback_message_title">Votre message ou proposition</string>
+    <string name="feedback_message_hint">Écrivez les détails de votre suggestion, remarque ou citation...</string>
+    <string name="send_feedback">Envoyer le message</string>
+    <string name="feedback_empty_error">Veuillez saisir votre message</string>
+    <string name="feedback_sent_success">Merci ! Votre message a été envoyé avec succès</string>
+    <string name="feedback_send_failed">Échec de l\'envoi, réessayez plus tard</string>
+
+    <!-- Notifications et Alertes -->
+    <string name="notifications_title">Notifications</string>
+    <string name="swipe_to_dismiss">Glissez pour supprimer la notification</string>
+    <string name="clear_all">Tout effacer</string>
+    <string name="no_notifications_yet">Aucune notification pour le moment</string>
+    <string name="login_required_notifications">Connectez-vous pour voir les notifications</string>
+    <string name="clear_notifications_title">Effacer les notifications</string>
+    <string name="clear_notifications_confirm">Voulez-vous vraiment effacer toutes les notifications ?</string>
+    <string name="notifications_cleared">Toutes les notifications ont été effacées</string>
+    <string name="notif_liked_post">%s a aimé votre publication</string>
+    <string name="notif_commented_post">%s a commenté votre publication</string>
+    <string name="notif_followed_you">%s a commencé à vous suivre</string>
+    <string name="notif_new_post">%s a publié un nouveau post</string>
+    <string name="notif_replied_comment">%s a répondu à votre commentaire</string>
+
+    <!-- Éléments additionnels de profil et interface -->
+    <string name="featured_writer">⭐ Rédacteur d\'élite</string>
+    <string name="badge_admin">👑 Administrateur</string>
+    <string name="badge_writer">⭐ Rédacteur d\'élite</string>
+    <string name="user_shared_posts_desc">Les pensées et textes partagés apparaîtront ici</string>
+    <string name="select_profile_picture_title">Choisir une photo de profil</string>
+    <string name="followers_title">Abonnés</string>
+    <string name="no_users_found">Aucun utilisateur pour le moment</string>
+
+    <!-- Connexion Google -->
+    <string name="login_title">Connexion</string>
+    <string name="login_desc">Connectez-vous avec Google pour publier avec votre profil.</string>
+    <string name="continue_with_google">Continuer avec Google</string>
+    <string name="choose_username_title">Choisissez un nom d\'utilisateur unique :</string>
+    <string name="username_example_hint">Ex : alex_95</string>
+    <string name="confirm_and_continue">Confirmer et continuer</string>
+
+    <!-- Chaînes supplémentaires traduites -->
+    <string name="post_added_to_favorites">Ajouté aux favoris</string>
+    <string name="post_removed_from_favorites">Retiré des favoris</string>
+    <string name="post_text_copied">Texte copié</string>
+    <string name="share_post_chooser">Partager la publication via</string>
+    <string name="guest_user">Visiteur</string>
+    <string name="tap_to_login">Appuyez pour vous connecter</string>
+    <string name="logout_confirm_title">Déconnexion</string>
+    <string name="logout_confirm_msg">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="logout_success">Déconnexion réussie</string>
+    <string name="press_back_again_to_exit">Appuyez à nouveau pour quitter</string>
+    <string name="login_required_profile">Veuillez vous connecter pour voir votre profil</string>
+    <string name="login_required_post">Veuillez vous connecter pour ajouter une publication</string>
+    <string name="login_required_like">Veuillez vous connecter pour aimer cette publication</string>
+    <string name="login_required_comment">Veuillez vous connecter pour commenter</string>
+    <string name="login_required_follow">Veuillez vous connecter pour vous abonner</string>
+    <string name="login_required_report">Veuillez vous connecter pour signaler</string>
+    <string name="delete_post_title">Supprimer la publication</string>
+    <string name="delete_post_confirm">Voulez-vous vraiment supprimer définitivement cette publication ?</string>
+    <string name="post_deleted_success">Publication supprimée avec succès</string>
+    <string name="preparing_story">Préparation de la story en cours...</string>
+    <string name="share_story_chooser">Partager en Story</string>
+    <string name="report_post_title">Motif du signalement de cette publication</string>
+    <string name="send_report">Envoyer le signalement</string>
+    <string name="report_received_success">Signalement reçu, merci de préserver la communauté</string>
+    <string name="report_error">Une erreur est survenue lors du signalement</string>
+    <string name="report_reason_inappropriate">Contenu inapproprié ou explicite</string>
+    <string name="report_reason_profanity">Propos vulgaires ou insultes</string>
+    <string name="report_reason_religion">Atteinte aux croyances religieuses</string>
+    <string name="report_reason_hate">Discours de haine ou harcèlement</string>
+    <string name="report_reason_spam">Contenu trompeur, arnaque ou spam</string>
+    <string name="report_reason_other">Autre</string>
+    <string name="following_title">Abonnements</string>
+    <string name="profile_picture_updated">Photo de profil mise à jour avec succès</string>
+    <string name="profile_picture_update_failed">Échec de la mise à jour de la photo</string>
+    <string name="username_change_failed">Impossible de modifier le nom d\'utilisateur</string>
+    <string name="comment_inappropriate_words">Le commentaire contient des mots inappropriés</string>
+    <string name="comments_count_zero">0 commentaire</string>
+    <string name="default_user_name">Utilisateur</string>
+    <string name="share_app_text">Téléchargez l\'application Manchorati pour les plus belles citations et pensées : https://play.google.com/store/apps/details?id=%s</string>
+    <string name="share_app_chooser">Partager l\'application via</string>
+    <string name="notif_friday">Bon vendredi</string>
+    <string name="notif_morning">Bonjour</string>
+    <string name="notif_evening">Bonsoir</string>
+    <string name="notif_daily_quote">Une pensée pour votre journée</string>
+    <string name="copy">Copier</string>
+    <string name="daily_notifications_channel">Notifications quotidiennes</string>
+    <string name="notif_default_body">Souriez et soyez optimiste, passez une excellente journée.</string>
+    <string name="letter_spacing_medium">Lettres : moyennes</string>
+    <string name="letter_spacing_wide">Lettres : espacées</string>
+    <string name="color_custom">Couleur personnalisée</string>
+    <string name="no_bio_yet">Aucune bio pour le moment.</string>
 </resources>

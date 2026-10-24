@@ -11,7 +11,8 @@ data class Comment(
     val content: String = "",
     val replyToAuthorName: String = "",
     val replyToCommentId: String = "",
-    var timestamp: Long = 0L
+    var timestamp: Long = 0L,
+    val isEdited: Boolean = false
 ) {
-    constructor() : this("", "", "", "", "", "", "", 0L)
+    constructor() : this("", "", "", "", "", "", "", 0L, false)
 }

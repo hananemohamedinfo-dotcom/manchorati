@@ -49,7 +49,11 @@ class PostAdapter(
             val newStatus = dbHelper.toggleFavorite(post.id, post.isFavorite)
             post.isFavorite = newStatus
             updateFavoriteIcon(holder.btnFavorite, newStatus)
-            val msg = if (newStatus == 1) "تمت الإضافة إلى المفضلة" else "تمت الإزالة من المفضلة"
+            val msg = if (newStatus == 1) {
+                context.getString(R.string.post_added_to_favorites)
+            } else {
+                context.getString(R.string.post_removed_from_favorites)
+            }
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
 
@@ -63,7 +67,7 @@ class PostAdapter(
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Post Content", post.content)
             clipboard.setPrimaryClip(clip)
-            Toast.makeText(context, "تم نسخ النص", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.post_text_copied), Toast.LENGTH_SHORT).show()
         }
 
         // زر مشاركة واتساب مباشرة
@@ -111,7 +115,7 @@ class PostAdapter(
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        context.startActivity(Intent.createChooser(intent, "مشاركة المنشور عبر"))
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_post_chooser)))
     }
 
     override fun getItemCount(): Int = posts.size
