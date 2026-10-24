@@ -17,6 +17,7 @@
     <string name="tag_all">All</string>
     <string name="saved_posts">Saved</string>
     <string name="choose_category">Choose category</string>
+    <string name="category_label">Category</string>
 
     <!-- Tags -->
     <string name="tag_wisdom">Wisdom &amp; Quotes</string>

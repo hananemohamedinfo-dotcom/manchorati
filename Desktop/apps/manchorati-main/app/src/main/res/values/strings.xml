@@ -17,6 +17,7 @@
     <string name="tag_all">الكل</string>
     <string name="saved_posts">المحفوظات</string>
     <string name="choose_category">اختر التصنيف</string>
+    <string name="category_label">التصنيف</string>
 
     <!-- وسوم المنشورات الافتراضية -->
     <string name="tag_wisdom">حكم وأقوال</string>

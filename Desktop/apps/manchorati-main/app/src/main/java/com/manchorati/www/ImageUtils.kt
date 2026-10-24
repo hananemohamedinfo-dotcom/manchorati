@@ -1067,15 +1067,18 @@ object ImageUtils {
             }
         }
 
-        // Watermark Toggle
-        var isWatermarkVisible = true
-        val btnToggleWatermark = view.findViewById<TextView>(R.id.btnToggleWatermark)
-        btnToggleWatermark.setOnClickListener {
-            isWatermarkVisible = !isWatermarkVisible
-            tvWatermark.visibility = if (isWatermarkVisible) View.VISIBLE else View.GONE
-            btnToggleWatermark.setBackgroundResource(if (isWatermarkVisible) R.drawable.bg_tool_chip_active else R.drawable.bg_tool_chip_idle)
-            btnToggleWatermark.setTextColor(if (isWatermarkVisible) Color.WHITE else Color.parseColor("#CBD5E1"))
+        // Category Badge Toggle (يمكن للمستخدم إزالته أو تركه حسب طلبه)
+        var isCategoryVisible = true
+        val btnToggleCategory = view.findViewById<TextView>(R.id.btnToggleCategory)
+        btnToggleCategory?.setOnClickListener {
+            isCategoryVisible = !isCategoryVisible
+            tvCategory.visibility = if (isCategoryVisible) View.VISIBLE else View.GONE
+            btnToggleCategory.setBackgroundResource(if (isCategoryVisible) R.drawable.bg_tool_chip_active else R.drawable.bg_tool_chip_idle)
+            btnToggleCategory.setTextColor(if (isCategoryVisible) Color.WHITE else Color.parseColor("#CBD5E1"))
         }
+
+        // اسم التطبيق منشوراتي يجب أن يبقى ثابتاً في كل الصور
+        tvWatermark.visibility = View.VISIBLE
 
         // ==============================================================
         // 7. PRO PRESETS (1-TAP STYLES)
@@ -1180,7 +1183,11 @@ object ImageUtils {
             quoteMode = 0
             authorMode = 0
 
-            isWatermarkVisible = true
+            isCategoryVisible = true
+            tvCategory.visibility = View.VISIBLE
+            btnToggleCategory?.setBackgroundResource(R.drawable.bg_tool_chip_active)
+            btnToggleCategory?.setTextColor(Color.WHITE)
+
             tvWatermark.visibility = View.VISIBLE
 
             updateRatio(btnRatioSquare, 270)

@@ -1113,9 +1113,9 @@
                         android:layout_width="8dp"
                         android:layout_height="1dp" />
 
-                    <!-- العلامة المائية -->
+                    <!-- شارة التصنيف العلوية (إظهار/إخفاء) -->
                     <TextView
-                        android:id="@+id/btnToggleWatermark"
+                        android:id="@+id/btnToggleCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:background="@drawable/bg_tool_chip_active"
@@ -1123,7 +1123,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
-                        android:text="@string/watermark_label"
+                        android:text="@string/category_label"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />

@@ -17,6 +17,7 @@
     <string name="tag_all">Tous</string>
     <string name="saved_posts">Enregistrements</string>
     <string name="choose_category">Choisir une catégorie</string>
+    <string name="category_label">Catégorie</string>
 
     <!-- Tags prédéfinis -->
     <string name="tag_wisdom">Sagesse &amp; Citations</string>

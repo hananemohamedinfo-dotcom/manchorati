@@ -368,8 +368,9 @@ class UserProfileActivity : AppCompatActivity() {
 
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
+            bottomSheet?.let { sheet ->
+                sheet.setBackgroundResource(android.R.color.transparent)
+                val behavior = BottomSheetBehavior.from(sheet)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.skipCollapsed = true
             }
