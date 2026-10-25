@@ -101,6 +101,7 @@
     <string name="photo_updated_success">Profile picture updated successfully</string>
     <string name="save_error">Failed to save data, please try again</string>
     <string name="edit_profile_btn">Edit</string>
+    <string name="menu_edit_profile">Edit Profile</string>
     <string name="follow">+ Follow</string>
     <string name="following">Following ✓</string>
     <string name="posts_count_label">Posts</string>
@@ -370,9 +371,9 @@
 
     <!-- Delete Account -->
     <string name="delete_account">Delete Account</string>
-    <string name="delete_account_confirm_title">Delete Account Permanently ⚠️</string>
+    <string name="delete_account_confirm_title">Delete Account Permanently</string>
     <string name="delete_account_warning">Warning: Your account, posts, and data will be permanently deleted from our servers. This action cannot be undone.\n\nPlease wait to confirm...</string>
-    <string name="delete_account_confirm_btn">Confirm Delete 🗑️</string>
+    <string name="delete_account_confirm_btn">Confirm Permanent Deletion</string>
     <string name="delete_account_progress">Deleting account and data...</string>
     <string name="delete_account_success">Account and all data deleted successfully</string>
     <string name="delete_account_error">Could not delete account, please try again</string>

@@ -226,11 +226,7 @@ class UserProfileActivity : AppCompatActivity() {
                 showEditProfileDialog()
             }
 
-            btnProfileAction.text = getString(R.string.edit_profile_btn)
-            btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
-            btnProfileAction.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
-            btnProfileAction.setOnClickListener { showEditProfileDialog() }
-
+            btnProfileAction.visibility = View.GONE
             btnProfileMenu.visibility = View.VISIBLE
             btnProfileMenu.setOnClickListener { showProfileOptionsMenu(it) }
         } else {
@@ -1417,9 +1413,9 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun showProfileOptionsMenu(anchor: View) {
         val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, "✏️ " + getString(R.string.edit_profile_btn))
-        popup.menu.add(0, 2, 1, "🚪 " + getString(R.string.logout))
-        popup.menu.add(0, 3, 2, "🗑️ " + getString(R.string.delete_account))
+        popup.menu.add(0, 1, 0, getString(R.string.menu_edit_profile))
+        popup.menu.add(0, 2, 1, getString(R.string.logout))
+        popup.menu.add(0, 3, 2, getString(R.string.delete_account))
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {

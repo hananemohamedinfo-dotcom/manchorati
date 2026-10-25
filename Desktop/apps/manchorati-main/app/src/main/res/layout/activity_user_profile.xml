@@ -152,6 +152,7 @@
                 <!-- زر تعديل البروفايل أو المتابعة العصري -->
                 <TextView
                     android:id="@+id/btnProfileAction"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="34dp"
                     android:background="@drawable/bg_tool_chip_active"

@@ -101,6 +101,7 @@
     <string name="photo_updated_success">Photo de profil mise à jour avec succès</string>
     <string name="save_error">Échec de l\'enregistrement, veuillez réessayer</string>
     <string name="edit_profile_btn">Modifier</string>
+    <string name="menu_edit_profile">Modifier le profil</string>
     <string name="follow">+ Suivre</string>
     <string name="following">Abonné ✓</string>
     <string name="posts_count_label">Publications</string>
@@ -370,9 +371,9 @@
 
     <!-- Supprimer le compte -->
     <string name="delete_account">Supprimer le compte</string>
-    <string name="delete_account_confirm_title">Supprimer le compte définitivement ⚠️</string>
+    <string name="delete_account_confirm_title">Supprimer définitivement le compte</string>
     <string name="delete_account_warning">Attention : Votre compte, vos publications et vos données seront définitivement supprimés de nos serveurs.\n\nVeuillez patienter pour confirmer...</string>
-    <string name="delete_account_confirm_btn">Confirmer la suppression 🗑️</string>
+    <string name="delete_account_confirm_btn">Confirmer la suppression définitive</string>
     <string name="delete_account_progress">Suppression du compte en cours...</string>
     <string name="delete_account_success">Compte et données supprimés définitivement</string>
     <string name="delete_account_error">Échec de la suppression du compte</string>
