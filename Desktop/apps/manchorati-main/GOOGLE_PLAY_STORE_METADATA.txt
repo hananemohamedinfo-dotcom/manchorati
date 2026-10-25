@@ -87,12 +87,12 @@
 6. متطلبات ملفات الوسائط (Media Assets Checklist):
   [x] أيقونة المتجر (App Icon): 512x512 بكسل (app_icon_512x512.png)
   [x] الرسم المميز (Feature Graphic): 1024x500 بكسل (feature_graphic_1024x500.png)
-  [x] لقطات الشاشة (Screenshots): 6 صور بأبعاد 1080x2400 بكسل عالية الدقة مع موك اب وتدرجات
-      - screenshot_1_categories.png (استكشف آلاف الخواطر المصنفة)
-      - screenshot_2_community.png (مجتمع كُتّاب تفاعلي ورُتب تقديرية)
-      - screenshot_3_mood_selector.png (كيف تشعر اليوم؟ خواطر تناسب مزاجك)
-      - screenshot_4_daily_streak.png (سلسلة القراءة اليومية وجوائز الإلهام)
-      - screenshot_5_story_share.png (شارك ستوري واتساب ببطاقات ساحرة)
-      - screenshot_6_arab_avatars.png (14 أفتار يعبر عن هويتك العربية)
+  [x] لقطات الشاشة المعتمدة من الهاتف الحقيقي (Phone Screenshots - 1080x2400 بكسل):
+      مجلد المرفقات: Store_Assets/Phone_Screenshots_PlayStore/
+      - 1_community_and_arab_avatars.png (مجتمع كُتّاب ملهم وشخصيات عربية + رتبة 👑)
+      - 2_mood_curation.png (خواطر وبطاقات مخصصة لمزاجك - كيف تشعر اليوم؟)
+      - 3_writer_ranks_and_badges.png (ارتقِ في رتب الكُتّاب وافتح الأوسمة والتحديات)
+      - 4_card_studio_and_story.png (صمم بطاقاتك وشارك ستوري واتساب بلمسة واحدة)
+      - 5_wisdom_and_quotes_library.png (آلاف الخواطر والحكم بدون إنترنت مع وضع ليلي)
 
 ================================================================================
