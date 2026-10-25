@@ -40,9 +40,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var tvName: TextView
     private lateinit var tvProfileBadge: TextView
     private lateinit var tvProfileUsername: TextView
-    private lateinit var btnLogoutTop: TextView
-    private lateinit var layoutAccountDangerZone: android.view.View
-    private lateinit var btnDeleteAccount: android.widget.TextView
+    private lateinit var btnProfileMenu: ImageView
     private lateinit var tvBio: TextView
     private lateinit var tvPostsCount: TextView
     private lateinit var tvFollowersCount: TextView
@@ -178,9 +176,7 @@ class UserProfileActivity : AppCompatActivity() {
         tvName = findViewById(R.id.tvProfileName)
         tvProfileBadge = findViewById(R.id.tvProfileBadge)
         tvProfileUsername = findViewById(R.id.tvProfileUsername)
-        btnLogoutTop = findViewById(R.id.btnLogoutTop)
-        layoutAccountDangerZone = findViewById(R.id.layoutAccountDangerZone)
-        btnDeleteAccount = findViewById(R.id.btnDeleteAccount)
+        btnProfileMenu = findViewById(R.id.btnProfileMenu)
         tvBio = findViewById(R.id.tvProfileBio)
         tvPostsCount = findViewById(R.id.tvPostsCount)
         tvFollowersCount = findViewById(R.id.tvFollowersCount)
@@ -235,26 +231,11 @@ class UserProfileActivity : AppCompatActivity() {
             btnProfileAction.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
             btnProfileAction.setOnClickListener { showEditProfileDialog() }
 
-            btnLogoutTop.visibility = View.VISIBLE
-            layoutAccountDangerZone.visibility = android.view.View.VISIBLE
-            btnDeleteAccount.setOnClickListener { showDeleteAccountDialog() }
-            btnLogoutTop.setOnClickListener {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.logout)
-                    .setMessage(R.string.confirm_logout)
-                    .setPositiveButton(R.string.logout) { _, _ ->
-                        AuthManager.signOut(this) {
-                            Toast.makeText(this, R.string.confirm_logout, Toast.LENGTH_SHORT).show()
-                            finish()
-                        }
-                    }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
-            }
+            btnProfileMenu.visibility = View.VISIBLE
+            btnProfileMenu.setOnClickListener { showProfileOptionsMenu(it) }
         } else {
             ivProfileAvatar.setOnClickListener(null)
-            btnLogoutTop.visibility = View.GONE
-            layoutAccountDangerZone.visibility = android.view.View.GONE
+            btnProfileMenu.visibility = View.GONE
             updateFollowButtonUI()
 
             btnProfileAction.setOnClickListener {
@@ -1432,6 +1413,37 @@ class UserProfileActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "خطأ في  تحديث صور التعليقات: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun showProfileOptionsMenu(anchor: View) {
+        val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
+        popup.menu.add(0, 1, 0, "✏️ " + getString(R.string.edit_profile_btn))
+        popup.menu.add(0, 2, 1, "🚪 " + getString(R.string.logout))
+        popup.menu.add(0, 3, 2, "🗑️ " + getString(R.string.delete_account))
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> showEditProfileDialog()
+                2 -> showLogoutConfirmDialog()
+                3 -> showDeleteAccountDialog()
+            }
+            true
+        }
+        popup.show()
+    }
+
+    private fun showLogoutConfirmDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.logout)
+            .setMessage(R.string.confirm_logout)
+            .setPositiveButton(R.string.logout) { _, _ ->
+                AuthManager.signOut(this) {
+                    Toast.makeText(this, R.string.confirm_logout, Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     private fun showDeleteAccountDialog() {
