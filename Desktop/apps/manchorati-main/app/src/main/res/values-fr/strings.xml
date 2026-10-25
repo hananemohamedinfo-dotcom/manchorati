@@ -367,4 +367,13 @@
     <string name="widget_copied_toast">Citation copiée avec succès 📋</string>
     <string name="drawer_add_widget">"Ajouter le Widget à l'écran"</string>
     <string name="widget_pin_instructions">"Appuyez longuement sur l'écran d'accueil, choisissez Widgets puis Manchorati 🌸"</string>
+
+    <!-- Supprimer le compte -->
+    <string name="delete_account">Supprimer le compte</string>
+    <string name="delete_account_confirm_title">Supprimer le compte définitivement ⚠️</string>
+    <string name="delete_account_warning">Attention : Votre compte, vos publications et vos données seront définitivement supprimés de nos serveurs.\n\nVeuillez patienter pour confirmer...</string>
+    <string name="delete_account_confirm_btn">Confirmer la suppression 🗑️</string>
+    <string name="delete_account_progress">Suppression du compte en cours...</string>
+    <string name="delete_account_success">Compte et données supprimés définitivement</string>
+    <string name="delete_account_error">Échec de la suppression du compte</string>
 </resources>

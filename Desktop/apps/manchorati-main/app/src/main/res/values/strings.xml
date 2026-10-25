@@ -393,4 +393,13 @@
     <string name="widget_copied_toast">تم نسخ الخاطرة بنجاح 📋</string>
     <string name="drawer_add_widget">إضافة ودجت للشاشة الرئيسية</string>
     <string name="widget_pin_instructions">المس مطولاً على شاشة هاتفك الرئيسية، ثم اختر (الأدوات/Widgets) واختر (منشوراتي) 🌸</string>
+
+    <!-- حذف الحساب والبيانات -->
+    <string name="delete_account">حذف الحساب نهائياً</string>
+    <string name="delete_account_confirm_title">حذف الحساب نهائياً ⚠️</string>
+    <string name="delete_account_warning">تحذير: سيتم حذف حسابك وجميع منشوراتك وبياناتك نهائياً من خوادم التطبيق وبلا رجعة.\n\nيرجى الانتظار لتأكيد العملية...</string>
+    <string name="delete_account_confirm_btn">تأكيد الحذف نهائياً 🗑️</string>
+    <string name="delete_account_progress">جاري حذف الحساب والبيانات...</string>
+    <string name="delete_account_success">تم حذف الحساب والبيانات نهائياً بنجاح</string>
+    <string name="delete_account_error">تعذر حذف الحساب، يرجى المحاولة لاحقاً</string>
 </resources>

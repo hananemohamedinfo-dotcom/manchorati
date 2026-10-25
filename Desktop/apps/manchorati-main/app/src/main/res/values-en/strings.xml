@@ -367,4 +367,13 @@
     <string name="widget_copied_toast">Quote copied successfully 📋</string>
     <string name="drawer_add_widget">Add Home Screen Widget</string>
     <string name="widget_pin_instructions">Long-press on your home screen, tap Widgets, and choose Manchorati 🌸</string>
+
+    <!-- Delete Account -->
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirm_title">Delete Account Permanently ⚠️</string>
+    <string name="delete_account_warning">Warning: Your account, posts, and data will be permanently deleted from our servers. This action cannot be undone.\n\nPlease wait to confirm...</string>
+    <string name="delete_account_confirm_btn">Confirm Delete 🗑️</string>
+    <string name="delete_account_progress">Deleting account and data...</string>
+    <string name="delete_account_success">Account and all data deleted successfully</string>
+    <string name="delete_account_error">Could not delete account, please try again</string>
 </resources>

@@ -41,6 +41,8 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var tvProfileBadge: TextView
     private lateinit var tvProfileUsername: TextView
     private lateinit var btnLogoutTop: TextView
+    private lateinit var layoutAccountDangerZone: android.view.View
+    private lateinit var btnDeleteAccount: android.widget.TextView
     private lateinit var tvBio: TextView
     private lateinit var tvPostsCount: TextView
     private lateinit var tvFollowersCount: TextView
@@ -177,6 +179,8 @@ class UserProfileActivity : AppCompatActivity() {
         tvProfileBadge = findViewById(R.id.tvProfileBadge)
         tvProfileUsername = findViewById(R.id.tvProfileUsername)
         btnLogoutTop = findViewById(R.id.btnLogoutTop)
+        layoutAccountDangerZone = findViewById(R.id.layoutAccountDangerZone)
+        btnDeleteAccount = findViewById(R.id.btnDeleteAccount)
         tvBio = findViewById(R.id.tvProfileBio)
         tvPostsCount = findViewById(R.id.tvPostsCount)
         tvFollowersCount = findViewById(R.id.tvFollowersCount)
@@ -232,6 +236,8 @@ class UserProfileActivity : AppCompatActivity() {
             btnProfileAction.setOnClickListener { showEditProfileDialog() }
 
             btnLogoutTop.visibility = View.VISIBLE
+            layoutAccountDangerZone.visibility = android.view.View.VISIBLE
+            btnDeleteAccount.setOnClickListener { showDeleteAccountDialog() }
             btnLogoutTop.setOnClickListener {
                 AlertDialog.Builder(this)
                     .setTitle(R.string.logout)
@@ -248,6 +254,7 @@ class UserProfileActivity : AppCompatActivity() {
         } else {
             ivProfileAvatar.setOnClickListener(null)
             btnLogoutTop.visibility = View.GONE
+            layoutAccountDangerZone.visibility = android.view.View.GONE
             updateFollowButtonUI()
 
             btnProfileAction.setOnClickListener {
@@ -1425,5 +1432,75 @@ class UserProfileActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "خطأ في  تحديث صور التعليقات: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun showDeleteAccountDialog() {
+        val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            android.widget.Toast.makeText(this, "يرجى تسجيل الدخول أولاً", android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        var countDownTimer: android.os.CountDownTimer? = null
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.delete_account_confirm_title)
+            .setMessage(R.string.delete_account_warning)
+            .setPositiveButton(getString(R.string.delete_account_confirm_btn) + " (5)") { _, _ ->
+                performAccountDeletion(user)
+            }
+            .setNegativeButton(R.string.no) { d, _ ->
+                countDownTimer?.cancel()
+                d.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.setOnShowListener {
+            val positiveBtn = dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+            positiveBtn.isEnabled = false
+            positiveBtn.setTextColor(android.graphics.Color.GRAY)
+
+            countDownTimer = object : android.os.CountDownTimer(5000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val sec = (millisUntilFinished / 1000) + 1
+                    positiveBtn.text = getString(R.string.delete_account_confirm_btn) + " ($sec)"
+                }
+
+                override fun onFinish() {
+                    positiveBtn.isEnabled = true
+                    positiveBtn.text = getString(R.string.delete_account_confirm_btn)
+                    positiveBtn.setTextColor(android.graphics.Color.RED)
+                }
+            }.start()
+        }
+
+        dialog.show()
+    }
+
+    private fun performAccountDeletion(user: com.google.firebase.auth.FirebaseUser) {
+        val uid = user.uid
+        val progressDialog = android.app.ProgressDialog(this).apply {
+            setMessage(getString(R.string.delete_account_progress))
+            setCancelable(false)
+            show()
+        }
+
+        FirestoreManager.deleteUserCompleteData(uid) { _ ->
+            user.delete().addOnCompleteListener { _ ->
+                try {
+                    progressDialog.dismiss()
+                } catch (e: Exception) {
+                }
+                getSharedPreferences("user_prefs", MODE_PRIVATE).edit().clear().apply()
+                AuthManager.signOut(this) {
+                    android.widget.Toast.makeText(this, R.string.delete_account_success, android.widget.Toast.LENGTH_LONG).show()
+                    val intent = android.content.Intent(this, MainActivity::class.java).apply {
+                        flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
     }
 }

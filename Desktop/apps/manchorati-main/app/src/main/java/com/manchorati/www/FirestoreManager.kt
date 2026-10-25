@@ -517,4 +517,33 @@ fun reportCommunityPost(postId: String, reporterId: String, reason: String, onCo
                     onComplete(false) 
                 }
         }
+
+    fun deleteUserCompleteData(userId: String, onComplete: (Boolean) -> Unit) {
+        if (userId.isEmpty()) {
+            onComplete(false)
+            return
+        }
+        db.collection("users").document(userId).delete()
+            .addOnCompleteListener {
+                db.collection("community_posts")
+                    .whereEqualTo("authorId", userId)
+                    .get()
+                    .addOnSuccessListener { snapshot ->
+                        if (snapshot.isEmpty) {
+                            onComplete(true)
+                        } else {
+                            val batch = db.batch()
+                            for (doc in snapshot.documents) {
+                                batch.delete(doc.reference)
+                            }
+                            batch.commit().addOnCompleteListener {
+                                onComplete(true)
+                            }
+                        }
+                    }
+                    .addOnFailureListener {
+                        onComplete(true)
+                    }
+            }
+    }
 }
