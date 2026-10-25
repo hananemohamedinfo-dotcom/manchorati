@@ -72,8 +72,10 @@ class NotificationsAdapter(
             tvTime.text = relativeTime
 
             dot.visibility = if (notification.isRead) View.GONE else View.VISIBLE
+            val isDark = (context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            val unreadBg = if (isDark) Color.parseColor("#1E293B") else Color.parseColor("#F1F5F9")
             itemView.setBackgroundColor(
-                if (notification.isRead) Color.TRANSPARENT else Color.parseColor("#F1F5F9")
+                if (notification.isRead) Color.TRANSPARENT else unreadBg
             )
 
             // تخصيص الأيقونة واللون حسب نوع الإشعار
@@ -92,6 +94,22 @@ class NotificationsAdapter(
                 }
                 "NEW_POST" -> {
                     ivIcon.setImageResource(R.drawable.ic_edit)
+                    ivIcon.setColorFilter(Color.parseColor("#F59E0B"))
+                }
+                "report_action_taken" -> {
+                    ivIcon.setImageResource(R.drawable.ic_check)
+                    ivIcon.setColorFilter(Color.parseColor("#10B981"))
+                }
+                "report_dismissed" -> {
+                    ivIcon.setImageResource(android.R.drawable.ic_dialog_info)
+                    ivIcon.setColorFilter(Color.parseColor("#38BDF8"))
+                }
+                "post_removed" -> {
+                    ivIcon.setImageResource(R.drawable.ic_flag_report)
+                    ivIcon.setColorFilter(Color.parseColor("#EF4444"))
+                }
+                "badge_promoted" -> {
+                    ivIcon.setImageResource(R.drawable.ic_trophy)
                     ivIcon.setColorFilter(Color.parseColor("#F59E0B"))
                 }
                 else -> {

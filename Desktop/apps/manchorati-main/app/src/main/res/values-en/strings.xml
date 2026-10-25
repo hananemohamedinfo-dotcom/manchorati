@@ -354,4 +354,17 @@
     <string name="privacy_btn_agree_continue">Agree &amp; Continue</string>
     <string name="privacy_btn_close">Close</string>
     <string name="privacy_toast_must_accept">Please agree to the terms to continue</string>
+    <string name="tab_card_templates">Ready Cards</string>
+    <string name="template_emerald">Calm Emerald</string>
+    <string name="template_crimson_brand">Crimson Manchorati</string>
+    <string name="template_ocean_breeze">Ocean Breeze</string>
+    <string name="download_post_image">Download Card Image</string>
+    <string name="post_image_saved_success">Card image saved to gallery successfully</string>
+    <string name="post_image_save_failed">Failed to save image, please try again</string>
+    <string name="saving_post_image">Saving image to gallery...</string>
+    <string name="widget_quote_name">Daily Quote</string>
+    <string name="widget_quote_description">Display inspiring quotes on your home screen with quick refresh and copy.</string>
+    <string name="widget_copied_toast">Quote copied successfully 📋</string>
+    <string name="drawer_add_widget">Add Home Screen Widget</string>
+    <string name="widget_pin_instructions">Long-press on your home screen, tap Widgets, and choose Manchorati 🌸</string>
 </resources>

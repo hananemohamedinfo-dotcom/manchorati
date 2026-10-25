@@ -117,18 +117,25 @@
                             android:textStyle="bold"
                             tools:text="محمد علي" />
 
-                        <!-- شارة المستخدم -->
+                        <!-- شارة المستخدم والرتبة التفاعلية -->
                         <TextView
                             android:id="@+id/tvProfileBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_badge_writer"
-                            android:text="@string/featured_writer"
-                            android:textColor="#FBBF24"
-                            android:textSize="10sp"
+                            android:background="@drawable/bg_badge_beginner"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="🥉 كاتب مبتدئ"
+                            android:textColor="#D97706"
+                            android:textSize="11sp"
                             android:textStyle="bold"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             tools:visibility="visible" />
                     </LinearLayout>
 

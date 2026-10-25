@@ -51,29 +51,37 @@ fun listenToUserPosts(
             }
     }
 
-   fun publishCommunityPost(
+    fun publishCommunityPost(
         authorId: String,
         authorName: String,
         authorUsername: String,
-        authorPhotoUrl: String, // استقبال رابط أو اسم الأفاتار
+        authorPhotoUrl: String,
         content: String,
         bgId: String,
         fontId: String,
         textColor: String = "",
         tag: String = "",
+        authorBadge: String = "",
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
+        val resolvedBadge = if (authorBadge.isNotEmpty()) {
+            authorBadge
+        } else {
+            BadgeHelper.getCachedBadge(authorId)?.id ?: ""
+        }
+
         val postMap = hashMapOf(
             "authorId" to authorId,
             "authorName" to authorName,
             "authorUsername" to authorUsername,
-            "authorPhotoUrl" to authorPhotoUrl, // تخزين الصورة في المنشور
+            "authorPhotoUrl" to authorPhotoUrl,
             "content" to content,
             "bgId" to bgId,
             "fontId" to fontId,
             "textColor" to textColor,
             "tag" to tag,
+            "authorBadge" to resolvedBadge,
             "likesCount" to 0,
             "commentsCount" to 0,
             "likedBy" to emptyList<String>(),

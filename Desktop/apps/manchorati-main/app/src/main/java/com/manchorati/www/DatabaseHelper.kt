@@ -166,6 +166,14 @@ private fun copyDatabaseFromAssetsIfNeeded() {
         )
     }
 
+    fun getCuratedPostsForCategoryIds(categoryIds: List<Int>, limit: Int = 15): List<Post> {
+        if (categoryIds.isEmpty()) return emptyList()
+        val placeholders = categoryIds.joinToString(",") { "?" }
+        val args = categoryIds.map { it.toString() }.toTypedArray()
+        val sql = "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE p.$COL_POST_CAT_ID IN ($placeholders) ORDER BY RANDOM() LIMIT $limit"
+        return queryPosts(sql, args)
+    }
+
     fun getFeaturedPosts(): List<Post> {
         return queryPosts(
             "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE p.$COL_POST_FEATURED = 1",
@@ -202,6 +210,17 @@ private fun copyDatabaseFromAssetsIfNeeded() {
         return list
     }
 
+    fun getRandomWidgetQuote(): Post? {
+        val list = queryPosts(
+            "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE LENGTH(p.$COL_POST_CONTENT) >= 15 AND LENGTH(p.$COL_POST_CONTENT) <= 150 ORDER BY RANDOM() LIMIT 1",
+            null
+        )
+        return list.firstOrNull() ?: queryPosts(
+            "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID ORDER BY RANDOM() LIMIT 1",
+            null
+        ).firstOrNull()
+    }
+
     fun toggleFavorite(postId: Int, currentStatus: Int): Int {
         val db = writableDatabase
         val newStatus = if (currentStatus == 1) 0 else 1
@@ -223,7 +242,8 @@ private fun copyDatabaseFromAssetsIfNeeded() {
 
         // جلب معرف القسم أو إنشائه إن لم يكن موجوداً
         var catId = -1
-        val catCursor = db.rawQuery("SELECT $COL_CAT_ID FROM $TABLE_CATEGORIES WHERE $COL_CAT_NAME = ?", arrayOf(categoryName))
+        val trimmed = categoryName.trim()
+        val catCursor = db.rawQuery("SELECT $COL_CAT_ID FROM $TABLE_CATEGORIES WHERE $COL_CAT_NAME = ? OR TRIM($COL_CAT_NAME) = ?", arrayOf(categoryName, trimmed))
         if (catCursor.moveToFirst()) {
             catId = catCursor.getInt(catCursor.getColumnIndexOrThrow(COL_CAT_ID))
         }
@@ -231,14 +251,18 @@ private fun copyDatabaseFromAssetsIfNeeded() {
 
         if (catId == -1) {
             val cvCat = ContentValues().apply {
-                put(COL_CAT_NAME, categoryName)
+                put(COL_CAT_NAME, trimmed)
                 put(COL_CAT_HAS_NEW, 1)
             }
             catId = db.insert(TABLE_CATEGORIES, null, cvCat).toInt()
+            val viewPrefs = context.getSharedPreferences("viewed_categories", Context.MODE_PRIVATE)
+            viewPrefs.edit().putBoolean("seen_$catId", false).apply()
         } else {
             // تفعيل علامة NEW على القسم
             val cvUpdate = ContentValues().apply { put(COL_CAT_HAS_NEW, 1) }
             db.update(TABLE_CATEGORIES, cvUpdate, "$COL_CAT_ID = ?", arrayOf(catId.toString()))
+            val viewPrefs = context.getSharedPreferences("viewed_categories", Context.MODE_PRIVATE)
+            viewPrefs.edit().putBoolean("seen_$catId", false).apply()
         }
 
         val cvPost = ContentValues().apply {

@@ -182,7 +182,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tabBg"
+                    android:id="@+id/tabTemplates"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_tool_chip_active"
@@ -191,10 +191,25 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_background"
+                    android:text="@string/tab_card_templates"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tabBg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:text="@string/tab_background"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tabTag"
@@ -249,13 +264,29 @@
             android:layout_height="52dp"
             android:layout_marginTop="10dp">
 
+            <!-- 0) حاوية قوالب البطاقات الجاهزة -->
+            <HorizontalScrollView
+                android:id="@+id/scrollCardTemplates"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/layoutTemplatesContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
             <!-- أ) حاوية ألوان الخلفية -->
             <HorizontalScrollView
                 android:id="@+id/scrollBgColors"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/layoutColorsContainer"

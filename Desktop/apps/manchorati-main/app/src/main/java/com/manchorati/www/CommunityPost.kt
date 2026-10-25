@@ -18,6 +18,7 @@ data class CommunityPost(
     val commentsCount: Long = 0,
     val reportCount: Long = 0,
     val likedBy: List<String> = emptyList(),
+    val authorBadge: String = "",
     val timestamp: Any? = null
 )
 

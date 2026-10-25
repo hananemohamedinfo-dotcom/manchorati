@@ -350,8 +350,21 @@
     <string name="drawer_privacy_policy">Confidentialité &amp; Conditions</string>
     <string name="privacy_dialog_title">Politique de confidentialité &amp; Conditions</string>
     <string name="privacy_dialog_subtitle">Conforme aux normes RGPD (UE) et aux politiques de Google Play</string>
-    <string name="privacy_checkbox_consent">J\'atteste avoir lu et j\'accepte la politique de confidentialité et les conditions d\'utilisation</string>
+    <string name="privacy_checkbox_consent">"J\'atteste avoir lu et j\'accepte la politique de confidentialité et les conditions d\'utilisation"</string>
     <string name="privacy_btn_agree_continue">Accepter et continuer</string>
     <string name="privacy_btn_close">Fermer</string>
     <string name="privacy_toast_must_accept">Veuillez accepter les conditions pour continuer</string>
+    <string name="tab_card_templates">Cartes prêtes</string>
+    <string name="template_emerald">Émeraude calme</string>
+    <string name="template_crimson_brand">Rouge Manchorati</string>
+    <string name="template_ocean_breeze">Brise océane</string>
+    <string name="download_post_image">Télécharger la carte</string>
+    <string name="post_image_saved_success">Image de la carte enregistrée dans la galerie avec succès</string>
+    <string name="post_image_save_failed">"Impossible d\'enregistrer l\'image"</string>
+    <string name="saving_post_image">"Enregistrement de l\'image dans la galerie..."</string>
+    <string name="widget_quote_name">Pensée du jour</string>
+    <string name="widget_quote_description">"Affichez de belles citations sur votre écran d'accueil avec actualisation rapide."</string>
+    <string name="widget_copied_toast">Citation copiée avec succès 📋</string>
+    <string name="drawer_add_widget">"Ajouter le Widget à l'écran"</string>
+    <string name="widget_pin_instructions">"Appuyez longuement sur l'écran d'accueil, choisissez Widgets puis Manchorati 🌸"</string>
 </resources>

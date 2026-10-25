@@ -18,122 +18,202 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- شبكة لعرض الصور (صورة جوجل + الـ 8 أفاتارات) -->
-    <GridLayout
+    <!-- مساحة قابلة للتمرير لعرض كافة الأفاتارات -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alignmentMode="alignMargins"
-        android:columnCount="4"
-        android:gravity="center">
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false">
 
-        <!-- 1. صورة جوجل الشخصية -->
-        <ImageView
-            android:id="@+id/ivGooglePhoto"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_profile" />
+        <!-- شبكة لعرض الصور (صورة جوجل + الأفاتارات) -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
+            android:columnCount="4"
+            android:gravity="center">
 
-        <!-- 2. الأفاتار الأول -->
-        <ImageView
-            android:id="@+id/ivAvatar1"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_1" />
+            <!-- 1. صورة جوجل الشخصية -->
+            <ImageView
+                android:id="@+id/ivGooglePhoto"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
 
-        <!-- 3. الأفاتار الثاني -->
-        <ImageView
-            android:id="@+id/ivAvatar2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_2" />
+            <!-- 2. الأفاتار الأول -->
+            <ImageView
+                android:id="@+id/ivAvatar1"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_1" />
 
-        <!-- 4. الأفاتار الثالث -->
-        <ImageView
-            android:id="@+id/ivAvatar3"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_3" />
+            <!-- 3. الأفاتار الثاني -->
+            <ImageView
+                android:id="@+id/ivAvatar2"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_2" />
 
-        <!-- 5. الأفاتار الرابع -->
-        <ImageView
-            android:id="@+id/ivAvatar4"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_4" />
+            <!-- 4. الأفاتار الثالث -->
+            <ImageView
+                android:id="@+id/ivAvatar3"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_3" />
 
-        <!-- 6. الأفاتار الخامس -->
-        <ImageView
-            android:id="@+id/ivAvatar5"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_5" />
+            <!-- 5. الأفاتار الرابع -->
+            <ImageView
+                android:id="@+id/ivAvatar4"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_4" />
 
-        <!-- 7. الأفاتار السادس -->
-        <ImageView
-            android:id="@+id/ivAvatar6"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_6" />
+            <!-- 6. الأفاتار الخامس -->
+            <ImageView
+                android:id="@+id/ivAvatar5"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_5" />
 
-        <!-- 8. الأفاتار السابع -->
-        <ImageView
-            android:id="@+id/ivAvatar7"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_7" />
+            <!-- 7. الأفاتار السادس -->
+            <ImageView
+                android:id="@+id/ivAvatar6"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_6" />
 
-        <!-- 9. الأفاتار الثامن -->
-        <ImageView
-            android:id="@+id/ivAvatar8"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar_8" />
+            <!-- 8. الأفاتار السابع -->
+            <ImageView
+                android:id="@+id/ivAvatar7"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_7" />
 
-    </GridLayout>
+            <!-- 9. الأفاتار الثامن -->
+            <ImageView
+                android:id="@+id/ivAvatar8"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_8" />
+
+            <!-- 10. الأفاتار التاسع (رجل عربي ملتحي) -->
+            <ImageView
+                android:id="@+id/ivAvatar9"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_9" />
+
+            <!-- 11. الأفاتار العاشر (امرأة عربية محجبة) -->
+            <ImageView
+                android:id="@+id/ivAvatar10"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_10" />
+
+            <!-- 12. الأفاتار الحادي عشر (شاب كاتب بنظارات) -->
+            <ImageView
+                android:id="@+id/ivAvatar11"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_11" />
+
+            <!-- 13. الأفاتار الثاني عشر (رجل عربي بالغترة والشماغ) -->
+            <ImageView
+                android:id="@+id/ivAvatar12"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_12" />
+
+            <!-- 14. الأفاتار الثالث عشر (امرأة محجبة بنظارات عصرية) -->
+            <ImageView
+                android:id="@+id/ivAvatar13"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_13" />
+
+            <!-- 15. الأفاتار الرابع عشر (شيخ ومفكر وقور بلحية بيضاء) -->
+            <ImageView
+                android:id="@+id/ivAvatar14"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_14" />
+
+        </GridLayout>
+    </ScrollView>
 
 </LinearLayout>

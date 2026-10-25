@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -33,6 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,6 +67,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvNavProfile: TextView
 
     private lateinit var tvToolbarTitle: TextView
+    private lateinit var btnDailyStreak: View
+    private lateinit var tvStreakCount: TextView
     private lateinit var btnOptionsMenu: ImageView
     private lateinit var btnMainNotificationsContainer: View
     private lateinit var mainBadgeNotificationDot: View
@@ -130,7 +134,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            syncManager.checkAndUpdatePosts()
+            val added = syncManager.checkAndUpdatePosts()
+            if (added) {
+                LocalBroadcastManager.getInstance(this@MainActivity)
+                    .sendBroadcast(Intent("com.manchorati.CATEGORY_UPDATED"))
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -197,6 +205,8 @@ class MainActivity : AppCompatActivity() {
         tvNavProfile = findViewById(R.id.tvNavProfile)
 
         tvToolbarTitle = findViewById(R.id.tvToolbarTitle)
+        btnDailyStreak = findViewById(R.id.btnDailyStreak)
+        tvStreakCount = findViewById(R.id.tvStreakCount)
         btnOptionsMenu = findViewById(R.id.btnOptionsMenu)
         btnMainNotificationsContainer = findViewById(R.id.btnMainNotificationsContainer)
         mainBadgeNotificationDot = findViewById(R.id.mainBadgeNotificationDot)
@@ -209,7 +219,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupHeaderActions() {
-      
+        val streakInfo = StreakManager.checkAndUpdateStreak(this) { newCount ->
+            Toast.makeText(this, "🔥 رائع! حافظت على سلسلتك اليومية: $newCount أيام متتالية!", Toast.LENGTH_LONG).show()
+        }
+        tvStreakCount.text = streakInfo.currentStreak.toString()
+        btnDailyStreak.setOnClickListener {
+            StreakManager.showStreakDialog(this)
+        }
+
         btnMainNotificationsContainer.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
@@ -654,6 +671,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationSettingsActivity::class.java))
         }
 
+        findViewById<View>(R.id.btnDrawerAddWidget)?.setOnClickListener {
+            drawerLayout.closeDrawers()
+            pinQuoteWidget()
+        }
+
         findViewById<View>(R.id.btnDrawerRate)?.setOnClickListener {
             drawerLayout.closeDrawers()
             openPlayStore()
@@ -678,6 +700,18 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             performLogout()
         }
+    }
+
+    private fun pinQuoteWidget() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
+            val myProvider = ComponentName(this, QuoteWidgetProvider::class.java)
+            if (appWidgetManager.isRequestPinAppWidgetSupported) {
+                appWidgetManager.requestPinAppWidget(myProvider, null, null)
+                return
+            }
+        }
+        Toast.makeText(this, getString(R.string.widget_pin_instructions), Toast.LENGTH_LONG).show()
     }
 
   private fun updateDrawerHeader() {

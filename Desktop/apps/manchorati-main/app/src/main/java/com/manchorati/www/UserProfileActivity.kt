@@ -59,6 +59,7 @@ class UserProfileActivity : AppCompatActivity() {
     private var currentUsername: String = ""
     private var isFollowing = false
     private var currentFollowersCount: Long = 0L
+    private var currentBadge: UserBadge = BadgeHelper.BADGE_BEGINNER
     private var fabAddPostProfile: View? = null
     private var postsListener: ListenerRegistration? = null
 
@@ -196,6 +197,9 @@ class UserProfileActivity : AppCompatActivity() {
         layoutFollowingContainer.setOnClickListener {
             showFollowersOrFollowingDialog(isFollowers = false)
         }
+        tvProfileBadge.setOnClickListener {
+            showWriterChallengesBottomSheet(currentBadge, currentFollowersCount)
+        }
 
         swipeRefresh.setColorSchemeColors(Color.parseColor("#0284C7"))
         swipeRefresh.setOnRefreshListener {
@@ -316,18 +320,16 @@ class UserProfileActivity : AppCompatActivity() {
                     tvFollowingCount.text = followingCount.formatCount()
                     swipeRefresh.isRefreshing = false
 
-                    // شارة المستخدم
+                    // شارة ورتبة المستخدم والتحديات
+                    val explicitBadge = data["badge"] as? String
                     val email = data["email"] as? String ?: (if (targetUserId == AuthManager.currentUser?.uid) AuthManager.currentUser?.email else null)
                     val totalLikes = (data["totalLikes"] as? Number)?.toLong() ?: 0L
-                    val badge = BadgeHelper.getBadgeForProfile(email, totalLikes, currentFollowersCount)
-                    if (badge != null) {
-                        tvProfileBadge.visibility = View.VISIBLE
-                        tvProfileBadge.setText(badge.titleResId)
-                        tvProfileBadge.setBackgroundResource(badge.bgResId)
-                        tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
-                    } else {
-                        tvProfileBadge.visibility = View.GONE
-                    }
+                    currentBadge = BadgeHelper.getBadgeForProfile(explicitBadge, email, totalLikes, currentFollowersCount)
+                    BadgeHelper.setCachedBadge(targetUserId, currentBadge)
+                    tvProfileBadge.visibility = View.VISIBLE
+                    tvProfileBadge.text = "${currentBadge.iconEmoji} ${currentBadge.title}"
+                    tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
+                    tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
 
                     if (targetUserId != activeUserId) {
                         isFollowing = followersList.contains(activeUserId)
@@ -344,19 +346,200 @@ class UserProfileActivity : AppCompatActivity() {
                         if (tvBio.text.isNullOrEmpty()) {
                             tvBio.text = getString(R.string.no_bio_yet)
                         }
-                        val badge = BadgeHelper.getBadgeForProfile(currentUser.email, 0L, currentFollowersCount)
-                        if (badge != null) {
-                            tvProfileBadge.visibility = View.VISIBLE
-                            tvProfileBadge.setText(badge.titleResId)
-                            tvProfileBadge.setBackgroundResource(badge.bgResId)
-                            tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
-                        } else {
-                            tvProfileBadge.visibility = View.GONE
-                        }
+                        currentBadge = BadgeHelper.getBadgeForProfile(null, currentUser.email, 0L, currentFollowersCount)
+                        BadgeHelper.setCachedBadge(targetUserId, currentBadge)
+                        tvProfileBadge.visibility = View.VISIBLE
+                        tvProfileBadge.text = "${currentBadge.iconEmoji} ${currentBadge.title}"
+                        tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
+                        tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
                     }
                 }
             }
         }
+    }
+
+    private fun showWriterChallengesBottomSheet(badge: UserBadge, followersCount: Long) {
+        val dialog = BottomSheetDialog(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_writer_challenges, null)
+        dialog.setContentView(dialogView)
+
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { sheet ->
+                sheet.setBackgroundResource(android.R.color.transparent)
+                val behavior = BottomSheetBehavior.from(sheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
+        }
+
+        val btnClose = dialogView.findViewById<ImageView>(R.id.btnCloseChallenges)
+        val btnDone = dialogView.findViewById<Button>(R.id.btnDoneChallenges)
+        val tvRankPill = dialogView.findViewById<TextView>(R.id.tvCurrentRankPill)
+        val tvProgressText = dialogView.findViewById<TextView>(R.id.tvNextTierProgressText)
+        val pbProgress = dialogView.findViewById<ProgressBar>(R.id.pbTierProgress)
+        val tvRemaining = dialogView.findViewById<TextView>(R.id.tvRemainingFollowersText)
+        val layoutRanks = dialogView.findViewById<LinearLayout>(R.id.layoutRanksGuide)
+        val layoutMilestones = dialogView.findViewById<LinearLayout>(R.id.layoutMilestonesContainer)
+
+        btnClose.setOnClickListener { dialog.dismiss() }
+        btnDone.setOnClickListener { dialog.dismiss() }
+
+        // 1. الرتبة الحالية
+        tvRankPill.text = "${badge.iconEmoji} ${badge.title}"
+        tvRankPill.setBackgroundResource(badge.bgResId)
+        tvRankPill.setTextColor(Color.parseColor(badge.textColorHex))
+
+        // 2. حساب التقدم نحو الرتبة التالية
+        val nextTier = BadgeHelper.getNextTier(badge)
+        if (nextTier != null) {
+            val min = badge.minFollowers
+            val max = nextTier.minFollowers
+            val currentInTier = (followersCount - min).coerceAtLeast(0L)
+            val range = (max - min).coerceAtLeast(1L)
+            val pct = ((currentInTier.toFloat() / range.toFloat()) * 100).toInt().coerceIn(0, 100)
+
+            pbProgress.progress = pct
+            tvProgressText.text = "${followersCount} / ${nextTier.minFollowers} متابع للترقية إلى ${nextTier.title} ($pct%)"
+            val remaining = (nextTier.minFollowers - followersCount).coerceAtLeast(0L)
+            tvRemaining.text = "متبقي $remaining متابع للترقية 🚀"
+            tvRemaining.visibility = View.VISIBLE
+        } else {
+            pbProgress.progress = 100
+            tvProgressText.text = getString(R.string.max_tier_reached)
+            tvRemaining.visibility = View.GONE
+        }
+
+        // 3. عرض دليل الرتب مع تمييز الرتبة الحالية
+        layoutRanks.removeAllViews()
+        for (tier in BadgeHelper.ALL_TIERS) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(24, 16, 24, 16)
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { topMargin = 8 }
+
+                if (tier.id == badge.id) {
+                    setBackgroundResource(R.drawable.bg_milestone_card)
+                } else {
+                    setBackgroundColor(Color.parseColor("#080F1D"))
+                }
+            }
+
+            val tvTierBadge = TextView(this).apply {
+                text = "${tier.iconEmoji} ${tier.title}"
+                textSize = 12f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setTextColor(Color.parseColor(tier.textColorHex))
+                setBackgroundResource(tier.bgResId)
+                setPadding(16, 6, 16, 6)
+            }
+
+            val layoutDetails = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                    marginStart = 16
+                }
+            }
+
+            val tvFollowersReq = TextView(this).apply {
+                text = if (tier.minFollowers == 0L) "لجميع الأعضاء الجدد" else "${tier.minFollowers}+ متابع"
+                textSize = 11f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setTextColor(Color.parseColor("#E2E8F0"))
+            }
+
+            val tvDesc = TextView(this).apply {
+                text = tier.description
+                textSize = 10f
+                setTextColor(Color.parseColor("#94A3B8"))
+            }
+
+            layoutDetails.addView(tvFollowersReq)
+            layoutDetails.addView(tvDesc)
+
+            row.addView(tvTierBadge)
+            row.addView(layoutDetails)
+
+            if (tier.id == badge.id) {
+                val tvActiveBadge = TextView(this).apply {
+                    text = "رتبتك الحالية"
+                    textSize = 10f
+                    setTextColor(Color.parseColor("#10B981"))
+                    setTypeface(null, android.graphics.Typeface.BOLD)
+                }
+                row.addView(tvActiveBadge)
+            }
+
+            layoutRanks.addView(row)
+        }
+
+        // 4. عرض أوسمة الإنجازات والتحديات
+        layoutMilestones.removeAllViews()
+        for (ms in BadgeHelper.ALL_MILESTONES) {
+            val isUnlocked = ms.isUnlocked(followersCount)
+            val card = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(24, 16, 24, 16)
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { topMargin = 8 }
+                setBackgroundResource(R.drawable.bg_milestone_card)
+            }
+
+            val tvEmoji = TextView(this).apply {
+                text = ms.emoji
+                textSize = 22f
+                setPadding(0, 0, 16, 0)
+            }
+
+            val layoutText = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            val tvTitle = TextView(this).apply {
+                text = ms.title
+                textSize = 12f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setTextColor(if (isUnlocked) Color.parseColor("#F59E0B") else Color.parseColor("#94A3B8"))
+            }
+
+            val tvSub = TextView(this).apply {
+                text = ms.description
+                textSize = 10f
+                setTextColor(Color.parseColor("#64748B"))
+            }
+
+            layoutText.addView(tvTitle)
+            layoutText.addView(tvSub)
+
+            val tvStatus = TextView(this).apply {
+                if (isUnlocked) {
+                    text = getString(R.string.badge_unlocked_label)
+                    setTextColor(Color.parseColor("#10B981"))
+                } else {
+                    val rem = (ms.targetFollowers - followersCount).coerceAtLeast(0L)
+                    text = getString(R.string.badge_locked_label, rem)
+                    setTextColor(Color.parseColor("#64748B"))
+                }
+                textSize = 11f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+            }
+
+            card.addView(tvEmoji)
+            card.addView(layoutText)
+            card.addView(tvStatus)
+
+            layoutMilestones.addView(card)
+        }
+
+        dialog.show()
     }
 
     private fun showFollowersOrFollowingDialog(isFollowers: Boolean) {
@@ -547,7 +730,13 @@ class UserProfileActivity : AppCompatActivity() {
             R.id.ivAvatar5 to "avatar_5",
             R.id.ivAvatar6 to "avatar_6",
             R.id.ivAvatar7 to "avatar_7",
-            R.id.ivAvatar8 to "avatar_8"
+            R.id.ivAvatar8 to "avatar_8",
+            R.id.ivAvatar9 to "avatar_9",
+            R.id.ivAvatar10 to "avatar_10",
+            R.id.ivAvatar11 to "avatar_11",
+            R.id.ivAvatar12 to "avatar_12",
+            R.id.ivAvatar13 to "avatar_13",
+            R.id.ivAvatar14 to "avatar_14"
         )
 
         for ((viewId, avatarName) in avatars) {

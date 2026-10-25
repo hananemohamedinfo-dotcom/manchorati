@@ -58,22 +58,28 @@
                             android:id="@+id/tvAuthor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:maxWidth="140dp"
                             android:text="اسم الكاتب"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <!-- شارة المستخدم (مشرف أو كاتب متميز) -->
+                        <!-- رمز شارة تصنيف ورتبة الكاتب (رمز فقط بدون خلفية أو نص) -->
                         <TextView
                             android:id="@+id/tvAuthorBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:background="@drawable/bg_badge_writer"
-                            android:text="@string/featured_writer"
-                            android:textColor="#FBBF24"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
+                            android:layout_marginStart="4dp"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:singleLine="true"
+                            android:text="👑"
+                            android:textSize="13.5sp"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -216,6 +222,27 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <!-- زر تحميل صورة البطاقة على الجهاز -->
+            <LinearLayout
+                android:id="@+id/btnDownloadPostContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="6dp">
+
+                <ImageView
+                    android:id="@+id/ivDownloadPost"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_download"
+                    app:tint="@color/text_secondary"
+                    android:contentDescription="@string/download_post_image" />
+            </LinearLayout>
 
             <!-- زر مشاركة ستوري 9:16 -->
             <LinearLayout

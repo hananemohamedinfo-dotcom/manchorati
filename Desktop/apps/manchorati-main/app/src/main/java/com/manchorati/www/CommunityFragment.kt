@@ -4,20 +4,25 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -27,10 +32,72 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.widget.ImageView
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
+
+enum class MoodType(
+    val id: String,
+    val title: String,
+    val emoji: String,
+    val bannerPhrase: String,
+    val keywords: List<String>,
+    val categoryIds: List<Int>,
+    val defaultTag: String
+) {
+    ALL("all", "الكل", "🌟", "", emptyList(), emptyList(), ""),
+    CHILL("chill", "رايق وهادئ", "☕", "كوب قهوة، وهدوء يملأ روحك.. اقرأ بروية وسلام ☕",
+        listOf("قهوة", "مساء", "صباح", "هدوء", "راحة", "سكينة", "أمل", "سلام", "روقان", "رايق", "شاي", "عزلة", "بحر", "مطر", "ورد", "تأمل", "كتاب", "فنجان", "نسيم"),
+        listOf(13, 14, 20), "قهوة ومساء"),
+    MOTIVATED("motivated", "محتاج تحفيز", "💪", "انهض! لا شيء مستحيل أمام إرادتك وعزيمتك الجبارة 🔥",
+        listOf("تحفيز", "تطوير", "نجاح", "أمل", "قوة", "إصرار", "حلم", "هدف", "طموح", "شغف", "عزيمة", "تحدي", "إرادة", "صبر", "مستقبل", "إنجاز", "كفاح", "طاقة", "تفاؤل"),
+        listOf(11, 18), "تحفيز وتطوير"),
+    SAD("sad", "مهموم وحزين", "😔", "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾ — كل مرٍّ سيمر، وهذه الكلمات لتُطبطب على قلبك 🤍",
+        listOf("خواطر", "حزن", "صبر", "فراق", "ألم", "دعاء", "طبطبة", "فرج", "عسر", "مهموم", "وجع", "ضيق", "تعب", "هم", "دموع", "يارب", "فقد", "مواساة", "خيبة"),
+        listOf(15, 4, 12), "خواطر"),
+    HAPPY("happy", "متفائل وسعيد", "😊", "ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸",
+        listOf("ابتسامة", "سعادة", "فرح", "ضحك", "فكاهة", "تفاؤل", "جمال", "فرفشة", "نكت", "وناسة", "سرور", "بهجة", "عيد", "أمل", "طاقة"),
+        listOf(8, 6, 9, 7), "فكاهة وضحك"),
+    LOVE("love", "حب وامتنان", "❤️", "الحب والامتنان سر السعادة.. شارك من تحب كلمة طيبة وأثراً جميلاً 💖",
+        listOf("حب", "عشق", "امتنان", "شوق", "وفاء", "صداقة", "أهل", "أمي", "أبي", "غرام", "مودة", "حبيبي", "صديق", "عتاب", "قلب", "مشاعر", "روحي", "تقدير"),
+        listOf(2, 3, 21, 23), "شعر وأدب"),
+    PEACE("peace", "أدعية وسكينة", "🤲", "ألا بذكر الله تطمئن القلوب.. سكينة ونور ودعوات مستجابة 🕊️",
+        listOf("أدعية", "أذكار", "دعاء", "طمأنينة", "ذكر", "قرآن", "استغفار", "الله", "يارب", "اللهم", "الحمدلله", "سبحان", "سكينة", "إيمان", "صلاة", "رسول", "نبي", "تسبيح", "رحمة", "مغفرة", "جنة", "نور", "أجر"),
+        listOf(1, 17, 10), "أدعية وأذكار")
+}
+
+fun Post.toCuratedCommunityPost(mood: MoodType, context: Context): CommunityPost {
+    val bgList = listOf("#1E293B", "#0F172A", "#18181B", "#1E1B4B", "#14532D", "#701A75", "#0C4A6E", "#831843")
+    val fontList = listOf("amiri", "tajawal", "cairo", "kufi")
+    val selectedBg = bgList[Math.abs(id.hashCode()) % bgList.size]
+    val selectedFont = fontList[Math.abs(id.hashCode()) % fontList.size]
+    val randomLikes = (35 + (Math.abs(id.hashCode()) % 150)).toLong()
+    val isLiked = LocalLikesManager.isLiked(context, "curated_$id")
+    val currentUid = AuthManager.currentUser?.uid ?: "local_guest"
+    val likedByList = if (isLiked) listOf(currentUid) else emptyList()
+
+    // استخدام أفاتار كرتوني حصري من أفاتار التطبيق فقط (avatar_1 .. avatar_14) لمنع أي استخدام لصور حسابات المستخدمين
+    val avatarIdx = (Math.abs(id.hashCode()) % 14) + 1
+    val avatarResourceName = "avatar_$avatarIdx"
+
+    return CommunityPost(
+        id = "curated_$id",
+        authorId = "manchorati_curated",
+        authorName = "منشوراتي",
+        authorUsername = "manchorati",
+        authorPhotoUrl = avatarResourceName,
+        content = content,
+        bgId = selectedBg,
+        fontId = selectedFont,
+        textColor = "#FFFFFF",
+        tag = mood.title,
+        likesCount = if (isLiked) randomLikes + 1 else randomLikes,
+        commentsCount = 0L,
+        reportCount = 0L,
+        likedBy = likedByList,
+        authorBadge = "official",
+        timestamp = System.currentTimeMillis() - (Math.abs(id.hashCode()) % 86400000L)
+    )
+}
 
 class CommunityFragment : Fragment() {
 
@@ -51,6 +118,10 @@ class CommunityFragment : Fragment() {
 
     private var currentTagFilter: String = "الكل"
     private var isTrendingSort: Boolean = false
+    private var sortMode: Int = 0 // 0 = latest, 1 = trending, 2 = following
+    private var selectedMood: MoodType = MoodType.ALL
+    private var followingUserIds: Set<String> = emptySet()
+    private var followingListener: ListenerRegistration? = null
 
     private var allPostsList: List<CommunityPost> = emptyList()
     private var deviceId: String = ""
@@ -150,6 +221,7 @@ class CommunityFragment : Fragment() {
 
         setupSortControls(view)
         setupTagSelector(view)
+        setupMoodSelector(view)
 
         rvCommunity.layoutManager = LinearLayoutManager(requireContext())
 
@@ -157,6 +229,10 @@ class CommunityFragment : Fragment() {
             posts = emptyList(),
             currentUserId = getActiveUserId(),
             onLikeClicked = { post, isLiked ->
+                if (post.id.startsWith("curated_")) {
+                    LocalLikesManager.toggleLike(requireContext(), post.id)
+                    return@CommunityAdapter
+                }
                 val currentUser = AuthManager.currentUser ?: com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
                     Toast.makeText(requireContext(), getString(R.string.login_required_like), Toast.LENGTH_SHORT).show()
@@ -179,6 +255,10 @@ class CommunityFragment : Fragment() {
                 }
             },
             onCommentClicked = { post ->
+                if (post.id.startsWith("curated_")) {
+                    Toast.makeText(requireContext(), "هذا منشور من مكتبة منشوراتي، يمكنك مشاركته كصورة أو نسخه!", Toast.LENGTH_SHORT).show()
+                    return@CommunityAdapter
+                }
                 val currentUser = AuthManager.currentUser
                 if (currentUser == null) {
                     Toast.makeText(requireContext(), getString(R.string.login_required_comment), Toast.LENGTH_SHORT).show()
@@ -188,6 +268,10 @@ class CommunityFragment : Fragment() {
                 }
             },
             onAuthorClicked = { authorId, authorName ->
+                if (authorId == "manchorati_curated") {
+                    Toast.makeText(requireContext(), "منشوراتي", Toast.LENGTH_SHORT).show()
+                    return@CommunityAdapter
+                }
                 val intent = Intent(requireContext(), UserProfileActivity::class.java).apply {
                     putExtra("USER_ID", authorId)
                     putExtra("USER_NAME", authorName)
@@ -200,8 +284,15 @@ class CommunityFragment : Fragment() {
         )
         rvCommunity.adapter = communityAdapter
 
+        val btnEmptyAction = view.findViewById<View>(R.id.btnEmptyAction)
+        btnEmptyAction?.setOnClickListener {
+            val tag = if (selectedMood != MoodType.ALL) selectedMood.defaultTag else if (currentTagFilter != "الكل") currentTagFilter else ""
+            checkUserAndOpenPostDialog(initialTag = tag)
+        }
+
         fabAddPost.setOnClickListener {
-            checkUserAndOpenPostDialog()
+            val tag = if (selectedMood != MoodType.ALL) selectedMood.defaultTag else if (currentTagFilter != "الكل") currentTagFilter else ""
+            checkUserAndOpenPostDialog(initialTag = tag)
         }
 
         return view
@@ -212,10 +303,10 @@ class CommunityFragment : Fragment() {
         tvActiveSortLabel = view.findViewById(R.id.tvActiveSortLabel)
 
         fun updateSortUI() {
-            tvActiveSortLabel.text = if (isTrendingSort) {
-                getString(R.string.sort_trending)
-            } else {
-                getString(R.string.sort_latest)
+            tvActiveSortLabel.text = when (sortMode) {
+                1 -> getString(R.string.sort_trending)
+                2 -> "أتابعهم 👥"
+                else -> getString(R.string.sort_latest)
             }
         }
         updateSortUI()
@@ -224,25 +315,40 @@ class CommunityFragment : Fragment() {
             val popup = androidx.appcompat.widget.PopupMenu(requireContext(), btnSortContainer)
             popup.menu.add(0, 1, 0, getString(R.string.sort_latest)).apply {
                 isCheckable = true
-                isChecked = !isTrendingSort
+                isChecked = (sortMode == 0)
             }
             popup.menu.add(0, 2, 1, getString(R.string.sort_trending)).apply {
                 isCheckable = true
-                isChecked = isTrendingSort
+                isChecked = (sortMode == 1)
+            }
+            popup.menu.add(0, 3, 2, "الكُتّاب الذين أتابعهم 👥").apply {
+                isCheckable = true
+                isChecked = (sortMode == 2)
             }
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     1 -> {
-                        if (isTrendingSort) {
-                            isTrendingSort = false
-                            updateSortUI()
-                            applyFilterAndSort()
-                        }
+                        sortMode = 0
+                        isTrendingSort = false
+                        updateSortUI()
+                        applyFilterAndSort()
                         true
                     }
                     2 -> {
-                        if (!isTrendingSort) {
-                            isTrendingSort = true
+                        sortMode = 1
+                        isTrendingSort = true
+                        updateSortUI()
+                        applyFilterAndSort()
+                        true
+                    }
+                    3 -> {
+                        val user = FirebaseAuth.getInstance().currentUser
+                        if (user == null) {
+                            Toast.makeText(requireContext(), "يرجى تسجيل الدخول لعرض منشورات من تتابعهم", Toast.LENGTH_SHORT).show()
+                            showLoginDialog()
+                        } else {
+                            sortMode = 2
+                            isTrendingSort = false
                             updateSortUI()
                             applyFilterAndSort()
                         }
@@ -252,6 +358,77 @@ class CommunityFragment : Fragment() {
                 }
             }
             popup.show()
+        }
+    }
+
+    private fun setupMoodSelector(view: View) {
+        val chipMoodAll = view.findViewById<TextView>(R.id.chipMoodAll)
+        val chipMoodChill = view.findViewById<TextView>(R.id.chipMoodChill)
+        val chipMoodMotivated = view.findViewById<TextView>(R.id.chipMoodMotivated)
+        val chipMoodSad = view.findViewById<TextView>(R.id.chipMoodSad)
+        val chipMoodHappy = view.findViewById<TextView>(R.id.chipMoodHappy)
+        val chipMoodLove = view.findViewById<TextView>(R.id.chipMoodLove)
+        val chipMoodPeace = view.findViewById<TextView>(R.id.chipMoodPeace)
+
+        val layoutMoodBanner = view.findViewById<View>(R.id.layoutMoodBanner)
+        val tvMoodBannerEmoji = view.findViewById<TextView>(R.id.tvMoodBannerEmoji)
+        val tvMoodBannerText = view.findViewById<TextView>(R.id.tvMoodBannerText)
+        val tvActiveMoodSubtitle = view.findViewById<TextView>(R.id.tvActiveMoodSubtitle)
+        val btnMoodWritePost = view.findViewById<View>(R.id.btnMoodWritePost)
+        val btnDismissMoodBanner = view.findViewById<View>(R.id.btnDismissMoodBanner)
+
+        btnMoodWritePost?.setOnClickListener {
+            btnMoodWritePost.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            checkUserAndOpenPostDialog(initialTag = selectedMood.defaultTag)
+        }
+
+        btnDismissMoodBanner?.setOnClickListener {
+            btnDismissMoodBanner.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            layoutMoodBanner.visibility = View.GONE
+        }
+
+        val chips = listOf(
+            Pair(chipMoodAll, MoodType.ALL),
+            Pair(chipMoodChill, MoodType.CHILL),
+            Pair(chipMoodMotivated, MoodType.MOTIVATED),
+            Pair(chipMoodSad, MoodType.SAD),
+            Pair(chipMoodHappy, MoodType.HAPPY),
+            Pair(chipMoodLove, MoodType.LOVE),
+            Pair(chipMoodPeace, MoodType.PEACE)
+        )
+
+        fun selectMood(mood: MoodType) {
+            selectedMood = mood
+            for ((chip, m) in chips) {
+                if (m == mood) {
+                    chip.setBackgroundResource(R.drawable.bg_mood_chip_active)
+                    chip.setTextColor(Color.WHITE)
+                    chip.setTypeface(null, Typeface.BOLD)
+                } else {
+                    chip.setBackgroundResource(R.drawable.bg_mood_chip_idle)
+                    chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+                    chip.setTypeface(null, Typeface.NORMAL)
+                }
+            }
+
+            if (mood == MoodType.ALL) {
+                layoutMoodBanner.visibility = View.GONE
+                tvActiveMoodSubtitle.text = "اختر مزاجك لتخصيص الخواطر"
+            } else {
+                layoutMoodBanner.visibility = View.VISIBLE
+                tvMoodBannerEmoji.text = mood.emoji
+                tvMoodBannerText.text = mood.bannerPhrase
+                tvActiveMoodSubtitle.text = "معروض الآن: ${mood.title}"
+            }
+
+            applyFilterAndSort()
+        }
+
+        for ((chip, mood) in chips) {
+            chip.setOnClickListener {
+                chip.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                selectMood(mood)
+            }
         }
     }
 
@@ -390,7 +567,7 @@ class CommunityFragment : Fragment() {
     private fun applyFilterAndSort() {
         var list = allPostsList
 
-        // Tag filter
+        // 1. تصفية حسب الوسم المختار (Tag filter)
         if (currentTagFilter == "المحفوظات") {
             val savedIds = BookmarkManager.getBookmarkedPostIds(requireContext())
             list = list.filter { savedIds.contains(it.id) }
@@ -402,21 +579,58 @@ class CommunityFragment : Fragment() {
             }
         }
 
-        // Sort
-        list = if (isTrendingSort) {
-            list.sortedWith(compareByDescending<CommunityPost> { it.likesCount }.thenByDescending { it.getTimeMillis() })
-        } else {
-            list.sortedByDescending { it.getTimeMillis() }
+        // 2. تصفية حسب المزاج المختار (Mood filter - قسم المعروضات)
+        if (selectedMood != MoodType.ALL) {
+            val moodKeywords = selectedMood.keywords
+            val userPostsMatching = list.filter { post ->
+                val content = post.content.lowercase()
+                val tag = (post.tag ?: "").lowercase()
+                post.tag == selectedMood.title || post.tag == selectedMood.defaultTag || moodKeywords.any { kw -> content.contains(kw) }
+            }
+
+            // سحب منشورات رسمية معروضة من مكتبة منشوراتي المحلية للمزاج المختار بأفاتار كرتوني رسمي فقط
+            if (isAdded) {
+                try {
+                    val dbHelper = DatabaseHelper(requireContext())
+                    val curatedRaw = dbHelper.getCuratedPostsForCategoryIds(selectedMood.categoryIds, limit = 20)
+                    val curatedPosts = curatedRaw.map { it.toCuratedCommunityPost(selectedMood, requireContext()) }
+                    list = curatedPosts + userPostsMatching
+                } catch (e: Exception) {
+                    list = userPostsMatching
+                }
+            } else {
+                list = userPostsMatching
+            }
+        }
+
+        // 3. ترتيب وتصفية التبويب (Sort / Feed Mode)
+        list = when (sortMode) {
+            1 -> { // الأكثر تفاعلاً
+                list.sortedWith(compareByDescending<CommunityPost> { it.likesCount }.thenByDescending { it.getTimeMillis() })
+            }
+            2 -> { // أتابعهم
+                list.filter { followingUserIds.contains(it.authorId) }
+                    .sortedByDescending { it.getTimeMillis() }
+            }
+            else -> { // الأحدث
+                list.sortedByDescending { it.getTimeMillis() }
+            }
         }
 
         communityAdapter.updateData(list)
 
-        // Empty state UI
+        // 4. معالجة الحالة الفارغة (Empty State UI)
         if (list.isEmpty()) {
             layoutEmptyCommunity.visibility = View.VISIBLE
-            if (currentTagFilter == "المحفوظات") {
+            if (sortMode == 2) {
+                tvEmptyTitle.text = "لا توجد منشورات لمن تتابعهم"
+                tvEmptySubtitle.text = "تابع بعض الكتّاب والمبدعين لتظهر منشوراتهم هنا ✨"
+            } else if (currentTagFilter == "المحفوظات") {
                 tvEmptyTitle.text = getString(R.string.saved_posts)
                 tvEmptySubtitle.text = getString(R.string.no_posts_yet)
+            } else if (selectedMood != MoodType.ALL) {
+                tvEmptyTitle.text = "لا توجد منشورات بهذا المزاج حالياً"
+                tvEmptySubtitle.text = "كن أول من يشارك خاطرة مناسبة لمزاج: ${selectedMood.title} ✨"
             } else if (currentTagFilter != "الكل") {
                 tvEmptyTitle.text = "${getString(R.string.no_posts_yet)} (${getLocalizedTagLabel(currentTagFilter)})"
                 tvEmptySubtitle.text = getString(R.string.share_first_post)
@@ -431,8 +645,26 @@ class CommunityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val appBar = view.findViewById<com.google.android.material.appbar.AppBarLayout>(R.id.appBarCommunity)
+        appBar?.addOnOffsetChangedListener { _, verticalOffset ->
+            swipeRefreshCommunity.isEnabled = (verticalOffset == 0)
+        }
         startListeningToPosts()
+        listenToFollowingList()
         observeAuthState()
+    }
+
+    private fun listenToFollowingList() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        followingListener?.remove()
+        followingListener = FirebaseFirestore.getInstance().collection("users").document(uid)
+            .addSnapshotListener { doc, _ ->
+                val list = (doc?.get("following") as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
+                followingUserIds = list.toSet()
+                if (sortMode == 2) {
+                    applyFilterAndSort()
+                }
+            }
     }
 
     private fun observeAuthState() {
@@ -454,6 +686,11 @@ class CommunityFragment : Fragment() {
                 activity?.runOnUiThread {
                     swipeRefreshCommunity.isRefreshing = false
                     allPostsList = list
+                    for (p in list) {
+                        if (p.authorId.isNotEmpty()) {
+                            BadgeHelper.fetchAndCacheAuthorBadge(p.authorId)
+                        }
+                    }
                     applyFilterAndSort()
 
                     if (pendingNotificationPostId != null) {
@@ -485,6 +722,8 @@ class CommunityFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         stopListeningToPosts()
+        followingListener?.remove()
+        followingListener = null
     }
 
     override fun onResume() {
@@ -520,7 +759,7 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    private fun checkUserAndOpenPostDialog() {
+    private fun checkUserAndOpenPostDialog(initialTag: String = "") {
         val user = AuthManager.currentUser
         if (user == null) {
             Toast.makeText(requireContext(), getString(R.string.login_required_post), Toast.LENGTH_SHORT).show()
@@ -539,14 +778,14 @@ class CommunityFragment : Fragment() {
                     val displayName = doc.getString("displayName")
                         ?.takeIf { it.isNotBlank() }
                         ?: defaultDisplayName
-                    showPostBottomSheet(user.uid, displayName, username, null)
+                    showPostBottomSheet(user.uid, displayName, username, null, initialTag)
                 } else {
-                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null)
+                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag)
                 }
             }
             .addOnFailureListener {
                 if (!isAdded) return@addOnFailureListener
-                showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null)
+                showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag)
             }
     }
 
@@ -1033,7 +1272,8 @@ class CommunityFragment : Fragment() {
         authorId: String,
         authorName: String,
         authorUsername: String,
-        editingPost: CommunityPost?
+        editingPost: CommunityPost?,
+        initialTag: String = ""
     ) {
         CommunityPostDialogHelper.show(
             context = requireContext(),
@@ -1041,6 +1281,7 @@ class CommunityFragment : Fragment() {
             authorName = authorName,
             authorUsername = authorUsername,
             editingPost = editingPost,
+            initialTag = initialTag,
             onAuthRequired = { showLoginDialog() }
         )
     }

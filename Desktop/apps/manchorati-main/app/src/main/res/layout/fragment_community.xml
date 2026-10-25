@@ -1,117 +1,337 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main"
-    android:orientation="vertical">
+    android:background="@color/bg_main">
 
-    <!-- شريط علوي عصري ومضغوط للترتيب والفلترة -->
-    <androidx.cardview.widget.CardView
+    <!-- شريط علوي قابل للتمرير (يختفي قسم المزاج واللافتة تلقائياً عند التمرير لمنح أقصى مساحة للمنشورات) -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarCommunity"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        app:cardElevation="1dp"
-        app:cardCornerRadius="0dp"
-        app:cardBackgroundColor="@color/bg_card">
+        android:layout_height="wrap_content"
+        android:background="@color/bg_card"
+        app:elevation="1dp">
 
-        <LinearLayout
+        <!-- شريط علوي عصري ومضغوط للترتيب والفلترة (ثابت) -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="14dp">
+            android:layout_height="42dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="0dp"
+            app:cardBackgroundColor="@color/bg_card">
 
-            <!-- 1. زر ترتيب المنشورات (أيقونة فقط مع خيارات عند النقر) -->
             <LinearLayout
-                android:id="@+id/btnSortContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="14dp">
 
-                <ImageView
-                    android:id="@+id/ivSortIcon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_sort"
-                    app:tint="@color/text_primary" />
+                <!-- 1. زر ترتيب المنشورات -->
+                <LinearLayout
+                    android:id="@+id/btnSortContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <ImageView
+                        android:id="@+id/ivSortIcon"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_sort"
+                        app:tint="@color/text_primary" />
+
+                    <TextView
+                        android:id="@+id/tvActiveSortLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/sort_latest"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_marginStart="3dp"
+                        android:src="@drawable/ic_chevron_down"
+                        app:tint="@color/text_secondary" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- 2. زر اختيار التصنيف / الوسم -->
+                <LinearLayout
+                    android:id="@+id/btnTagSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <TextView
+                        android:id="@+id/tvActiveTagLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tag_all"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <ImageView
+                        android:id="@+id/ivTagChevron"
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/ic_chevron_down"
+                        app:tint="@color/text_secondary" />
+
+                    <ImageView
+                        android:id="@+id/btnClearTag"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginStart="4dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_close_small"
+                        android:visibility="gone"
+                        app:tint="#FFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- شريط مزاج اليوم (Mood Selector / كيف تشعر اليوم؟) - يرتفع ويختفي مع التمرير لمنح مساحة قصوى للمنشورات -->
+        <LinearLayout
+            android:id="@+id/layoutMoodSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/bg_card"
+            android:paddingTop="4dp"
+            android:paddingBottom="6dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvActiveSortLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@string/sort_latest"
+                    android:text="كيف تشعر اليوم؟ 💭"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="3dp"
-                    android:src="@drawable/ic_chevron_down"
-                    app:tint="@color/text_secondary" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <!-- 2. زر اختيار التصنيف / الوسم (مخفي وينبثق عند النقر ويبقى ظاهراً عند الاختيار) -->
-            <LinearLayout
-                android:id="@+id/btnTagSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
                 <TextView
-                    android:id="@+id/tvActiveTagLabel"
+                    android:id="@+id/tvActiveMoodSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tag_all"
+                    android:text="اختر مزاجك لتخصيص الخواطر"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+
+            <!-- كبسولات المزاج أفقية السحب -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:paddingHorizontal="12dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutMoodChips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- 🌟 الكل -->
+                    <TextView
+                        android:id="@+id/chipMoodAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_active"
+                        android:text="🌟 الكل"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <!-- ☕ رايق وهادئ -->
+                    <TextView
+                        android:id="@+id/chipMoodChill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="☕ رايق وهادئ"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <!-- 💪 محتاج تحفيز -->
+                    <TextView
+                        android:id="@+id/chipMoodMotivated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="💪 محتاج تحفيز"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <!-- 😔 مهموم وحزين -->
+                    <TextView
+                        android:id="@+id/chipMoodSad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="😔 مهموم وحزين"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <!-- 😊 متفائل وسعيد -->
+                    <TextView
+                        android:id="@+id/chipMoodHappy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="😊 متفائل وسعيد"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <!-- ❤️ حب وامتنان -->
+                    <TextView
+                        android:id="@+id/chipMoodLove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="❤️ حب وامتنان"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+
+                    <!-- 🤲 أدعية وسكينة -->
+                    <TextView
+                        android:id="@+id/chipMoodPeace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="11dp"
+                        android:background="@drawable/bg_mood_chip_idle"
+                        android:text="🤲 أدعية وسكينة"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- لافتة الاقتباس المعبر حسب المزاج بتصميم مضغوط مع زر إغلاق سريع لتوفير المساحة -->
+            <LinearLayout
+                android:id="@+id/layoutMoodBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/bg_mood_banner"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:paddingVertical="6dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvMoodBannerEmoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvMoodBannerText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:lineSpacingExtra="1.5dp"
+                    android:textColor="#FEF08A"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnMoodWritePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_tool_chip_active"
+                    android:gravity="center"
+                    android:paddingHorizontal="8dp"
+                    android:text="اكتب ✍️"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/ivTagChevron"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="4dp"
-                    android:src="@drawable/ic_chevron_down"
-                    app:tint="@color/text_secondary" />
-
-                <ImageView
-                    android:id="@+id/btnClearTag"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="2dp"
+                    android:id="@+id/btnDismissMoodBanner"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="5dp"
                     android:src="@drawable/ic_close_small"
-                    android:visibility="gone"
-                    app:tint="#FFFFFF" />
+                    app:tint="#FDE047" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- مساحة المنشورات الرئيسية مع سحب للتحديث وزر إضافة عائم -->
-    <FrameLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshCommunity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshCommunity"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -120,56 +340,71 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="6dp"
+                android:paddingTop="4dp"
                 android:paddingBottom="84dp" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!-- الحالة الفارغة في حال عدم وجود منشورات بالتصنيف -->
-        <LinearLayout
-            android:id="@+id/layoutEmptyCommunity"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:visibility="gone">
+            <!-- الحالة الفارغة في حال عدم وجود منشورات بالتصنيف -->
+            <LinearLayout
+                android:id="@+id/layoutEmptyCommunity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:visibility="gone">
 
-            <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:alpha="0.4"
-                android:src="@drawable/ic_quotes"
-                app:tint="@color/text_secondary" />
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_quotes"
+                    app:tint="@color/text_secondary" />
 
-            <TextView
-                android:id="@+id/tvEmptyTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/no_posts_yet"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvEmptyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/no_posts_yet"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvEmptySubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="@string/share_first_post"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvEmptySubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/share_first_post"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12.5sp" />
 
-        <!-- زر إضافة منشور العائم -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddPost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_margin="20dp"
-            android:backgroundTint="#EF4444"
-            android:src="@android:drawable/ic_input_add"
-            app:tint="#FFFFFF" />
-    </FrameLayout>
-</LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEmptyAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/share_first_post"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="19dp"
+                    app:backgroundTint="#EF4444" />
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- زر إضافة منشور العائم -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="20dp"
+        android:backgroundTint="#EF4444"
+        android:src="@android:drawable/ic_input_add"
+        app:elevation="4dp"
+        app:fabSize="normal"
+        app:tint="#FFFFFF" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

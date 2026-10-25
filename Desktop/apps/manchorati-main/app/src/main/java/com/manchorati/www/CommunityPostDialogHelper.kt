@@ -32,6 +32,7 @@ object CommunityPostDialogHelper {
         authorName: String,
         authorUsername: String,
         editingPost: CommunityPost? = null,
+        initialTag: String = "",
         onAuthRequired: (() -> Unit)? = null,
         onSuccess: (() -> Unit)? = null
     ) {
@@ -62,18 +63,21 @@ object CommunityPostDialogHelper {
         val btnClearContent = dialogView.findViewById<TextView>(R.id.btnClearContent)
 
         // Menu Tabs
+        val tabTemplates = dialogView.findViewById<TextView>(R.id.tabTemplates)
         val tabBg = dialogView.findViewById<TextView>(R.id.tabBg)
         val tabTag = dialogView.findViewById<TextView>(R.id.tabTag)
         val tabTextColor = dialogView.findViewById<TextView>(R.id.tabTextColor)
         val tabFont = dialogView.findViewById<TextView>(R.id.tabFont)
 
         // ScrollViews for each section
+        val scrollCardTemplates = dialogView.findViewById<HorizontalScrollView>(R.id.scrollCardTemplates)
         val scrollBgColors = dialogView.findViewById<HorizontalScrollView>(R.id.scrollBgColors)
         val scrollTags = dialogView.findViewById<HorizontalScrollView>(R.id.scrollTags)
         val scrollTextColors = dialogView.findViewById<HorizontalScrollView>(R.id.scrollTextColors)
         val scrollFonts = dialogView.findViewById<HorizontalScrollView>(R.id.scrollFonts)
 
         // Containers
+        val layoutTemplates = dialogView.findViewById<LinearLayout>(R.id.layoutTemplatesContainer)
         val layoutColors = dialogView.findViewById<LinearLayout>(R.id.layoutColorsContainer)
         val layoutTags = dialogView.findViewById<LinearLayout>(R.id.layoutTagsContainer)
         val layoutTextColors = dialogView.findViewById<LinearLayout>(R.id.layoutTextColorsContainer)
@@ -84,10 +88,10 @@ object CommunityPostDialogHelper {
         val pbPublishing = dialogView.findViewById<ProgressBar>(R.id.pbPublishing)
 
         // State
-        var selectedBg = editingPost?.bgId ?: "#FFFFFF"
+        var selectedBg = editingPost?.bgId ?: "card_crimson_brand"
         var selectedFont = editingPost?.fontId ?: "tajawal"
-        var selectedTextColor = editingPost?.textColor ?: ""
-        var selectedTag = editingPost?.tag ?: ""
+        var selectedTextColor = editingPost?.textColor ?: (if (editingPost == null) "#FFFFFF" else "")
+        var selectedTag = editingPost?.tag ?: initialTag
 
         // Load Author Profile
         val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -174,8 +178,8 @@ object CommunityPostDialogHelper {
 
         // 1. Tab Menu Navigation
         fun switchTab(activeTab: TextView, activeScroll: View) {
-            val allTabs = listOf(tabBg, tabTag, tabTextColor, tabFont)
-            val allScrolls = listOf(scrollBgColors, scrollTags, scrollTextColors, scrollFonts)
+            val allTabs = listOf(tabTemplates, tabBg, tabTag, tabTextColor, tabFont)
+            val allScrolls = listOf(scrollCardTemplates, scrollBgColors, scrollTags, scrollTextColors, scrollFonts)
 
             for (t in allTabs) {
                 if (t == activeTab) {
@@ -194,6 +198,7 @@ object CommunityPostDialogHelper {
             }
         }
 
+        tabTemplates.setOnClickListener { switchTab(tabTemplates, scrollCardTemplates) }
         tabBg.setOnClickListener { switchTab(tabBg, scrollBgColors) }
         tabTag.setOnClickListener { switchTab(tabTag, scrollTags) }
         tabTextColor.setOnClickListener { switchTab(tabTextColor, scrollTextColors) }
@@ -643,6 +648,65 @@ object CommunityPostDialogHelper {
             }
         }
         renderFonts()
+
+        fun renderCardTemplates() {
+            layoutTemplates.removeAllViews()
+            val density = context.resources.displayMetrics.density
+
+            for (tmpl in ThemeHelper.CARD_TEMPLATES) {
+                val isSelected = selectedBg.equals(tmpl.id, ignoreCase = true)
+
+                val itemCard = LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = android.view.Gravity.CENTER
+                    val padH = (16 * density).toInt()
+                    val padV = (8 * density).toInt()
+                    setPadding(padH, padV, padH, padV)
+                    val margin = (4 * density).toInt()
+                    layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        (42 * density).toInt()
+                    ).apply {
+                        setMargins(margin, margin, margin, margin)
+                    }
+
+                    val bgDrawable = GradientDrawable(
+                        GradientDrawable.Orientation.TL_BR,
+                        intArrayOf(tmpl.startColor, tmpl.endColor)
+                    ).apply {
+                        cornerRadius = 14 * density
+                        if (isSelected) {
+                            setStroke((2.5f * density).toInt(), Color.parseColor("#EF4444"))
+                        } else if (tmpl.borderColor != null) {
+                            setStroke((tmpl.borderWidthDp * density).toInt(), tmpl.borderColor)
+                        }
+                    }
+                    background = bgDrawable
+
+                    val tvTitle = TextView(context).apply {
+                        text = context.getString(tmpl.nameRes)
+                        setTextColor(tmpl.textColor)
+                        textSize = 12f
+                        typeface = ThemeHelper.getFontTypeface(context, tmpl.defaultFont)
+                        setSingleLine(true)
+                    }
+                    addView(tvTitle)
+
+                    setOnClickListener {
+                        selectedBg = tmpl.id
+                        selectedFont = tmpl.defaultFont
+                        selectedTextColor = String.format("#%06X", 0xFFFFFF and tmpl.textColor)
+                        updatePreview()
+                        renderCardTemplates()
+                        renderBgColors()
+                        renderFonts()
+                        renderTextColors()
+                    }
+                }
+                layoutTemplates.addView(itemCard)
+            }
+        }
+        renderCardTemplates()
 
         // 6. Publish Button Logic
         btnPublish.setOnClickListener {

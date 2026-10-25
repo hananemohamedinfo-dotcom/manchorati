@@ -278,8 +278,34 @@
 
     <!-- عناصر إضافية في الملف الشخصي والواجهات -->
     <string name="featured_writer">⭐ كاتب متميز</string>
-    <string name="badge_admin">👑 المشرف</string>
+    <string name="badge_admin">🛡️ مشرف التطبيق</string>
+    <string name="badge_legendary">👑 كاتب أسطوري</string>
+    <string name="badge_elite">💎 كاتب نخبة</string>
+    <string name="badge_distinguished">⭐ كاتب متميز</string>
+    <string name="badge_rising">🥈 كاتب صاعد</string>
+    <string name="badge_beginner">🥉 كاتب مبتدئ</string>
     <string name="badge_writer">⭐ كاتب متميز</string>
+
+    <!-- رتب وتحديات الكاتب والأوسمة -->
+    <string name="writer_challenges_title">رتب وتحديات الكاتب</string>
+    <string name="writer_challenges_desc">شارك كلماتك وابنِ جمهورك لترتقي برتبتك وتفتح أوسمة وتحديات حصرية!</string>
+    <string name="current_tier_label">رتبتك الحالية:</string>
+    <string name="next_tier_progress">%1$d من %2$d متابع للرتبة التالية</string>
+    <string name="next_tier_remaining">متبقي %d متابع للترقية 🚀</string>
+    <string name="max_tier_reached">لقد بلغت قمة المجد! أعلى رتبة متاحة 🏆</string>
+    <string name="ranks_guide_title">دليل الرتب والمستويات</string>
+    <string name="milestones_title">أوسمة الإنجازات والتحديات</string>
+    <string name="milestone_1k">نادي الألفية الأولى (1K)</string>
+    <string name="milestone_1k_desc">تخطي حاجز 1,000 متابع حقيقي</string>
+    <string name="milestone_5k">وسام النخبة (5K)</string>
+    <string name="milestone_5k_desc">الوصول إلى 5,000 متابع ملهم</string>
+    <string name="milestone_7k">وسام القمة (7K)</string>
+    <string name="milestone_7k_desc">تحقيق 7,000 متابع وتأثير واسع</string>
+    <string name="milestone_10k">درع الأسطورة الذهبي (10K)</string>
+    <string name="milestone_10k_desc">أكثر من 10,000 متابع في المجتمع</string>
+    <string name="badge_unlocked_label">مكتمل ومفتوح ✨</string>
+    <string name="badge_locked_label">متبقي %d متابع 🔒</string>
+    <string name="btn_close_challenges">فهمت، سأواصل الإبداع!</string>
     <string name="user_shared_posts_desc">الخواطر والكلمات التي تتم مشاركتها ستظهر هنا</string>
     <string name="select_profile_picture_title">اختر صورة الملف الشخصي</string>
     <string name="followers_title">المتابعون</string>
@@ -354,4 +380,17 @@
     <string name="privacy_btn_agree_continue">أوافق وأتابع</string>
     <string name="privacy_btn_close">إغلاق</string>
     <string name="privacy_toast_must_accept">يرجى تأكيد الموافقة على الشروط للمتابعة</string>
+    <string name="tab_card_templates">بطاقات جاهزة</string>
+    <string name="template_emerald">زمردي هادئ</string>
+    <string name="template_crimson_brand">أحمر منشوراتي</string>
+    <string name="template_ocean_breeze">نسيم المحيط</string>
+    <string name="download_post_image">تحميل صورة البطاقة</string>
+    <string name="post_image_saved_success">تم حفظ صورة البطاقة في المعرض بنجاح</string>
+    <string name="post_image_save_failed">تعذر حفظ الصورة، يرجى المحاولة لاحقاً</string>
+    <string name="saving_post_image">جاري حفظ الصورة في المعرض...</string>
+    <string name="widget_quote_name">خاطرة اليوم</string>
+    <string name="widget_quote_description">عرض أجمل الخواطر والحكم على الشاشة الرئيسية مع التحديث والنسخ السريع.</string>
+    <string name="widget_copied_toast">تم نسخ الخاطرة بنجاح 📋</string>
+    <string name="drawer_add_widget">إضافة ودجت للشاشة الرئيسية</string>
+    <string name="widget_pin_instructions">المس مطولاً على شاشة هاتفك الرئيسية، ثم اختر (الأدوات/Widgets) واختر (منشوراتي) 🌸</string>
 </resources>

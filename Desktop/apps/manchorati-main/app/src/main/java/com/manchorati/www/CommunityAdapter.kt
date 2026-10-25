@@ -75,6 +75,7 @@ class CommunityAdapter(
         private val btnComment: ImageView = itemView.findViewById(R.id.btnComment)
         private val tvCommentsCount: TextView = itemView.findViewById(R.id.tvCommentsCount)
 
+        private val btnDownloadPostContainer: LinearLayout = itemView.findViewById(R.id.btnDownloadPostContainer)
         private val btnShareStoryContainer: LinearLayout = itemView.findViewById(R.id.btnShareStoryContainer)
         private val btnBookmarkContainer: LinearLayout = itemView.findViewById(R.id.btnBookmarkContainer)
         private val ivBookmark: ImageView = itemView.findViewById(R.id.ivBookmark)
@@ -82,19 +83,20 @@ class CommunityAdapter(
         private var lastCardClickTime: Long = 0L
 
         fun bind(post: CommunityPost) {
+            itemView.tag = post.id
             tvAuthor.text = post.authorName
             tvUsername.text = "@${post.authorUsername}"
             tvContent.text = post.content
 
-            // 1. شارة المستخدم (👑 مشرف أو ⭐ كاتب متميز)
-            val badge = BadgeHelper.getBadgeForPost(post)
-            if (badge != null) {
-                tvAuthorBadge.visibility = View.VISIBLE
-                tvAuthorBadge.setText(badge.titleResId)
-                tvAuthorBadge.setBackgroundResource(badge.bgResId)
-                tvAuthorBadge.setTextColor(Color.parseColor(badge.textColorHex))
-            } else {
-                tvAuthorBadge.visibility = View.GONE
+            // 1. شارة تصنيف ورتبة الكاتب (تظهر دائماً بجانب اسمه)
+            val initialBadge = BadgeHelper.getBadgeForPost(post)
+            bindAuthorBadge(initialBadge, post)
+
+            // جلب وتحديث رتبة الكاتب الحية من قاعدة البيانات في الخلفية
+            BadgeHelper.fetchAndCacheAuthorBadge(post.authorId) { liveBadge ->
+                if (itemView.tag == post.id) {
+                    bindAuthorBadge(liveBadge, post)
+                }
             }
 
             // تحميل الصورة الشخصية أو الأفاتار
@@ -211,9 +213,18 @@ class CommunityAdapter(
                 onAuthorClicked(post.authorId, post.authorName)
             }
 
-            // 4. زر مشاركة كستوري 9:16
+            // 4. زر تحميل صورة البطاقة في المعرض
+            btnDownloadPostContainer.setOnClickListener {
+                StoryShareHelper.savePostImageToGallery(itemView.context, post)
+            }
+
+            // 5. زر مشاركة كستوري 9:16 (صورة فقط) ونقرة مطولة لمشاركة واتساب مباشرة
             btnShareStoryContainer.setOnClickListener {
                 StoryShareHelper.sharePostAsStory(itemView.context, post)
+            }
+            btnShareStoryContainer.setOnLongClickListener {
+                StoryShareHelper.sharePostToWhatsApp(itemView.context, post)
+                true
             }
 
             // 5. زر حفظ المنشور في المحفوظات (Bookmarks)
@@ -241,19 +252,23 @@ class CommunityAdapter(
             btnPostMenu.setOnClickListener { view ->
                 val ctx = view.context
                 val popup = PopupMenu(ctx, view)
-                popup.menu.add(0, 10, 0, ctx.getString(R.string.post_action_share_story))
-                popup.menu.add(0, 11, 1, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
-                popup.menu.add(0, 12, 2, ctx.getString(R.string.post_action_copy))
+                popup.menu.add(0, 14, 0, "مشاركة في حالة واتساب 🟢")
+                popup.menu.add(0, 13, 1, ctx.getString(R.string.download_post_image))
+                popup.menu.add(0, 10, 2, ctx.getString(R.string.post_action_share_story))
+                popup.menu.add(0, 11, 3, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
+                popup.menu.add(0, 12, 4, ctx.getString(R.string.post_action_copy))
 
                 if (isMyPost) {
-                    popup.menu.add(0, 1, 3, ctx.getString(R.string.post_action_edit))
-                    popup.menu.add(0, 2, 4, ctx.getString(R.string.post_action_delete))
+                    popup.menu.add(0, 1, 5, ctx.getString(R.string.post_action_edit))
+                    popup.menu.add(0, 2, 6, ctx.getString(R.string.post_action_delete))
                 } else {
-                    popup.menu.add(0, 3, 5, ctx.getString(R.string.post_action_report))
+                    popup.menu.add(0, 3, 7, ctx.getString(R.string.post_action_report))
                 }
 
                 popup.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
+                        14 -> StoryShareHelper.sharePostToWhatsApp(view.context, post)
+                        13 -> StoryShareHelper.savePostImageToGallery(view.context, post)
                         10 -> StoryShareHelper.sharePostAsStory(view.context, post)
                         11 -> {
                             val saved = BookmarkManager.toggleBookmark(view.context, post.id)
@@ -274,6 +289,33 @@ class CommunityAdapter(
                     true
                 }
                 popup.show()
+            }
+        }
+
+        private fun bindAuthorBadge(badge: UserBadge, post: CommunityPost) {
+            // إخفاء أي شارة أو علامة ذهبية لمنشورات تطبيق "منشوراتي" الرسمية بناءً على طلب المستخدم
+            if (post.authorId == "manchorati_curated" ||
+                post.authorBadge == "official" ||
+                post.authorName == "منشوراتي" ||
+                post.authorUsername.equals("manchorati", ignoreCase = true) ||
+                badge.id == "official" ||
+                badge.iconEmoji.isEmpty() ||
+                badge.id == BadgeHelper.BADGE_BEGINNER.id) {
+                tvAuthorBadge.visibility = View.GONE
+                return
+            }
+
+            tvAuthorBadge.visibility = View.VISIBLE
+            tvAuthorBadge.text = badge.iconEmoji
+            tvAuthorBadge.background = null
+            tvAuthorBadge.setPadding(0, 0, 0, 0)
+            tvAuthorBadge.setOnClickListener {
+                Toast.makeText(
+                    itemView.context,
+                    "${badge.iconEmoji} ${badge.title}\n${badge.description}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                onAuthorClicked(post.authorId, post.authorName)
             }
         }
 

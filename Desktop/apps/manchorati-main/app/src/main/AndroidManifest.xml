@@ -67,6 +67,21 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
                 android:excludeFromRecents="true"
                 android:exported="false" />
+
+        <!-- ودجت الشاشة الرئيسية للخواطر (Home Screen Quote Widget) -->
+        <receiver
+            android:name=".QuoteWidgetProvider"
+            android:label="@string/widget_quote_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.manchorati.www.ACTION_REFRESH_WIDGET" />
+                <action android:name="com.manchorati.www.ACTION_COPY_WIDGET" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/quote_widget_info" />
+        </receiver>
     </application>
     
 
