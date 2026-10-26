@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nom de l'application -->
+    <!-- Nom de l’application -->
     <string name="app_name">منشوراتي</string>
 
     <!-- Onglets de navigation inférieure -->
@@ -31,16 +31,16 @@
 
     <!-- Menu latéral (Drawer) -->
     <string name="drawer_dark_mode">Mode sombre</string>
-    <string name="drawer_language">Langue de l\'application</string>
+    <string name="drawer_language">Langue de l’application</string>
     <string name="drawer_contact">Contactez-nous &amp; Suggestions</string>
     <string name="drawer_notifications">Paramètres des notifications</string>
-    <string name="drawer_rate">Évaluer l\'application</string>
-    <string name="drawer_share">Partager l\'application</string>
-    <string name="drawer_more_apps">Plus d\'applications</string>
+    <string name="drawer_rate">Évaluer l’application</string>
+    <string name="drawer_share">Partager l’application</string>
+    <string name="drawer_more_apps">Plus d’applications</string>
     <string name="drawer_logout">Déconnexion</string>
     <string name="drawer_version">Version 1.0.0</string>
 
-    <!-- Commentaires & Interactions -->
+    <!-- Commentaires &amp; Interactions -->
     <string name="comment_hint">Écrire un commentaire...</string>
     <string name="edit_comment_hint">Modifiez votre commentaire...</string>
     <string name="reply_button">Répondre</string>
@@ -53,16 +53,16 @@
     <string name="comments_dialog_title">Commentaires</string>
     <string name="no_comments_title">Aucun commentaire pour le moment</string>
     <string name="no_comments_subtitle">Soyez le premier à commenter !</string>
-    <string name="time_just_now">À l\'instant</string>
+    <string name="time_just_now">À l’instant</string>
     <string name="comment_edited_success">Commentaire modifié avec succès</string>
-    <string name="comment_error">Échec de l\'envoi du commentaire, réessayez plus tard</string>
+    <string name="comment_error">Échec de l’envoi du commentaire, réessayez plus tard</string>
     <string name="comment_edit_error">Échec de la modification du commentaire</string>
     <string name="comment_bad_words">Le commentaire contient des mots inappropriés</string>
     <string name="login_required_to_comment">Veuillez vous connecter pour commenter</string>
     <string name="comments_count_format">%d commentaires</string>
 
     <!-- Actions sur les publications -->
-    <string name="post_action_like">J\'aime</string>
+    <string name="post_action_like">J’aime</string>
     <string name="post_action_comment">Commenter</string>
     <string name="post_action_share_story">Partager en Story / Carte</string>
     <string name="post_action_bookmark">Enregistrer la publication</string>
@@ -83,23 +83,23 @@
     <string name="account_settings_title">Paramètres du compte</string>
     <string name="change_profile_photo">Changer la photo de profil</string>
     <string name="select_avatar_title">Choisir une photo de profil</string>
-    <string name="display_name_label">Nom d\'affichage</string>
+    <string name="display_name_label">Nom d’affichage</string>
     <string name="display_name_hint">Entrez votre nom ou pseudonyme</string>
-    <string name="username_label">Nom d\'utilisateur unique</string>
-    <string name="username_desc">Identifiant unique avec @ qui ne peut être utilisé par personne d\'autre.</string>
-    <string name="username_available">Nom d\'utilisateur disponible ✓</string>
-    <string name="username_current">Votre nom d\'utilisateur actuel</string>
-    <string name="username_too_short">Le nom d\'utilisateur doit contenir au moins 3 caractères</string>
+    <string name="username_label">Nom d’utilisateur unique</string>
+    <string name="username_desc">Identifiant unique avec @ qui ne peut être utilisé par personne d’autre.</string>
+    <string name="username_available">Nom d’utilisateur disponible ✓</string>
+    <string name="username_current">Votre nom d’utilisateur actuel</string>
+    <string name="username_too_short">Le nom d’utilisateur doit contenir au moins 3 caractères</string>
     <string name="username_invalid_chars">Uniquement lettres anglaises, chiffres, _ et .</string>
-    <string name="username_taken">Nom d\'utilisateur déjà pris, veuillez en choisir un autre</string>
+    <string name="username_taken">Nom d’utilisateur déjà pris, veuillez en choisir un autre</string>
     <string name="username_checking">Vérification de la disponibilité...</string>
     <string name="bio_label">Biographie (Bio)</string>
-    <string name="bio_hint">Écrivez une courte biographie, vos centres d\'intérêt ou citation...</string>
+    <string name="bio_hint">Écrivez une courte biographie, vos centres d’intérêt ou citation...</string>
     <string name="bio_default">Aucune biographie pour le moment.</string>
     <string name="save_changes">Enregistrer les modifications</string>
     <string name="profile_saved_success">Paramètres du compte enregistrés avec succès</string>
     <string name="photo_updated_success">Photo de profil mise à jour avec succès</string>
-    <string name="save_error">Échec de l\'enregistrement, veuillez réessayer</string>
+    <string name="save_error">Échec de l’enregistrement, veuillez réessayer</string>
     <string name="edit_profile_btn">Modifier</string>
     <string name="menu_edit_profile">Modifier le profil</string>
     <string name="follow">+ Suivre</string>
@@ -201,13 +201,13 @@
     <string name="tab_templates">Modèles</string>
     <string name="my_photo">Ma photo</string>
     <string name="remove_photo">Supprimer</string>
-    <string name="pick_photo_not_supported">Sélection d\'image non disponible</string>
-    <string name="bg_applied_success">Image d\'arrière-plan appliquée</string>
+    <string name="pick_photo_not_supported">Sélection d’image non disponible</string>
+    <string name="bg_applied_success">Image d’arrière-plan appliquée</string>
     <string name="bg_removed">Arrière-plan supprimé</string>
     <string name="template_applied">Modèle appliqué : %s</string>
-    <string name="reset_design_success">Style d\'origine restauré</string>
+    <string name="reset_design_success">Style d’origine restauré</string>
     <string name="image_saved_success">Carte enregistrée dans la galerie</string>
-    <string name="image_save_error">Impossible d\'enregistrer l\'image</string>
+    <string name="image_save_error">Impossible d’enregistrer l’image</string>
     <string name="share_card_via">Partager la carte via</string>
 
     <!-- Noms des modèles -->
@@ -252,15 +252,15 @@
     <string name="contact_us_title">Contactez-nous &amp; Suggestions</string>
     <string name="feedback_type_label">Type de message</string>
     <string name="feedback_type_suggest_quote">Suggérer une citation ou un post</string>
-    <string name="feedback_type_suggest_feature">Idée ou amélioration de l\'application</string>
+    <string name="feedback_type_suggest_feature">Idée ou amélioration de l’application</string>
     <string name="feedback_type_report_bug">Signaler un problème technique</string>
-    <string name="feedback_type_general">Message général à l\'administration</string>
+    <string name="feedback_type_general">Message général à l’administration</string>
     <string name="feedback_message_title">Votre message ou proposition</string>
     <string name="feedback_message_hint">Écrivez les détails de votre suggestion, remarque ou citation...</string>
     <string name="send_feedback">Envoyer le message</string>
     <string name="feedback_empty_error">Veuillez saisir votre message</string>
     <string name="feedback_sent_success">Merci ! Votre message a été envoyé avec succès</string>
-    <string name="feedback_send_failed">Échec de l\'envoi, réessayez plus tard</string>
+    <string name="feedback_send_failed">Échec de l’envoi, réessayez plus tard</string>
 
     <!-- Notifications et Alertes -->
     <string name="notifications_title">Notifications</string>
@@ -278,9 +278,9 @@
     <string name="notif_replied_comment">%s a répondu à votre commentaire</string>
 
     <!-- Éléments additionnels de profil et interface -->
-    <string name="featured_writer">⭐ Rédacteur d\'élite</string>
+    <string name="featured_writer">⭐ Rédacteur d’élite</string>
     <string name="badge_admin">👑 Administrateur</string>
-    <string name="badge_writer">⭐ Rédacteur d\'élite</string>
+    <string name="badge_writer">⭐ Rédacteur d’élite</string>
     <string name="user_shared_posts_desc">Les pensées et textes partagés apparaîtront ici</string>
     <string name="select_profile_picture_title">Choisir une photo de profil</string>
     <string name="followers_title">Abonnés</string>
@@ -290,7 +290,7 @@
     <string name="login_title">Connexion</string>
     <string name="login_desc">Connectez-vous avec Google pour publier avec votre profil.</string>
     <string name="continue_with_google">Continuer avec Google</string>
-    <string name="choose_username_title">Choisissez un nom d\'utilisateur unique :</string>
+    <string name="choose_username_title">Choisissez un nom d’utilisateur unique :</string>
     <string name="username_example_hint">Ex : alex_95</string>
     <string name="confirm_and_continue">Confirmer et continuer</string>
 
@@ -329,12 +329,12 @@
     <string name="following_title">Abonnements</string>
     <string name="profile_picture_updated">Photo de profil mise à jour avec succès</string>
     <string name="profile_picture_update_failed">Échec de la mise à jour de la photo</string>
-    <string name="username_change_failed">Impossible de modifier le nom d\'utilisateur</string>
+    <string name="username_change_failed">Impossible de modifier le nom d’utilisateur</string>
     <string name="comment_inappropriate_words">Le commentaire contient des mots inappropriés</string>
     <string name="comments_count_zero">0 commentaire</string>
     <string name="default_user_name">Utilisateur</string>
-    <string name="share_app_text">Téléchargez l\'application Manchorati pour les plus belles citations et pensées : https://play.google.com/store/apps/details?id=%s</string>
-    <string name="share_app_chooser">Partager l\'application via</string>
+    <string name="share_app_text">Téléchargez l’application Manchorati pour les plus belles citations et pensées : https://play.google.com/store/apps/details?id=%s</string>
+    <string name="share_app_chooser">Partager l’application via</string>
     <string name="notif_friday">Bon vendredi</string>
     <string name="notif_morning">Bonjour</string>
     <string name="notif_evening">Bonsoir</string>
@@ -347,11 +347,11 @@
     <string name="color_custom">Couleur personnalisée</string>
     <string name="no_bio_yet">Aucune bio pour le moment.</string>
 
-    <!-- Politique de confidentialité et conditions (RGPD & Google Play) -->
+    <!-- Politique de confidentialité et conditions (RGPD &amp; Google Play) -->
     <string name="drawer_privacy_policy">Confidentialité &amp; Conditions</string>
     <string name="privacy_dialog_title">Politique de confidentialité &amp; Conditions</string>
     <string name="privacy_dialog_subtitle">Conforme aux normes RGPD (UE) et aux politiques de Google Play</string>
-    <string name="privacy_checkbox_consent">"J\'atteste avoir lu et j\'accepte la politique de confidentialité et les conditions d\'utilisation"</string>
+    <string name="privacy_checkbox_consent">"J’atteste avoir lu et j’accepte la politique de confidentialité et les conditions d’utilisation"</string>
     <string name="privacy_btn_agree_continue">Accepter et continuer</string>
     <string name="privacy_btn_close">Fermer</string>
     <string name="privacy_toast_must_accept">Veuillez accepter les conditions pour continuer</string>
@@ -361,13 +361,13 @@
     <string name="template_ocean_breeze">Brise océane</string>
     <string name="download_post_image">Télécharger la carte</string>
     <string name="post_image_saved_success">Image de la carte enregistrée dans la galerie avec succès</string>
-    <string name="post_image_save_failed">"Impossible d\'enregistrer l\'image"</string>
-    <string name="saving_post_image">"Enregistrement de l\'image dans la galerie..."</string>
+    <string name="post_image_save_failed">"Impossible d’enregistrer l’image"</string>
+    <string name="saving_post_image">"Enregistrement de l’image dans la galerie..."</string>
     <string name="widget_quote_name">Pensée du jour</string>
-    <string name="widget_quote_description">"Affichez de belles citations sur votre écran d'accueil avec actualisation rapide."</string>
+    <string name="widget_quote_description">"Affichez de belles citations sur votre écran d’accueil avec actualisation rapide."</string>
     <string name="widget_copied_toast">Citation copiée avec succès 📋</string>
-    <string name="drawer_add_widget">"Ajouter le Widget à l'écran"</string>
-    <string name="widget_pin_instructions">"Appuyez longuement sur l'écran d'accueil, choisissez Widgets puis Manchorati 🌸"</string>
+    <string name="drawer_add_widget">"Ajouter le Widget à l’écran"</string>
+    <string name="widget_pin_instructions">"Appuyez longuement sur l’écran d’accueil, choisissez Widgets puis Manchorati 🌸"</string>
 
     <!-- Supprimer le compte -->
     <string name="delete_account">Supprimer le compte</string>
@@ -377,4 +377,45 @@
     <string name="delete_account_progress">Suppression du compte en cours...</string>
     <string name="delete_account_success">Compte et données supprimés définitivement</string>
     <string name="delete_account_error">Échec de la suppression du compte</string>
+
+    <!-- Rangs et défis d’écrivain -->
+    <string name="badge_legendary">👑 Écrivain Légendaire</string>
+    <string name="badge_elite">💎 Écrivain d’Élite</string>
+    <string name="badge_distinguished">⭐ Écrivain Distingué</string>
+    <string name="badge_rising">🥈 Écrivain Émergent</string>
+    <string name="badge_beginner">🥉 Écrivain Débutant</string>
+    <string name="writer_challenges_title">Rangs et défis d’auteur</string>
+    <string name="writer_challenges_desc">Partagez vos citations et développez votre audience pour monter en grade et débloquer des badges exclusifs !</string>
+    <string name="current_tier_label">Votre rang actuel :</string>
+    <string name="next_tier_progress">%1$d sur %2$d abonnés pour le rang suivant</string>
+    <string name="next_tier_remaining">%d abonnés restants pour la promotion 🚀</string>
+    <string name="max_tier_reached">Vous avez atteint le sommet ! Plus haut rang obtenu 🏆</string>
+    <string name="ranks_guide_title">Guide des rangs et niveaux</string>
+    <string name="milestones_title">Badges de réalisations et défis</string>
+    <string name="milestone_1k">Club du premier millier (1K)</string>
+    <string name="milestone_1k_desc">Dépasser 1 000 véritables abonnés</string>
+    <string name="milestone_5k">Badge d’Élite (5K)</string>
+    <string name="milestone_5k_desc">Inspirer plus de 5 000 abonnés</string>
+    <string name="milestone_7k">Badge du Sommet (7K)</string>
+    <string name="milestone_7k_desc">Atteindre 7 000 abonnés et une large audience</string>
+    <string name="milestone_10k">Bouclier d’Or Légendaire (10K)</string>
+    <string name="milestone_10k_desc">Plus de 10 000 abonnés dans la communauté</string>
+    <string name="badge_unlocked_label">Débloqué et accompli ✨</string>
+    <string name="badge_locked_label">%d abonnés restants 🔒</string>
+    <string name="btn_close_challenges">Compris, continuons à créer !</string>
+
+    <!-- Authentification par E-mail et Mot de passe -->
+    <string name="or_divider">Ou avec E-mail</string>
+    <string name="email_hint">Adresse e-mail</string>
+    <string name="password_hint">Mot de passe (min 6 caractères)</string>
+    <string name="sign_in_btn">Se connecter</string>
+    <string name="sign_up_btn">Créer un nouveau compte</string>
+    <string name="dont_have_account">Vous n’avez pas de compte ? S’inscrire</string>
+    <string name="already_have_account">Vous avez déjà un compte ? Se connecter</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="reset_link_sent">Lien de réinitialisation envoyé à votre e-mail</string>
+    <string name="auth_field_empty">Veuillez remplir tous les champs obligatoires</string>
+    <string name="auth_success">Connexion réussie !</string>
+    <string name="enter_email_to_reset">Veuillez saisir votre e-mail ci-dessus pour recevoir le lien</string>
+
 </resources>

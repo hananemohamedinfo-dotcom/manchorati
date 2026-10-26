@@ -170,7 +170,7 @@ object ImageUtils {
         // ==============================================================
         val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
         val isSystemDark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        var isEditorDarkMode = themePrefs.getBoolean("is_dark_mode", isSystemDark)
+        var isEditorDarkMode = themePrefs.getBoolean("is_dark_mode", true)
 
         var activeTabIndex = 0
 
@@ -201,7 +201,23 @@ object ImageUtils {
             }
         }
 
-        fun applyEditorTheme(isDark: Boolean) {
+        
+        fun adaptTextColorForCardBackground(bgColor: Int) {
+            val lum = androidx.core.graphics.ColorUtils.calculateLuminance(bgColor)
+            if (lum > 0.5) {
+                // Light background -> High contrast dark text
+                tvContent.setTextColor(Color.parseColor("#0F172A"))
+                tvCategory.setTextColor(Color.parseColor("#0284C7"))
+                tvWatermark.setTextColor(Color.parseColor("#64748B"))
+            } else {
+                // Dark background -> Crisp white text
+                tvContent.setTextColor(Color.WHITE)
+                tvCategory.setTextColor(Color.parseColor("#38BDF8"))
+                tvWatermark.setTextColor(Color.parseColor("#94A3B8"))
+            }
+        }
+
+fun applyEditorTheme(isDark: Boolean) {
             isEditorDarkMode = isDark
             if (isDark) {
                 layoutEditorRoot.setBackgroundColor(Color.parseColor("#0B0F19"))
@@ -387,6 +403,7 @@ object ImageUtils {
                             viewOverlay.visibility = View.GONE
                             cardPreview.background = null
                             cardPreview.setCardBackgroundColor(color)
+                            adaptTextColorForCardBackground(color)
                         }
                     }
                 )
@@ -570,7 +587,7 @@ object ImageUtils {
                 setPadding(padH, padV, padH, padV)
                 text = item.displayName
                 textSize = 12f
-                setTextColor(if (item.fontResId == R.font.tajawal) Color.WHITE else Color.parseColor("#CBD5E1"))
+                setTextColor(if (item.fontResId == R.font.tajawal) Color.WHITE else (if (isEditorDarkMode) Color.parseColor("#CBD5E1") else Color.parseColor("#1E293B")))
                 setBackgroundResource(if (item.fontResId == R.font.tajawal) R.drawable.bg_tool_chip_active else R.drawable.bg_tool_chip_idle)
 
                 try {
@@ -580,7 +597,7 @@ object ImageUtils {
                 setOnClickListener {
                     fontViewList.forEach {
                         it.setBackgroundResource(R.drawable.bg_tool_chip_idle)
-                        it.setTextColor(Color.parseColor("#CBD5E1"))
+                        it.setTextColor(if (isEditorDarkMode) Color.parseColor("#CBD5E1") else Color.parseColor("#1E293B"))
                     }
                     setBackgroundResource(R.drawable.bg_tool_chip_active)
                     setTextColor(Color.WHITE)

@@ -367,7 +367,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/dimming_label"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -383,7 +383,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="0%"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -397,7 +397,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="30%"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -426,7 +426,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="75%"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <!-- فاصل رأسي ناعم -->
@@ -442,7 +442,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/blur_label"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -472,7 +472,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/blur_soft"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -486,7 +486,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/blur_strong"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <!-- فاصل رأسي ناعم -->
@@ -501,7 +501,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/filter_label"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -531,7 +531,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/filter_warm"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -545,7 +545,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/filter_night"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -559,7 +559,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/filter_emerald"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -573,7 +573,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/filter_classic"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -672,7 +672,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="B"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -687,7 +687,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="I"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="13sp"
                         android:textStyle="italic" />
 
@@ -721,7 +721,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/lines_loose"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <!-- ميزة تباعد الحروف (Letter Spacing) -->
@@ -736,7 +736,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/letter_spacing"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -788,7 +788,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
                         android:text="@string/text_gradient_normal"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <View
@@ -806,7 +806,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
                         android:text="@string/text_highlight"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <View
@@ -876,7 +876,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
                         android:text="@string/ratio_portrait"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -890,7 +890,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
                         android:text="@string/ratio_story"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -904,7 +904,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="14dp"
                         android:text="@string/ratio_landscape"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -922,7 +922,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/alignment_label"
-                    android:textColor="#CBD5E1"
+                    android:textColor="@color/chip_idle_text"
                     android:textSize="11sp"
                     android:textStyle="bold" />
 
@@ -997,7 +997,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/corners_label"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -1012,7 +1012,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/corner_sharp"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <TextView
@@ -1041,7 +1041,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:text="@string/corner_pill"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <View
@@ -1059,7 +1059,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
                         android:text="@string/card_border"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -1088,7 +1088,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
                         android:text="@string/quote_none"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <View
@@ -1106,7 +1106,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="12dp"
                         android:text="@string/author_signature"
-                        android:textColor="#CBD5E1"
+                        android:textColor="@color/chip_idle_text"
                         android:textSize="11sp" />
 
                     <View
@@ -1144,7 +1144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/instant_presets_subtitle"
-                android:textColor="#CBD5E1"
+                android:textColor="@color/chip_idle_text"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 

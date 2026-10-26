@@ -9,4 +9,7 @@
     <color name="divider_color">#334155</color>
     <color name="search_bg">#334155</color>
     <color name="comment_text_color">#F1F1F1</color> <!-- رمادي فاتح جداً -->
+    <color name="chip_idle_bg">#1E293B</color>
+    <color name="chip_idle_stroke">#334155</color>
+    <color name="chip_idle_text">#CBD5E1</color>
 </resources>

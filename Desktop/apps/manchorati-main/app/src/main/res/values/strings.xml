@@ -403,4 +403,19 @@
     <string name="delete_account_progress">جاري حذف الحساب والبيانات...</string>
     <string name="delete_account_success">تم حذف الحساب والبيانات نهائياً بنجاح</string>
     <string name="delete_account_error">تعذر حذف الحساب، يرجى المحاولة لاحقاً</string>
+
+    <!-- مصادقة البريد الإلكتروني وكلمة المرور -->
+    <string name="or_divider">أو عبر البريد الإلكتروني</string>
+    <string name="email_hint">البريد الإلكتروني</string>
+    <string name="password_hint">كلمة المرور (6 أحرف على الأقل)</string>
+    <string name="sign_in_btn">تسجيل الدخول</string>
+    <string name="sign_up_btn">إنشاء حساب جديد</string>
+    <string name="dont_have_account">ليس لديك حساب؟ إنشاء حساب جديد</string>
+    <string name="already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="reset_link_sent">تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني</string>
+    <string name="auth_field_empty">يرجى ملء جميع الحقول المطلوبة</string>
+    <string name="auth_success">تم تسجيل الدخول بنجاح!</string>
+    <string name="enter_email_to_reset">يرجى كتابة بريدك الإلكتروني في الخانة أولاً لإرسال الرابط</string>
+
 </resources>

@@ -800,8 +800,114 @@ class CommunityFragment : Fragment() {
         val etUsername = view.findViewById<EditText>(R.id.etUsernameInput)
         val btnConfirm = view.findViewById<Button>(R.id.btnConfirmUsername)
 
+        val layoutAuthDivider = view.findViewById<View>(R.id.layoutAuthDivider)
+        val layoutEmailAuth = view.findViewById<View>(R.id.layoutEmailAuth)
+        val etAuthDisplayName = view.findViewById<EditText>(R.id.etAuthDisplayName)
+        val etAuthEmail = view.findViewById<EditText>(R.id.etAuthEmail)
+        val etAuthPassword = view.findViewById<EditText>(R.id.etAuthPassword)
+        val tvAuthError = view.findViewById<TextView>(R.id.tvAuthError)
+        val btnSubmitEmailAuth = view.findViewById<Button>(R.id.btnSubmitEmailAuth)
+        val tvToggleAuthMode = view.findViewById<TextView>(R.id.tvToggleAuthMode)
+        val tvForgotPassword = view.findViewById<TextView>(R.id.tvForgotPassword)
+
+        var isSignUpMode = false
+
+        fun updateAuthUIMode() {
+            tvAuthError.visibility = View.GONE
+            if (isSignUpMode) {
+                etAuthDisplayName.visibility = View.VISIBLE
+                btnSubmitEmailAuth.text = getString(R.string.sign_up_btn)
+                tvToggleAuthMode.text = getString(R.string.already_have_account)
+                tvForgotPassword.visibility = View.GONE
+            } else {
+                etAuthDisplayName.visibility = View.GONE
+                btnSubmitEmailAuth.text = getString(R.string.sign_in_btn)
+                tvToggleAuthMode.text = getString(R.string.dont_have_account)
+                tvForgotPassword.visibility = View.VISIBLE
+            }
+        }
+        updateAuthUIMode()
+
+        tvToggleAuthMode.setOnClickListener {
+            isSignUpMode = !isSignUpMode
+            updateAuthUIMode()
+        }
+
+        tvForgotPassword.setOnClickListener {
+            val email = etAuthEmail.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.enter_email_to_reset), Toast.LENGTH_LONG).show()
+                etAuthEmail.requestFocus()
+                return@setOnClickListener
+            }
+            AuthManager.sendPasswordReset(email,
+                onSuccess = {
+                    Toast.makeText(requireContext(), getString(R.string.reset_link_sent), Toast.LENGTH_LONG).show()
+                },
+                onFailure = { err ->
+                    tvAuthError.text = err
+                    tvAuthError.visibility = View.VISIBLE
+                }
+            )
+        }
+
+        btnSubmitEmailAuth.setOnClickListener {
+            val email = etAuthEmail.text.toString().trim()
+            val password = etAuthPassword.text.toString().trim()
+            val name = etAuthDisplayName.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                tvAuthError.text = getString(R.string.auth_field_empty)
+                tvAuthError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+
+            tvAuthError.visibility = View.GONE
+            btnSubmitEmailAuth.isEnabled = false
+
+            if (isSignUpMode) {
+                AuthManager.signUpWithEmail(email, password, name,
+                    onSuccess = { isNewUser ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        Toast.makeText(requireContext(), getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
+                        if (isNewUser) {
+                            showUsernameSetupInDialog(suggestedUsername = name)
+                        } else {
+                            dialog.dismiss()
+                            startListeningToPosts()
+                        }
+                    },
+                    onFailure = { err ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        tvAuthError.text = err
+                        tvAuthError.visibility = View.VISIBLE
+                    }
+                )
+            } else {
+                AuthManager.signInWithEmail(email, password,
+                    onSuccess = { isNewUser ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        Toast.makeText(requireContext(), getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
+                        if (isNewUser) {
+                            showUsernameSetupInDialog(suggestedUsername = email.substringBefore("@"))
+                        } else {
+                            dialog.dismiss()
+                            startListeningToPosts()
+                        }
+                    },
+                    onFailure = { err ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        tvAuthError.text = err
+                        tvAuthError.visibility = View.VISIBLE
+                    }
+                )
+            }
+        }
+
         if (showUsernameOnly) {
             btnGoogle.visibility = View.GONE
+            layoutAuthDivider.visibility = View.GONE
+            layoutEmailAuth.visibility = View.GONE
             layoutUsername.visibility = View.VISIBLE
         }
 

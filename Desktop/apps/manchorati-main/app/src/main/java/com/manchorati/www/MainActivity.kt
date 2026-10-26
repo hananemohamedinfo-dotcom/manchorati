@@ -1,5 +1,7 @@
 package com.manchorati.www
 
+import androidx.activity.enableEdgeToEdge
+
 import android.Manifest
 import android.app.AlertDialog
 import android.app.NotificationChannel
@@ -101,9 +103,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         // قراءة حالة الوضع الليلي وتطبيقها قبل استدعاء setContentView
         val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        val isDarkMode = themePrefs.getBoolean("is_dark_mode", false)
+        val isDarkMode = themePrefs.getBoolean("is_dark_mode", true)
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
@@ -607,7 +610,7 @@ class MainActivity : AppCompatActivity() {
 
         val switchDarkMode = findViewById<SwitchCompat>(R.id.switchDarkMode)
         val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        val currentDark = themePrefs.getBoolean("is_dark_mode", false)
+        val currentDark = themePrefs.getBoolean("is_dark_mode", true)
         switchDarkMode?.isChecked = currentDark
 
         switchDarkMode?.setOnCheckedChangeListener { _, isChecked ->

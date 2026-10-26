@@ -1244,7 +1244,14 @@ class UserProfileActivity : AppCompatActivity() {
                 imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
-                FirestoreManager.deleteComment(post.id, comment.id) {}
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle(R.string.delete_button)
+                    .setMessage(R.string.confirm_delete_comment)
+                    .setPositiveButton(R.string.delete_button) { _, _ ->
+                        FirestoreManager.deleteComment(post.id, comment.id) {}
+                    }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
             }
         )
         rvComments.adapter = commentsAdapter

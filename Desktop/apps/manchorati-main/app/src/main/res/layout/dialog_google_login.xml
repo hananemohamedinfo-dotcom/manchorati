@@ -22,7 +22,7 @@
         android:id="@+id/tvLoginSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="@string/login_desc"
         android:textColor="@color/text_secondary"
@@ -32,13 +32,142 @@
     <Button
         android:id="@+id/btnGoogleSignIn"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="50dp"
         android:backgroundTint="#4285F4"
         android:text="@string/continue_with_google"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:textStyle="bold" />
+
+    <!-- فاصل أو -->
+    <LinearLayout
+        android:id="@+id/layoutAuthDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:text="@string/or_divider"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color" />
+    </LinearLayout>
+
+    <!-- نموذج تسجيل الدخول / إنشاء حساب بالبريد الإلكتروني -->
+    <LinearLayout
+        android:id="@+id/layoutEmailAuth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- حقل الاسم (يظهر عند إنشاء حساب جديد فقط) -->
+        <EditText
+            android:id="@+id/etAuthDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/search_bg"
+            android:hint="@string/display_name_hint"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- حقل البريد الإلكتروني -->
+        <EditText
+            android:id="@+id/etAuthEmail"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/search_bg"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <!-- حقل كلمة المرور -->
+        <EditText
+            android:id="@+id/etAuthPassword"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/search_bg"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <!-- رسالة الخطأ -->
+        <TextView
+            android:id="@+id/tvAuthError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="#EF4444"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- زر تنفيذ الدخول أو الإنشاء -->
+        <Button
+            android:id="@+id/btnSubmitEmailAuth"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#BE123C"
+            android:text="@string/sign_in_btn"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- روابط التبديل ونسيت كلمة المرور -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvToggleAuthMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:text="@string/dont_have_account"
+                android:textColor="#0284C7"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/forgot_password"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- واجهة اختيار الـ Username (تظهر تلقائياً إذا كان المستخدم جديداً) -->
     <LinearLayout

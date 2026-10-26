@@ -9,7 +9,7 @@
     <string name="tab_favorites">Favorites</string>
     <string name="tab_profile">My Profile</string>
 
-    <!-- Search, Sort & Filter -->
+    <!-- Search, Sort &amp; Filter -->
     <string name="search_hint">Search in posts...</string>
     <string name="sort_by">Sort by:</string>
     <string name="sort_latest">Latest</string>
@@ -40,7 +40,7 @@
     <string name="drawer_logout">Log Out</string>
     <string name="drawer_version">Version 1.0.0</string>
 
-    <!-- Comments & Interactions -->
+    <!-- Comments &amp; Interactions -->
     <string name="comment_hint">Write a comment...</string>
     <string name="edit_comment_hint">Edit your comment...</string>
     <string name="reply_button">Reply</string>
@@ -78,7 +78,7 @@
     <string name="no">Cancel</string>
     <string name="confirm">Confirm</string>
 
-    <!-- Profile & Account Settings -->
+    <!-- Profile &amp; Account Settings -->
     <string name="profile_title">Profile</string>
     <string name="account_settings_title">Account Settings</string>
     <string name="change_profile_photo">Change Profile Photo</string>
@@ -127,7 +127,7 @@
     <string name="settings_saved_success">Notification settings saved successfully</string>
     <string name="default_all">Default (All)</string>
 
-    <!-- Add & Edit Post -->
+    <!-- Add &amp; Edit Post -->
     <string name="add_post_title">New Post</string>
     <string name="edit_post_title">Edit Post</string>
     <string name="add_post_hint">What is on your mind? Share your thoughts, quotes...</string>
@@ -228,7 +228,7 @@
     <string name="font_blaka">Blaka</string>
     <string name="font_bold">Bold</string>
 
-    <!-- Add & Edit Post Additional -->
+    <!-- Add &amp; Edit Post Additional -->
     <string name="you_author">You</string>
     <string name="clear_text">Clear Text</string>
     <string name="tag_none">No Tag</string>
@@ -248,7 +248,7 @@
     <string name="post_failed">Failed to publish, please try again</string>
     <string name="post_edit_failed">Failed to update, please try again</string>
 
-    <!-- Contact & Feedback Screen -->
+    <!-- Contact &amp; Feedback Screen -->
     <string name="contact_us_title">Contact Us &amp; Suggestions</string>
     <string name="feedback_type_label">Message Type</string>
     <string name="feedback_type_suggest_quote">Suggest a new quote or post</string>
@@ -277,7 +277,7 @@
     <string name="notif_new_post">%s published a new post</string>
     <string name="notif_replied_comment">%s replied to your comment</string>
 
-    <!-- Additional Profile & UI -->
+    <!-- Additional Profile &amp; UI -->
     <string name="featured_writer">⭐ Featured Writer</string>
     <string name="badge_admin">👑 Admin</string>
     <string name="badge_writer">⭐ Featured Writer</string>
@@ -347,7 +347,7 @@
     <string name="color_custom">Custom color</string>
     <string name="no_bio_yet">No bio yet.</string>
 
-    <!-- Privacy Policy and Terms of Service (GDPR & Google Play Standards) -->
+    <!-- Privacy Policy and Terms of Service (GDPR &amp; Google Play Standards) -->
     <string name="drawer_privacy_policy">Privacy Policy &amp; Terms</string>
     <string name="privacy_dialog_title">Privacy Policy &amp; Terms of Service</string>
     <string name="privacy_dialog_subtitle">Compliant with EU GDPR standards and Google Play Developer Policies</string>
@@ -377,4 +377,45 @@
     <string name="delete_account_progress">Deleting account and data...</string>
     <string name="delete_account_success">Account and all data deleted successfully</string>
     <string name="delete_account_error">Could not delete account, please try again</string>
+
+    <!-- Writer Tiers &amp; Challenges -->
+    <string name="badge_legendary">👑 Legendary Writer</string>
+    <string name="badge_elite">💎 Elite Writer</string>
+    <string name="badge_distinguished">⭐ Distinguished Writer</string>
+    <string name="badge_rising">🥈 Rising Writer</string>
+    <string name="badge_beginner">🥉 Beginner Writer</string>
+    <string name="writer_challenges_title">Writer Ranks &amp; Challenges</string>
+    <string name="writer_challenges_desc">Share your quotes and grow your audience to level up your rank and unlock exclusive badges!</string>
+    <string name="current_tier_label">Your Current Rank:</string>
+    <string name="next_tier_progress">%1$d of %2$d followers to next rank</string>
+    <string name="next_tier_remaining">%d followers left for promotion 🚀</string>
+    <string name="max_tier_reached">You have reached the pinnacle! Maximum rank achieved 🏆</string>
+    <string name="ranks_guide_title">Ranks &amp; Levels Guide</string>
+    <string name="milestones_title">Achievements &amp; Milestone Badges</string>
+    <string name="milestone_1k">First Millennium Club (1K)</string>
+    <string name="milestone_1k_desc">Surpass 1,000 real followers</string>
+    <string name="milestone_5k">Elite Badge (5K)</string>
+    <string name="milestone_5k_desc">Inspire more than 5,000 followers</string>
+    <string name="milestone_7k">Pinnacle Badge (7K)</string>
+    <string name="milestone_7k_desc">Reach 7,000 followers and broad influence</string>
+    <string name="milestone_10k">Golden Legend Shield (10K)</string>
+    <string name="milestone_10k_desc">More than 10,000 followers in the community</string>
+    <string name="badge_unlocked_label">Unlocked &amp; Complete ✨</string>
+    <string name="badge_locked_label">%d followers remaining 🔒</string>
+    <string name="btn_close_challenges">Understood, Keep Creating!</string>
+
+    <!-- Email &amp; Password Authentication -->
+    <string name="or_divider">Or with Email</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password (min 6 characters)</string>
+    <string name="sign_in_btn">Sign In</string>
+    <string name="sign_up_btn">Create New Account</string>
+    <string name="dont_have_account">Don’t have an account? Create one</string>
+    <string name="already_have_account">Already have an account? Sign In</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_link_sent">Password reset link sent to your email</string>
+    <string name="auth_field_empty">Please fill in all required fields</string>
+    <string name="auth_success">Signed in successfully!</string>
+    <string name="enter_email_to_reset">Please enter your email above to receive the reset link</string>
+
 </resources>

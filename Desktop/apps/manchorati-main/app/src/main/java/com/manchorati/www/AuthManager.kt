@@ -311,4 +311,117 @@ fun changeUsername(
             }
         }
     }
+
+    // إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
+    fun signUpWithEmail(
+        email: String,
+        password: String,
+        displayName: String,
+        onSuccess: (isNewUser: Boolean) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val cleanEmail = email.trim()
+        if (cleanEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
+            onFailure("يرجى إدخال بريد إلكتروني صحيح")
+            return
+        }
+        if (password.length < 6) {
+            onFailure("يجب أن تتكون كلمة المرور من 6 أحرف على الأقل")
+            return
+        }
+
+        auth.createUserWithEmailAndPassword(cleanEmail, password)
+            .addOnSuccessListener { result ->
+                val user = result.user
+                if (user == null) {
+                    onFailure("تعذر إنشاء الحساب")
+                    return@addOnSuccessListener
+                }
+
+                val finalName = displayName.trim().ifEmpty { cleanEmail.substringBefore("@") }
+                val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                    .setDisplayName(finalName)
+                    .build()
+                user.updateProfile(profileUpdates)
+
+                val generatedUsername = finalName.lowercase().replace(" ", "_").filter { it.isLetterOrDigit() || it == '_' }
+                    .ifEmpty { "user_${Random.nextInt(1000, 9999)}" }
+
+                registerUsername(user.uid, generatedUsername, finalName, cleanEmail) { _, _ ->
+                    onSuccess(true)
+                }
+            }
+            .addOnFailureListener { e ->
+                val msg = when {
+                    e.message?.contains("already in use", ignoreCase = true) == true -> "هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول به"
+                    e.message?.contains("weak password", ignoreCase = true) == true -> "كلمة المرور ضعيفة، اختر كلمة مرور أقوى"
+                    else -> e.localizedMessage ?: "فشل إنشاء الحساب"
+                }
+                onFailure(msg)
+            }
+    }
+
+    // تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+    fun signInWithEmail(
+        email: String,
+        password: String,
+        onSuccess: (isNewUser: Boolean) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val cleanEmail = email.trim()
+        if (cleanEmail.isEmpty()) {
+            onFailure("يرجى إدخال البريد الإلكتروني")
+            return
+        }
+        if (password.isEmpty()) {
+            onFailure("يرجى إدخال كلمة المرور")
+            return
+        }
+
+        auth.signInWithEmailAndPassword(cleanEmail, password)
+            .addOnSuccessListener { result ->
+                val user = result.user
+                if (user == null) {
+                    onFailure("تعذر التعرف على المستخدم")
+                    return@addOnSuccessListener
+                }
+
+                db.collection("users").document(user.uid).get()
+                    .addOnSuccessListener { doc ->
+                        val hasUsername = doc.exists() && doc.contains("username")
+                        onSuccess(!hasUsername)
+                    }
+                    .addOnFailureListener {
+                        onSuccess(false)
+                    }
+            }
+            .addOnFailureListener { e ->
+                val msg = when {
+                    e.message?.contains("invalid", ignoreCase = true) == true ||
+                    e.message?.contains("credential", ignoreCase = true) == true ||
+                    e.message?.contains("password", ignoreCase = true) == true -> "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+                    e.message?.contains("no user", ignoreCase = true) == true -> "لا يوجد حساب بهذا البريد، يرجى إنشاء حساب جديد"
+                    else -> e.localizedMessage ?: "فشل تسجيل الدخول"
+                }
+                onFailure(msg)
+            }
+    }
+
+    // إرسال رابط استعادة كلمة المرور
+    fun sendPasswordReset(
+        email: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val cleanEmail = email.trim()
+        if (cleanEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
+            onFailure("يرجى إدخال بريد إلكتروني صحيح أولاً")
+            return
+        }
+
+        auth.sendPasswordResetEmail(cleanEmail)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { e -> onFailure(e.localizedMessage ?: "تعذر إرسال الرابط") }
+    }
+
 }

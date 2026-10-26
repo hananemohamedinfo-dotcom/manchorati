@@ -1,21 +1,30 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Proguard & R8 Optimization Rules for Manchorati
+-keep class com.manchorati.www.** { *; }
+-keepclassmembers class com.manchorati.www.** { *; }
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,SourceFile,LineNumberTable
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Firebase Firestore & Auth models
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+-keepattributes *Annotation*
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Google Play Services & Google Sign In
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Coroutines
+-keepnames class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+
+# Coil & Glide Image Loading
+-keep class io.coilkt.** { *; }
+-keep class com.bumptech.glide.** { *; }
+
+# OkHttp
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# AmbilWarna Color Picker
+-keep class yuku.ambilwarna.** { *; }

@@ -10,4 +10,7 @@
     <color name="search_bg">#FFFFFF</color>
     <color name="comment_text_color">#212121</color> <!-- رمادي داكن جداً -->
     <color name="ic_launcher_background">#DC2626</color>
+    <color name="chip_idle_bg">#E2E8F0</color>
+    <color name="chip_idle_stroke">#CBD5E1</color>
+    <color name="chip_idle_text">#1E293B</color>
 </resources>

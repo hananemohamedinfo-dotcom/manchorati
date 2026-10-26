@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val themePrefs = getSharedPreferences("theme_prefs", android.content.Context.MODE_PRIVATE)
-        val isDarkMode = themePrefs.getBoolean("is_dark_mode", false)
+        val isDarkMode = themePrefs.getBoolean("is_dark_mode", true)
         androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
             if (isDarkMode) androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES else androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
         )
