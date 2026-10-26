@@ -96,16 +96,15 @@ object DailyNotificationHelper {
             PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0)
         )
 
-        val showIntent = Intent(context, MainActivity::class.java)
-        val showPendingIntent = PendingIntent.getActivity(
-            context,
-            requestCode + 100,
-            showIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0)
-        )
-
-        val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerTime, showPendingIntent)
-        alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun cancelAlarm(context: Context, requestCode: Int) {

@@ -110,5 +110,12 @@ class NotificationReceiver : BroadcastReceiver() {
             .addAction(R.drawable.ic_copy, localizedContext.getString(R.string.copy), copyPendingIntent)
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
+
+        // إعادة جدولة إشعار اليوم التالي
+        try {
+            DailyNotificationHelper.rescheduleFromPreferences(context)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
