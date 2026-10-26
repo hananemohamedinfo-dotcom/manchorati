@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Nom de l'application -->
-    <string name="app_name">Manchorati</string>
+    <string name="app_name">منشوراتي</string>
 
     <!-- Onglets de navigation inférieure -->
     <string name="tab_community">Communauté</string>
