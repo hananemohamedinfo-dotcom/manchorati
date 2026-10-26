@@ -4,9 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_widget_card"
-    android:padding="13dp">
+    android:layoutDirection="locale"
+    android:padding="14dp">
 
-    <!-- الشريط العلوي للودجت -->
+    <!-- 1. الشريط العلوي للودجت -->
     <RelativeLayout
         android:id="@+id/layoutWidgetHeader"
         android:layout_width="match_parent"
@@ -23,30 +24,31 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/ic_quotes" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="6dp"
                 android:text="@string/app_name"
                 android:textColor="#38BDF8"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvWidgetTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/bg_widget_tag"
-                android:paddingHorizontal="7dp"
-                android:paddingVertical="2dp"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="3dp"
                 android:text="خاطرة اليوم"
                 android:textColor="#BAE6FD"
-                android:textSize="10.5sp" />
+                android:textSize="11sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- أزرار التحكم السريعة (نسخ وتحديث) -->
@@ -61,37 +63,70 @@
             <!-- زر النسخ السريع -->
             <ImageView
                 android:id="@+id/btnWidgetCopy"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/bg_widget_button"
-                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="7dp"
                 android:src="@drawable/ic_copy" />
 
-            <!-- زر التحديث لخاطرة أخرى -->
+            <!-- زر التحديث لخاطرة أخرى مع أنيميشن -->
             <ImageView
                 android:id="@+id/btnWidgetRefresh"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginStart="6dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/bg_widget_button"
-                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="7dp"
                 android:src="@drawable/ic_refresh" />
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- نص الخاطرة في المنتصف بتنسيق مريح للعين -->
-    <TextView
-        android:id="@+id/tvWidgetContent"
+    <!-- 2. محاكي التحريك السلس بالنص مع أنيميشن التبديل (ViewFlipper) -->
+    <ViewFlipper
+        android:id="@+id/widgetFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/layoutWidgetHeader"
-        android:gravity="center"
-        android:lineSpacingExtra="3.5dp"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="6dp"
-        android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸"
-        android:textColor="#FFFFFF"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:inAnimation="@anim/widget_slide_in"
+        android:outAnimation="@anim/widget_slide_out">
+
+        <TextView
+            android:id="@+id/tvWidgetContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingExtra="4.5dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:shadowColor="#E6000000"
+            android:shadowDx="1.5"
+            android:shadowDy="1.5"
+            android:shadowRadius="4"
+            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸"
+            android:textColor="#FFFFFF"
+            android:textSize="15.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvWidgetContentAlt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingExtra="4.5dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:shadowColor="#E6000000"
+            android:shadowDx="1.5"
+            android:shadowDy="1.5"
+            android:shadowRadius="4"
+            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸"
+            android:textColor="#FFFFFF"
+            android:textSize="15.5sp"
+            android:textStyle="bold" />
+    </ViewFlipper>
 
 </RelativeLayout>

@@ -120,7 +120,11 @@ class QuoteWidgetProvider : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.widget_quote)
 
         views.setTextViewText(R.id.tvWidgetContent, quote)
+        views.setTextViewText(R.id.tvWidgetContentAlt, quote)
         views.setTextViewText(R.id.tvWidgetTag, tag)
+        try {
+            views.showNext(R.id.widgetFlipper)
+        } catch (_: Exception) {}
 
         // 1. النقر على البطاقة يفتح التطبيق
         val openAppIntent = Intent(context, SplashActivity::class.java).apply {
@@ -133,6 +137,8 @@ class QuoteWidgetProvider : AppWidgetProvider() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         views.setOnClickPendingIntent(R.id.tvWidgetContent, openAppPendingIntent)
+        views.setOnClickPendingIntent(R.id.tvWidgetContentAlt, openAppPendingIntent)
+        views.setOnClickPendingIntent(R.id.widgetFlipper, openAppPendingIntent)
         views.setOnClickPendingIntent(R.id.layoutWidgetRoot, openAppPendingIntent)
 
         // 2. النقر على زر التحديث يجلب خاطرة جديدة عشوائية
