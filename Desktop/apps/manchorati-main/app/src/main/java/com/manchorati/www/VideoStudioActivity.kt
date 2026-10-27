@@ -17,9 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import java.io.InputStream
 
@@ -27,7 +24,6 @@ class VideoStudioActivity : AppCompatActivity() {
 
     private lateinit var videoMotionView: VideoMotionView
     private lateinit var ivPlayPauseIndicator: ImageView
-    private lateinit var layoutCustomMediaWarning: LinearLayout
 
     // Ratio & Duration
     private lateinit var btnRatioStory: TextView
@@ -56,7 +52,6 @@ class VideoStudioActivity : AppCompatActivity() {
     private lateinit var btnSaveGallery: LinearLayout
     private lateinit var btnShareWhatsApp: LinearLayout
     private lateinit var btnShareGeneral: FrameLayout
-    private lateinit var btnPublishCommunity: LinearLayout
 
     // State
     private var selectedMotion = "STARS"
@@ -76,9 +71,6 @@ class VideoStudioActivity : AppCompatActivity() {
     private var postAuthorBadge = ""
     private var postTag = ""
 
-    private var loginDialog: BottomSheetDialog? = null
-    private var pendingPublishAfterLogin = false
-
     // Image Picker
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
@@ -90,32 +82,6 @@ class VideoStudioActivity : AppCompatActivity() {
     private val pickAudioLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             loadCustomAudio(uri)
-        }
-    }
-
-    // Google Sign-In
-    private val googleSignInLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                if (account != null) {
-                    AuthManager.firebaseAuthWithGoogle(account, { _ ->
-                        loginDialog?.dismiss()
-                        Toast.makeText(this, "تم تسجيل الدخول بنجاح! 🎉", Toast.LENGTH_SHORT).show()
-                        if (pendingPublishAfterLogin) {
-                            pendingPublishAfterLogin = false
-                            publishVirtualVideoToCommunity()
-                        }
-                    }, { errorMsg ->
-                        Toast.makeText(this, "فشل تسجيل الدخول: $errorMsg", Toast.LENGTH_LONG).show()
-                    })
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this, "خطأ تسجيل الدخول: ${e.message}", Toast.LENGTH_LONG).show()
-            }
         }
     }
 
@@ -132,7 +98,6 @@ class VideoStudioActivity : AppCompatActivity() {
         populateAnimPresets()
         populateFontPresets()
         updateConfig()
-        updatePublishCommunityState()
     }
 
     private fun initIntentData() {
@@ -168,7 +133,6 @@ class VideoStudioActivity : AppCompatActivity() {
 
         videoMotionView = findViewById(R.id.videoMotionView)
         ivPlayPauseIndicator = findViewById(R.id.ivPlayPauseIndicator)
-        layoutCustomMediaWarning = findViewById(R.id.layoutCustomMediaWarning)
 
         btnRatioStory = findViewById(R.id.btnRatioStory)
         btnRatioSquare = findViewById(R.id.btnRatioSquare)
@@ -194,7 +158,6 @@ class VideoStudioActivity : AppCompatActivity() {
         btnSaveGallery = findViewById(R.id.btnSaveGallery)
         btnShareWhatsApp = findViewById(R.id.btnShareWhatsApp)
         btnShareGeneral = findViewById(R.id.btnShareGeneral)
-        btnPublishCommunity = findViewById(R.id.btnPublishCommunity)
     }
 
     private fun applyWindowInsets() {
@@ -303,10 +266,6 @@ class VideoStudioActivity : AppCompatActivity() {
                 VideoExporter.shareVideoGeneral(this, file)
             })
         }
-
-        btnPublishCommunity.setOnClickListener {
-            publishVirtualVideoToCommunity()
-        }
     }
 
     private fun showPlayPauseFeedback(isPaused: Boolean) {
@@ -360,7 +319,6 @@ class VideoStudioActivity : AppCompatActivity() {
                     customImageBitmap = null
                     populateMotionPresets()
                     updateConfig()
-                    updatePublishCommunityState()
                 }
             }
             layoutMotionPresets.addView(chip)
@@ -388,7 +346,6 @@ class VideoStudioActivity : AppCompatActivity() {
                     videoMotionView.customAudioUri = null
                     populateAudioPresets()
                     updateConfig()
-                    updatePublishCommunityState()
                 }
             }
             layoutAudioPresets.addView(chip)
@@ -492,7 +449,6 @@ class VideoStudioActivity : AppCompatActivity() {
                 selectedMotion = "CUSTOM_IMAGE"
                 populateMotionPresets()
                 updateConfig()
-                updatePublishCommunityState()
                 Toast.makeText(this, "تم اختيار الصورة الشخصية بنجاح 🖼️", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
@@ -507,19 +463,7 @@ class VideoStudioActivity : AppCompatActivity() {
         videoMotionView.customAudioUri = uri
         populateAudioPresets()
         updateConfig()
-        updatePublishCommunityState()
         Toast.makeText(this, "تم اختيار الملف الصوتي بنجاح 🎵", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun updatePublishCommunityState() {
-        val isUsingCustomMedia = (selectedMotion == "CUSTOM_IMAGE" || customAudioUri != null || selectedAudio == "custom")
-        if (isUsingCustomMedia) {
-            layoutCustomMediaWarning.visibility = View.VISIBLE
-            btnPublishCommunity.visibility = View.GONE
-        } else {
-            layoutCustomMediaWarning.visibility = View.GONE
-            btnPublishCommunity.visibility = View.VISIBLE
-        }
     }
 
     private fun updateConfig() {
@@ -610,169 +554,6 @@ class VideoStudioActivity : AppCompatActivity() {
                 Toast.makeText(this, "حدث خطأ أثناء تصدير الفيديو: ${exc.message}", Toast.LENGTH_LONG).show()
             }
         )
-    }
-
-    private fun publishVirtualVideoToCommunity() {
-        val user = AuthManager.currentUser ?: AuthManager.auth.currentUser
-        if (user == null) {
-            pendingPublishAfterLogin = true
-            showLoginDialog()
-            return
-        }
-
-        val authorId = user.uid
-        val authorName = postAuthorName
-        val authorUsername = postAuthorUsername
-        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val authorPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
-            ?: user.photoUrl?.toString()
-            ?: ""
-
-        Toast.makeText(this, "جاري نشر الفيديو في المجتمع...", Toast.LENGTH_SHORT).show()
-
-        FirestoreManager.publishCommunityVideoPost(
-            authorId = authorId,
-            authorName = authorName,
-            authorUsername = authorUsername,
-            authorPhotoUrl = authorPhoto,
-            content = postContent,
-            bgMotionId = selectedMotion,
-            audioPreset = selectedAudio,
-            animStyle = selectedAnim,
-            videoRatio = selectedRatio,
-            bgId = "card_crimson_brand",
-            fontId = selectedFont,
-            textColor = selectedTextColor,
-            tag = postTag.ifEmpty { "فيديو" },
-            authorBadge = postAuthorBadge,
-            onSuccess = {
-                Toast.makeText(this, "تم نشر الفيديو بنجاح في مجتمع منشوراتي! 🎉", Toast.LENGTH_LONG).show()
-                finish()
-            },
-            onFailure = { e ->
-                Toast.makeText(this, "فشل نشر الفيديو: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        )
-    }
-
-    private fun showLoginDialog() {
-        val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.dialog_google_login, null)
-        dialog.setContentView(view)
-        loginDialog = dialog
-
-        val btnGoogle = view.findViewById<Button>(R.id.btnGoogleSignIn)
-        val etAuthDisplayName = view.findViewById<EditText>(R.id.etAuthDisplayName)
-        val etAuthEmail = view.findViewById<EditText>(R.id.etAuthEmail)
-        val etAuthPassword = view.findViewById<EditText>(R.id.etAuthPassword)
-        val tvAuthError = view.findViewById<TextView>(R.id.tvAuthError)
-        val btnSubmitEmailAuth = view.findViewById<Button>(R.id.btnSubmitEmailAuth)
-        val tvToggleAuthMode = view.findViewById<TextView>(R.id.tvToggleAuthMode)
-        val tvForgotPassword = view.findViewById<TextView>(R.id.tvForgotPassword)
-
-        var isSignUpMode = false
-
-        fun updateAuthUIMode() {
-            tvAuthError.visibility = View.GONE
-            if (isSignUpMode) {
-                etAuthDisplayName.visibility = View.VISIBLE
-                btnSubmitEmailAuth.text = getString(R.string.sign_up_btn)
-                tvToggleAuthMode.text = getString(R.string.already_have_account)
-                tvForgotPassword.visibility = View.GONE
-            } else {
-                etAuthDisplayName.visibility = View.GONE
-                btnSubmitEmailAuth.text = getString(R.string.sign_in_btn)
-                tvToggleAuthMode.text = getString(R.string.dont_have_account)
-                tvForgotPassword.visibility = View.VISIBLE
-            }
-        }
-        updateAuthUIMode()
-
-        tvToggleAuthMode.setOnClickListener {
-            isSignUpMode = !isSignUpMode
-            updateAuthUIMode()
-        }
-
-        tvForgotPassword.setOnClickListener {
-            val email = etAuthEmail.text.toString().trim()
-            if (email.isEmpty()) {
-                Toast.makeText(this, getString(R.string.enter_email_to_reset), Toast.LENGTH_LONG).show()
-                etAuthEmail.requestFocus()
-                return@setOnClickListener
-            }
-            AuthManager.sendPasswordReset(email,
-                onSuccess = {
-                    Toast.makeText(this, getString(R.string.reset_link_sent), Toast.LENGTH_LONG).show()
-                },
-                onFailure = { err ->
-                    tvAuthError.text = err
-                    tvAuthError.visibility = View.VISIBLE
-                }
-            )
-        }
-
-        btnGoogle.setOnClickListener {
-            val client = AuthManager.getGoogleClient(this)
-            googleSignInLauncher.launch(client.signInIntent)
-        }
-
-        btnSubmitEmailAuth.setOnClickListener {
-            val email = etAuthEmail.text.toString().trim()
-            val password = etAuthPassword.text.toString().trim()
-            val displayName = etAuthDisplayName.text.toString().trim()
-
-            if (email.isEmpty()) {
-                tvAuthError.text = "يرجى كتابة البريد الإلكتروني"
-                tvAuthError.visibility = View.VISIBLE
-                return@setOnClickListener
-            }
-            if (password.length < 6) {
-                tvAuthError.text = "يجب أن تكون كلمة المرور 6 أحرف على الأقل"
-                tvAuthError.visibility = View.VISIBLE
-                return@setOnClickListener
-            }
-
-            tvAuthError.visibility = View.GONE
-            btnSubmitEmailAuth.isEnabled = false
-
-            if (isSignUpMode) {
-                AuthManager.signUpWithEmail(email, password, displayName,
-                    onSuccess = { _ ->
-                        btnSubmitEmailAuth.isEnabled = true
-                        dialog.dismiss()
-                        Toast.makeText(this, "تم إنشاء الحساب بنجاح! 🎉", Toast.LENGTH_SHORT).show()
-                        if (pendingPublishAfterLogin) {
-                            pendingPublishAfterLogin = false
-                            publishVirtualVideoToCommunity()
-                        }
-                    },
-                    onFailure = { err ->
-                        btnSubmitEmailAuth.isEnabled = true
-                        tvAuthError.text = err
-                        tvAuthError.visibility = View.VISIBLE
-                    }
-                )
-            } else {
-                AuthManager.signInWithEmail(email, password,
-                    onSuccess = { _ ->
-                        btnSubmitEmailAuth.isEnabled = true
-                        dialog.dismiss()
-                        Toast.makeText(this, "تم تسجيل الدخول بنجاح! 🎉", Toast.LENGTH_SHORT).show()
-                        if (pendingPublishAfterLogin) {
-                            pendingPublishAfterLogin = false
-                            publishVirtualVideoToCommunity()
-                        }
-                    },
-                    onFailure = { err ->
-                        btnSubmitEmailAuth.isEnabled = true
-                        tvAuthError.text = err
-                        tvAuthError.visibility = View.VISIBLE
-                    }
-                )
-            }
-        }
-
-        dialog.show()
     }
 
     override fun onResume() {

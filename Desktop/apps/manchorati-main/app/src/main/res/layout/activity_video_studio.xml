@@ -219,38 +219,7 @@
                     android:textSize="10.5sp" />
             </LinearLayout>
 
-            <!-- 2.3 Privacy Warning Pill for Custom Media -->
-            <LinearLayout
-                android:id="@+id/layoutCustomMediaWarning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_card_white"
-                android:backgroundTint="#1F991B1B"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔒"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:text="محتوى مخصص: متاح للتصدير والمشاركة على واتساب وتطبيقات التواصل فقط (لحفظ الخصوصية وحقوق الملكية)."
-                    android:textColor="#FCA5A5"
-                    android:textSize="11sp" />
-            </LinearLayout>
-
-            <!-- 2.4 Modern Category Tab Strip (Dock Style) -->
+            <!-- 2.3 Modern Category Tab Strip (Dock Style) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -395,124 +364,88 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#0D131F"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingHorizontal="16dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="12dp"
+        android:paddingBottom="14dp">
 
-        <!-- Top Action Row -->
+        <!-- Share to WhatsApp Status -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="horizontal">
-
-            <!-- Share to WhatsApp Status -->
-            <LinearLayout
-                android:id="@+id/btnShareWhatsApp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_button_gradient_primary"
-                android:backgroundTint="#059669"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_whatsapp"
-                    app:tint="#FFFFFF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="حالة واتساب 🟢"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Save MP4 to Gallery -->
-            <LinearLayout
-                android:id="@+id/btnSaveGallery"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_button_gradient_primary"
-                android:backgroundTint="#1E293B"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_download"
-                    app:tint="#FFFFFF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="حفظ الفيديو 💾"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- General Share -->
-            <FrameLayout
-                android:id="@+id/btnShareGeneral"
-                android:layout_width="44dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_button_gradient_primary"
-                android:backgroundTint="#0284C7"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_share_card"
-                    app:tint="#FFFFFF" />
-            </FrameLayout>
-        </LinearLayout>
-
-        <!-- Bottom Row: Publish to Community (Virtual Video) -->
-        <LinearLayout
-            android:id="@+id/btnPublishCommunity"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="8dp"
+            android:id="@+id/btnShareWhatsApp"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_button_gradient_primary"
-            android:backgroundTint="#EF4444"
+            android:backgroundTint="#059669"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_video_reel"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_whatsapp"
                 app:tint="#FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="نشر كفيديو في مجتمع منشوراتي 🌐"
+                android:text="حالة واتساب"
                 android:textColor="#FFFFFF"
-                android:textSize="12.5sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- Save MP4 to Gallery -->
+        <LinearLayout
+            android:id="@+id/btnSaveGallery"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1.2"
+            android:background="@drawable/bg_button_gradient_primary"
+            android:backgroundTint="#1E293B"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_download"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="حفظ الفيديو 💾"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- General Share -->
+        <FrameLayout
+            android:id="@+id/btnShareGeneral"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_button_gradient_primary"
+            android:backgroundTint="#0284C7"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_share_card"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

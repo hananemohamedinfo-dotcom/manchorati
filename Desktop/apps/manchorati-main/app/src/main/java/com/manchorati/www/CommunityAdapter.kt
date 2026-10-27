@@ -91,7 +91,7 @@ class CommunityAdapter(
             tvUsername.text = "@${post.authorUsername}"
             tvContent.text = post.content
 
-            val isVideo = post.postType == "VIDEO"
+            val isVideo = false
             if (isVideo) {
                 badgeVideoReel.visibility = View.VISIBLE
                 btnCardPlayVideo.visibility = View.VISIBLE
