@@ -300,8 +300,8 @@ object VideoExporter {
             if (decoded != null && decoded.isNotEmpty()) return decoded
         }
 
-        // 3. Mute
-        if (audioPreset == "mute") {
+        // 3. Mute or Silence
+        if (audioPreset.lowercase() in listOf("mute", "none", "off", "silent")) {
             return ByteArray(totalBytesNeeded) // Silence
         }
 

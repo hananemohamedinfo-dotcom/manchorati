@@ -27,7 +27,10 @@ object VideoMotionRenderer {
         var customImageBitmap: Bitmap? = null,
         val showTag: Boolean = false,
         val showAuthor: Boolean = true,
-        val downloadedAudioPath: String? = null
+        val downloadedAudioPath: String? = null,
+        val animSpeed: Float = 1.0f, // 0.5f, 1.0f, 1.5f, 2.0f, 3.0f
+        val imageFramingMode: String = "cover", // "cover", "fit_blur", "zoom"
+        val imageFocusY: Float = 0.5f // 0.0f = top, 0.5f = center, 1.0f = bottom
     )
 
     // Pre-allocated deterministic particles
@@ -253,9 +256,12 @@ object VideoMotionRenderer {
         var scale = 1.0f
         var translateY = 0f
 
+        val speed = config.animSpeed.coerceIn(0.2f, 5.0f)
+        val animProgress = (progress * speed).coerceIn(0f, 1f)
+
         when (config.animStyle.lowercase()) {
             "typewriter" -> {
-                val typeRatio = (progress / 0.65f).coerceIn(0f, 1f)
+                val typeRatio = (animProgress / 0.70f).coerceIn(0f, 1f)
                 val charCount = (config.content.length * typeRatio).toInt()
                 val isBlinking = ((loopTimeMs / 380) % 2 == 0L) && typeRatio < 1.0f
                 textToDraw = config.content.take(charCount) + (if (isBlinking) " |" else "")
@@ -263,32 +269,32 @@ object VideoMotionRenderer {
             "word_by_word" -> {
                 val words = config.content.split(Regex("\\s+")).filter { it.isNotEmpty() }
                 if (words.isNotEmpty()) {
-                    val wordRatio = (progress / 0.70f).coerceIn(0f, 1f)
+                    val wordRatio = (animProgress / 0.75f).coerceIn(0f, 1f)
                     val visibleCount = maxOf(1, (words.size * wordRatio).toInt().coerceAtMost(words.size))
                     textToDraw = words.take(visibleCount).joinToString(" ")
                 }
             }
             "fade" -> {
-                val fadeProgress = (progress / 0.20f).coerceIn(0f, 1f)
+                val fadeProgress = (animProgress / 0.25f).coerceIn(0f, 1f)
                 textAlpha = (fadeProgress * 255).toInt()
             }
             "zoom" -> {
-                scale = 0.95f + 0.10f * progress
+                scale = 0.95f + 0.10f * animProgress
             }
             "glow" -> {
-                val pulse = 0.5f + 0.5f * sin(progress * 4 * Math.PI.toFloat())
+                val pulse = 0.5f + 0.5f * sin(progress * 4 * Math.PI.toFloat() * speed)
                 val glowRadius = (12f + pulse * 14f) * S
                 textPaint.setShadowLayer(glowRadius, 0f, 0f, Color.parseColor("#38BDF8"))
             }
             "slide_up" -> {
-                val slideProgress = (progress / 0.22f).coerceIn(0f, 1f)
+                val slideProgress = (animProgress / 0.25f).coerceIn(0f, 1f)
                 val ease = 1f - (1f - slideProgress).pow(2)
                 translateY = (1f - ease) * 35f * S
                 textAlpha = (ease * 255).toInt()
             }
             "blur_in" -> {
-                if (progress < 0.22f) {
-                    val blurProgress = 1f - (progress / 0.22f)
+                if (animProgress < 0.25f) {
+                    val blurProgress = 1f - (animProgress / 0.25f)
                     val blurRadius = blurProgress * 12f * S
                     if (blurRadius >= 1f) {
                         textPaint.maskFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL)
@@ -365,26 +371,45 @@ object VideoMotionRenderer {
 
         if (config.customImageBitmap != null) {
             val bmp = config.customImageBitmap!!
-            val kenBurnsScale = 1.0f + 0.08f * progress
-            val kenBurnsShift = (progress - 0.5f) * (w * 0.04f)
+            val kenBurnsScale = 1.0f + 0.05f * sin(progress * Math.PI.toFloat())
+            val kenBurnsShift = 8f * sin(progress * 2 * Math.PI.toFloat()) * S
+            val focusY = config.imageFocusY.coerceIn(0f, 1f)
 
             canvas.save()
-            canvas.translate(w / 2f + kenBurnsShift, h / 2f)
-            canvas.scale(kenBurnsScale, kenBurnsScale)
-            val srcRect = Rect(0, 0, bmp.width, bmp.height)
-            val dstRatio = w / h
-            val bmpRatio = bmp.width.toFloat() / bmp.height.toFloat()
-            val drawW: Float
-            val drawH: Float
-            if (bmpRatio > dstRatio) {
-                drawH = h
-                drawW = h * bmpRatio
-            } else {
-                drawW = w
-                drawH = w / bmpRatio
+            when (config.imageFramingMode) {
+                "fit_blur" -> {
+                    // Stretched blurred background
+                    val bgDst = RectF(0f, 0f, w, h)
+                    canvas.drawBitmap(bmp, null, bgDst, bgPaint)
+                    canvas.drawColor(Color.parseColor("#99000000"))
+
+                    // Aspect-fit centered
+                    val fitScale = minOf(w / bmp.width.toFloat(), h / bmp.height.toFloat())
+                    val fw = bmp.width.toFloat() * fitScale
+                    val fh = bmp.height.toFloat() * fitScale
+                    val fitDst = RectF((w - fw) / 2f, (h - fh) / 2f, (w + fw) / 2f, (h + fh) / 2f)
+                    canvas.drawBitmap(bmp, null, fitDst, bgPaint)
+                }
+                "zoom" -> {
+                    val baseScale = maxOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * 1.30f * kenBurnsScale
+                    val drawW = bmp.width.toFloat() * baseScale
+                    val drawH = bmp.height.toFloat() * baseScale
+                    val top = -((drawH - h) * focusY)
+                    val left = (w - drawW) / 2f + kenBurnsShift
+                    val dstRect = RectF(left, top, left + drawW, top + drawH)
+                    canvas.drawBitmap(bmp, null, dstRect, bgPaint)
+                }
+                else -> {
+                    // "cover" with focusY alignment
+                    val baseScale = maxOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * kenBurnsScale
+                    val drawW = bmp.width.toFloat() * baseScale
+                    val drawH = bmp.height.toFloat() * baseScale
+                    val top = -((drawH - h) * focusY)
+                    val left = (w - drawW) / 2f + kenBurnsShift
+                    val dstRect = RectF(left, top, left + drawW, top + drawH)
+                    canvas.drawBitmap(bmp, null, dstRect, bgPaint)
+                }
             }
-            val dstRect = RectF(-drawW / 2f, -drawH / 2f, drawW / 2f, drawH / 2f)
-            canvas.drawBitmap(bmp, srcRect, dstRect, bgPaint)
             canvas.restore()
 
             // Dark vignette overlay

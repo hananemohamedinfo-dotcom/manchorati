@@ -197,7 +197,7 @@ class VideoMotionView @JvmOverloads constructor(
 
     private fun startAudio() {
         stopAudio()
-        if (config.audioPreset == "mute") return
+        if (config.audioPreset.lowercase() in listOf("mute", "none", "off", "silent")) return
 
         try {
             // 1. Downloaded Audio file path
