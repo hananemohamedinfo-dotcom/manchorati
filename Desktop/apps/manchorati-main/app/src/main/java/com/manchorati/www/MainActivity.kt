@@ -608,6 +608,11 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
+        findViewById<View>(R.id.btnDrawerVideoStudio)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, VideoStudioActivity::class.java))
+        }
+
         val switchDarkMode = findViewById<SwitchCompat>(R.id.switchDarkMode)
         val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
         val currentDark = themePrefs.getBoolean("is_dark_mode", true)

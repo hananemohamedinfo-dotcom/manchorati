@@ -1,0 +1,749 @@
+package com.manchorati.www
+
+import android.app.Dialog
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.Window
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.File
+import java.io.InputStream
+
+class VideoStudioActivity : AppCompatActivity() {
+
+    private lateinit var videoMotionView: VideoMotionView
+    private lateinit var btnPlayPauseOverlay: FrameLayout
+    private lateinit var ivPlayPauseIcon: ImageView
+    private lateinit var layoutCustomMediaWarning: LinearLayout
+
+    // Ratio & Duration
+    private lateinit var btnRatioStory: TextView
+    private lateinit var btnRatioSquare: TextView
+    private lateinit var btnDur5s: TextView
+    private lateinit var btnDur10s: TextView
+    private lateinit var btnDur15s: TextView
+
+    // Tabs
+    private lateinit var tabMotion: TextView
+    private lateinit var tabAudio: TextView
+    private lateinit var tabStyle: TextView
+    private lateinit var scrollMotion: HorizontalScrollView
+    private lateinit var scrollAudio: HorizontalScrollView
+    private lateinit var layoutStyleSettings: LinearLayout
+
+    // Containers
+    private lateinit var layoutMotionPresets: LinearLayout
+    private lateinit var layoutAudioPresets: LinearLayout
+    private lateinit var layoutFontPresets: LinearLayout
+
+    // Anim Styles
+    private lateinit var btnAnimTypewriter: TextView
+    private lateinit var btnAnimFade: TextView
+    private lateinit var btnAnimZoom: TextView
+
+    // Actions
+    private lateinit var btnSaveGallery: LinearLayout
+    private lateinit var btnShareWhatsApp: LinearLayout
+    private lateinit var btnShareGeneral: LinearLayout
+    private lateinit var btnPublishCommunity: LinearLayout
+
+    // State
+    private var selectedMotion = "STARS"
+    private var selectedAudio = "piano"
+    private var selectedAnim = "typewriter"
+    private var selectedRatio = "9:16"
+    private var selectedDuration = 10
+    private var selectedFont = "tajawal"
+    private var selectedTextColor = "#FFFFFF"
+
+    private var customImageBitmap: Bitmap? = null
+    private var customAudioUri: Uri? = null
+
+    private var postContent = ""
+    private var postAuthorName = ""
+    private var postAuthorUsername = ""
+    private var postAuthorBadge = ""
+    private var postTag = ""
+
+    private var loginDialog: BottomSheetDialog? = null
+    private var pendingPublishAfterLogin = false
+
+    // Image Picker
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            loadCustomImage(uri)
+        }
+    }
+
+    // Audio Picker
+    private val pickAudioLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            loadCustomAudio(uri)
+        }
+    }
+
+    // Google Sign-In
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    AuthManager.firebaseAuthWithGoogle(account, { isNewUser ->
+                        loginDialog?.dismiss()
+                        Toast.makeText(this, "تم تسجيل الدخول بنجاح! 🎉", Toast.LENGTH_SHORT).show()
+                        if (pendingPublishAfterLogin) {
+                            pendingPublishAfterLogin = false
+                            publishVirtualVideoToCommunity()
+                        }
+                    }, { errorMsg ->
+                        Toast.makeText(this, "فشل تسجيل الدخول: $errorMsg", Toast.LENGTH_LONG).show()
+                    })
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "خطأ تسجيل الدخول: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_video_studio)
+
+        initIntentData()
+        initViews()
+        setupListeners()
+        populateMotionPresets()
+        populateAudioPresets()
+        populateFontPresets()
+        updateConfig()
+        updatePublishCommunityState()
+    }
+
+    private fun initIntentData() {
+        postContent = intent.getStringExtra("EXTRA_CONTENT") ?: "كل لحظة هي بداية جديدة، فاصنع منها ما يستحق أن يُذكر."
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val user = AuthManager.currentUser
+
+        postAuthorName = intent.getStringExtra("EXTRA_AUTHOR_NAME")
+            ?: prefs.getString("user_name", "")?.takeIf { it.isNotEmpty() }
+            ?: user?.displayName
+            ?: "من منشوراتي"
+
+        postAuthorUsername = intent.getStringExtra("EXTRA_AUTHOR_USERNAME")
+            ?: prefs.getString("user_username", "")?.takeIf { it.isNotEmpty() }
+            ?: "manchorati"
+
+        postAuthorBadge = intent.getStringExtra("EXTRA_AUTHOR_BADGE")
+            ?: BadgeHelper.getCachedBadge(user?.uid ?: "")?.iconEmoji
+            ?: ""
+
+        postTag = intent.getStringExtra("EXTRA_TAG") ?: "حكمة"
+        selectedFont = intent.getStringExtra("EXTRA_FONT_ID") ?: "tajawal"
+        selectedTextColor = intent.getStringExtra("EXTRA_TEXT_COLOR") ?: "#FFFFFF"
+        selectedMotion = intent.getStringExtra("EXTRA_BG_MOTION_ID") ?: "STARS"
+        selectedAudio = intent.getStringExtra("EXTRA_AUDIO_PRESET") ?: "piano"
+        selectedAnim = intent.getStringExtra("EXTRA_ANIM_STYLE") ?: "typewriter"
+        selectedRatio = intent.getStringExtra("EXTRA_VIDEO_RATIO") ?: "9:16"
+    }
+
+    private fun initViews() {
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+
+        videoMotionView = findViewById(R.id.videoMotionView)
+        btnPlayPauseOverlay = findViewById(R.id.btnPlayPauseOverlay)
+        ivPlayPauseIcon = findViewById(R.id.ivPlayPauseIcon)
+        layoutCustomMediaWarning = findViewById(R.id.layoutCustomMediaWarning)
+
+        btnRatioStory = findViewById(R.id.btnRatioStory)
+        btnRatioSquare = findViewById(R.id.btnRatioSquare)
+        btnDur5s = findViewById(R.id.btnDur5s)
+        btnDur10s = findViewById(R.id.btnDur10s)
+        btnDur15s = findViewById(R.id.btnDur15s)
+
+        tabMotion = findViewById(R.id.tabMotion)
+        tabAudio = findViewById(R.id.tabAudio)
+        tabStyle = findViewById(R.id.tabStyle)
+        scrollMotion = findViewById(R.id.scrollMotion)
+        scrollAudio = findViewById(R.id.scrollAudio)
+        layoutStyleSettings = findViewById(R.id.layoutStyleSettings)
+
+        layoutMotionPresets = findViewById(R.id.layoutMotionPresets)
+        layoutAudioPresets = findViewById(R.id.layoutAudioPresets)
+        layoutFontPresets = findViewById(R.id.layoutFontPresets)
+
+        btnAnimTypewriter = findViewById(R.id.btnAnimTypewriter)
+        btnAnimFade = findViewById(R.id.btnAnimFade)
+        btnAnimZoom = findViewById(R.id.btnAnimZoom)
+
+        btnSaveGallery = findViewById(R.id.btnSaveGallery)
+        btnShareWhatsApp = findViewById(R.id.btnShareWhatsApp)
+        btnShareGeneral = findViewById(R.id.btnShareGeneral)
+        btnPublishCommunity = findViewById(R.id.btnPublishCommunity)
+    }
+
+    private fun setupListeners() {
+        // Play / Pause
+        btnPlayPauseOverlay.setOnClickListener {
+            videoMotionView.togglePlay()
+        }
+        videoMotionView.onPlayStateChanged = { isPlaying ->
+            ivPlayPauseIcon.setImageResource(
+                if (isPlaying) R.drawable.ic_video_pause else R.drawable.ic_video_play
+            )
+        }
+
+        // Ratio Toggle
+        btnRatioStory.setOnClickListener {
+            selectedRatio = "9:16"
+            btnRatioStory.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnRatioStory.setTextColor(Color.WHITE)
+            btnRatioSquare.background = null
+            btnRatioSquare.setTextColor(Color.parseColor("#94A3B8"))
+            updateConfig()
+        }
+        btnRatioSquare.setOnClickListener {
+            selectedRatio = "1:1"
+            btnRatioSquare.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnRatioSquare.setTextColor(Color.WHITE)
+            btnRatioStory.background = null
+            btnRatioStory.setTextColor(Color.parseColor("#94A3B8"))
+            updateConfig()
+        }
+
+        // Duration Selectors
+        val durBtns = listOf(btnDur5s to 5, btnDur10s to 10, btnDur15s to 15)
+        for ((btn, sec) in durBtns) {
+            btn.setOnClickListener {
+                selectedDuration = sec
+                for ((b, _) in durBtns) {
+                    if (b == btn) {
+                        b.setBackgroundResource(R.drawable.bg_segment_btn_active)
+                        b.setTextColor(Color.WHITE)
+                    } else {
+                        b.background = null
+                        b.setTextColor(Color.parseColor("#94A3B8"))
+                    }
+                }
+                updateConfig()
+                videoMotionView.restart()
+            }
+        }
+
+        // Tabs Toggle
+        tabMotion.setOnClickListener { switchTab(0) }
+        tabAudio.setOnClickListener { switchTab(1) }
+        tabStyle.setOnClickListener { switchTab(2) }
+
+        // Anim Styles
+        btnAnimTypewriter.setOnClickListener {
+            selectedAnim = "typewriter"
+            highlightAnimBtn(btnAnimTypewriter)
+            updateConfig()
+            videoMotionView.restart()
+        }
+        btnAnimFade.setOnClickListener {
+            selectedAnim = "fade"
+            highlightAnimBtn(btnAnimFade)
+            updateConfig()
+            videoMotionView.restart()
+        }
+        btnAnimZoom.setOnClickListener {
+            selectedAnim = "zoom"
+            highlightAnimBtn(btnAnimZoom)
+            updateConfig()
+            videoMotionView.restart()
+        }
+
+        // Bottom Actions
+        btnSaveGallery.setOnClickListener {
+            startExport(onComplete = { file ->
+                val uri = VideoExporter.saveVideoToGallery(this, file, postAuthorName)
+                if (uri != null) {
+                    Toast.makeText(this, "تم حفظ الفيديو بنجاح في ألبوم Manchorati! 🎉", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "حدث خطأ أثناء حفظ الفيديو", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        btnShareWhatsApp.setOnClickListener {
+            startExport(onComplete = { file ->
+                VideoExporter.shareVideoToWhatsApp(this, file)
+            })
+        }
+
+        btnShareGeneral.setOnClickListener {
+            startExport(onComplete = { file ->
+                VideoExporter.shareVideoGeneral(this, file)
+            })
+        }
+
+        btnPublishCommunity.setOnClickListener {
+            publishVirtualVideoToCommunity()
+        }
+    }
+
+    private fun switchTab(tabIndex: Int) {
+        val tabs = listOf(tabMotion, tabAudio, tabStyle)
+        for (i in tabs.indices) {
+            if (i == tabIndex) {
+                tabs[i].setBackgroundResource(R.drawable.bg_segment_btn_active)
+                tabs[i].setTextColor(Color.WHITE)
+            } else {
+                tabs[i].background = null
+                tabs[i].setTextColor(Color.parseColor("#94A3B8"))
+            }
+        }
+        scrollMotion.visibility = if (tabIndex == 0) View.VISIBLE else View.GONE
+        scrollAudio.visibility = if (tabIndex == 1) View.VISIBLE else View.GONE
+        layoutStyleSettings.visibility = if (tabIndex == 2) View.VISIBLE else View.GONE
+    }
+
+    private fun highlightAnimBtn(selected: TextView) {
+        val animBtns = listOf(btnAnimTypewriter, btnAnimFade, btnAnimZoom)
+        for (btn in animBtns) {
+            if (btn == selected) {
+                btn.setBackgroundResource(R.drawable.bg_segment_btn_active)
+                btn.setTextColor(Color.WHITE)
+            } else {
+                btn.background = null
+                btn.setTextColor(Color.parseColor("#94A3B8"))
+            }
+        }
+    }
+
+    private fun populateMotionPresets() {
+        layoutMotionPresets.removeAllViews()
+        val presets = listOf(
+            Triple("STARS", "✨ فضاء ونجوم", "#0D162B"),
+            Triple("RAIN", "🌧️ مطر ناعم", "#131C2E"),
+            Triple("AURORA", "🌌 شفق أخضر", "#0A1226"),
+            Triple("GOLD", "✨ جزيئات ذهبية", "#281F18"),
+            Triple("OCEAN", "🌊 أمواج هادئة", "#0A2540"),
+            Triple("CUSTOM_IMAGE", "🖼️ صورة من هاتفي", "#334155")
+        )
+
+        for ((id, title, colorHex) in presets) {
+            val chip = createOptionChip(title, id == selectedMotion, colorHex) {
+                if (id == "CUSTOM_IMAGE") {
+                    pickImageLauncher.launch("image/*")
+                } else {
+                    selectedMotion = id
+                    customImageBitmap = null
+                    populateMotionPresets()
+                    updateConfig()
+                    updatePublishCommunityState()
+                }
+            }
+            layoutMotionPresets.addView(chip)
+        }
+    }
+
+    private fun populateAudioPresets() {
+        layoutAudioPresets.removeAllViews()
+        val audios = listOf(
+            Triple("piano", "🎹 بيانو هادئ", "#0284C7"),
+            Triple("rain", "🌧️ صوت المطر", "#0369A1"),
+            Triple("oud", "🪕 عود شرقي", "#B45309"),
+            Triple("nature", "🍃 نسيم وطبيعة", "#059669"),
+            Triple("mute", "🔇 صامت", "#475569"),
+            Triple("custom", "📁 موسيقى من هاتفي", "#7C3AED")
+        )
+
+        for ((id, title, colorHex) in audios) {
+            val chip = createOptionChip(title, id == selectedAudio, colorHex) {
+                if (id == "custom") {
+                    pickAudioLauncher.launch("audio/*")
+                } else {
+                    selectedAudio = id
+                    customAudioUri = null
+                    videoMotionView.customAudioUri = null
+                    populateAudioPresets()
+                    updateConfig()
+                    updatePublishCommunityState()
+                }
+            }
+            layoutAudioPresets.addView(chip)
+        }
+    }
+
+    private fun populateFontPresets() {
+        layoutFontPresets.removeAllViews()
+        val fonts = listOf(
+            "tajawal" to "تجوال",
+            "amiri" to "أميري",
+            "cairo" to "كايرو",
+            "changa" to "تشانجا",
+            "marhey" to "مرحي",
+            "noto_kufi" to "كوفي"
+        )
+
+        for ((fontId, fontName) in fonts) {
+            val chip = createOptionChip(fontName, fontId == selectedFont, "#1E293B") {
+                selectedFont = fontId
+                populateFontPresets()
+                updateConfig()
+            }
+            layoutFontPresets.addView(chip)
+        }
+    }
+
+    private fun createOptionChip(title: String, isSelected: Boolean, colorHex: String, onClick: () -> Unit): View {
+        val density = resources.displayMetrics.density
+        val tv = TextView(this).apply {
+            text = title
+            textSize = 12f
+            setPadding((14 * density).toInt(), (8 * density).toInt(), (14 * density).toInt(), (8 * density).toInt())
+            setTextColor(Color.WHITE)
+            if (isSelected) {
+                setBackgroundResource(R.drawable.bg_button_gradient_primary)
+                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor(colorHex))
+            } else {
+                setBackgroundResource(R.drawable.bg_card_white)
+                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#1E293B"))
+            }
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                marginEnd = (8 * density).toInt()
+            }
+            layoutParams = params
+            isClickable = true
+            isFocusable = true
+            setOnClickListener { onClick() }
+        }
+        return tv
+    }
+
+    private fun loadCustomImage(uri: Uri) {
+        try {
+            val inputStream: InputStream? = contentResolver.openInputStream(uri)
+            val original = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            if (original != null) {
+                // Scale if too large
+                val maxDim = 1280
+                val scale = minOf(maxDim.toFloat() / original.width, maxDim.toFloat() / original.height, 1.0f)
+                customImageBitmap = if (scale < 1.0f) {
+                    Bitmap.createScaledBitmap(
+                        original,
+                        (original.width * scale).toInt(),
+                        (original.height * scale).toInt(),
+                        true
+                    )
+                } else {
+                    original
+                }
+
+                selectedMotion = "CUSTOM_IMAGE"
+                populateMotionPresets()
+                updateConfig()
+                updatePublishCommunityState()
+                Toast.makeText(this, "تم اختيار الصورة الشخصية بنجاح 🖼️", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "فشل تحميل الصورة: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadCustomAudio(uri: Uri) {
+        customAudioUri = uri
+        selectedAudio = "custom"
+        videoMotionView.customAudioUri = uri
+        populateAudioPresets()
+        updateConfig()
+        updatePublishCommunityState()
+        Toast.makeText(this, "تم اختيار الملف الصوتي بنجاح 🎵", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updatePublishCommunityState() {
+        val isUsingCustomMedia = (selectedMotion == "CUSTOM_IMAGE" || customAudioUri != null || selectedAudio == "custom")
+        if (isUsingCustomMedia) {
+            layoutCustomMediaWarning.visibility = View.VISIBLE
+            btnPublishCommunity.visibility = View.GONE
+        } else {
+            layoutCustomMediaWarning.visibility = View.GONE
+            btnPublishCommunity.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateConfig() {
+        val config = VideoMotionRenderer.VideoConfig(
+            content = postContent,
+            authorName = postAuthorName,
+            authorUsername = postAuthorUsername,
+            authorBadge = postAuthorBadge,
+            tag = postTag,
+            bgMotionId = selectedMotion,
+            audioPreset = selectedAudio,
+            animStyle = selectedAnim,
+            aspectRatio = selectedRatio,
+            durationSec = selectedDuration,
+            fontId = selectedFont,
+            textColor = selectedTextColor,
+            customImageBitmap = customImageBitmap
+        )
+        videoMotionView.config = config
+    }
+
+    private fun startExport(onComplete: (File) -> Unit) {
+        videoMotionView.pause()
+
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(60, 60, 60, 60)
+            setBackgroundColor(Color.parseColor("#0F172A"))
+            gravity = android.view.Gravity.CENTER
+        }
+
+        val tvTitle = TextView(this).apply {
+            text = "🎬 جاري تصدير الفيديو بجودة عالية..."
+            setTextColor(Color.WHITE)
+            textSize = 16f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+        }
+
+        val progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 30
+                bottomMargin = 20
+            }
+            layoutParams = params
+        }
+
+        val tvPercent = TextView(this).apply {
+            text = "0%"
+            setTextColor(Color.parseColor("#38BDF8"))
+            textSize = 14f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+        }
+
+        container.addView(tvTitle)
+        container.addView(progressBar)
+        container.addView(tvPercent)
+
+        dialog.setContentView(container)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+
+        val config = videoMotionView.config
+
+        VideoExporter.exportVideo(
+            context = this,
+            config = config,
+            customAudioUri = customAudioUri,
+            onProgress = { percent ->
+                progressBar.progress = percent
+                tvPercent.text = "$percent%"
+            },
+            onSuccess = { file ->
+                dialog.dismiss()
+                onComplete(file)
+            },
+            onError = { exc ->
+                dialog.dismiss()
+                Toast.makeText(this, "حدث خطأ أثناء تصدير الفيديو: ${exc.message}", Toast.LENGTH_LONG).show()
+            }
+        )
+    }
+
+    private fun publishVirtualVideoToCommunity() {
+        val user = AuthManager.currentUser ?: AuthManager.auth.currentUser
+        if (user == null) {
+            pendingPublishAfterLogin = true
+            showLoginDialog()
+            return
+        }
+
+        val authorId = user.uid
+        val authorName = postAuthorName
+        val authorUsername = postAuthorUsername
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val authorPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            ?: user.photoUrl?.toString()
+            ?: ""
+
+        Toast.makeText(this, "جاري نشر الفيديو في المجتمع...", Toast.LENGTH_SHORT).show()
+
+        FirestoreManager.publishCommunityVideoPost(
+            authorId = authorId,
+            authorName = authorName,
+            authorUsername = authorUsername,
+            authorPhotoUrl = authorPhoto,
+            content = postContent,
+            bgMotionId = selectedMotion,
+            audioPreset = selectedAudio,
+            animStyle = selectedAnim,
+            videoRatio = selectedRatio,
+            bgId = "card_crimson_brand",
+            fontId = selectedFont,
+            textColor = selectedTextColor,
+            tag = postTag.ifEmpty { "فيديو" },
+            authorBadge = postAuthorBadge,
+            onSuccess = {
+                Toast.makeText(this, "تم نشر الفيديو بنجاح في مجتمع منشوراتي! 🎉", Toast.LENGTH_LONG).show()
+                finish()
+            },
+            onFailure = { e ->
+                Toast.makeText(this, "فشل نشر الفيديو: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun showLoginDialog() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.dialog_google_login, null)
+        dialog.setContentView(view)
+        loginDialog = dialog
+
+        val btnGoogle = view.findViewById<Button>(R.id.btnGoogleSignIn)
+        val layoutEmailAuth = view.findViewById<View>(R.id.layoutEmailAuth)
+        val etAuthDisplayName = view.findViewById<EditText>(R.id.etAuthDisplayName)
+        val etAuthEmail = view.findViewById<EditText>(R.id.etAuthEmail)
+        val etAuthPassword = view.findViewById<EditText>(R.id.etAuthPassword)
+        val tvAuthError = view.findViewById<TextView>(R.id.tvAuthError)
+        val btnSubmitEmailAuth = view.findViewById<Button>(R.id.btnSubmitEmailAuth)
+        val tvToggleAuthMode = view.findViewById<TextView>(R.id.tvToggleAuthMode)
+        val tvForgotPassword = view.findViewById<TextView>(R.id.tvForgotPassword)
+
+        var isSignUpMode = false
+
+        fun updateAuthUIMode() {
+            tvAuthError.visibility = View.GONE
+            if (isSignUpMode) {
+                etAuthDisplayName.visibility = View.VISIBLE
+                btnSubmitEmailAuth.text = getString(R.string.sign_up_btn)
+                tvToggleAuthMode.text = getString(R.string.already_have_account)
+                tvForgotPassword.visibility = View.GONE
+            } else {
+                etAuthDisplayName.visibility = View.GONE
+                btnSubmitEmailAuth.text = getString(R.string.sign_in_btn)
+                tvToggleAuthMode.text = getString(R.string.dont_have_account)
+                tvForgotPassword.visibility = View.VISIBLE
+            }
+        }
+        updateAuthUIMode()
+
+        tvToggleAuthMode.setOnClickListener {
+            isSignUpMode = !isSignUpMode
+            updateAuthUIMode()
+        }
+
+        tvForgotPassword.setOnClickListener {
+            val email = etAuthEmail.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(this, getString(R.string.enter_email_to_reset), Toast.LENGTH_LONG).show()
+                etAuthEmail.requestFocus()
+                return@setOnClickListener
+            }
+            AuthManager.sendPasswordReset(email,
+                onSuccess = {
+                    Toast.makeText(this, getString(R.string.reset_link_sent), Toast.LENGTH_LONG).show()
+                },
+                onFailure = { err ->
+                    tvAuthError.text = err
+                    tvAuthError.visibility = View.VISIBLE
+                }
+            )
+        }
+
+        btnGoogle.setOnClickListener {
+            val client = AuthManager.getGoogleClient(this)
+            googleSignInLauncher.launch(client.signInIntent)
+        }
+
+        btnSubmitEmailAuth.setOnClickListener {
+            val email = etAuthEmail.text.toString().trim()
+            val password = etAuthPassword.text.toString().trim()
+            val displayName = etAuthDisplayName.text.toString().trim()
+
+            if (email.isEmpty()) {
+                tvAuthError.text = "يرجى كتابة البريد الإلكتروني"
+                tvAuthError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+            if (password.length < 6) {
+                tvAuthError.text = "يجب أن تكون كلمة المرور 6 أحرف على الأقل"
+                tvAuthError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+
+            tvAuthError.visibility = View.GONE
+            btnSubmitEmailAuth.isEnabled = false
+
+            if (isSignUpMode) {
+                AuthManager.signUpWithEmail(email, password, displayName,
+                    onSuccess = { _ ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        dialog.dismiss()
+                        Toast.makeText(this, "تم إنشاء الحساب بنجاح! 🎉", Toast.LENGTH_SHORT).show()
+                        if (pendingPublishAfterLogin) {
+                            pendingPublishAfterLogin = false
+                            publishVirtualVideoToCommunity()
+                        }
+                    },
+                    onFailure = { err ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        tvAuthError.text = err
+                        tvAuthError.visibility = View.VISIBLE
+                    }
+                )
+            } else {
+                AuthManager.signInWithEmail(email, password,
+                    onSuccess = { _ ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        dialog.dismiss()
+                        Toast.makeText(this, "تم تسجيل الدخول بنجاح! 🎉", Toast.LENGTH_SHORT).show()
+                        if (pendingPublishAfterLogin) {
+                            pendingPublishAfterLogin = false
+                            publishVirtualVideoToCommunity()
+                        }
+                    },
+                    onFailure = { err ->
+                        btnSubmitEmailAuth.isEnabled = true
+                        tvAuthError.text = err
+                        tvAuthError.visibility = View.VISIBLE
+                    }
+                )
+            }
+        }
+
+        dialog.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        videoMotionView.play()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoMotionView.pause()
+    }
+}

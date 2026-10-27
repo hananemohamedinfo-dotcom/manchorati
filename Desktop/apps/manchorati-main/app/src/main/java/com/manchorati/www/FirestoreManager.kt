@@ -96,6 +96,61 @@ fun listenToUserPosts(
             }
             .addOnFailureListener { onFailure(it) }
     }
+    fun publishCommunityVideoPost(
+        authorId: String,
+        authorName: String,
+        authorUsername: String,
+        authorPhotoUrl: String,
+        content: String,
+        bgMotionId: String,
+        audioPreset: String,
+        animStyle: String = "typewriter",
+        videoRatio: String = "9:16",
+        bgId: String = "card_crimson_brand",
+        fontId: String = "tajawal",
+        textColor: String = "#FFFFFF",
+        tag: String = "فيديو",
+        authorBadge: String = "",
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val resolvedBadge = if (authorBadge.isNotEmpty()) {
+            authorBadge
+        } else {
+            BadgeHelper.getCachedBadge(authorId)?.id ?: ""
+        }
+
+        val postMap = hashMapOf(
+            "authorId" to authorId,
+            "authorName" to authorName,
+            "authorUsername" to authorUsername,
+            "authorPhotoUrl" to authorPhotoUrl,
+            "content" to content,
+            "bgId" to bgId,
+            "fontId" to fontId,
+            "textColor" to textColor,
+            "tag" to tag,
+            "authorBadge" to resolvedBadge,
+            "likesCount" to 0L,
+            "commentsCount" to 0L,
+            "likedBy" to emptyList<String>(),
+            "timestamp" to System.currentTimeMillis(),
+            "postType" to "VIDEO",
+            "bgMotionId" to bgMotionId,
+            "audioPreset" to audioPreset,
+            "animStyle" to animStyle,
+            "videoRatio" to videoRatio
+        )
+
+        db.collection("community_posts")
+            .add(postMap)
+            .addOnSuccessListener { docRef ->
+                notifyFollowersOfNewPost(authorId, authorName, docRef.id)
+                onSuccess()
+            }
+            .addOnFailureListener { onFailure(it) }
+    }
+
 
     private fun notifyFollowersOfNewPost(authorId: String, authorName: String, postId: String) {
         if (authorId.isEmpty() || postId.isEmpty()) return

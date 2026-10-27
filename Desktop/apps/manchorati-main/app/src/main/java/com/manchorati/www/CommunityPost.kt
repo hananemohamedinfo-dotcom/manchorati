@@ -19,7 +19,12 @@ data class CommunityPost(
     val reportCount: Long = 0,
     val likedBy: List<String> = emptyList(),
     val authorBadge: String = "",
-    val timestamp: Any? = null
+    val timestamp: Any? = null,
+    val postType: String = "TEXT",
+    val bgMotionId: String = "",
+    val audioPreset: String = "",
+    val animStyle: String = "typewriter",
+    val videoRatio: String = "9:16"
 )
 
 fun CommunityPost.getTimeMillis(): Long {

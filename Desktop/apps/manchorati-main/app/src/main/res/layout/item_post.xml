@@ -56,6 +56,16 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
+            <!-- زر تحويل المنشور إلى فيديو / ستوري متحرك -->
+            <ImageView
+                android:id="@+id/btnShareAsVideo"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@drawable/ic_video_reel"
+                app:tint="@color/text_secondary" />
+
             <!-- زر حفظ ومشاركة كصورة -->
             <ImageView
                 android:id="@+id/btnShareAsImage"

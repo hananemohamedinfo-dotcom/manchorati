@@ -3,6 +3,7 @@ package com.manchorati.www
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -63,6 +64,8 @@ class CommunityAdapter(
         private val tvPostTag: TextView = itemView.findViewById(R.id.tvPostTag)
         private val btnPostMenu: ImageView = itemView.findViewById(R.id.btnPostMenu)
 
+        private val badgeVideoReel: LinearLayout = itemView.findViewById(R.id.badgeVideoReel)
+        private val btnCardPlayVideo: FrameLayout = itemView.findViewById(R.id.btnCardPlayVideo)
         private val layoutPostCard: FrameLayout = itemView.findViewById(R.id.layoutPostCard)
         private val tvContent: TextView = itemView.findViewById(R.id.tvContent)
         private val ivDoubleTapHeart: ImageView = itemView.findViewById(R.id.ivDoubleTapHeart)
@@ -87,6 +90,19 @@ class CommunityAdapter(
             tvAuthor.text = post.authorName
             tvUsername.text = "@${post.authorUsername}"
             tvContent.text = post.content
+
+            val isVideo = post.postType == "VIDEO"
+            if (isVideo) {
+                badgeVideoReel.visibility = View.VISIBLE
+                btnCardPlayVideo.visibility = View.VISIBLE
+                btnCardPlayVideo.setOnClickListener {
+                    openReelPlayer(itemView.context, post)
+                }
+            } else {
+                badgeVideoReel.visibility = View.GONE
+                btnCardPlayVideo.visibility = View.GONE
+            }
+
 
             // 1. شارة تصنيف ورتبة الكاتب (تظهر دائماً بجانب اسمه)
             val initialBadge = BadgeHelper.getBadgeForPost(post)
@@ -199,6 +215,13 @@ class CommunityAdapter(
                     lastCardClickTime = 0L
                 } else {
                     lastCardClickTime = now
+                    if (isVideo) {
+                        layoutPostCard.postDelayed({
+                            if (lastCardClickTime != 0L) {
+                                openReelPlayer(itemView.context, post)
+                            }
+                        }, 360)
+                    }
                 }
             }
 
@@ -252,7 +275,11 @@ class CommunityAdapter(
             btnPostMenu.setOnClickListener { view ->
                 val ctx = view.context
                 val popup = PopupMenu(ctx, view)
-                popup.menu.add(0, 14, 0, "مشاركة في حالة واتساب 🟢")
+                if (isVideo) {
+                    popup.menu.add(0, 15, 0, "تشغيل الريل / الفيديو 🎬")
+                }
+                popup.menu.add(0, 16, 1, "تحويل إلى فيديو / ستوري 🎬")
+                popup.menu.add(0, 14, 2, "مشاركة في حالة واتساب 🟢")
                 popup.menu.add(0, 13, 1, ctx.getString(R.string.download_post_image))
                 popup.menu.add(0, 10, 2, ctx.getString(R.string.post_action_share_story))
                 popup.menu.add(0, 11, 3, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
@@ -267,6 +294,25 @@ class CommunityAdapter(
 
                 popup.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
+                        15 -> openReelPlayer(view.context, post)
+                        16 -> {
+                            val vIntent = Intent(view.context, VideoStudioActivity::class.java).apply {
+                                putExtra("EXTRA_CONTENT", post.content)
+                                putExtra("EXTRA_AUTHOR_NAME", post.authorName)
+                                putExtra("EXTRA_AUTHOR_USERNAME", post.authorUsername)
+                                putExtra("EXTRA_AUTHOR_BADGE", post.authorBadge)
+                                putExtra("EXTRA_TAG", post.tag)
+                                putExtra("EXTRA_FONT_ID", post.fontId)
+                                putExtra("EXTRA_TEXT_COLOR", post.textColor)
+                                if (post.postType == "VIDEO") {
+                                    putExtra("EXTRA_BG_MOTION_ID", post.bgMotionId)
+                                    putExtra("EXTRA_AUDIO_PRESET", post.audioPreset)
+                                    putExtra("EXTRA_ANIM_STYLE", post.animStyle)
+                                    putExtra("EXTRA_VIDEO_RATIO", post.videoRatio)
+                                }
+                            }
+                            view.context.startActivity(vIntent)
+                        }
                         14 -> StoryShareHelper.sharePostToWhatsApp(view.context, post)
                         13 -> StoryShareHelper.savePostImageToGallery(view.context, post)
                         10 -> StoryShareHelper.sharePostAsStory(view.context, post)
@@ -340,6 +386,27 @@ class CommunityAdapter(
                 ivBookmark.setImageResource(R.drawable.ic_bookmark_outline)
                 ivBookmark.setColorFilter(Color.parseColor("#64748B"))
             }
+        }
+
+
+        private fun openReelPlayer(context: Context, post: CommunityPost) {
+            val intent = Intent(context, ReelPlayerActivity::class.java).apply {
+                putExtra("EXTRA_POST_ID", post.id)
+                putExtra("EXTRA_CONTENT", post.content)
+                putExtra("EXTRA_AUTHOR_NAME", post.authorName)
+                putExtra("EXTRA_AUTHOR_USERNAME", post.authorUsername)
+                putExtra("EXTRA_AUTHOR_BADGE", post.authorBadge)
+                putExtra("EXTRA_TAG", post.tag)
+                putExtra("EXTRA_BG_MOTION_ID", post.bgMotionId.ifEmpty { "STARS" })
+                putExtra("EXTRA_AUDIO_PRESET", post.audioPreset.ifEmpty { "piano" })
+                putExtra("EXTRA_ANIM_STYLE", post.animStyle.ifEmpty { "typewriter" })
+                putExtra("EXTRA_VIDEO_RATIO", post.videoRatio.ifEmpty { "9:16" })
+                putExtra("EXTRA_FONT_ID", post.fontId)
+                putExtra("EXTRA_TEXT_COLOR", post.textColor)
+                putExtra("EXTRA_LIKES_COUNT", post.likesCount)
+                putStringArrayListExtra("EXTRA_LIKED_BY", ArrayList(post.likedBy))
+            }
+            context.startActivity(intent)
         }
 
         private fun showDoubleTapHeartBurst() {

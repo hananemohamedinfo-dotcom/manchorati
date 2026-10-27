@@ -26,6 +26,7 @@ class PostAdapter(
         val tvCategory: TextView = itemView.findViewById(R.id.tvCategoryName)
         val btnShareGeneral: ImageView = itemView.findViewById(R.id.btnShareGeneral)
         val btnShareWhatsapp: ImageView = itemView.findViewById(R.id.btnShareWhatsapp)
+        val btnShareAsVideo: ImageView = itemView.findViewById(R.id.btnShareAsVideo)
         val btnShareAsImage: ImageView = itemView.findViewById(R.id.btnShareAsImage)
         val btnCopy: ImageView = itemView.findViewById(R.id.btnCopyPost)
         val btnFavorite: ImageView = itemView.findViewById(R.id.btnFavorite)
@@ -55,6 +56,15 @@ class PostAdapter(
                 context.getString(R.string.post_removed_from_favorites)
             }
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+
+        // فتح استوديو صانع الفيديو لتحويل المنشور إلى ريل أو ستوري
+        holder.btnShareAsVideo.setOnClickListener {
+            val intent = Intent(context, VideoStudioActivity::class.java).apply {
+                putExtra("EXTRA_CONTENT", post.content)
+                putExtra("EXTRA_TAG", post.categoryName)
+            }
+            context.startActivity(intent)
         }
 
         // فتح نافذة المعاينة ومحرر البطاقة واختيار الصورة
