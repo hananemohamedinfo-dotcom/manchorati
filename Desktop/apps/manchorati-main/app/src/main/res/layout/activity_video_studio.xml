@@ -4,449 +4,211 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#080C14"
+    android:background="#0A0A0A"
     android:orientation="vertical">
 
-    <!-- 1. Top Sleek Studio Toolbar -->
-    <LinearLayout
-        android:id="@+id/layoutStudioHeader"
+    <!-- Status Bar Spacer (height set programmatically) -->
+    <View
+        android:id="@+id/statusBarSpacer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#0D131F"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:background="#0A0A0A" />
 
-        <!-- Status Bar Spacer (height set programmatically) -->
-        <View
-            android:id="@+id/statusBarSpacer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp" />
+    <!-- 1. CapCut Top Bar (52dp) -->
+    <RelativeLayout
+        android:id="@+id/layoutTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="#0A0A0A"
+        android:paddingHorizontal="16dp">
 
-        <!-- Actual Header Content (56dp) -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingHorizontal="14dp">
+        <!-- Back Button '<' -->
+        <FrameLayout
+            android:id="@+id/btnBackContainer"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true">
 
-            <!-- Back Button -->
-            <FrameLayout
-                android:id="@+id/btnBackContainer"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_send_comment_circle"
-                android:backgroundTint="#1AFFFFFF"
-                android:clickable="true"
-                android:focusable="true">
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_arrow_back"
-                    app:tint="#FFFFFF" />
-            </FrameLayout>
+        <!-- Center Studio Title -->
+        <TextView
+            android:id="@+id/tvTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="استوديو الفيديو"
+            android:textColor="#E2E8F0"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-            <!-- Center Title -->
-            <LinearLayout
+        <!-- Top Right "Enreg." / Save Button (Exact CapCut style) -->
+        <FrameLayout
+            android:id="@+id/btnEnregContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingHorizontal="8dp">
+
+            <TextView
+                android:id="@+id/btnEnreg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:text="Enreg."
+                android:textColor="#FFFFFF"
+                android:textSize="15.5sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="استوديو الفيديو 🎬"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="صانع الريلز والستوري المتحرك"
-                    android:textColor="#64748B"
-                    android:textSize="10.5sp" />
-            </LinearLayout>
-
-            <!-- Ratio Toggle Pills -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_segment_container"
-                android:backgroundTint="#1AFFFFFF"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <TextView
-                    android:id="@+id/btnRatioStory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_segment_btn_active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="9dp"
-                    android:text="9:16"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/btnRatioSquare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="9dp"
-                    android:text="1:1"
-                    android:textColor="#94A3B8"
-                    android:textSize="11sp" />
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!-- 2. Scrollable Studio Body -->
-    <ScrollView
+    <!-- 2. Video Preview Area (Fills space above controls) -->
+    <FrameLayout
+        android:id="@+id/layoutPreviewArea"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:background="#000000">
 
-        <LinearLayout
+        <!-- Video Motion View -->
+        <com.manchorati.www.VideoMotionView
+            android:id="@+id/videoMotionView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <!-- Quick Fade Feedback Icon when tapping play/pause -->
+        <ImageView
+            android:id="@+id/ivPlayPauseIndicator"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_send_comment_circle"
+            android:backgroundTint="#80000000"
+            android:padding="16dp"
+            android:src="@drawable/ic_video_play"
+            android:visibility="gone"
+            app:tint="#FFFFFF" />
+    </FrameLayout>
+
+    <!-- 3. CapCut Playback Controls Bar (44dp: Time on Left, Play/Pause Center, Speaker Right) -->
+    <RelativeLayout
+        android:id="@+id/layoutPlaybackControls"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0A0A0A"
+        android:paddingHorizontal="20dp">
+
+        <!-- Time Display on the LEFT ("00:15" or "00:04 / 00:15") -->
+        <TextView
+            android:id="@+id/tvTimeCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="00:15"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Play / Pause Button in the CENTER -->
+        <ImageView
+            android:id="@+id/ivPlayPauseCenter"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_video_play"
+            app:tint="#FFFFFF" />
+
+        <!-- Mute / Speaker Icon on the RIGHT -->
+        <ImageView
+            android:id="@+id/ivMuteToggle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_volume_up"
+            app:tint="#FFFFFF" />
+    </RelativeLayout>
+
+    <!-- 4. CapCut Video Filmstrip Timeline (72dp with ruler ticks, frames, and center white playhead) -->
+    <com.manchorati.www.TimelineFilmstripView
+        android:id="@+id/timelineFilmstripView"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="#0A0A0A" />
+
+    <!-- 5. Tool Panels Container (Slides up when a bottom tool is tapped) -->
+    <LinearLayout
+        android:id="@+id/layoutToolPanelContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#15171C"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Tool Panel Header (Active title + Checkmark Done button) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:background="#1E222B"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:id="@+id/tvToolPanelTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Audio"
+                android:textColor="#38BDF8"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btnCloseToolPanel"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp"
+                android:src="@drawable/ic_check"
+                app:tint="#38BDF8" />
+        </RelativeLayout>
+
+        <!-- Tool Panel Content Carousel -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:paddingVertical="10dp">
 
-            <!-- 2.1 Floating Phone Mockup Canvas Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPreviewMockup"
-                android:layout_width="wrap_content"
-                android:layout_height="330dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                app:cardBackgroundColor="#050811"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                app:strokeColor="#253552"
-                app:strokeWidth="1.5dp"
-                app:cardPreventCornerOverlap="true">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <com.manchorati.www.VideoMotionView
-                        android:id="@+id/videoMotionView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center" />
-
-                    <!-- Quick Fade Feedback Icon when tapping play/pause -->
-                    <ImageView
-                        android:id="@+id/ivPlayPauseIndicator"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_send_comment_circle"
-                        android:backgroundTint="#80000000"
-                        android:padding="16dp"
-                        android:src="@drawable/ic_video_play"
-                        android:visibility="gone"
-                        app:tint="#FFFFFF" />
-
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- 2.1.5 Sleek Video Player Controls Bar -->
-            <LinearLayout
-                android:id="@+id/layoutVideoControls"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_segment_container"
-                android:backgroundTint="#1F15233D"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
-
-                <!-- Play / Pause Button -->
-                <FrameLayout
-                    android:id="@+id/btnControlsPlayPause"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/bg_send_comment_circle"
-                    android:backgroundTint="#2638BDF8"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:id="@+id/ivControlsPlayPause"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_video_pause"
-                        app:tint="#38BDF8" />
-                </FrameLayout>
-
-                <!-- Current Time -->
-                <TextView
-                    android:id="@+id/tvControlsCurrentTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="monospace"
-                    android:text="00:00"
-                    android:textColor="#38BDF8"
-                    android:textSize="11.5sp"
-                    android:textStyle="bold" />
-
-                <!-- Progress SeekBar -->
-                <SeekBar
-                    android:id="@+id/seekBarVideoProgress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:max="1000"
-                    android:progress="0"
-                    android:progressBackgroundTint="#334766"
-                    android:progressTint="#38BDF8"
-                    android:splitTrack="false"
-                    android:thumbTint="#38BDF8" />
-
-                <!-- Total Time -->
-                <TextView
-                    android:id="@+id/tvControlsTotalTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="monospace"
-                    android:text="00:15"
-                    android:textColor="#94A3B8"
-                    android:textSize="11.5sp" />
-
-                <!-- Mute / Unmute Button -->
-                <FrameLayout
-                    android:id="@+id/btnControlsMute"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/bg_send_comment_circle"
-                    android:backgroundTint="#1AFFFFFF"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:id="@+id/ivControlsMute"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_volume_up"
-                        app:tint="#FFFFFF" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <!-- 2.2 Duration and Visibility Toggles Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <!-- Duration Pill Selector: 15s, 30s, 45s -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:background="@drawable/bg_segment_container"
-                    android:backgroundTint="#1AFFFFFF"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:id="@+id/btnDur15s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_segment_btn_active"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:text="15 ثانية"
-                        android:textColor="#FFFFFF"
-                        android:textSize="10.5sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/btnDur30s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:text="30 ثانية"
-                        android:textColor="#94A3B8"
-                        android:textSize="10.5sp" />
-
-                    <TextView
-                        android:id="@+id/btnDur45s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:text="45 ثانية"
-                        android:textColor="#94A3B8"
-                        android:textSize="10.5sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="12dp"
-                    android:layout_height="1dp" />
-
-                <!-- Visibility Toggles: Author & Tag -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:background="@drawable/bg_segment_container"
-                    android:backgroundTint="#1AFFFFFF"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:id="@+id/btnToggleAuthor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_segment_btn_active"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:text="👤 الكاتب"
-                        android:textColor="#FFFFFF"
-                        android:textSize="10.5sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/btnToggleTag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:text="🏷️ الوسم"
-                        android:textColor="#94A3B8"
-                        android:textSize="10.5sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- 2.3 Modern Category Tab Strip (Dock Style) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_segment_container"
-                android:backgroundTint="#14FFFFFF"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <TextView
-                    android:id="@+id/tabMotion"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_segment_btn_active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:text="🎨 الخلفية"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11.5sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tabAudio"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:text="🎵 الصوت"
-                    android:textColor="#94A3B8"
-                    android:textSize="11.5sp" />
-
-                <TextView
-                    android:id="@+id/tabAnim"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:text="✨ الحركة"
-                    android:textColor="#94A3B8"
-                    android:textSize="11.5sp" />
-
-                <TextView
-                    android:id="@+id/tabFont"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:text="✍️ الخط"
-                    android:textColor="#94A3B8"
-                    android:textSize="11.5sp" />
-            </LinearLayout>
-
-            <!-- 2.5 Carousel for Tab 1: Motion & Aesthetic Backgrounds -->
-            <HorizontalScrollView
-                android:id="@+id/scrollMotion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/layoutMotionPresets"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-            </HorizontalScrollView>
-
-            <!-- 2.6 Carousel for Tab 2: Audio Presets -->
+            <!-- Panel 1: Audio -->
             <HorizontalScrollView
                 android:id="@+id/scrollAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="16dp"
                 android:scrollbars="none"
                 android:visibility="gone">
 
@@ -457,14 +219,13 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- 2.7 Carousel for Tab 3: Animation Styles -->
+            <!-- Panel 2: Effets (Animations) -->
             <HorizontalScrollView
                 android:id="@+id/scrollAnim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="16dp"
                 android:scrollbars="none"
                 android:visibility="gone">
 
@@ -475,14 +236,13 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- 2.8 Carousel for Tab 4: Arabic Fonts -->
+            <!-- Panel 3: Ajouter Texte (Arabic Fonts) -->
             <HorizontalScrollView
                 android:id="@+id/scrollFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="16dp"
                 android:scrollbars="none"
                 android:visibility="gone">
 
@@ -493,82 +253,310 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-        </LinearLayout>
-    </ScrollView>
+            <!-- Panel 4: Autocollant (Toggles Author/Tag & Duration & Ratio) -->
+            <HorizontalScrollView
+                android:id="@+id/scrollOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:scrollbars="none"
+                android:visibility="gone">
 
-    <!-- 3. Bottom Sticky Action Dock (Icon-only, Top Video Editor App Styling) -->
-    <LinearLayout
-        android:id="@+id/layoutBottomDock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#0D131F"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="14dp">
+                <LinearLayout
+                    android:id="@+id/layoutOptionsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-        <!-- Share to WhatsApp Status (Icon Only) -->
-        <FrameLayout
-            android:id="@+id/btnShareWhatsApp"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_gradient_primary"
-            android:backgroundTint="#25D366"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:focusable="true">
+                    <!-- Duration Selector: 15s, 30s, 45s -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_segment_container"
+                        android:backgroundTint="#26FFFFFF"
+                        android:orientation="horizontal"
+                        android:padding="2dp">
 
-            <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_whatsapp"
-                app:tint="#FFFFFF" />
-        </FrameLayout>
+                        <TextView
+                            android:id="@+id/btnDur15s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_segment_btn_active"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingHorizontal="12dp"
+                            android:text="15s"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
 
-        <!-- Save MP4 to Gallery (Icon Only) -->
-        <FrameLayout
-            android:id="@+id/btnSaveGallery"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1.2"
-            android:background="@drawable/bg_button_gradient_primary"
-            android:backgroundTint="#0284C7"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:focusable="true">
+                        <TextView
+                            android:id="@+id/btnDur30s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingHorizontal="12dp"
+                            android:text="30s"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
 
-            <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_download"
-                app:tint="#FFFFFF" />
-        </FrameLayout>
+                        <TextView
+                            android:id="@+id/btnDur45s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingHorizontal="12dp"
+                            android:text="45s"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
-        <!-- General Share (Icon Only) -->
-        <FrameLayout
-            android:id="@+id/btnShareGeneral"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_gradient_primary"
-            android:backgroundTint="#1E293B"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:focusable="true">
+                    <!-- Ratio Toggle: 9:16 vs 1:1 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_segment_container"
+                        android:backgroundTint="#26FFFFFF"
+                        android:orientation="horizontal"
+                        android:padding="2dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_share_card"
-                app:tint="#FFFFFF" />
+                        <TextView
+                            android:id="@+id/btnRatioStory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_segment_btn_active"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingHorizontal="10dp"
+                            android:text="9:16"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnRatioSquare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingHorizontal="10dp"
+                            android:text="1:1"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <!-- Author Toggle -->
+                    <TextView
+                        android:id="@+id/btnToggleAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_segment_btn_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="👤 اسم الكاتب"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <!-- Tag Toggle -->
+                    <TextView
+                        android:id="@+id/btnToggleTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_segment_container"
+                        android:backgroundTint="#26FFFFFF"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:text="🏷️ الوسم"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Panel 5: Aj. Photo (Backgrounds) -->
+            <HorizontalScrollView
+                android:id="@+id/scrollMotion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/layoutMotionPresets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
         </FrameLayout>
     </LinearLayout>
+
+    <!-- 6. CapCut Bottom Toolbar (Exact Match to User Screenshot) -->
+    <LinearLayout
+        android:id="@+id/layoutBottomToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#121212"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- Tool 1: Audio -->
+        <LinearLayout
+            android:id="@+id/toolAudio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_capcut_audio"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Audio"
+                android:textColor="#E2E8F0"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <!-- Tool 2: Effets -->
+        <LinearLayout
+            android:id="@+id/toolEffects"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_capcut_effects"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Effets"
+                android:textColor="#E2E8F0"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <!-- Tool 3: Ajouter Texte -->
+        <LinearLayout
+            android:id="@+id/toolText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_capcut_text"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Ajouter Texte"
+                android:textColor="#E2E8F0"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- Tool 4: Autocollant -->
+        <LinearLayout
+            android:id="@+id/toolStickers"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_capcut_sticker"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Autocollant"
+                android:textColor="#E2E8F0"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <!-- Tool 5: Aj. Photo -->
+        <LinearLayout
+            android:id="@+id/toolPhoto"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_capcut_photo"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Aj. Photo"
+                android:textColor="#E2E8F0"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Navigation Bar Spacer -->
+    <View
+        android:id="@+id/navBarSpacer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#121212" />
 
 </LinearLayout>

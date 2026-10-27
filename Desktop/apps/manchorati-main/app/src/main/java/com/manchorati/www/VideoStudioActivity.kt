@@ -3,11 +3,13 @@ package com.manchorati.www
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import java.io.InputStream
 import java.util.Locale
@@ -25,44 +28,50 @@ class VideoStudioActivity : AppCompatActivity() {
     private lateinit var videoMotionView: VideoMotionView
     private lateinit var ivPlayPauseIndicator: ImageView
 
-    // Video Player Controls
-    private lateinit var btnControlsPlayPause: FrameLayout
-    private lateinit var ivControlsPlayPause: ImageView
-    private lateinit var tvControlsCurrentTime: TextView
-    private lateinit var seekBarVideoProgress: SeekBar
-    private lateinit var tvControlsTotalTime: TextView
-    private lateinit var btnControlsMute: FrameLayout
-    private lateinit var ivControlsMute: ImageView
+    // Top Bar
+    private lateinit var btnBackContainer: FrameLayout
+    private lateinit var btnEnregContainer: FrameLayout
+    private lateinit var btnEnreg: TextView
 
-    // Ratio, Duration & Visibility Toggles
-    private lateinit var btnRatioStory: TextView
-    private lateinit var btnRatioSquare: TextView
-    private lateinit var btnDur15s: TextView
-    private lateinit var btnDur30s: TextView
-    private lateinit var btnDur45s: TextView
-    private lateinit var btnToggleAuthor: TextView
-    private lateinit var btnToggleTag: TextView
+    // CapCut Playback Controls
+    private lateinit var tvTimeCurrent: TextView
+    private lateinit var ivPlayPauseCenter: ImageView
+    private lateinit var ivMuteToggle: ImageView
 
-    // Tabs
-    private lateinit var tabMotion: TextView
-    private lateinit var tabAudio: TextView
-    private lateinit var tabAnim: TextView
-    private lateinit var tabFont: TextView
-    private lateinit var scrollMotion: HorizontalScrollView
+    // Timeline Filmstrip
+    private lateinit var timelineFilmstripView: TimelineFilmstripView
+
+    // Tool Panels
+    private lateinit var layoutToolPanelContainer: LinearLayout
+    private lateinit var tvToolPanelTitle: TextView
+    private lateinit var btnCloseToolPanel: ImageView
+
     private lateinit var scrollAudio: HorizontalScrollView
     private lateinit var scrollAnim: HorizontalScrollView
     private lateinit var scrollFont: HorizontalScrollView
+    private lateinit var scrollOptions: HorizontalScrollView
+    private lateinit var scrollMotion: HorizontalScrollView
 
-    // Preset Containers
-    private lateinit var layoutMotionPresets: LinearLayout
     private lateinit var layoutAudioPresets: LinearLayout
     private lateinit var layoutAnimStyles: LinearLayout
     private lateinit var layoutFontPresets: LinearLayout
+    private lateinit var layoutMotionPresets: LinearLayout
 
-    // Bottom Action Buttons (Pure Icon-Only)
-    private lateinit var btnSaveGallery: FrameLayout
-    private lateinit var btnShareWhatsApp: FrameLayout
-    private lateinit var btnShareGeneral: FrameLayout
+    // Autocollant Panel Toggles & Selectors
+    private lateinit var btnDur15s: TextView
+    private lateinit var btnDur30s: TextView
+    private lateinit var btnDur45s: TextView
+    private lateinit var btnRatioStory: TextView
+    private lateinit var btnRatioSquare: TextView
+    private lateinit var btnToggleAuthor: TextView
+    private lateinit var btnToggleTag: TextView
+
+    // Bottom Toolbar Items (Exact CapCut Style)
+    private lateinit var toolAudio: LinearLayout
+    private lateinit var toolEffects: LinearLayout
+    private lateinit var toolText: LinearLayout
+    private lateinit var toolStickers: LinearLayout
+    private lateinit var toolPhoto: LinearLayout
 
     // State
     private var selectedMotion = "STARS"
@@ -84,6 +93,8 @@ class VideoStudioActivity : AppCompatActivity() {
     private var postAuthorUsername = ""
     private var postAuthorBadge = ""
     private var postTag = ""
+
+    private var activeToolIndex = -1 // -1 = closed
 
     // Image Picker
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -112,6 +123,7 @@ class VideoStudioActivity : AppCompatActivity() {
         populateAnimPresets()
         populateFontPresets()
         updateConfig()
+        generateFilmstripThumb()
     }
 
     private fun initIntentData() {
@@ -142,59 +154,56 @@ class VideoStudioActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        findViewById<View>(R.id.btnBackContainer).setOnClickListener { finish() }
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+        btnBackContainer = findViewById(R.id.btnBackContainer)
+        btnEnregContainer = findViewById(R.id.btnEnregContainer)
+        btnEnreg = findViewById(R.id.btnEnreg)
 
         videoMotionView = findViewById(R.id.videoMotionView)
         ivPlayPauseIndicator = findViewById(R.id.ivPlayPauseIndicator)
 
-        // Player Controls
-        btnControlsPlayPause = findViewById(R.id.btnControlsPlayPause)
-        ivControlsPlayPause = findViewById(R.id.ivControlsPlayPause)
-        tvControlsCurrentTime = findViewById(R.id.tvControlsCurrentTime)
-        seekBarVideoProgress = findViewById(R.id.seekBarVideoProgress)
-        tvControlsTotalTime = findViewById(R.id.tvControlsTotalTime)
-        btnControlsMute = findViewById(R.id.btnControlsMute)
-        ivControlsMute = findViewById(R.id.ivControlsMute)
+        tvTimeCurrent = findViewById(R.id.tvTimeCurrent)
+        ivPlayPauseCenter = findViewById(R.id.ivPlayPauseCenter)
+        ivMuteToggle = findViewById(R.id.ivMuteToggle)
 
-        // Ratio & Duration
-        btnRatioStory = findViewById(R.id.btnRatioStory)
-        btnRatioSquare = findViewById(R.id.btnRatioSquare)
-        btnDur15s = findViewById(R.id.btnDur15s)
-        btnDur30s = findViewById(R.id.btnDur30s)
-        btnDur45s = findViewById(R.id.btnDur45s)
+        timelineFilmstripView = findViewById(R.id.timelineFilmstripView)
+        timelineFilmstripView.durationSec = selectedDuration
 
-        // Visibility Toggles
-        btnToggleAuthor = findViewById(R.id.btnToggleAuthor)
-        btnToggleTag = findViewById(R.id.btnToggleTag)
+        layoutToolPanelContainer = findViewById(R.id.layoutToolPanelContainer)
+        tvToolPanelTitle = findViewById(R.id.tvToolPanelTitle)
+        btnCloseToolPanel = findViewById(R.id.btnCloseToolPanel)
 
-        // Tabs
-        tabMotion = findViewById(R.id.tabMotion)
-        tabAudio = findViewById(R.id.tabAudio)
-        tabAnim = findViewById(R.id.tabAnim)
-        tabFont = findViewById(R.id.tabFont)
-
-        scrollMotion = findViewById(R.id.scrollMotion)
         scrollAudio = findViewById(R.id.scrollAudio)
         scrollAnim = findViewById(R.id.scrollAnim)
         scrollFont = findViewById(R.id.scrollFont)
+        scrollOptions = findViewById(R.id.scrollOptions)
+        scrollMotion = findViewById(R.id.scrollMotion)
 
-        layoutMotionPresets = findViewById(R.id.layoutMotionPresets)
         layoutAudioPresets = findViewById(R.id.layoutAudioPresets)
         layoutAnimStyles = findViewById(R.id.layoutAnimStyles)
         layoutFontPresets = findViewById(R.id.layoutFontPresets)
+        layoutMotionPresets = findViewById(R.id.layoutMotionPresets)
 
-        btnSaveGallery = findViewById(R.id.btnSaveGallery)
-        btnShareWhatsApp = findViewById(R.id.btnShareWhatsApp)
-        btnShareGeneral = findViewById(R.id.btnShareGeneral)
+        btnDur15s = findViewById(R.id.btnDur15s)
+        btnDur30s = findViewById(R.id.btnDur30s)
+        btnDur45s = findViewById(R.id.btnDur45s)
+        btnRatioStory = findViewById(R.id.btnRatioStory)
+        btnRatioSquare = findViewById(R.id.btnRatioSquare)
+        btnToggleAuthor = findViewById(R.id.btnToggleAuthor)
+        btnToggleTag = findViewById(R.id.btnToggleTag)
 
-        tvControlsTotalTime.text = formatTime(selectedDuration * 1000L)
+        toolAudio = findViewById(R.id.toolAudio)
+        toolEffects = findViewById(R.id.toolEffects)
+        toolText = findViewById(R.id.toolText)
+        toolStickers = findViewById(R.id.toolStickers)
+        toolPhoto = findViewById(R.id.toolPhoto)
+
+        tvTimeCurrent.text = formatTime(selectedDuration * 1000L)
     }
 
     private fun applyWindowInsets() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.parseColor("#080C14")
+        window.navigationBarColor = Color.parseColor("#121212")
 
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.isAppearanceLightStatusBars = false
@@ -213,49 +222,41 @@ class VideoStudioActivity : AppCompatActivity() {
                 )
             }
 
-            findViewById<View>(R.id.layoutBottomDock)?.setPadding(
-                (24 * density).toInt(),
-                (12 * density).toInt(),
-                (24 * density).toInt(),
-                navBar.bottom + (12 * density).toInt()
-            )
+            val navSpacer = findViewById<View>(R.id.navBarSpacer)
+            if (navSpacer != null && navSpacer.layoutParams.height != navBar.bottom) {
+                navSpacer.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    navBar.bottom
+                )
+            }
 
             insets
         }
     }
 
     private fun setupListeners() {
-        // Tap canvas toggles play/pause with quick visual feedback
+        btnBackContainer.setOnClickListener { finish() }
+
+        // Top Right "Enreg." button opens export sheet
+        btnEnregContainer.setOnClickListener {
+            showExportActionSheet()
+        }
+
+        // Tap video canvas toggles play/pause
         videoMotionView.setOnClickListener {
             videoMotionView.togglePlay()
             showPlayPauseFeedback(!videoMotionView.isPlaying)
         }
 
-        // Play/Pause State Sync
-        videoMotionView.onPlayStateChanged = { isPlaying ->
-            ivControlsPlayPause.setImageResource(
-                if (isPlaying) R.drawable.ic_video_pause else R.drawable.ic_video_play
-            )
-        }
-
-        // Live Progress Sync
-        videoMotionView.onProgressUpdate = { curMs, totalMs, ratio ->
-            seekBarVideoProgress.progress = (ratio * 1000).toInt()
-            tvControlsCurrentTime.text = formatTime(curMs)
-            tvControlsTotalTime.text = formatTime(totalMs)
-        }
-
-        // Player Controls
-        btnControlsPlayPause.setOnClickListener {
+        // Center Play/Pause button
+        ivPlayPauseCenter.setOnClickListener {
             videoMotionView.togglePlay()
-            ivControlsPlayPause.setImageResource(
-                if (videoMotionView.isPlaying) R.drawable.ic_video_pause else R.drawable.ic_video_play
-            )
         }
 
-        btnControlsMute.setOnClickListener {
+        // Mute/Speaker button
+        ivMuteToggle.setOnClickListener {
             videoMotionView.isMuted = !videoMotionView.isMuted
-            ivControlsMute.setImageResource(
+            ivMuteToggle.setImageResource(
                 if (videoMotionView.isMuted) R.drawable.ic_volume_off else R.drawable.ic_volume_up
             )
             Toast.makeText(
@@ -265,38 +266,44 @@ class VideoStudioActivity : AppCompatActivity() {
             ).show()
         }
 
-        seekBarVideoProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val ratio = progress / 1000f
-                    videoMotionView.seekTo(ratio)
-                    val curMs = (ratio * selectedDuration * 1000L).toLong()
-                    tvControlsCurrentTime.text = formatTime(curMs)
-                }
-            }
-            override fun onStartTrackingTouch(sb: SeekBar?) {}
-            override fun onStopTrackingTouch(sb: SeekBar?) {}
-        })
-
-        // Ratio Toggle
-        btnRatioStory.setOnClickListener {
-            selectedRatio = "9:16"
-            btnRatioStory.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnRatioStory.setTextColor(Color.WHITE)
-            btnRatioSquare.background = null
-            btnRatioSquare.setTextColor(Color.parseColor("#94A3B8"))
-            updateConfig()
-        }
-        btnRatioSquare.setOnClickListener {
-            selectedRatio = "1:1"
-            btnRatioSquare.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnRatioSquare.setTextColor(Color.WHITE)
-            btnRatioStory.background = null
-            btnRatioStory.setTextColor(Color.parseColor("#94A3B8"))
-            updateConfig()
+        // Play/Pause State Sync
+        videoMotionView.onPlayStateChanged = { isPlaying ->
+            ivPlayPauseCenter.setImageResource(
+                if (isPlaying) R.drawable.ic_video_pause else R.drawable.ic_video_play
+            )
         }
 
-        // Duration Selectors (15s, 30s, 45s)
+        // Live Progress Sync with Timeline Filmstrip
+        videoMotionView.onProgressUpdate = { curMs, totalMs, ratio ->
+            timelineFilmstripView.currentRatio = ratio
+            tvTimeCurrent.text = formatTime(curMs)
+        }
+
+        // Timeline Scrubbing / Seeking
+        timelineFilmstripView.onSeek = { ratio ->
+            videoMotionView.seekTo(ratio)
+            val curMs = (ratio * selectedDuration * 1000L).toLong()
+            tvTimeCurrent.text = formatTime(curMs)
+        }
+
+        // Plus icon on timeline opens options / ratio
+        timelineFilmstripView.onPlusClick = {
+            openToolPanel(3) // open Autocollant / Options
+        }
+
+        // Close Tool Panel button
+        btnCloseToolPanel.setOnClickListener {
+            closeToolPanel()
+        }
+
+        // Bottom 5 Tools (Exact CapCut Navigation)
+        toolAudio.setOnClickListener { openToolPanel(0) }
+        toolEffects.setOnClickListener { openToolPanel(1) }
+        toolText.setOnClickListener { openToolPanel(2) }
+        toolStickers.setOnClickListener { openToolPanel(3) }
+        toolPhoto.setOnClickListener { openToolPanel(4) }
+
+        // Duration Selectors in Options Panel
         val durBtns = listOf(btnDur15s to 15, btnDur30s to 30, btnDur45s to 45)
         for ((btn, sec) in durBtns) {
             btn.setOnClickListener {
@@ -310,13 +317,33 @@ class VideoStudioActivity : AppCompatActivity() {
                         b.setTextColor(Color.parseColor("#94A3B8"))
                     }
                 }
-                tvControlsTotalTime.text = formatTime(selectedDuration * 1000L)
+                timelineFilmstripView.durationSec = selectedDuration
                 updateConfig()
                 videoMotionView.restart()
             }
         }
 
-        // Visibility Toggles
+        // Ratio Toggle in Options Panel
+        btnRatioStory.setOnClickListener {
+            selectedRatio = "9:16"
+            btnRatioStory.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnRatioStory.setTextColor(Color.WHITE)
+            btnRatioSquare.background = null
+            btnRatioSquare.setTextColor(Color.parseColor("#94A3B8"))
+            updateConfig()
+            generateFilmstripThumb()
+        }
+        btnRatioSquare.setOnClickListener {
+            selectedRatio = "1:1"
+            btnRatioSquare.setBackgroundResource(R.drawable.bg_segment_btn_active)
+            btnRatioSquare.setTextColor(Color.WHITE)
+            btnRatioStory.background = null
+            btnRatioStory.setTextColor(Color.parseColor("#94A3B8"))
+            updateConfig()
+            generateFilmstripThumb()
+        }
+
+        // Visibility Toggles in Options Panel
         btnToggleAuthor.setOnClickListener {
             showAuthor = !showAuthor
             if (showAuthor) {
@@ -327,6 +354,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 btnToggleAuthor.setTextColor(Color.parseColor("#94A3B8"))
             }
             updateConfig()
+            generateFilmstripThumb()
         }
 
         btnToggleTag.setOnClickListener {
@@ -339,37 +367,37 @@ class VideoStudioActivity : AppCompatActivity() {
                 btnToggleTag.setTextColor(Color.parseColor("#94A3B8"))
             }
             updateConfig()
+            generateFilmstripThumb()
+        }
+    }
+
+    private fun openToolPanel(index: Int) {
+        if (activeToolIndex == index && layoutToolPanelContainer.visibility == View.VISIBLE) {
+            closeToolPanel()
+            return
         }
 
-        // Tabs Toggle
-        tabMotion.setOnClickListener { switchTab(0) }
-        tabAudio.setOnClickListener { switchTab(1) }
-        tabAnim.setOnClickListener { switchTab(2) }
-        tabFont.setOnClickListener { switchTab(3) }
+        activeToolIndex = index
+        layoutToolPanelContainer.visibility = View.VISIBLE
 
-        // Bottom Actions (Icon-Only, Top Video Editor Styling)
-        btnSaveGallery.setOnClickListener {
-            startExport(onComplete = { file ->
-                val uri = VideoExporter.saveVideoToGallery(this, file, postAuthorName)
-                if (uri != null) {
-                    Toast.makeText(this, "تم حفظ الفيديو بنجاح في ألبوم Manchorati! 🎉", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, "حدث خطأ أثناء حفظ الفيديو", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
+        scrollAudio.visibility = if (index == 0) View.VISIBLE else View.GONE
+        scrollAnim.visibility = if (index == 1) View.VISIBLE else View.GONE
+        scrollFont.visibility = if (index == 2) View.VISIBLE else View.GONE
+        scrollOptions.visibility = if (index == 3) View.VISIBLE else View.GONE
+        scrollMotion.visibility = if (index == 4) View.VISIBLE else View.GONE
 
-        btnShareWhatsApp.setOnClickListener {
-            startExport(onComplete = { file ->
-                VideoExporter.shareVideoToWhatsApp(this, file)
-            })
+        tvToolPanelTitle.text = when (index) {
+            0 -> "Audio (الصوت والموسيقى)"
+            1 -> "Effets (حركات النص)"
+            2 -> "Ajouter Texte (الخطوط العربية)"
+            3 -> "Autocollant (الخيارات والوسم)"
+            else -> "Aj. Photo (الخلفيات والتأثيرات)"
         }
+    }
 
-        btnShareGeneral.setOnClickListener {
-            startExport(onComplete = { file ->
-                VideoExporter.shareVideoGeneral(this, file)
-            })
-        }
+    private fun closeToolPanel() {
+        activeToolIndex = -1
+        layoutToolPanelContainer.visibility = View.GONE
     }
 
     private fun formatTime(ms: Long): String {
@@ -391,91 +419,6 @@ class VideoStudioActivity : AppCompatActivity() {
             .setStartDelay(200)
             .withEndAction { ivPlayPauseIndicator.visibility = View.GONE }
             .start()
-    }
-
-    private fun switchTab(tabIndex: Int) {
-        val tabs = listOf(tabMotion, tabAudio, tabAnim, tabFont)
-        for (i in tabs.indices) {
-            if (i == tabIndex) {
-                tabs[i].setBackgroundResource(R.drawable.bg_segment_btn_active)
-                tabs[i].setTextColor(Color.WHITE)
-            } else {
-                tabs[i].background = null
-                tabs[i].setTextColor(Color.parseColor("#94A3B8"))
-            }
-        }
-        scrollMotion.visibility = if (tabIndex == 0) View.VISIBLE else View.GONE
-        scrollAudio.visibility = if (tabIndex == 1) View.VISIBLE else View.GONE
-        scrollAnim.visibility = if (tabIndex == 2) View.VISIBLE else View.GONE
-        scrollFont.visibility = if (tabIndex == 3) View.VISIBLE else View.GONE
-    }
-
-    private fun populateMotionPresets() {
-        layoutMotionPresets.removeAllViews()
-
-        // 1. Built-in Dynamic Motion Shaders
-        val presets = listOf(
-            Triple("STARS", "✨ فضاء ونجوم", "#0D162B"),
-            Triple("RAIN", "🌧️ مطر ناعم", "#131C2E"),
-            Triple("AURORA", "🌌 شفق أخضر", "#0A1226"),
-            Triple("GOLD", "🌟 بريق ذهبي", "#281F18"),
-            Triple("OCEAN", "🌊 أمواج هادئة", "#0A2540"),
-            Triple("CUSTOM_IMAGE", "🖼️ صورتي", "#1E293B")
-        )
-
-        for ((id, title, colorHex) in presets) {
-            val chip = createStudioCard(title, id == selectedMotion, colorHex) {
-                if (id == "CUSTOM_IMAGE") {
-                    pickImageLauncher.launch("image/*")
-                } else {
-                    selectedMotion = id
-                    customImageBitmap = null
-                    populateMotionPresets()
-                    updateConfig()
-                }
-            }
-            layoutMotionPresets.addView(chip)
-        }
-
-        // 2. Curated Aesthetic Online Backgrounds (Downloaded on-demand and cached permanently)
-        for (onlineBg in StudioAssetManager.onlineBackgrounds) {
-            val isDownloaded = StudioAssetManager.isBackgroundDownloaded(this, onlineBg.id)
-            val chipTitle = if (isDownloaded) onlineBg.title else "${onlineBg.title} ⬇️"
-            val isSelected = selectedMotion == onlineBg.id
-
-            val chip = createStudioCard(chipTitle, isSelected, onlineBg.previewColor) {
-                if (isDownloaded) {
-                    val bmp = StudioAssetManager.getDownloadedBackgroundBitmap(this, onlineBg.id)
-                    if (bmp != null) {
-                        customImageBitmap = bmp
-                        selectedMotion = onlineBg.id
-                        populateMotionPresets()
-                        updateConfig()
-                    }
-                } else {
-                    Toast.makeText(this, "جاري تحميل الخلفية ⏳", Toast.LENGTH_SHORT).show()
-                    StudioAssetManager.downloadBackground(
-                        this,
-                        onlineBg,
-                        onSuccess = { bmp ->
-                            runOnUiThread {
-                                customImageBitmap = bmp
-                                selectedMotion = onlineBg.id
-                                populateMotionPresets()
-                                updateConfig()
-                                Toast.makeText(this, "تم تحميل الخلفية بنجاح ✨", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        onError = { err ->
-                            runOnUiThread {
-                                Toast.makeText(this, err, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    )
-                }
-            }
-            layoutMotionPresets.addView(chip)
-        }
     }
 
     private fun populateAudioPresets() {
@@ -576,7 +519,7 @@ class VideoStudioActivity : AppCompatActivity() {
     private fun populateFontPresets() {
         layoutFontPresets.removeAllViews()
 
-        // All 8 authentic Arabic fonts loaded from res/font/
+        // All 8 authentic Arabic fonts with live preview
         val fonts = listOf(
             "tajawal" to "تجوال",
             "cairoplay" to "كايرو",
@@ -598,8 +541,80 @@ class VideoStudioActivity : AppCompatActivity() {
                 selectedFont = fontId
                 populateFontPresets()
                 updateConfig()
+                generateFilmstripThumb()
             }
             layoutFontPresets.addView(chip)
+        }
+    }
+
+    private fun populateMotionPresets() {
+        layoutMotionPresets.removeAllViews()
+
+        // 1. Built-in Dynamic Motion Shaders
+        val presets = listOf(
+            Triple("STARS", "✨ فضاء ونجوم", "#0D162B"),
+            Triple("RAIN", "🌧️ مطر ناعم", "#131C2E"),
+            Triple("AURORA", "🌌 شفق أخضر", "#0A1226"),
+            Triple("GOLD", "🌟 بريق ذهبي", "#281F18"),
+            Triple("OCEAN", "🌊 أمواج هادئة", "#0A2540"),
+            Triple("CUSTOM_IMAGE", "🖼️ صورتي", "#1E293B")
+        )
+
+        for ((id, title, colorHex) in presets) {
+            val chip = createStudioCard(title, id == selectedMotion, colorHex) {
+                if (id == "CUSTOM_IMAGE") {
+                    pickImageLauncher.launch("image/*")
+                } else {
+                    selectedMotion = id
+                    customImageBitmap = null
+                    populateMotionPresets()
+                    updateConfig()
+                    generateFilmstripThumb()
+                }
+            }
+            layoutMotionPresets.addView(chip)
+        }
+
+        // 2. Curated Aesthetic Online Backgrounds (Unsplash CDN, cached locally)
+        for (onlineBg in StudioAssetManager.onlineBackgrounds) {
+            val isDownloaded = StudioAssetManager.isBackgroundDownloaded(this, onlineBg.id)
+            val chipTitle = if (isDownloaded) onlineBg.title else "${onlineBg.title} ⬇️"
+            val isSelected = selectedMotion == onlineBg.id
+
+            val chip = createStudioCard(chipTitle, isSelected, onlineBg.previewColor) {
+                if (isDownloaded) {
+                    val bmp = StudioAssetManager.getDownloadedBackgroundBitmap(this, onlineBg.id)
+                    if (bmp != null) {
+                        customImageBitmap = bmp
+                        selectedMotion = onlineBg.id
+                        populateMotionPresets()
+                        updateConfig()
+                        generateFilmstripThumb()
+                    }
+                } else {
+                    Toast.makeText(this, "جاري تحميل الخلفية ⏳", Toast.LENGTH_SHORT).show()
+                    StudioAssetManager.downloadBackground(
+                        this,
+                        onlineBg,
+                        onSuccess = { bmp ->
+                            runOnUiThread {
+                                customImageBitmap = bmp
+                                selectedMotion = onlineBg.id
+                                populateMotionPresets()
+                                updateConfig()
+                                generateFilmstripThumb()
+                                Toast.makeText(this, "تم تحميل الخلفية بنجاح ✨", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        onError = { err ->
+                            runOnUiThread {
+                                Toast.makeText(this, err, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                }
+            }
+            layoutMotionPresets.addView(chip)
         }
     }
 
@@ -617,7 +632,6 @@ class VideoStudioActivity : AppCompatActivity() {
             setPadding((16 * density).toInt(), (9 * density).toInt(), (16 * density).toInt(), (9 * density).toInt())
             setTextColor(Color.WHITE)
 
-            // Live preview: apply exact font to font chip!
             if (fontId != null) {
                 val tf = ThemeHelper.getFontTypeface(this@VideoStudioActivity, fontId)
                 if (tf != null) {
@@ -627,13 +641,13 @@ class VideoStudioActivity : AppCompatActivity() {
             }
 
             val bg = GradientDrawable().apply {
-                cornerRadius = 14 * density
+                cornerRadius = 12 * density
                 if (isSelected) {
                     setColor(Color.parseColor(colorHex))
                     setStroke((2 * density).toInt(), Color.parseColor("#38BDF8"))
                 } else {
-                    setColor(Color.parseColor("#141E33"))
-                    setStroke((1 * density).toInt(), Color.parseColor("#25334E"))
+                    setColor(Color.parseColor("#1C202B"))
+                    setStroke((1 * density).toInt(), Color.parseColor("#2E3748"))
                 }
             }
             background = bg
@@ -675,6 +689,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 selectedMotion = "CUSTOM_IMAGE"
                 populateMotionPresets()
                 updateConfig()
+                generateFilmstripThumb()
                 Toast.makeText(this, "تم اختيار الصورة بنجاح 🖼️", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
@@ -713,6 +728,166 @@ class VideoStudioActivity : AppCompatActivity() {
             downloadedAudioPath = downloadedAudioPath
         )
         videoMotionView.config = config
+    }
+
+    private fun generateFilmstripThumb() {
+        try {
+            val w = 180
+            val h = if (selectedRatio == "9:16") 320 else 180
+            val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            VideoMotionRenderer.renderFrame(this, canvas, w, h, 2000L, videoMotionView.config)
+            timelineFilmstripView.thumbnailBitmap = bmp
+        } catch (_: Exception) {}
+    }
+
+    private fun showExportActionSheet() {
+        videoMotionView.pause()
+
+        val bottomSheet = BottomSheetDialog(this)
+        val density = resources.displayMetrics.density
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor("#15171C"))
+            setPadding((24 * density).toInt(), (20 * density).toInt(), (24 * density).toInt(), (28 * density).toInt())
+        }
+
+        // Title
+        val tvSheetTitle = TextView(this).apply {
+            text = "تصدير الفيديو ومشاركته 🎬"
+            setTextColor(Color.WHITE)
+            textSize = 17f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, (20 * density).toInt())
+        }
+        container.addView(tvSheetTitle)
+
+        // 1. WhatsApp Status Option
+        val btnWhatsApp = createExportOptionRow(
+            title = "مشاركة في حالة واتساب (Status)",
+            desc = "نشر الفيديو مباشرة كحالة واتساب بجودة عالية",
+            iconRes = R.drawable.ic_whatsapp,
+            accentColor = "#25D366"
+        ) {
+            bottomSheet.dismiss()
+            startExport { file ->
+                VideoExporter.shareVideoToWhatsApp(this, file)
+            }
+        }
+        container.addView(btnWhatsApp)
+
+        // 2. Save to Gallery Option
+        val btnGallery = createExportOptionRow(
+            title = "حفظ الفيديو في المعرض (HD MP4)",
+            desc = "تخزين دائم في ألبوم Manchorati بجودة أصلية",
+            iconRes = R.drawable.ic_download,
+            accentColor = "#0284C7"
+        ) {
+            bottomSheet.dismiss()
+            startExport { file ->
+                val uri = VideoExporter.saveVideoToGallery(this, file, postAuthorName)
+                if (uri != null) {
+                    Toast.makeText(this, "تم حفظ الفيديو بنجاح في ألبوم Manchorati! 🎉", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "حدث خطأ أثناء حفظ الفيديو", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        container.addView(btnGallery)
+
+        // 3. General Share Option
+        val btnGeneral = createExportOptionRow(
+            title = "مشاركة في تطبيقات أخرى...",
+            desc = "إنستغرام، تيك توك، فيسبوك، تيليجرام...",
+            iconRes = R.drawable.ic_share_card,
+            accentColor = "#8B5CF6"
+        ) {
+            bottomSheet.dismiss()
+            startExport { file ->
+                VideoExporter.shareVideoGeneral(this, file)
+            }
+        }
+        container.addView(btnGeneral)
+
+        bottomSheet.setContentView(container)
+        bottomSheet.show()
+    }
+
+    private fun createExportOptionRow(
+        title: String,
+        desc: String,
+        iconRes: Int,
+        accentColor: String,
+        onClick: () -> Unit
+    ): View {
+        val density = resources.displayMetrics.density
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            setPadding((14 * density).toInt(), (12 * density).toInt(), (14 * density).toInt(), (12 * density).toInt())
+            isClickable = true
+            isFocusable = true
+
+            val bg = GradientDrawable().apply {
+                cornerRadius = 14 * density
+                setColor(Color.parseColor("#1E222B"))
+            }
+            background = bg
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                bottomMargin = (10 * density).toInt()
+            }
+            layoutParams = params
+            setOnClickListener { onClick() }
+        }
+
+        // Icon Frame
+        val iconFrame = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams((44 * density).toInt(), (44 * density).toInt()).apply {
+                marginEnd = (14 * density).toInt()
+            }
+            val bg = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(Color.parseColor(accentColor))
+            }
+            background = bg
+        }
+        val iv = ImageView(this).apply {
+            layoutParams = FrameLayout.LayoutParams((22 * density).toInt(), (22 * density).toInt()).apply {
+                gravity = android.view.Gravity.CENTER
+            }
+            setImageResource(iconRes)
+            setColorFilter(Color.WHITE)
+        }
+        iconFrame.addView(iv)
+
+        // Texts
+        val textContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val tvTitle = TextView(this).apply {
+            text = title
+            setTextColor(Color.WHITE)
+            textSize = 14f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+        }
+        val tvDesc = TextView(this).apply {
+            text = desc
+            setTextColor(Color.parseColor("#94A3B8"))
+            textSize = 11f
+        }
+        textContainer.addView(tvTitle)
+        textContainer.addView(tvDesc)
+
+        row.addView(iconFrame)
+        row.addView(textContainer)
+        return row
     }
 
     private fun startExport(onComplete: (File) -> Unit) {
