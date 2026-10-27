@@ -2,11 +2,13 @@ package com.manchorati.www
 
 import android.content.Context
 import android.graphics.Canvas
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
+import java.io.File
 
 class VideoMotionView @JvmOverloads constructor(
     context: Context,
@@ -21,9 +23,15 @@ class VideoMotionView @JvmOverloads constructor(
     )
         set(value) {
             val oldAudio = field.audioPreset
+            val oldPath = field.downloadedAudioPath
+            val oldDur = field.durationSec
             field = value
-            if (oldAudio != value.audioPreset) {
+            if (oldAudio != value.audioPreset || oldPath != value.downloadedAudioPath) {
                 updateAudioPlayback()
+            }
+            if (oldDur != value.durationSec) {
+                // Keep progress within bounds
+                pausedTimeOffsetMs = pausedTimeOffsetMs % (value.durationSec * 1000L).coerceAtLeast(1000L)
             }
             requestLayout()
             invalidate()
@@ -35,6 +43,15 @@ class VideoMotionView @JvmOverloads constructor(
             updateAudioPlayback()
         }
 
+    var isMuted: Boolean = false
+        set(value) {
+            field = value
+            val vol = if (value) 0f else 1f
+            try {
+                mediaPlayer?.setVolume(vol, vol)
+            } catch (_: Exception) {}
+        }
+
     var isPlaying: Boolean = true
         private set
 
@@ -44,6 +61,7 @@ class VideoMotionView @JvmOverloads constructor(
 
     private var mediaPlayer: MediaPlayer? = null
     var onPlayStateChanged: ((Boolean) -> Unit)? = null
+    var onProgressUpdate: ((elapsedMs: Long, totalMs: Long, ratio: Float) -> Unit)? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -60,9 +78,24 @@ class VideoMotionView @JvmOverloads constructor(
         stopAudio()
     }
 
+    private fun getCurrentElapsedMs(): Long {
+        val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
+        val rawMs = if (isPlaying) {
+            val elapsedNs = System.nanoTime() - startTimeNs
+            (elapsedNs / 1_000_000L) + pausedTimeOffsetMs
+        } else {
+            pausedTimeOffsetMs
+        }
+        return rawMs % totalMs
+    }
+
     override fun doFrame(frameTimeNanos: Long) {
         if (!isAttached) return
         if (isPlaying) {
+            val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
+            val curMs = getCurrentElapsedMs()
+            val ratio = curMs.toFloat() / totalMs.toFloat()
+            onProgressUpdate?.invoke(curMs, totalMs, ratio)
             invalidate()
         }
         Choreographer.getInstance().postFrameCallback(this)
@@ -91,14 +124,7 @@ class VideoMotionView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (width <= 0 || height <= 0) return
-
-        val currentElapsedMs = if (isPlaying) {
-            val elapsedNs = System.nanoTime() - startTimeNs
-            (elapsedNs / 1_000_000L) + pausedTimeOffsetMs
-        } else {
-            pausedTimeOffsetMs
-        }
-
+        val currentElapsedMs = getCurrentElapsedMs()
         VideoMotionRenderer.renderFrame(context, canvas, width, height, currentElapsedMs, config)
     }
 
@@ -125,7 +151,8 @@ class VideoMotionView @JvmOverloads constructor(
         if (!isPlaying) return
         isPlaying = false
         val elapsedNs = System.nanoTime() - startTimeNs
-        pausedTimeOffsetMs += (elapsedNs / 1_000_000L)
+        val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
+        pausedTimeOffsetMs = (pausedTimeOffsetMs + (elapsedNs / 1_000_000L)) % totalMs
         try {
             mediaPlayer?.pause()
         } catch (_: Exception) {}
@@ -143,6 +170,24 @@ class VideoMotionView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun seekTo(ratio: Float) {
+        val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
+        val targetMs = (ratio.coerceIn(0f, 1f) * totalMs).toLong()
+        pausedTimeOffsetMs = targetMs
+        startTimeNs = System.nanoTime()
+        try {
+            mediaPlayer?.let { mp ->
+                val mpDur = mp.duration
+                if (mpDur > 0) {
+                    val audioTarget = (targetMs % mpDur).toInt()
+                    mp.seekTo(audioTarget)
+                }
+            }
+        } catch (_: Exception) {}
+        onProgressUpdate?.invoke(targetMs, totalMs, ratio)
+        invalidate()
+    }
+
     private fun updateAudioPlayback() {
         stopAudio()
         if (isAttached && isPlaying) {
@@ -151,22 +196,50 @@ class VideoMotionView @JvmOverloads constructor(
     }
 
     private fun startAudio() {
-        if (config.audioPreset == "mute") {
-            stopAudio()
-            return
-        }
+        stopAudio()
+        if (config.audioPreset == "mute") return
 
         try {
-            if (customAudioUri != null) {
+            // 1. Downloaded Audio file path
+            val downloadedPath = config.downloadedAudioPath
+            if (downloadedPath != null && File(downloadedPath).exists()) {
                 mediaPlayer = MediaPlayer().apply {
-                    setDataSource(context, customAudioUri!!)
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(downloadedPath)
                     isLooping = true
+                    val vol = if (isMuted) 0f else 1f
+                    setVolume(vol, vol)
                     prepare()
                     if (isPlaying) start()
                 }
                 return
             }
 
+            // 2. Custom User Selected Audio URI
+            if (customAudioUri != null) {
+                mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(context, customAudioUri!!)
+                    isLooping = true
+                    val vol = if (isMuted) 0f else 1f
+                    setVolume(vol, vol)
+                    prepare()
+                    if (isPlaying) start()
+                }
+                return
+            }
+
+            // 3. Built-in Raw Resources
             val rawRes = when (config.audioPreset.lowercase()) {
                 "rain" -> R.raw.ambient_rain
                 "oud" -> R.raw.ambient_oud
@@ -174,8 +247,20 @@ class VideoMotionView @JvmOverloads constructor(
                 else -> R.raw.ambient_piano
             }
 
-            mediaPlayer = MediaPlayer.create(context, rawRes)?.apply {
+            val afd = context.resources.openRawResourceFd(rawRes) ?: return
+            mediaPlayer = MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                afd.close()
                 isLooping = true
+                val vol = if (isMuted) 0f else 1f
+                setVolume(vol, vol)
+                prepare()
                 if (isPlaying) start()
             }
         } catch (e: Exception) {

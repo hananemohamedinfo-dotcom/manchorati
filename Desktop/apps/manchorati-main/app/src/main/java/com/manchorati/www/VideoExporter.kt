@@ -73,7 +73,7 @@ object VideoExporter {
 
                 // 2. Prepare Audio PCM Data
                 val totalDurationSec = config.durationSec
-                val pcmData = getAudioPcmBytes(context, config.audioPreset, customAudioUri, totalDurationSec)
+                val pcmData = getAudioPcmBytes(context, config.audioPreset, customAudioUri, config.downloadedAudioPath, totalDurationSec)
 
                 // 3. Encode Video Frames
                 val totalFrames = totalDurationSec * FRAME_RATE
@@ -186,7 +186,7 @@ object VideoExporter {
     }
 
     private fun setupAudioTrack(muxer: MediaMuxer): Int {
-        val audioFormat = MediaFormat.createAudioFormat(AUDIO_MIME, SAMPLE_RATE_AUDIO, 1).apply {
+        val audioFormat = MediaFormat.createAudioFormat(AUDIO_MIME, SAMPLE_RATE_AUDIO, 2).apply {
             setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
             setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE_AUDIO)
             setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384)
@@ -217,7 +217,7 @@ object VideoExporter {
         audioTrackIndex: Int,
         onProgress: (Int) -> Unit
     ) {
-        val audioFormat = MediaFormat.createAudioFormat(AUDIO_MIME, SAMPLE_RATE_AUDIO, 1).apply {
+        val audioFormat = MediaFormat.createAudioFormat(AUDIO_MIME, SAMPLE_RATE_AUDIO, 2).apply {
             setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
             setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE_AUDIO)
             setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384)
@@ -244,8 +244,8 @@ object VideoExporter {
                             inputBuffer.put(pcmData, pcmOffset, bytesToRead)
                             encoder.queueInputBuffer(inputIndex, 0, bytesToRead, presentationTimeUs, 0)
                             pcmOffset += bytesToRead
-                            // Samples sent = bytes / 2 (16-bit mono)
-                            val samples = bytesToRead / 2
+                            // Samples sent = bytes / 4 (16-bit stereo = 2 channels * 2 bytes = 4 bytes per frame)
+                            val samples = bytesToRead / 4
                             presentationTimeUs += (samples * 1_000_000L) / SAMPLE_RATE_AUDIO
 
                             val prog = ((pcmOffset.toFloat() / pcmData.size) * 100f).toInt()
@@ -282,21 +282,30 @@ object VideoExporter {
         context: Context,
         audioPreset: String,
         customAudioUri: Uri?,
+        downloadedAudioPath: String?,
         durationSec: Int
     ): ByteArray? {
-        val totalBytesNeeded = durationSec * SAMPLE_RATE_AUDIO * 2 // 16-bit mono
+        val totalBytesNeeded = durationSec * SAMPLE_RATE_AUDIO * 4 // 16-bit stereo (4 bytes per sample frame)
 
-        // Custom Audio handling
+        // 1. Downloaded Audio handling
+        if (downloadedAudioPath != null && File(downloadedAudioPath).exists()) {
+            val fileUri = Uri.fromFile(File(downloadedAudioPath))
+            val decoded = decodeAudioUriToPcm(context, fileUri, totalBytesNeeded)
+            if (decoded != null && decoded.isNotEmpty()) return decoded
+        }
+
+        // 2. Custom Audio handling
         if (customAudioUri != null) {
             val decoded = decodeAudioUriToPcm(context, customAudioUri, totalBytesNeeded)
             if (decoded != null && decoded.isNotEmpty()) return decoded
         }
 
-        // Mute or Unknown
+        // 3. Mute
         if (audioPreset == "mute") {
             return ByteArray(totalBytesNeeded) // Silence
         }
 
+        // 4. Built-in Raw Stereo WAVs
         val rawResId = when (audioPreset.lowercase()) {
             "rain" -> R.raw.ambient_rain
             "oud" -> R.raw.ambient_oud

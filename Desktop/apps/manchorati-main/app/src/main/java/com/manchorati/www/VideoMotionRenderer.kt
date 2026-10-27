@@ -19,12 +19,15 @@ object VideoMotionRenderer {
         val tag: String = "",
         val bgMotionId: String = "STARS", // STARS, RAIN, AURORA, GOLD, OCEAN, CUSTOM_IMAGE
         val audioPreset: String = "piano", // piano, rain, oud, nature, mute, custom
-        val animStyle: String = "typewriter", // typewriter, fade, zoom
+        val animStyle: String = "typewriter", // typewriter, fade, zoom, glow, slide_up, word_by_word, blur_in
         val aspectRatio: String = "9:16", // 9:16 or 1:1
-        val durationSec: Int = 10,
+        val durationSec: Int = 15,
         val fontId: String = "tajawal",
         val textColor: String = "#FFFFFF",
-        var customImageBitmap: Bitmap? = null
+        var customImageBitmap: Bitmap? = null,
+        val showTag: Boolean = false,
+        val showAuthor: Boolean = true,
+        val downloadedAudioPath: String? = null
     )
 
     // Pre-allocated deterministic particles
@@ -134,41 +137,44 @@ object VideoMotionRenderer {
         }
         canvas.drawRoundRect(cardRect, cardRadius, cardRadius, borderPaint)
 
-        // 3. Header: Author info on the RIGHT, Tag chip on the LEFT
+        // 3. Header: Author info on the RIGHT, Tag chip on the LEFT (conditionally)
         val padX = 32f * S
         val headerY = cardTop + 44f * S
+        val hasAuthor = config.showAuthor && config.authorName.isNotEmpty()
+        val hasTag = config.showTag && config.tag.isNotEmpty()
 
-        // Author Name & Badge
-        val authorPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            textSize = (if (isStory) 24f else 22f) * S
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textAlign = Paint.Align.RIGHT
+        if (hasAuthor) {
+            // Author Name & Badge
+            val authorPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                textSize = (if (isStory) 24f else 22f) * S
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                textAlign = Paint.Align.RIGHT
+            }
+            val usernamePaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#94A3B8")
+                textSize = 17f * S
+                textAlign = Paint.Align.RIGHT
+            }
+
+            val rawAuthor = if (config.authorBadge.isNotEmpty() && config.authorBadge != "beginner") {
+                "${config.authorName}  ${config.authorBadge}"
+            } else {
+                config.authorName
+            }
+
+            val maxAuthorW = (cardRight - cardLeft) * 0.52f
+            val ellipAuthor = TextUtils.ellipsize(rawAuthor, authorPaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+            val authorX = cardRight - padX
+            canvas.drawText(ellipAuthor, authorX, headerY, authorPaint)
+
+            val usernameText = "@${config.authorUsername}"
+            val ellipUser = TextUtils.ellipsize(usernameText, usernamePaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+            canvas.drawText(ellipUser, authorX, headerY + 26f * S, usernamePaint)
         }
-        val usernamePaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#94A3B8")
-            textSize = 17f * S
-            textAlign = Paint.Align.RIGHT
-        }
-
-        val rawAuthor = if (config.authorBadge.isNotEmpty() && config.authorBadge != "beginner") {
-            "${config.authorName}  ${config.authorBadge}"
-        } else {
-            config.authorName
-        }
-
-        // Available width for author name so it NEVER touches the tag chip
-        val maxAuthorW = (cardRight - cardLeft) * 0.52f
-        val ellipAuthor = TextUtils.ellipsize(rawAuthor, authorPaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
-        val authorX = cardRight - padX
-        canvas.drawText(ellipAuthor, authorX, headerY, authorPaint)
-
-        val usernameText = "@${config.authorUsername}"
-        val ellipUser = TextUtils.ellipsize(usernameText, usernamePaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
-        canvas.drawText(ellipUser, authorX, headerY + 26f * S, usernamePaint)
 
         // Tag Chip (Top Left inside card)
-        if (config.tag.isNotEmpty()) {
+        if (hasTag) {
             val cleanTag = config.tag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
             val tagText = "# ${cleanTag.ifEmpty { config.tag }}"
             val tagPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -198,13 +204,18 @@ object VideoMotionRenderer {
             canvas.drawText(tagText, chipLeft + 11f * S, chipBottom - 8f * S, tagPaint)
         }
 
-        // Header Divider
-        val dividerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#20FFFFFF")
-            strokeWidth = 1.2f * S
+        // Header Divider (only if header elements exist)
+        val dividerY: Float
+        if (hasAuthor || hasTag) {
+            val dividerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#20FFFFFF")
+                strokeWidth = 1.2f * S
+            }
+            dividerY = headerY + 44f * S
+            canvas.drawLine(cardLeft + 24f * S, dividerY, cardRight - 24f * S, dividerY, dividerPaint)
+        } else {
+            dividerY = cardTop + 16f * S
         }
-        val dividerY = headerY + 44f * S
-        canvas.drawLine(cardLeft + 24f * S, dividerY, cardRight - 24f * S, dividerY, dividerPaint)
 
         // Subtle Watermark Quotation Mark behind quote
         val quotePulse = 0.20f + 0.08f * sin(progress * 2 * Math.PI.toFloat())
@@ -215,7 +226,8 @@ object VideoMotionRenderer {
             typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
         }
-        canvas.drawText("“", w / 2f, dividerY + 54f * S, quotePaint)
+        val quoteMarkY = if (hasAuthor || hasTag) dividerY + 54f * S else cardTop + 68f * S
+        canvas.drawText("“", w / 2f, quoteMarkY, quotePaint)
 
         // 5. Central Typography with Selected Animation
         val textPaddingX = 36f * S
@@ -239,6 +251,7 @@ object VideoMotionRenderer {
         var textToDraw = config.content
         var textAlpha = 255
         var scale = 1.0f
+        var translateY = 0f
 
         when (config.animStyle.lowercase()) {
             "typewriter" -> {
@@ -247,12 +260,41 @@ object VideoMotionRenderer {
                 val isBlinking = ((loopTimeMs / 380) % 2 == 0L) && typeRatio < 1.0f
                 textToDraw = config.content.take(charCount) + (if (isBlinking) " |" else "")
             }
+            "word_by_word" -> {
+                val words = config.content.split(Regex("\\s+")).filter { it.isNotEmpty() }
+                if (words.isNotEmpty()) {
+                    val wordRatio = (progress / 0.70f).coerceIn(0f, 1f)
+                    val visibleCount = maxOf(1, (words.size * wordRatio).toInt().coerceAtMost(words.size))
+                    textToDraw = words.take(visibleCount).joinToString(" ")
+                }
+            }
             "fade" -> {
                 val fadeProgress = (progress / 0.20f).coerceIn(0f, 1f)
                 textAlpha = (fadeProgress * 255).toInt()
             }
             "zoom" -> {
-                scale = 0.96f + 0.08f * progress
+                scale = 0.95f + 0.10f * progress
+            }
+            "glow" -> {
+                val pulse = 0.5f + 0.5f * sin(progress * 4 * Math.PI.toFloat())
+                val glowRadius = (12f + pulse * 14f) * S
+                textPaint.setShadowLayer(glowRadius, 0f, 0f, Color.parseColor("#38BDF8"))
+            }
+            "slide_up" -> {
+                val slideProgress = (progress / 0.22f).coerceIn(0f, 1f)
+                val ease = 1f - (1f - slideProgress).pow(2)
+                translateY = (1f - ease) * 35f * S
+                textAlpha = (ease * 255).toInt()
+            }
+            "blur_in" -> {
+                if (progress < 0.22f) {
+                    val blurProgress = 1f - (progress / 0.22f)
+                    val blurRadius = blurProgress * 12f * S
+                    if (blurRadius >= 1f) {
+                        textPaint.maskFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL)
+                    }
+                    textAlpha = ((1f - blurProgress * 0.35f) * 255).toInt()
+                }
             }
         }
         textPaint.alpha = textAlpha
@@ -275,14 +317,16 @@ object VideoMotionRenderer {
             )
         }
 
-        val textAvailableHeight = (cardBottom - 60f * S) - (dividerY + 30f * S)
-        val textStartY = dividerY + 30f * S + ((textAvailableHeight - staticLayout.height) / 2f).coerceAtLeast(10f)
+        val textTopLimit = if (hasAuthor || hasTag) (dividerY + 28f * S) else (cardTop + 40f * S)
+        val textBottomLimit = cardBottom - 48f * S
+        val textAvailableHeight = (textBottomLimit - textTopLimit).coerceAtLeast(50f)
+        val textStartY = textTopLimit + ((textAvailableHeight - staticLayout.height) / 2f).coerceAtLeast(0f)
 
         canvas.save()
         if (scale != 1.0f) {
             canvas.scale(scale, scale, w / 2f, textStartY + staticLayout.height / 2f)
         }
-        canvas.translate(cardLeft + textPaddingX, textStartY)
+        canvas.translate(cardLeft + textPaddingX, textStartY - translateY)
         staticLayout.draw(canvas)
         canvas.restore()
 
@@ -319,7 +363,7 @@ object VideoMotionRenderer {
     ) {
         val bgPaint = Paint()
 
-        if (config.bgMotionId == "CUSTOM_IMAGE" && config.customImageBitmap != null) {
+        if (config.customImageBitmap != null) {
             val bmp = config.customImageBitmap!!
             val kenBurnsScale = 1.0f + 0.08f * progress
             val kenBurnsShift = (progress - 0.5f) * (w * 0.04f)
