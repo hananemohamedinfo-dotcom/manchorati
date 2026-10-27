@@ -45,7 +45,7 @@ fun listenToUserPosts(
                     val post = doc.toObject(CommunityPost::class.java)
                     post?.apply { id = doc.id }
                 }.sortedByDescending { post: CommunityPost ->
-                    (post.timestamp as? Number)?.toLong() ?: 0L
+                    post.getTimeMillis()
                 }
                 onUpdate(list)
             }

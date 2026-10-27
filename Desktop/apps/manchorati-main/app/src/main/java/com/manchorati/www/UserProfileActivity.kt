@@ -75,6 +75,12 @@ class UserProfileActivity : AppCompatActivity() {
 
         initViews()
         setupRecyclerView()
+
+        if (targetUserId.isNotEmpty()) {
+            loadProfileData()
+            listenToPosts()
+        }
+
         observeAuthState()
     }
 
@@ -117,6 +123,8 @@ class UserProfileActivity : AppCompatActivity() {
                         finish()
                     } else {
                         updateProfileUI()
+                        loadProfileData()
+                        listenToPosts()
                     }
                 }
             }
@@ -338,7 +346,15 @@ class UserProfileActivity : AppCompatActivity() {
                         tvProfileBadge.text = "${currentBadge.iconEmoji} ${currentBadge.title}"
                         tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
                         tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
+                    } else {
+                        tvName.text = targetUserName
+                        if (tvBio.text.isNullOrEmpty()) {
+                            tvBio.text = getString(R.string.no_bio_yet)
+                        }
+                        tvFollowersCount.text = currentFollowersCount.formatCount()
+                        tvFollowingCount.text = 0L.formatCount()
                     }
+                    swipeRefresh.isRefreshing = false
                 }
             }
         }

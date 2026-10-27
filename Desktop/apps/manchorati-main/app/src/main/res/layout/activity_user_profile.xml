@@ -110,47 +110,39 @@
                         android:textStyle="bold"
                         tools:text="محمد علي" />
 
-                    <!-- شارة المستخدم واسم المستخدم في سطر أنيق وغير مضغوط -->
-                    <LinearLayout
+                    <!-- اسم المستخدم الفريد (@username) -->
+                    <TextView
+                        android:id="@+id/tvProfileUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        tools:text="@mohamed"
+                        tools:visibility="visible" />
 
-                        <!-- اسم المستخدم الفريد (@username) -->
-                        <TextView
-                            android:id="@+id/tvProfileUsername"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            android:visibility="gone"
-                            tools:text="@mohamed"
-                            tools:visibility="visible" />
-
-                        <!-- شارة المستخدم والرتبة التفاعلية -->
-                        <TextView
-                            android:id="@+id/tvProfileBadge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_badge_beginner"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:paddingStart="8dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="2dp"
-                            android:singleLine="true"
-                            android:text="🥉 كاتب مبتدئ"
-                            android:textColor="#D97706"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:visibility="visible"
-                            tools:visibility="visible" />
-                    </LinearLayout>
+                    <!-- شارة المستخدم والرتبة التفاعلية في سطر مخصص بدون ضغط -->
+                    <TextView
+                        android:id="@+id/tvProfileBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_badge_beginner"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        android:singleLine="true"
+                        android:text="🥉 كاتب مبتدئ"
+                        android:textColor="#D97706"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:visibility="visible" />
                 </LinearLayout>
 
                 <!-- زر المتابعة العصري للزوار -->
