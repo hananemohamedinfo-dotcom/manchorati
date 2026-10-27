@@ -98,36 +98,52 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+                    <!-- الاسم الشخصي Display Name -->
+                    <TextView
+                        android:id="@+id/tvProfileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="محمد علي" />
+
+                    <!-- شارة المستخدم واسم المستخدم في سطر أنيق وغير مضغوط -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <!-- الاسم الشخصي Display Name -->
+                        <!-- اسم المستخدم الفريد (@username) -->
                         <TextView
-                            android:id="@+id/tvProfileName"
+                            android:id="@+id/tvProfileUsername"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            tools:text="محمد علي" />
+                            android:layout_marginEnd="6dp"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:visibility="gone"
+                            tools:text="@mohamed"
+                            tools:visibility="visible" />
 
                         <!-- شارة المستخدم والرتبة التفاعلية -->
                         <TextView
                             android:id="@+id/tvProfileBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
                             android:background="@drawable/bg_badge_beginner"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:paddingStart="8dp"
-                            android:paddingTop="3dp"
+                            android:paddingTop="2dp"
                             android:paddingEnd="8dp"
-                            android:paddingBottom="3dp"
+                            android:paddingBottom="2dp"
+                            android:singleLine="true"
                             android:text="🥉 كاتب مبتدئ"
                             android:textColor="#D97706"
                             android:textSize="11sp"
@@ -135,24 +151,11 @@
                             android:visibility="visible"
                             tools:visibility="visible" />
                     </LinearLayout>
-
-                    <!-- اسم المستخدم الفريد (@username) -->
-                    <TextView
-                        android:id="@+id/tvProfileUsername"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:visibility="gone"
-                        tools:text="@mohamed"
-                        tools:visibility="visible" />
                 </LinearLayout>
 
-                <!-- زر تعديل البروفايل أو المتابعة العصري -->
+                <!-- زر المتابعة العصري للزوار -->
                 <TextView
                     android:id="@+id/btnProfileAction"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="34dp"
                     android:background="@drawable/bg_tool_chip_active"
@@ -160,10 +163,12 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
-                    android:text="@string/edit_profile_btn"
+                    android:text="@string/follow"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
 
             <!-- النبذة الشخصية (Bio) -->

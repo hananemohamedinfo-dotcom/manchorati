@@ -71,6 +71,7 @@ class UserProfileActivity : AppCompatActivity() {
         val passedId = intent.getStringExtra("USER_ID") ?: ""
         targetUserId = passedId
         targetUserName = intent.getStringExtra("USER_NAME") ?: "فاعل خير"
+        activeUserId = AuthManager.currentUser?.uid ?: ""
 
         initViews()
         setupRecyclerView()
@@ -232,6 +233,7 @@ class UserProfileActivity : AppCompatActivity() {
         } else {
             ivProfileAvatar.setOnClickListener(null)
             btnProfileMenu.visibility = View.GONE
+            btnProfileAction.visibility = View.VISIBLE
             updateFollowButtonUI()
 
             btnProfileAction.setOnClickListener {
@@ -757,6 +759,12 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun updateFollowButtonUI() {
+        val isMyProfile = (targetUserId.isNotEmpty() && targetUserId == activeUserId) || targetUserId.isEmpty()
+        if (isMyProfile) {
+            btnProfileAction.visibility = View.GONE
+            return
+        }
+        btnProfileAction.visibility = View.VISIBLE
         if (isFollowing) {
             btnProfileAction.text = getString(R.string.following)
             btnProfileAction.setBackgroundResource(R.drawable.bg_tool_chip_idle)
