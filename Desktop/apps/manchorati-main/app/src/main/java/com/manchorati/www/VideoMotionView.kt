@@ -62,7 +62,6 @@ class VideoMotionView @JvmOverloads constructor(
 
     override fun doFrame(frameTimeNanos: Long) {
         if (!isAttached) return
-
         if (isPlaying) {
             invalidate()
         }
@@ -70,33 +69,23 @@ class VideoMotionView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val parentW = MeasureSpec.getSize(widthMeasureSpec)
+        val parentH = MeasureSpec.getSize(heightMeasureSpec)
         val isStory = config.aspectRatio == "9:16"
-        val desiredHeight = if (isStory) {
-            (width * 16) / 9
-        } else {
-            width
+        val ratio = if (isStory) 9f / 16f else 1f
+
+        val wMode = MeasureSpec.getMode(widthMeasureSpec)
+        val hMode = MeasureSpec.getMode(heightMeasureSpec)
+
+        var targetH = if (hMode != MeasureSpec.UNSPECIFIED && parentH > 0) parentH else (parentW / ratio).toInt()
+        var targetW = (targetH * ratio).toInt()
+
+        if (wMode != MeasureSpec.UNSPECIFIED && parentW > 0 && targetW > parentW) {
+            targetW = parentW
+            targetH = (targetW / ratio).toInt()
         }
 
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val maxHeight = MeasureSpec.getSize(heightMeasureSpec)
-
-        val finalHeight = if (heightMode == MeasureSpec.AT_MOST && desiredHeight > maxHeight) {
-            maxHeight
-        } else {
-            desiredHeight
-        }
-
-        // Adjust width if height was capped
-        val finalWidth = if (isStory && finalHeight < desiredHeight) {
-            (finalHeight * 9) / 16
-        } else if (!isStory && finalHeight < desiredHeight) {
-            finalHeight
-        } else {
-            width
-        }
-
-        setMeasuredDimension(finalWidth, finalHeight)
+        setMeasuredDimension(targetW, targetH)
     }
 
     override fun onDraw(canvas: Canvas) {

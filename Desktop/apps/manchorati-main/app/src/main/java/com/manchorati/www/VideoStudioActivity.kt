@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,9 @@ import android.view.Window
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,8 +26,7 @@ import java.io.InputStream
 class VideoStudioActivity : AppCompatActivity() {
 
     private lateinit var videoMotionView: VideoMotionView
-    private lateinit var btnPlayPauseOverlay: FrameLayout
-    private lateinit var ivPlayPauseIcon: ImageView
+    private lateinit var ivPlayPauseIndicator: ImageView
     private lateinit var layoutCustomMediaWarning: LinearLayout
 
     // Ratio & Duration
@@ -36,25 +39,23 @@ class VideoStudioActivity : AppCompatActivity() {
     // Tabs
     private lateinit var tabMotion: TextView
     private lateinit var tabAudio: TextView
-    private lateinit var tabStyle: TextView
+    private lateinit var tabAnim: TextView
+    private lateinit var tabFont: TextView
     private lateinit var scrollMotion: HorizontalScrollView
     private lateinit var scrollAudio: HorizontalScrollView
-    private lateinit var layoutStyleSettings: LinearLayout
+    private lateinit var scrollAnim: HorizontalScrollView
+    private lateinit var scrollFont: HorizontalScrollView
 
     // Containers
     private lateinit var layoutMotionPresets: LinearLayout
     private lateinit var layoutAudioPresets: LinearLayout
+    private lateinit var layoutAnimStyles: LinearLayout
     private lateinit var layoutFontPresets: LinearLayout
-
-    // Anim Styles
-    private lateinit var btnAnimTypewriter: TextView
-    private lateinit var btnAnimFade: TextView
-    private lateinit var btnAnimZoom: TextView
 
     // Actions
     private lateinit var btnSaveGallery: LinearLayout
     private lateinit var btnShareWhatsApp: LinearLayout
-    private lateinit var btnShareGeneral: LinearLayout
+    private lateinit var btnShareGeneral: FrameLayout
     private lateinit var btnPublishCommunity: LinearLayout
 
     // State
@@ -101,7 +102,7 @@ class VideoStudioActivity : AppCompatActivity() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 if (account != null) {
-                    AuthManager.firebaseAuthWithGoogle(account, { isNewUser ->
+                    AuthManager.firebaseAuthWithGoogle(account, { _ ->
                         loginDialog?.dismiss()
                         Toast.makeText(this, "تم تسجيل الدخول بنجاح! 🎉", Toast.LENGTH_SHORT).show()
                         if (pendingPublishAfterLogin) {
@@ -124,9 +125,11 @@ class VideoStudioActivity : AppCompatActivity() {
 
         initIntentData()
         initViews()
+        applyWindowInsets()
         setupListeners()
         populateMotionPresets()
         populateAudioPresets()
+        populateAnimPresets()
         populateFontPresets()
         updateConfig()
         updatePublishCommunityState()
@@ -160,11 +163,11 @@ class VideoStudioActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        findViewById<View>(R.id.btnBackContainer).setOnClickListener { finish() }
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
         videoMotionView = findViewById(R.id.videoMotionView)
-        btnPlayPauseOverlay = findViewById(R.id.btnPlayPauseOverlay)
-        ivPlayPauseIcon = findViewById(R.id.ivPlayPauseIcon)
+        ivPlayPauseIndicator = findViewById(R.id.ivPlayPauseIndicator)
         layoutCustomMediaWarning = findViewById(R.id.layoutCustomMediaWarning)
 
         btnRatioStory = findViewById(R.id.btnRatioStory)
@@ -175,18 +178,18 @@ class VideoStudioActivity : AppCompatActivity() {
 
         tabMotion = findViewById(R.id.tabMotion)
         tabAudio = findViewById(R.id.tabAudio)
-        tabStyle = findViewById(R.id.tabStyle)
+        tabAnim = findViewById(R.id.tabAnim)
+        tabFont = findViewById(R.id.tabFont)
+
         scrollMotion = findViewById(R.id.scrollMotion)
         scrollAudio = findViewById(R.id.scrollAudio)
-        layoutStyleSettings = findViewById(R.id.layoutStyleSettings)
+        scrollAnim = findViewById(R.id.scrollAnim)
+        scrollFont = findViewById(R.id.scrollFont)
 
         layoutMotionPresets = findViewById(R.id.layoutMotionPresets)
         layoutAudioPresets = findViewById(R.id.layoutAudioPresets)
+        layoutAnimStyles = findViewById(R.id.layoutAnimStyles)
         layoutFontPresets = findViewById(R.id.layoutFontPresets)
-
-        btnAnimTypewriter = findViewById(R.id.btnAnimTypewriter)
-        btnAnimFade = findViewById(R.id.btnAnimFade)
-        btnAnimZoom = findViewById(R.id.btnAnimZoom)
 
         btnSaveGallery = findViewById(R.id.btnSaveGallery)
         btnShareWhatsApp = findViewById(R.id.btnShareWhatsApp)
@@ -194,15 +197,44 @@ class VideoStudioActivity : AppCompatActivity() {
         btnPublishCommunity = findViewById(R.id.btnPublishCommunity)
     }
 
-    private fun setupListeners() {
-        // Play / Pause
-        btnPlayPauseOverlay.setOnClickListener {
-            videoMotionView.togglePlay()
-        }
-        videoMotionView.onPlayStateChanged = { isPlaying ->
-            ivPlayPauseIcon.setImageResource(
-                if (isPlaying) R.drawable.ic_video_pause else R.drawable.ic_video_play
+    private fun applyWindowInsets() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.parseColor("#080C14")
+
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = false
+        insetsController.isAppearanceLightNavigationBars = false
+
+        val density = resources.displayMetrics.density
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
+            val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBar = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            val spacer = findViewById<View>(R.id.statusBarSpacer)
+            if (spacer != null && spacer.layoutParams.height != statusBar.top) {
+                spacer.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    statusBar.top
+                )
+            }
+
+            findViewById<View>(R.id.layoutBottomDock)?.setPadding(
+                (16 * density).toInt(),
+                (10 * density).toInt(),
+                (16 * density).toInt(),
+                navBar.bottom + (10 * density).toInt()
             )
+
+            insets
+        }
+    }
+
+    private fun setupListeners() {
+        // Tap canvas toggles play/pause with sleek feedback
+        videoMotionView.setOnClickListener {
+            videoMotionView.togglePlay()
+            showPlayPauseFeedback(!videoMotionView.isPlaying)
         }
 
         // Ratio Toggle
@@ -245,27 +277,8 @@ class VideoStudioActivity : AppCompatActivity() {
         // Tabs Toggle
         tabMotion.setOnClickListener { switchTab(0) }
         tabAudio.setOnClickListener { switchTab(1) }
-        tabStyle.setOnClickListener { switchTab(2) }
-
-        // Anim Styles
-        btnAnimTypewriter.setOnClickListener {
-            selectedAnim = "typewriter"
-            highlightAnimBtn(btnAnimTypewriter)
-            updateConfig()
-            videoMotionView.restart()
-        }
-        btnAnimFade.setOnClickListener {
-            selectedAnim = "fade"
-            highlightAnimBtn(btnAnimFade)
-            updateConfig()
-            videoMotionView.restart()
-        }
-        btnAnimZoom.setOnClickListener {
-            selectedAnim = "zoom"
-            highlightAnimBtn(btnAnimZoom)
-            updateConfig()
-            videoMotionView.restart()
-        }
+        tabAnim.setOnClickListener { switchTab(2) }
+        tabFont.setOnClickListener { switchTab(3) }
 
         // Bottom Actions
         btnSaveGallery.setOnClickListener {
@@ -296,8 +309,22 @@ class VideoStudioActivity : AppCompatActivity() {
         }
     }
 
+    private fun showPlayPauseFeedback(isPaused: Boolean) {
+        ivPlayPauseIndicator.setImageResource(
+            if (isPaused) R.drawable.ic_video_play else R.drawable.ic_video_pause
+        )
+        ivPlayPauseIndicator.visibility = View.VISIBLE
+        ivPlayPauseIndicator.alpha = 1f
+        ivPlayPauseIndicator.animate()
+            .alpha(0f)
+            .setDuration(450)
+            .setStartDelay(200)
+            .withEndAction { ivPlayPauseIndicator.visibility = View.GONE }
+            .start()
+    }
+
     private fun switchTab(tabIndex: Int) {
-        val tabs = listOf(tabMotion, tabAudio, tabStyle)
+        val tabs = listOf(tabMotion, tabAudio, tabAnim, tabFont)
         for (i in tabs.indices) {
             if (i == tabIndex) {
                 tabs[i].setBackgroundResource(R.drawable.bg_segment_btn_active)
@@ -309,20 +336,8 @@ class VideoStudioActivity : AppCompatActivity() {
         }
         scrollMotion.visibility = if (tabIndex == 0) View.VISIBLE else View.GONE
         scrollAudio.visibility = if (tabIndex == 1) View.VISIBLE else View.GONE
-        layoutStyleSettings.visibility = if (tabIndex == 2) View.VISIBLE else View.GONE
-    }
-
-    private fun highlightAnimBtn(selected: TextView) {
-        val animBtns = listOf(btnAnimTypewriter, btnAnimFade, btnAnimZoom)
-        for (btn in animBtns) {
-            if (btn == selected) {
-                btn.setBackgroundResource(R.drawable.bg_segment_btn_active)
-                btn.setTextColor(Color.WHITE)
-            } else {
-                btn.background = null
-                btn.setTextColor(Color.parseColor("#94A3B8"))
-            }
-        }
+        scrollAnim.visibility = if (tabIndex == 2) View.VISIBLE else View.GONE
+        scrollFont.visibility = if (tabIndex == 3) View.VISIBLE else View.GONE
     }
 
     private fun populateMotionPresets() {
@@ -331,13 +346,13 @@ class VideoStudioActivity : AppCompatActivity() {
             Triple("STARS", "✨ فضاء ونجوم", "#0D162B"),
             Triple("RAIN", "🌧️ مطر ناعم", "#131C2E"),
             Triple("AURORA", "🌌 شفق أخضر", "#0A1226"),
-            Triple("GOLD", "✨ جزيئات ذهبية", "#281F18"),
+            Triple("GOLD", "🌟 بريق ذهبي", "#281F18"),
             Triple("OCEAN", "🌊 أمواج هادئة", "#0A2540"),
-            Triple("CUSTOM_IMAGE", "🖼️ صورة من هاتفي", "#334155")
+            Triple("CUSTOM_IMAGE", "🖼️ صورتي", "#1E293B")
         )
 
         for ((id, title, colorHex) in presets) {
-            val chip = createOptionChip(title, id == selectedMotion, colorHex) {
+            val chip = createStudioCard(title, id == selectedMotion, colorHex) {
                 if (id == "CUSTOM_IMAGE") {
                     pickImageLauncher.launch("image/*")
                 } else {
@@ -355,16 +370,16 @@ class VideoStudioActivity : AppCompatActivity() {
     private fun populateAudioPresets() {
         layoutAudioPresets.removeAllViews()
         val audios = listOf(
-            Triple("piano", "🎹 بيانو هادئ", "#0284C7"),
-            Triple("rain", "🌧️ صوت المطر", "#0369A1"),
+            Triple("piano", "🎹 بيانو هادئ", "#0369A1"),
+            Triple("rain", "🌧️ صوت المطر", "#0284C7"),
             Triple("oud", "🪕 عود شرقي", "#B45309"),
-            Triple("nature", "🍃 نسيم وطبيعة", "#059669"),
-            Triple("mute", "🔇 صامت", "#475569"),
-            Triple("custom", "📁 موسيقى من هاتفي", "#7C3AED")
+            Triple("nature", "🍃 نسيم وطبيعة", "#047857"),
+            Triple("mute", "🔇 صامت", "#334155"),
+            Triple("custom", "📁 ملف صوتي", "#6D28D9")
         )
 
         for ((id, title, colorHex) in audios) {
-            val chip = createOptionChip(title, id == selectedAudio, colorHex) {
+            val chip = createStudioCard(title, id == selectedAudio, colorHex) {
                 if (id == "custom") {
                     pickAudioLauncher.launch("audio/*")
                 } else {
@@ -380,6 +395,25 @@ class VideoStudioActivity : AppCompatActivity() {
         }
     }
 
+    private fun populateAnimPresets() {
+        layoutAnimStyles.removeAllViews()
+        val anims = listOf(
+            Triple("typewriter", "⌨️ كتابة حية", "#0284C7"),
+            Triple("fade", "✨ ظهور ناعم", "#7C3AED"),
+            Triple("zoom", "🔍 تقريب سينمائي", "#C026D3")
+        )
+
+        for ((id, title, colorHex) in anims) {
+            val chip = createStudioCard(title, id == selectedAnim, colorHex) {
+                selectedAnim = id
+                populateAnimPresets()
+                updateConfig()
+                videoMotionView.restart()
+            }
+            layoutAnimStyles.addView(chip)
+        }
+    }
+
     private fun populateFontPresets() {
         layoutFontPresets.removeAllViews()
         val fonts = listOf(
@@ -392,7 +426,7 @@ class VideoStudioActivity : AppCompatActivity() {
         )
 
         for ((fontId, fontName) in fonts) {
-            val chip = createOptionChip(fontName, fontId == selectedFont, "#1E293B") {
+            val chip = createStudioCard(fontName, fontId == selectedFont, "#1E293B") {
                 selectedFont = fontId
                 populateFontPresets()
                 updateConfig()
@@ -401,25 +435,31 @@ class VideoStudioActivity : AppCompatActivity() {
         }
     }
 
-    private fun createOptionChip(title: String, isSelected: Boolean, colorHex: String, onClick: () -> Unit): View {
+    private fun createStudioCard(title: String, isSelected: Boolean, colorHex: String, onClick: () -> Unit): View {
         val density = resources.displayMetrics.density
         val tv = TextView(this).apply {
             text = title
-            textSize = 12f
-            setPadding((14 * density).toInt(), (8 * density).toInt(), (14 * density).toInt(), (8 * density).toInt())
+            textSize = 12.5f
+            setPadding((16 * density).toInt(), (9 * density).toInt(), (16 * density).toInt(), (9 * density).toInt())
             setTextColor(Color.WHITE)
-            if (isSelected) {
-                setBackgroundResource(R.drawable.bg_button_gradient_primary)
-                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor(colorHex))
-            } else {
-                setBackgroundResource(R.drawable.bg_card_white)
-                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#1E293B"))
+
+            val bg = GradientDrawable().apply {
+                cornerRadius = 14 * density
+                if (isSelected) {
+                    setColor(Color.parseColor(colorHex))
+                    setStroke((2 * density).toInt(), Color.parseColor("#38BDF8"))
+                } else {
+                    setColor(Color.parseColor("#141E33"))
+                    setStroke((1 * density).toInt(), Color.parseColor("#25334E"))
+                }
             }
+            background = bg
+
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginEnd = (8 * density).toInt()
+                marginEnd = (10 * density).toInt()
             }
             layoutParams = params
             isClickable = true
@@ -436,7 +476,6 @@ class VideoStudioActivity : AppCompatActivity() {
             inputStream?.close()
 
             if (original != null) {
-                // Scale if too large
                 val maxDim = 1280
                 val scale = minOf(maxDim.toFloat() / original.width, maxDim.toFloat() / original.height, 1.0f)
                 customImageBitmap = if (scale < 1.0f) {
@@ -623,7 +662,6 @@ class VideoStudioActivity : AppCompatActivity() {
         loginDialog = dialog
 
         val btnGoogle = view.findViewById<Button>(R.id.btnGoogleSignIn)
-        val layoutEmailAuth = view.findViewById<View>(R.id.layoutEmailAuth)
         val etAuthDisplayName = view.findViewById<EditText>(R.id.etAuthDisplayName)
         val etAuthEmail = view.findViewById<EditText>(R.id.etAuthEmail)
         val etAuthPassword = view.findViewById<EditText>(R.id.etAuthPassword)

@@ -4,206 +4,233 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#090D16"
+    android:background="#080C14"
     android:orientation="vertical">
 
-    <!-- Top Toolbar -->
-    <RelativeLayout
+    <!-- 1. Top Sleek Studio Toolbar -->
+    <LinearLayout
+        android:id="@+id/layoutStudioHeader"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#0F172A"
-        android:paddingHorizontal="12dp">
+        android:layout_height="wrap_content"
+        android:background="#0D131F"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="#FFFFFF" />
+        <!-- Status Bar Spacer (height set programmatically) -->
+        <View
+            android:id="@+id/statusBarSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@id/btnBack"
-            android:orientation="vertical">
+        <!-- Actual Header Content (56dp) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingHorizontal="14dp">
 
-            <TextView
+            <!-- Back Button -->
+            <FrameLayout
+                android:id="@+id/btnBackContainer"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_send_comment_circle"
+                android:backgroundTint="#1AFFFFFF"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="#FFFFFF" />
+            </FrameLayout>
+
+            <!-- Center Title -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="استوديو صانع الفيديو 🎬"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvStudioSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="تحويل المنشور إلى ريل أو ستوري متحرك"
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <!-- Ratio Toggle Pills -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_segment_container"
-            android:orientation="horizontal"
-            android:padding="2dp">
-
-            <TextView
-                android:id="@+id/btnRatioStory"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_segment_btn_active"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_centerInParent="true"
                 android:gravity="center"
-                android:paddingHorizontal="10dp"
-                android:text="9:16 ستوري"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/btnRatioSquare"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="استوديو الفيديو 🎬"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="صانع الريلز والستوري المتحرك"
+                    android:textColor="#64748B"
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+
+            <!-- Ratio Toggle Pills -->
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:paddingHorizontal="10dp"
-                android:text="1:1 مربع"
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_segment_container"
+                android:backgroundTint="#1AFFFFFF"
+                android:orientation="horizontal"
+                android:padding="2dp">
 
-    <!-- Main Content Area: Scrollable -->
+                <TextView
+                    android:id="@+id/btnRatioStory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_segment_btn_active"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="9dp"
+                    android:text="9:16"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnRatioSquare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="9dp"
+                    android:text="1:1"
+                    android:textColor="#94A3B8"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 2. Scrollable Studio Body -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:paddingBottom="16dp">
 
-            <!-- Video Preview Box -->
-            <FrameLayout
-                android:id="@+id/previewContainer"
-                android:layout_width="match_parent"
-                android:layout_height="380dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_card_white"
-                android:backgroundTint="#0F172A">
+            <!-- 2.1 Floating Phone Mockup Canvas Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPreviewMockup"
+                android:layout_width="wrap_content"
+                android:layout_height="340dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#050811"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeColor="#253552"
+                app:strokeWidth="1.5dp"
+                app:cardPreventCornerOverlap="true">
 
-                <com.manchorati.www.VideoMotionView
-                    android:id="@+id/videoMotionView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center" />
-
-                <!-- Play/Pause Overlay Floating Button -->
                 <FrameLayout
-                    android:id="@+id/btnPlayPauseOverlay"
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_send_comment_circle"
-                    android:backgroundTint="#80000000"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:id="@+id/ivPlayPauseIcon"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_video_pause"
-                        app:tint="#FFFFFF" />
-                </FrameLayout>
-
-                <!-- Duration Pills Overlay (Top Right) -->
-                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="26dp"
-                    android:layout_gravity="top|end"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_segment_container"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/btnDur5s"
+                    <com.manchorati.www.VideoMotionView
+                        android:id="@+id/videoMotionView"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="7dp"
-                        android:text="5 ثواني"
-                        android:textColor="#94A3B8"
-                        android:textSize="10sp" />
+                        android:layout_gravity="center" />
 
-                    <TextView
-                        android:id="@+id/btnDur10s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_segment_btn_active"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="7dp"
-                        android:text="10 ثواني"
-                        android:textColor="#FFFFFF"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
+                    <!-- Quick Fade Feedback Icon when tapping play/pause -->
+                    <ImageView
+                        android:id="@+id/ivPlayPauseIndicator"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_send_comment_circle"
+                        android:backgroundTint="#80000000"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_video_play"
+                        android:visibility="gone"
+                        app:tint="#FFFFFF" />
 
-                    <TextView
-                        android:id="@+id/btnDur15s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingHorizontal="7dp"
-                        android:text="15 ثانية"
-                        android:textColor="#94A3B8"
-                        android:textSize="10sp" />
-                </LinearLayout>
-            </FrameLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Privacy Warning Card for Custom Media -->
+            <!-- 2.2 Duration Selector Row (Cleanly outside video canvas!) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_segment_container"
+                android:backgroundTint="#1AFFFFFF"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/btnDur5s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="5 ثواني"
+                    android:textColor="#94A3B8"
+                    android:textSize="10.5sp" />
+
+                <TextView
+                    android:id="@+id/btnDur10s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_segment_btn_active"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="10 ثواني"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnDur15s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="15 ثانية"
+                    android:textColor="#94A3B8"
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+
+            <!-- 2.3 Privacy Warning Pill for Custom Media -->
             <LinearLayout
                 android:id="@+id/layoutCustomMediaWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_card_white"
                 android:backgroundTint="#1F991B1B"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="12dp"
+                android:padding="10dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -211,26 +238,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🔒"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="تنبيه الخصوصية وحقوق النشر: المنشورات التي تحتوي على صور أو ملفات صوتية خاصة من هاتفك مخصصة للتصدير والمشاركة على واتساب وتطبيقات التواصل فقط، ولا يمكن نشرها في مجتمع منشوراتي العام لحماية خصوصيتك وحقوق النشر."
+                    android:text="محتوى مخصص: متاح للتصدير والمشاركة على واتساب وتطبيقات التواصل فقط (لحفظ الخصوصية وحقوق الملكية)."
                     android:textColor="#FCA5A5"
                     android:textSize="11sp" />
             </LinearLayout>
 
-            <!-- Navigation Tabs -->
+            <!-- 2.4 Modern Category Tab Strip (Dock Style) -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="14dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/bg_segment_container"
+                android:backgroundTint="#14FFFFFF"
                 android:orientation="horizontal"
                 android:padding="2dp">
 
@@ -243,9 +270,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:text="🎨 الخلفية المتحركة"
+                    android:text="🎨 الخلفية"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="11.5sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -257,12 +284,12 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:text="🎵 الصوت والموسيقى"
+                    android:text="🎵 الصوت"
                     android:textColor="#94A3B8"
-                    android:textSize="12sp" />
+                    android:textSize="11.5sp" />
 
                 <TextView
-                    android:id="@+id/tabStyle"
+                    android:id="@+id/tabAnim"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -270,19 +297,32 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:text="✍️ حركة النص والخط"
+                    android:text="✨ الحركة"
                     android:textColor="#94A3B8"
-                    android:textSize="12sp" />
+                    android:textSize="11.5sp" />
+
+                <TextView
+                    android:id="@+id/tabFont"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="✍️ الخط"
+                    android:textColor="#94A3B8"
+                    android:textSize="11.5sp" />
             </LinearLayout>
 
-            <!-- Container for Tab 1: Motion Backgrounds -->
+            <!-- 2.5 Carousel for Tab 1: Motion Backgrounds -->
             <HorizontalScrollView
                 android:id="@+id/scrollMotion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -292,14 +332,14 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- Container for Tab 2: Audio Presets -->
+            <!-- 2.6 Carousel for Tab 2: Audio Presets -->
             <HorizontalScrollView
                 android:id="@+id/scrollAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:scrollbars="none"
                 android:visibility="gone">
 
@@ -310,145 +350,63 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- Container for Tab 3: Typography & Animation Style -->
-            <LinearLayout
-                android:id="@+id/layoutStyleSettings"
+            <!-- 2.7 Carousel for Tab 3: Animation Styles -->
+            <HorizontalScrollView
+                android:id="@+id/scrollAnim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="20dp"
+                android:scrollbars="none"
                 android:visibility="gone">
 
-                <!-- Anim Style Pills -->
-                <TextView
+                <LinearLayout
+                    android:id="@+id/layoutAnimStyles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="نمط حركة النص:"
-                    android:textColor="#94A3B8"
-                    android:textSize="12sp" />
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- 2.8 Carousel for Tab 4: Arabic Fonts -->
+            <HorizontalScrollView
+                android:id="@+id/scrollFont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="20dp"
+                android:scrollbars="none"
+                android:visibility="gone">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_segment_container"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:id="@+id/btnAnimTypewriter"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_segment_btn_active"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="⌨️ كتابة حية"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/btnAnimFade"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="✨ ظهور ناعم"
-                        android:textColor="#94A3B8"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/btnAnimZoom"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="🔍 تقريب سينمائي"
-                        android:textColor="#94A3B8"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- Font Picker -->
-                <TextView
+                    android:id="@+id/layoutFontPresets"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="نوع الخط العربي:"
-                    android:textColor="#94A3B8"
-                    android:textSize="12sp" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:clipToPadding="false"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/layoutFontPresets"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal" />
-                </HorizontalScrollView>
-            </LinearLayout>
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Sticky Actions Bar -->
+    <!-- 3. Bottom Sticky Action Dock (Padded safely above navigation bar!) -->
     <LinearLayout
+        android:id="@+id/layoutBottomDock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0F172A"
+        android:background="#0D131F"
         android:orientation="vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="10dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp">
 
+        <!-- Top Action Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:orientation="horizontal">
 
-            <!-- 1. Save Video to Gallery -->
-            <LinearLayout
-                android:id="@+id/btnSaveGallery"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_button_gradient_primary"
-                android:backgroundTint="#1E293B"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_download"
-                    app:tint="#FFFFFF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="حفظ الفيديو 💾"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- 2. Share directly to WhatsApp Status -->
+            <!-- Share to WhatsApp Status -->
             <LinearLayout
                 android:id="@+id/btnShareWhatsApp"
                 android:layout_width="0dp"
@@ -478,26 +436,56 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- 3. General Video Share -->
+            <!-- Save MP4 to Gallery -->
             <LinearLayout
+                android:id="@+id/btnSaveGallery"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button_gradient_primary"
+                android:backgroundTint="#1E293B"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_download"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="حفظ الفيديو 💾"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- General Share -->
+            <FrameLayout
                 android:id="@+id/btnShareGeneral"
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_button_gradient_primary"
                 android:backgroundTint="#0284C7"
                 android:clickable="true"
-                android:focusable="true"
-                android:gravity="center">
+                android:focusable="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_share_image"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_share_card"
                     app:tint="#FFFFFF" />
-            </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
-        <!-- 4. Publish to Community (Virtual Video - Disabled/Hidden for Custom Media!) -->
+        <!-- Bottom Row: Publish to Community (Virtual Video) -->
         <LinearLayout
             android:id="@+id/btnPublishCommunity"
             android:layout_width="match_parent"
@@ -511,8 +499,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/ic_video_reel"
                 app:tint="#FFFFFF" />
 
@@ -522,7 +510,7 @@
                 android:layout_marginStart="8dp"
                 android:text="نشر كفيديو في مجتمع منشوراتي 🌐"
                 android:textColor="#FFFFFF"
-                android:textSize="13sp"
+                android:textSize="12.5sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

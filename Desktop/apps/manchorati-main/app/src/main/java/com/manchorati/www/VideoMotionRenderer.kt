@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.text.TextUtils
 import kotlin.math.*
 
 object VideoMotionRenderer {
@@ -26,7 +27,7 @@ object VideoMotionRenderer {
         var customImageBitmap: Bitmap? = null
     )
 
-    // Pre-allocated particles for deterministic performance (no GC allocations during render loop)
+    // Pre-allocated deterministic particles
     private const val NUM_STARS = 65
     private val starX = FloatArray(NUM_STARS)
     private val starY = FloatArray(NUM_STARS)
@@ -52,7 +53,7 @@ object VideoMotionRenderer {
         for (i in 0 until NUM_STARS) {
             starX[i] = rand.nextFloat()
             starY[i] = rand.nextFloat()
-            starRadius[i] = 1.8f + rand.nextFloat() * 3.2f
+            starRadius[i] = 1.8f + rand.nextFloat() * 3.0f
             starSpeed[i] = 0.5f + rand.nextFloat() * 1.5f
             starPhase[i] = rand.nextFloat() * (2 * Math.PI.toFloat())
         }
@@ -65,7 +66,7 @@ object VideoMotionRenderer {
         for (i in 0 until NUM_GOLD) {
             goldX[i] = rand.nextFloat()
             goldY[i] = rand.nextFloat()
-            goldRadius[i] = 4f + rand.nextFloat() * 12f
+            goldRadius[i] = 4f + rand.nextFloat() * 10f
             goldSpeed[i] = 0.3f + rand.nextFloat() * 0.7f
             goldPhase[i] = rand.nextFloat() * (2 * Math.PI.toFloat())
         }
@@ -81,109 +82,145 @@ object VideoMotionRenderer {
     ) {
         val w = width.toFloat()
         val h = height.toFloat()
+        if (w <= 0f || h <= 0f) return
+
+        val isStory = config.aspectRatio == "9:16"
+        val refW = 720f
+        val refH = if (isStory) 1280f else 720f
+        // Dynamic scale factor for perfect responsive rendering on ANY screen size
+        val S = minOf(w / refW, h / refH)
+
         val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
         val loopTimeMs = timeMs % totalMs
         val progress = loopTimeMs.toFloat() / totalMs.toFloat()
 
         // 1. Draw Motion Background
-        drawMotionBackground(canvas, w, h, loopTimeMs, progress, config)
+        drawMotionBackground(canvas, w, h, loopTimeMs, progress, config, S)
 
-        // 2. Determine Card Bounds
-        val isStory = config.aspectRatio == "9:16"
-        val cardMargin = if (isStory) w * 0.07f else w * 0.05f
-        val cardLeft = cardMargin
-        val cardRight = w - cardMargin
-        val cardTop = if (isStory) h * 0.16f else h * 0.08f
-        val cardBottom = if (isStory) h * 0.85f else h * 0.90f
-        val cardRadius = 36f
+        // 2. Card Dimensions
+        val cardMarginX = if (isStory) 48f * S else 36f * S
+        val cardLeft = cardMarginX
+        val cardRight = w - cardMarginX
+        val cardTop = if (isStory) h * 0.14f else h * 0.08f
+        val cardBottom = if (isStory) h * 0.86f else h * 0.92f
+        val cardRadius = 28f * S
 
-        // Draw Frosted Card Background
-        val cardPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#3B090D16")
+        // Frosted Card Shadow / Glow
+        val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#40000000")
             style = Paint.Style.FILL
-        }
-        val cardBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#33FFFFFF")
-            style = Paint.Style.STROKE
-            strokeWidth = 2.5f
+            maskFilter = BlurMaskFilter(20f * S, BlurMaskFilter.Blur.NORMAL)
         }
         val cardRect = RectF(cardLeft, cardTop, cardRight, cardBottom)
-        canvas.drawRoundRect(cardRect, cardRadius, cardRadius, cardPaint)
-        canvas.drawRoundRect(cardRect, cardRadius, cardRadius, cardBorderPaint)
+        canvas.drawRoundRect(cardRect, cardRadius, cardRadius, shadowPaint)
 
-        // 3. Card Header: Quotation mark, Author, Username, Badge, Tag
-        val quotePulse = 0.35f + 0.15f * sin(progress * 2 * Math.PI.toFloat())
-        val quotePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            alpha = (quotePulse * 255).toInt().coerceIn(40, 200)
-            textSize = 100f
-            typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD)
-            textAlign = Paint.Align.CENTER
+        // Frosted Glass Card Fill
+        val cardPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#380B1220")
+            style = Paint.Style.FILL
         }
-        canvas.drawText("“", w / 2f, cardTop + 105f, quotePaint)
+        canvas.drawRoundRect(cardRect, cardRadius, cardRadius, cardPaint)
 
-        // Header Author details
-        val authorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // Card Border with subtle gradient
+        val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            shader = LinearGradient(
+                cardLeft, cardTop, cardRight, cardBottom,
+                intArrayOf(Color.parseColor("#55FFFFFF"), Color.parseColor("#15FFFFFF"), Color.parseColor("#4038BDF8")),
+                floatArrayOf(0f, 0.6f, 1f),
+                Shader.TileMode.CLAMP
+            )
+            style = Paint.Style.STROKE
+            strokeWidth = 2f * S
+        }
+        canvas.drawRoundRect(cardRect, cardRadius, cardRadius, borderPaint)
+
+        // 3. Header: Author info on the RIGHT, Tag chip on the LEFT
+        val padX = 32f * S
+        val headerY = cardTop + 44f * S
+
+        // Author Name & Badge
+        val authorPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.WHITE
-            textSize = if (isStory) 34f else 32f
+            textSize = (if (isStory) 24f else 22f) * S
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.RIGHT
         }
-        val usernamePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        val usernamePaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.parseColor("#94A3B8")
-            textSize = 24f
+            textSize = 17f * S
             textAlign = Paint.Align.RIGHT
         }
 
-        val headerY = cardTop + 170f
-        val headerX = cardRight - 45f
-        val authorBadgeText = if (config.authorBadge.isNotEmpty() && config.authorBadge != "beginner") {
+        val rawAuthor = if (config.authorBadge.isNotEmpty() && config.authorBadge != "beginner") {
             "${config.authorName}  ${config.authorBadge}"
         } else {
             config.authorName
         }
-        canvas.drawText(authorBadgeText, headerX, headerY, authorPaint)
-        canvas.drawText("@${config.authorUsername}", headerX, headerY + 36f, usernamePaint)
 
-        // Category Tag Chip (Top Left inside card)
+        // Available width for author name so it NEVER touches the tag chip
+        val maxAuthorW = (cardRight - cardLeft) * 0.52f
+        val ellipAuthor = TextUtils.ellipsize(rawAuthor, authorPaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+        val authorX = cardRight - padX
+        canvas.drawText(ellipAuthor, authorX, headerY, authorPaint)
+
+        val usernameText = "@${config.authorUsername}"
+        val ellipUser = TextUtils.ellipsize(usernameText, usernamePaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+        canvas.drawText(ellipUser, authorX, headerY + 26f * S, usernamePaint)
+
+        // Tag Chip (Top Left inside card)
         if (config.tag.isNotEmpty()) {
             val cleanTag = config.tag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
             val tagText = "# ${cleanTag.ifEmpty { config.tag }}"
             val tagPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Color.parseColor("#38BDF8")
-                textSize = 24f
+                textSize = 17f * S
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
-            val textWidth = tagPaint.measureText(tagText)
-            val chipLeft = cardLeft + 45f
-            val chipTop = headerY - 26f
-            val chipRight = chipLeft + textWidth + 30f
-            val chipBottom = headerY + 16f
+            val tagW = tagPaint.measureText(tagText)
+            val chipLeft = cardLeft + padX
+            val chipTop = headerY - 18f * S
+            val chipRight = chipLeft + tagW + 22f * S
+            val chipBottom = headerY + 14f * S
 
             val chipBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#260284C7")
+                color = Color.parseColor("#2B0284C7")
                 style = Paint.Style.FILL
             }
             val chipBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#4D38BDF8")
+                color = Color.parseColor("#5538BDF8")
                 style = Paint.Style.STROKE
-                strokeWidth = 2f
+                strokeWidth = 1.5f * S
             }
             val chipRect = RectF(chipLeft, chipTop, chipRight, chipBottom)
-            canvas.drawRoundRect(chipRect, 16f, 16f, chipBgPaint)
-            canvas.drawRoundRect(chipRect, 16f, 16f, chipBorder)
-            canvas.drawText(tagText, chipLeft + 15f, chipBottom - 11f, tagPaint)
+            val chipRadius = 12f * S
+            canvas.drawRoundRect(chipRect, chipRadius, chipRadius, chipBgPaint)
+            canvas.drawRoundRect(chipRect, chipRadius, chipRadius, chipBorder)
+            canvas.drawText(tagText, chipLeft + 11f * S, chipBottom - 8f * S, tagPaint)
         }
 
         // Header Divider
         val dividerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#26FFFFFF")
-            strokeWidth = 1.5f
+            color = Color.parseColor("#20FFFFFF")
+            strokeWidth = 1.2f * S
         }
-        canvas.drawLine(cardLeft + 40f, headerY + 65f, cardRight - 40f, headerY + 65f, dividerPaint)
+        val dividerY = headerY + 44f * S
+        canvas.drawLine(cardLeft + 24f * S, dividerY, cardRight - 24f * S, dividerY, dividerPaint)
 
-        // 4. Central Content Typography with Animation
-        val textWidth = (cardRight - cardLeft - 80f).toInt()
+        // Subtle Watermark Quotation Mark behind quote
+        val quotePulse = 0.20f + 0.08f * sin(progress * 2 * Math.PI.toFloat())
+        val quotePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            alpha = (quotePulse * 255).toInt().coerceIn(25, 75)
+            textSize = 76f * S
+            typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+        }
+        canvas.drawText("“", w / 2f, dividerY + 54f * S, quotePaint)
+
+        // 5. Central Typography with Selected Animation
+        val textPaddingX = 36f * S
+        val textWidth = (cardRight - cardLeft - (textPaddingX * 2)).toInt().coerceAtLeast(100)
+
         val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
             color = try {
                 if (config.textColor.isNotEmpty()) Color.parseColor(config.textColor) else Color.WHITE
@@ -191,9 +228,9 @@ object VideoMotionRenderer {
                 Color.WHITE
             }
             textSize = when {
-                config.content.length > 250 -> if (isStory) 34f else 30f
-                config.content.length > 120 -> if (isStory) 40f else 36f
-                else -> if (isStory) 48f else 44f
+                config.content.length > 250 -> (if (isStory) 24f else 22f) * S
+                config.content.length > 120 -> (if (isStory) 30f else 26f) * S
+                else -> (if (isStory) 38f else 32f) * S
             }
             typeface = ThemeHelper.getFontTypeface(context, config.fontId)
         }
@@ -211,7 +248,7 @@ object VideoMotionRenderer {
                 textToDraw = config.content.take(charCount) + (if (isBlinking) " |" else "")
             }
             "fade" -> {
-                val fadeProgress = (progress / 0.18f).coerceIn(0f, 1f)
+                val fadeProgress = (progress / 0.20f).coerceIn(0f, 1f)
                 textAlpha = (fadeProgress * 255).toInt()
             }
             "zoom" -> {
@@ -223,7 +260,7 @@ object VideoMotionRenderer {
         val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             StaticLayout.Builder.obtain(textToDraw, 0, textToDraw.length, textPaint, textWidth)
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                .setLineSpacing(14f, 1.25f)
+                .setLineSpacing(10f * S, 1.25f)
                 .build()
         } else {
             @Suppress("DEPRECATION")
@@ -233,40 +270,42 @@ object VideoMotionRenderer {
                 textWidth,
                 Layout.Alignment.ALIGN_CENTER,
                 1.25f,
-                14f,
+                10f * S,
                 true
             )
         }
 
-        val textAvailableHeight = (cardBottom - 100f) - (headerY + 90f)
-        val textStartY = headerY + 90f + ((textAvailableHeight - staticLayout.height) / 2f).coerceAtLeast(10f)
+        val textAvailableHeight = (cardBottom - 60f * S) - (dividerY + 30f * S)
+        val textStartY = dividerY + 30f * S + ((textAvailableHeight - staticLayout.height) / 2f).coerceAtLeast(10f)
 
         canvas.save()
         if (scale != 1.0f) {
             canvas.scale(scale, scale, w / 2f, textStartY + staticLayout.height / 2f)
         }
-        canvas.translate(cardLeft + 40f, textStartY)
+        canvas.translate(cardLeft + textPaddingX, textStartY)
         staticLayout.draw(canvas)
         canvas.restore()
 
-        // 5. Sound Visualizer Bars (Bottom-Left inside card)
-        drawAudioVisualizerBars(canvas, cardLeft + 45f, cardBottom - 45f, loopTimeMs, config.audioPreset)
+        // 6. Sound Visualizer Bars (Bottom Left inside card)
+        drawAudioVisualizerBars(canvas, cardLeft + 36f * S, cardBottom - 32f * S, loopTimeMs, config.audioPreset, S)
 
-        // 6. Watermark Branding
+        // 7. Watermark Branding (Below card)
         val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.WHITE
-            textSize = 28f
+            textSize = 20f * S
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER
         }
         val subBrandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.parseColor("#94A3B8")
-            textSize = 20f
+            textSize = 14f * S
             textAlign = Paint.Align.CENTER
         }
-        val brandY = if (isStory) h * 0.93f else h * 0.95f
-        canvas.drawText("من منشوراتي", w / 2f, brandY, brandPaint)
-        canvas.drawText("تطبيق منشوراتي للاقتباسات والخواطر", w / 2f, brandY + 32f, subBrandPaint)
+        val brandY = cardBottom + (if (isStory) 44f * S else 30f * S)
+        if (brandY + 24f * S < h) {
+            canvas.drawText("من منشوراتي", w / 2f, brandY, brandPaint)
+            canvas.drawText("تطبيق منشوراتي للاقتباسات والخواطر", w / 2f, brandY + 22f * S, subBrandPaint)
+        }
     }
 
     private fun drawMotionBackground(
@@ -275,21 +314,20 @@ object VideoMotionRenderer {
         h: Float,
         timeMs: Long,
         progress: Float,
-        config: VideoConfig
+        config: VideoConfig,
+        S: Float
     ) {
         val bgPaint = Paint()
 
-        // Check if Custom Image is selected and bitmap available
         if (config.bgMotionId == "CUSTOM_IMAGE" && config.customImageBitmap != null) {
             val bmp = config.customImageBitmap!!
             val kenBurnsScale = 1.0f + 0.08f * progress
-            val kenBurnsShift = (progress - 0.5f) * (w * 0.05f)
+            val kenBurnsShift = (progress - 0.5f) * (w * 0.04f)
 
             canvas.save()
             canvas.translate(w / 2f + kenBurnsShift, h / 2f)
             canvas.scale(kenBurnsScale, kenBurnsScale)
             val srcRect = Rect(0, 0, bmp.width, bmp.height)
-            // Center crop fit
             val dstRatio = w / h
             val bmpRatio = bmp.width.toFloat() / bmp.height.toFloat()
             val drawW: Float
@@ -305,7 +343,7 @@ object VideoMotionRenderer {
             canvas.drawBitmap(bmp, srcRect, dstRect, bgPaint)
             canvas.restore()
 
-            // Dark vignette overlay so text is 100% readable
+            // Dark vignette overlay
             val overlay = LinearGradient(
                 0f, 0f, 0f, h,
                 intArrayOf(Color.parseColor("#80000000"), Color.parseColor("#99000000"), Color.parseColor("#B3000000")),
@@ -320,7 +358,6 @@ object VideoMotionRenderer {
 
         when (config.bgMotionId.uppercase()) {
             "RAIN" -> {
-                // Dark rainy sky gradient
                 val gradient = LinearGradient(
                     0f, 0f, 0f, h,
                     intArrayOf(Color.parseColor("#090D16"), Color.parseColor("#131C2E")),
@@ -330,37 +367,34 @@ object VideoMotionRenderer {
                 canvas.drawRect(0f, 0f, w, h, bgPaint)
                 bgPaint.shader = null
 
-                // Slanted rain drops
                 val rainPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#6694A3B8")
-                    strokeWidth = 2.2f
+                    strokeWidth = 2.0f * S
                     strokeCap = Paint.Cap.ROUND
                 }
-                val slantX = -8f
+                val slantX = -6f * S
                 for (i in 0 until NUM_RAIN) {
-                    val curY = ((rainY[i] * h) + (timeMs * rainSpeed[i] * 1.5f)) % h
+                    val curY = ((rainY[i] * h) + (timeMs * rainSpeed[i] * 1.5f * S)) % h
                     val curX = (rainX[i] * w)
-                    canvas.drawLine(curX, curY, curX + slantX, curY + rainLength[i], rainPaint)
+                    canvas.drawLine(curX, curY, curX + slantX, curY + rainLength[i] * S, rainPaint)
                 }
 
-                // Soft ripple rings at bottom
                 val ripplePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#2638BDF8")
                     style = Paint.Style.STROKE
-                    strokeWidth = 1.5f
+                    strokeWidth = 1.2f * S
                 }
                 for (r in 0..4) {
                     val rPhase = (timeMs + r * 600) % 3000 / 3000f
                     val rx = w * (0.2f + r * 0.15f)
                     val ry = h * 0.94f
-                    val rRadius = 15f + rPhase * 75f
+                    val rRadius = (15f + rPhase * 70f) * S
                     ripplePaint.alpha = ((1f - rPhase) * 60).toInt()
                     canvas.drawOval(RectF(rx - rRadius, ry - rRadius * 0.35f, rx + rRadius, ry + rRadius * 0.35f), ripplePaint)
                 }
             }
 
             "AURORA" -> {
-                // Northern Sky deep gradient
                 val gradient = LinearGradient(
                     0f, 0f, 0f, h,
                     intArrayOf(Color.parseColor("#021816"), Color.parseColor("#0A1226")),
@@ -370,15 +404,13 @@ object VideoMotionRenderer {
                 canvas.drawRect(0f, 0f, w, h, bgPaint)
                 bgPaint.shader = null
 
-                // Aurora waving harmonic glow curves
                 val t = timeMs * 0.0015f
-                drawAuroraRibbon(canvas, w, h, t, Color.parseColor("#2610B981"), 0.30f, 70f, 0.004f)
-                drawAuroraRibbon(canvas, w, h, t * 1.2f + 1.0f, Color.parseColor("#2614B8A6"), 0.38f, 90f, 0.003f)
-                drawAuroraRibbon(canvas, w, h, t * 0.8f + 2.5f, Color.parseColor("#228B5CF6"), 0.46f, 80f, 0.005f)
+                drawAuroraRibbon(canvas, w, h, t, Color.parseColor("#2610B981"), 0.30f, 60f * S, 0.004f)
+                drawAuroraRibbon(canvas, w, h, t * 1.2f + 1.0f, Color.parseColor("#2614B8A6"), 0.38f, 75f * S, 0.003f)
+                drawAuroraRibbon(canvas, w, h, t * 0.8f + 2.5f, Color.parseColor("#228B5CF6"), 0.46f, 65f * S, 0.005f)
             }
 
             "GOLD" -> {
-                // Luxury amber dark gradient
                 val gradient = LinearGradient(
                     0f, 0f, 0f, h,
                     intArrayOf(Color.parseColor("#15110E"), Color.parseColor("#281F18")),
@@ -388,21 +420,19 @@ object VideoMotionRenderer {
                 canvas.drawRect(0f, 0f, w, h, bgPaint)
                 bgPaint.shader = null
 
-                // Rising golden embers & bokeh
                 val goldPaint = Paint(Paint.ANTI_ALIAS_FLAG)
                 for (i in 0 until NUM_GOLD) {
-                    val curY = h - (((goldY[i] * h) + (timeMs * goldSpeed[i] * 0.4f)) % h)
-                    val sway = sin(timeMs * 0.002f + goldPhase[i]) * 20f
+                    val curY = h - (((goldY[i] * h) + (timeMs * goldSpeed[i] * 0.4f * S)) % h)
+                    val sway = sin(timeMs * 0.002f + goldPhase[i]) * 15f * S
                     val curX = (goldX[i] * w + sway).coerceIn(0f, w)
                     val alphaPulse = 0.4f + 0.6f * sin(timeMs * 0.003f + goldPhase[i])
                     goldPaint.color = Color.parseColor("#F59E0B")
                     goldPaint.alpha = (alphaPulse * 160).toInt().coerceIn(20, 220)
-                    canvas.drawCircle(curX, curY, goldRadius[i], goldPaint)
+                    canvas.drawCircle(curX, curY, goldRadius[i] * S, goldPaint)
                 }
             }
 
             "OCEAN" -> {
-                // Deep ocean gradient
                 val gradient = LinearGradient(
                     0f, 0f, 0f, h,
                     intArrayOf(Color.parseColor("#020D1A"), Color.parseColor("#0A2540")),
@@ -412,14 +442,12 @@ object VideoMotionRenderer {
                 canvas.drawRect(0f, 0f, w, h, bgPaint)
                 bgPaint.shader = null
 
-                // Calming wave horizons
                 val t = timeMs * 0.0012f
-                drawOceanWave(canvas, w, h, t, Color.parseColor("#1F0284C7"), 0.75f, 40f)
-                drawOceanWave(canvas, w, h, t * 1.3f + 1.5f, Color.parseColor("#2B06B6D4"), 0.82f, 30f)
+                drawOceanWave(canvas, w, h, t, Color.parseColor("#1F0284C7"), 0.75f, 35f * S)
+                drawOceanWave(canvas, w, h, t * 1.3f + 1.5f, Color.parseColor("#2B06B6D4"), 0.82f, 25f * S)
             }
 
-            else -> { // "STARS" is default
-                // Midnight cosmic gradient
+            else -> { // STARS
                 val gradient = LinearGradient(
                     0f, 0f, 0f, h,
                     intArrayOf(Color.parseColor("#040711"), Color.parseColor("#0D162B")),
@@ -429,29 +457,27 @@ object VideoMotionRenderer {
                 canvas.drawRect(0f, 0f, w, h, bgPaint)
                 bgPaint.shader = null
 
-                // Cosmic nebula highlight drifting slowly
                 val nebPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#0F38BDF8")
-                    maskFilter = BlurMaskFilter(180f, BlurMaskFilter.Blur.NORMAL)
+                    maskFilter = BlurMaskFilter(150f * S, BlurMaskFilter.Blur.NORMAL)
                 }
-                val nebX = w * 0.7f + sin(timeMs * 0.0006f) * 60f
-                val nebY = h * 0.28f + cos(timeMs * 0.0005f) * 40f
-                canvas.drawCircle(nebX, nebY, 260f, nebPaint)
+                val nebX = w * 0.7f + sin(timeMs * 0.0006f) * 45f * S
+                val nebY = h * 0.28f + cos(timeMs * 0.0005f) * 30f * S
+                canvas.drawCircle(nebX, nebY, 200f * S, nebPaint)
 
-                // Twinkling stars
                 val starPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.WHITE
                 }
                 for (i in 0 until NUM_STARS) {
                     val curX = starX[i] * w
-                    val curY = ((starY[i] * h) - (timeMs * 0.015f)) % h
+                    val curY = ((starY[i] * h) - (timeMs * 0.012f * S)) % h
                     val yPos = if (curY < 0) curY + h else curY
                     val twinkle = 0.35f + 0.65f * sin(timeMs * 0.003f * starSpeed[i] + starPhase[i])
                     starPaint.alpha = (twinkle * 240).toInt().coerceIn(30, 255)
-                    canvas.drawCircle(curX, yPos, starRadius[i], starPaint)
+                    canvas.drawCircle(curX, yPos, starRadius[i] * S, starPaint)
                 }
 
-                // Periodic shooting star
+                // Shooting star
                 val shootPeriod = 4500L
                 val shootProgress = (timeMs % shootPeriod) / 1200f
                 if (shootProgress in 0f..1f) {
@@ -460,10 +486,10 @@ object VideoMotionRenderer {
                     val shootPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                         color = Color.WHITE
                         alpha = ((1f - shootProgress) * 200).toInt()
-                        strokeWidth = 2.5f
+                        strokeWidth = 2.2f * S
                         strokeCap = Paint.Cap.ROUND
                     }
-                    canvas.drawLine(shootX1, shootY1, shootX1 - 50f, shootY1 - 25f, shootPaint)
+                    canvas.drawLine(shootX1, shootY1, shootX1 - 40f * S, shootY1 - 20f * S, shootPaint)
                 }
             }
         }
@@ -479,14 +505,14 @@ object VideoMotionRenderer {
             path.lineTo(x, y)
             x += 20f
         }
-        path.lineTo(w, baseY + 180f)
-        path.lineTo(0f, baseY + 180f)
+        path.lineTo(w, baseY + 140f)
+        path.lineTo(0f, baseY + 140f)
         path.close()
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             this.color = color
             style = Paint.Style.FILL
-            maskFilter = BlurMaskFilter(60f, BlurMaskFilter.Blur.NORMAL)
+            maskFilter = BlurMaskFilter(45f, BlurMaskFilter.Blur.NORMAL)
         }
         canvas.drawPath(path, paint)
     }
@@ -512,18 +538,18 @@ object VideoMotionRenderer {
         canvas.drawPath(path, paint)
     }
 
-    private fun drawAudioVisualizerBars(canvas: Canvas, startX: Float, bottomY: Float, timeMs: Long, audioPreset: String) {
+    private fun drawAudioVisualizerBars(canvas: Canvas, startX: Float, bottomY: Float, timeMs: Long, audioPreset: String, S: Float) {
         if (audioPreset == "mute") return
 
         val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.parseColor("#38BDF8")
             strokeCap = Paint.Cap.ROUND
-            strokeWidth = 4.5f
+            strokeWidth = 3.5f * S
         }
         val barCount = 5
-        val barSpacing = 10f
-        val maxH = 26f
-        val minH = 6f
+        val barSpacing = 8f * S
+        val maxH = 22f * S
+        val minH = 5f * S
 
         for (i in 0 until barCount) {
             val freq = 0.007f + i * 0.003f
