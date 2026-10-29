@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:layoutDirection="locale"
+    android:orientation="horizontal"
+    android:paddingHorizontal="14dp"
+    android:paddingVertical="10dp">
+
+    <!-- شارة الترتيب Rank Badge -->
+    <FrameLayout
+        android:id="@+id/layoutRankBadge"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_rank_normal">
+
+        <TextView
+            android:id="@+id/tvWriterRank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="1" />
+    </FrameLayout>
+
+    <!-- صورة الكاتب Avatar -->
+    <FrameLayout
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="12dp">
+
+        <ImageView
+            android:id="@+id/ivWriterAvatar"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
+
+        <ImageView
+            android:id="@+id/ivWriterCrownSmall"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="top|end"
+            android:src="@drawable/ic_crown"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- معلومات الكاتب Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- الاسم + وسام الرتبة -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvWriterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="محمد حناني" />
+
+            <TextView
+                android:id="@+id/tvWriterBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_badge_beginner"
+                android:maxLines="1"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:singleLine="true"
+                android:textColor="#D97706"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="👑 أسطوري"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <!-- المعرف @username -->
+        <TextView
+            android:id="@+id/tvWriterUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="#0284C7"
+            android:textSize="12sp"
+            tools:text="@hanane" />
+
+        <!-- الإحصائيات Stats -->
+        <TextView
+            android:id="@+id/tvWriterStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_secondary"
+            android:textSize="11.5sp"
+            tools:text="❤️ 125 إعجاب هذا الأسبوع" />
+    </LinearLayout>
+
+    <!-- زر المتابعة Follow -->
+    <TextView
+        android:id="@+id/btnWriterFollow"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_tool_chip_active"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingHorizontal="14dp"
+        android:text="@string/follow"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</LinearLayout>

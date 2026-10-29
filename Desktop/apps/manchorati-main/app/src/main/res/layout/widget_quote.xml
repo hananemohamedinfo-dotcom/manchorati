@@ -45,7 +45,7 @@
                 android:background="@drawable/bg_widget_tag"
                 android:paddingHorizontal="9dp"
                 android:paddingVertical="3dp"
-                android:text="خاطرة اليوم"
+                android:text="@string/widget_quote_title"
                 android:textColor="#BAE6FD"
                 android:textSize="11sp"
                 android:textStyle="bold" />

@@ -195,8 +195,8 @@ object StreakManager {
         val btnCloseStreak = view.findViewById<View>(R.id.btnCloseStreak)
 
         tvStreakNumber.text = "${info.currentStreak}"
-        tvLongestStreak.text = "${info.longestStreak} يوم"
-        tvTotalActiveDays.text = "${info.totalActiveDays} يوم"
+        tvLongestStreak.text = context.getString(R.string.streak_day_format, info.longestStreak)
+        tvTotalActiveDays.text = context.getString(R.string.streak_day_format, info.totalActiveDays)
 
         tvStreakSubtitle.text = when {
             info.currentStreak >= 30 -> "أسطورة حقيقية! لقد أكملت شهراً كاملاً من الإلهام المستمر 👑"
@@ -264,12 +264,12 @@ object StreakManager {
         pb.progress = currentStreak.coerceAtMost(target)
 
         if (currentStreak >= target) {
-            tvStatus.text = "✓ تم الفتح"
+            tvStatus.text = parent.context.getString(R.string.streak_unlocked)
             tvStatus.setTextColor(Color.parseColor("#10B981"))
             layout.alpha = 1.0f
         } else {
             val remaining = target - currentStreak
-            tvStatus.text = "باقي $remaining أيام"
+            tvStatus.text = parent.context.getString(R.string.streak_remaining_days, remaining)
             tvStatus.setTextColor(Color.parseColor("#94A3B8"))
             layout.alpha = 0.85f
         }
@@ -281,6 +281,6 @@ object StreakManager {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, message)
         }
-        context.startActivity(Intent.createChooser(shareIntent, "شارك إنجازك اليومي"))
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.streak_share_btn)))
     }
 }

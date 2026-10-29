@@ -418,4 +418,211 @@
     <string name="auth_success">Signed in successfully!</string>
     <string name="enter_email_to_reset">Please enter your email above to receive the reset link</string>
 
+
+    <!-- AI Writer -->
+    <string name="ai_writer_title">AI Quote Writer</string>
+    <string name="ai_quota_badge">Remaining attempts: %1$d / %2$d ✨</string>
+    <string name="ai_topic_label">Choose a topic:</string>
+    <string name="ai_style_label">Choose writing style:</string>
+    <string name="ai_custom_prompt_hint">Add custom instructions (optional)...</string>
+    <string name="ai_generate_btn">✨ Generate New Quote</string>
+    <string name="ai_generating">Thinking and generating... ✨</string>
+    <string name="ai_copy_btn">Copy</string>
+    <string name="ai_image_btn">Art Card</string>
+    <string name="ai_video_btn">AI Video</string>
+    <string name="ai_publish_btn">Publish</string>
+    <string name="ai_copied_toast">Quote copied successfully ✨</string>
+    <string name="ai_quota_exceeded">You have used all your daily attempts. Come back tomorrow ✨</string>
+    <string name="ai_topic_wisdom">Wisdom &amp; Quotes</string>
+    <string name="ai_topic_motivation">Motivation &amp; Drive</string>
+    <string name="ai_topic_love">Love &amp; Feelings</string>
+    <string name="ai_topic_dua">Dua &amp; Prayer</string>
+    <string name="ai_topic_calm">Calm &amp; Serenity</string>
+    <string name="ai_topic_farewell">Farewell &amp; Parting</string>
+    <string name="ai_style_wisdom">Wise Prose</string>
+    <string name="ai_style_short">Short Quote</string>
+    <string name="ai_style_poem">Free Verse</string>
+    <string name="drawer_ai_writer">AI Quote Writer ✨</string>
+
+    <!-- AI Writer & Video Cooldown / Errors -->
+    <string name="ai_wait_seconds">Please wait %d seconds before generating again ⏱️</string>
+    <string name="ai_generate_again_btn">✨ Generate Another Quote</string>
+
+    <!-- Video Studio & Reel Player -->
+    <string name="studio_title">Video Studio</string>
+    <string name="studio_save">Save</string>
+    <string name="studio_edit">Edit</string>
+    <string name="studio_audio">Audio</string>
+    <string name="studio_speed">Speed:</string>
+    <string name="studio_all">All</string>
+    <string name="studio_animated">Animated</string>
+    <string name="studio_dark">Dark</string>
+    <string name="studio_nature">Nature</string>
+    <string name="studio_framing">Adjust Framing</string>
+    <string name="studio_duration">Duration:</string>
+    <string name="studio_custom">Custom</string>
+    <string name="studio_sec_format">%s s</string>
+    <string name="studio_author">Author</string>
+    <string name="studio_tag">Tag</string>
+    <string name="studio_animations">Motion</string>
+    <string name="studio_texts">Texts</string>
+    <string name="studio_backgrounds">Backgrounds</string>
+    <string name="studio_settings">Settings</string>
+    <string name="studio_edit_quote_title">Edit Post Text</string>
+    <string name="studio_edit_quote_subtitle">Edit text to appear instantly with video motion effects</string>
+    <string name="studio_edit_quote_hint">Type or paste post text here...</string>
+    <string name="studio_char_count_format">%d chars</string>
+    <string name="studio_save_apply">Save &amp; Apply</string>
+    <string name="studio_text_updated">Text updated successfully</string>
+    <string name="studio_text_invalid">Please enter valid text</string>
+    <string name="studio_audio_silent">Mute</string>
+    <string name="studio_audio_my_device">Device</string>
+    <string name="studio_audio_downloaded">Ready ✓</string>
+    <string name="studio_audio_download">Download 📥</string>
+    <string name="studio_audio_download_success">Audio downloaded successfully ✓</string>
+    <string name="studio_audio_pick_success">Audio selected successfully</string>
+    <string name="studio_audio_pick_failed">Failed to load audio</string>
+    <string name="studio_image_read_error">Failed to read image</string>
+    <string name="studio_export_title">Export and Share Video</string>
+    <string name="studio_resolution_prompt">Choose video resolution:</string>
+    <string name="studio_whatsapp_status_title">Share to WhatsApp Status</string>
+    <string name="studio_whatsapp_status_desc">Post directly to WhatsApp status in HD quality</string>
+    <string name="studio_save_gallery_title">Save to Gallery (HD MP4)</string>
+    <string name="studio_save_gallery_desc">Permanently store in Manchorati album with original quality</string>
+    <string name="studio_save_gallery_success">Video saved successfully in Manchorati album!</string>
+    <string name="studio_save_gallery_error">An error occurred while saving the video</string>
+    <string name="studio_share_other_apps_title">Share to other apps...</string>
+    <string name="studio_share_other_apps_desc">Instagram, TikTok, Facebook, Telegram...</string>
+    <string name="studio_exporting_progress">Processing and exporting video...</string>
+    <string name="studio_export_error">Error while exporting video: %s</string>
+
+    <!-- Image Framing BottomSheet -->
+    <string name="framing_title">Adjust Image Framing in Video</string>
+    <string name="framing_mode_label">Display Mode:</string>
+    <string name="framing_fill_screen">Fill Screen</string>
+    <string name="framing_center_blur">Center with Blur</string>
+    <string name="framing_zoom">Zoom In</string>
+    <string name="framing_focus_label">Vertical Focus:</string>
+    <string name="framing_focus_top">Top</string>
+    <string name="framing_focus_center">Center</string>
+    <string name="framing_focus_bottom">Bottom</string>
+    <string name="framing_apply">Apply</string>
+
+    <!-- Reel Player -->
+    <string name="reel_player_title">🎬 Manchorati Reel</string>
+    <string name="reel_export_mp4">Export MP4</string>
+    <string name="reel_whatsapp_status">WhatsApp Status</string>
+    <string name="reel_saved_gallery_success">Video saved to gallery successfully! 🎉</string>
+    <string name="reel_exporting_progress">🎬 Preparing and exporting Reel as MP4...</string>
+    <string name="reel_export_failed">Failed to export video: %s</string>
+    <string name="reel_video_badge">Reel / Video 🎬</string>
+
+    <!-- Community & Mood Selector -->
+    <string name="mood_selector_title">How are you feeling today? 💭</string>
+    <string name="mood_selector_subtitle">Choose your mood to personalize quotes</string>
+    <string name="mood_all">🌟 All</string>
+    <string name="mood_calm">☕ Calm &amp; Serene</string>
+    <string name="mood_motivation">💪 Need Motivation</string>
+    <string name="mood_sad">😔 Down &amp; Sad</string>
+    <string name="mood_happy">😊 Optimistic &amp; Happy</string>
+    <string name="mood_love">❤️ Love &amp; Gratitude</string>
+    <string name="mood_dua">🤲 Prayers &amp; Peace</string>
+    <string name="mood_write_btn">Write ✍️</string>
+    <string name="mood_active_display">Showing now: %s</string>
+    <string name="following_feed_menu">Writers I Follow 👥</string>
+    <string name="following_feed_empty_title">No posts from writers you follow</string>
+    <string name="following_feed_empty_subtitle">Follow some writers and creators to see their posts here ✨</string>
+    <string name="mood_empty_title">No posts with this mood currently</string>
+    <string name="mood_empty_subtitle">Be the first to share a quote for mood: %s ✨</string>
+
+    <!-- Daily Streak Dialog -->
+    <string name="streak_days_consecutive">Consecutive Days</string>
+    <string name="streak_longest">Longest Streak ⚡</string>
+    <string name="streak_total_active">Total Active Days 📅</string>
+    <string name="streak_day_format">%d days</string>
+    <string name="streak_medals_title">Perseverance &amp; Inspiration Badges</string>
+    <string name="streak_share_btn">Share Daily Achievement 🚀</string>
+    <string name="streak_continue_reading">Continue Reading</string>
+    <string name="streak_unlocked">✓ Unlocked</string>
+    <string name="streak_remaining_days">%d days left</string>
+    <string name="day_sat">Sat</string>
+    <string name="day_sun">Sun</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+
+    <!-- Misc UI -->
+    <string name="badge_new">New</string>
+    <string name="widget_quote_title">Quote of the Day</string>
+    <string name="anonymous_author">Anonymous</string>
+    <string name="user_default_handle">@user</string>
+
+
+    <string name="studio_profile_enabled">Profile: On ✓</string>
+    <string name="studio_profile_disabled">Profile: Off ✕</string>
+    <string name="studio_tag_enabled">Tag: On ✓</string>
+    <string name="studio_tag_disabled">Tag: Off ✕</string>
+    <string name="studio_audio_muted">Audio muted</string>
+    <string name="studio_audio_unmuted">Audio enabled</string>
+
+    <string name="login_required_following">Please log in to view posts from writers you follow</string>
+
+    <string name="tier_for_all_new_members">For all new members</string>
+    <string name="tier_followers_plus">%d+ followers</string>
+
+    <!-- Tier Descriptions -->
+    <string name="badge_admin_desc">Official member of Manchorati development &amp; management team.</string>
+    <string name="badge_legendary_desc">Reached the pinnacle of influence with over 10,000 genuine followers!</string>
+    <string name="badge_elite_desc">Among the elite writers with over 5,000 engaged followers.</string>
+    <string name="badge_distinguished_desc">Surpassed 1,000 followers with a strong community presence.</string>
+    <string name="badge_rising_desc">Talented writer on the rise with over 100 followers.</string>
+    <string name="badge_beginner_desc">Takes first steps in sharing words, quotes and inspiration.</string>
+
+    <!-- Video Studio Animations -->
+    <string name="fx_typewriter">Typewriter</string>
+    <string name="fx_scroll_up">Scroll Up</string>
+    <string name="fx_words">Words</string>
+    <string name="fx_fade">Fade</string>
+    <string name="fx_zoom">Zoom</string>
+    <string name="fx_glow">Glow</string>
+    <string name="fx_slide_up">Slide Up</string>
+    <string name="fx_blur_in">Blur In</string>
+
+    <!-- Video Studio Audio Presets -->
+    <string name="audio_oud">Oud</string>
+    <string name="audio_piano">Piano</string>
+    <string name="audio_nature">Nature</string>
+
+    <!-- Video Studio Backgrounds -->
+    <string name="bg_stars">Stars</string>
+    <string name="bg_nebula">Nebula</string>
+    <string name="bg_aurora">Aurora</string>
+    <string name="bg_gold">Gold</string>
+    <string name="bg_ocean">Ocean</string>
+
+    <!-- Explore Writers & Weekly Leaderboard -->
+    <string name="drawer_writers">Writers &amp; Weekly Leaderboard</string>
+    <string name="writers_title">Explore Writers &amp; Leaderboard</string>
+    <string name="writer_of_the_week">Writer of the Week 👑</string>
+    <string name="writer_of_the_week_desc">The most inspiring and active writer this week</string>
+    <string name="writer_weekly_likes">%d likes this week</string>
+    <string name="writer_total_likes">%d total likes</string>
+    <string name="writer_followers_count">%s followers</string>
+    <string name="writer_posts_count">%d posts</string>
+    <string name="challenge_ends_in_days">Weekly challenge ends in %d days</string>
+    <string name="challenge_ends_tomorrow">Weekly challenge ends tomorrow!</string>
+    <string name="challenge_ends_today">Weekly challenge ends tonight!</string>
+    <string name="tab_weekly_leaderboard">🏆 Weekly Stars</string>
+    <string name="tab_top_followers">💎 Most Followed</string>
+    <string name="tab_all_writers">🌟 All Writers</string>
+    <string name="search_writers_hint">Search by @username or name...</string>
+    <string name="no_writers_found">No writers found matching your search</string>
+    <string name="view_profile_btn">Profile</string>
+    <string name="community_writers_badge">Top Writers 🏆</string>
+    <string name="weekly_champion_congrats">Congrats to the leader! Post and share quotes to become next week\'s star 🔥</string>
+    <string name="no_weekly_posts_yet">Be the first to post this week and claim Writer of the Week!</string>
+    <string name="leaderboard_rank_format">#%d</string>
+    <string name="leaderboard_section_title">Leaderboard Rankings</string>
 </resources>

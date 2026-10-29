@@ -38,6 +38,7 @@ object VideoExporter {
         context: Context,
         config: VideoMotionRenderer.VideoConfig,
         customAudioUri: Uri? = null,
+        quality: String = "1080p",
         onProgress: (Int) -> Unit,
         onSuccess: (File) -> Unit,
         onError: (Exception) -> Unit
@@ -50,8 +51,20 @@ object VideoExporter {
 
             try {
                 val isStory = config.aspectRatio == "9:16"
-                val width = 720
-                val height = if (isStory) 1280 else 720
+                val (width, height, bitrate) = when (quality.lowercase()) {
+                    "1080p", "fhd" -> {
+                        if (isStory) Triple(1080, 1920, 8_000_000)
+                        else Triple(1080, 1080, 7_500_000)
+                    }
+                    "480p", "sd" -> {
+                        if (isStory) Triple(480, 854, 1_600_000)
+                        else Triple(480, 480, 1_400_000)
+                    }
+                    else -> { // Default "720p", "hd"
+                        if (isStory) Triple(720, 1280, 4_000_000)
+                        else Triple(720, 720, 3_500_000)
+                    }
+                }
 
                 val cacheDir = File(context.cacheDir, "exported_videos").apply { mkdirs() }
                 val outputFile = File(cacheDir, "reel_${System.currentTimeMillis()}.mp4")
@@ -61,7 +74,7 @@ object VideoExporter {
                 // 1. Configure Video Encoder
                 val videoFormat = MediaFormat.createVideoFormat(VIDEO_MIME, width, height).apply {
                     setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
-                    setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE_VIDEO)
+                    setInteger(MediaFormat.KEY_BIT_RATE, bitrate)
                     setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE)
                     setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL)
                 }

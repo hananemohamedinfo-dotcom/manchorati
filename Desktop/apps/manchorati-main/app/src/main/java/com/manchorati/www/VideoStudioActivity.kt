@@ -1,10 +1,13 @@
 package com.manchorati.www
 
+import android.content.Context
+
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
@@ -20,6 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import java.io.InputStream
@@ -29,6 +33,8 @@ class VideoStudioActivity : AppCompatActivity() {
 
     private lateinit var videoMotionView: VideoMotionView
     private lateinit var ivPlayPauseIndicator: ImageView
+    private var btnQuickEditText: View? = null
+    private var btnEditTextInTypography: View? = null
 
     // Top Bar
     private lateinit var btnBackContainer: FrameLayout
@@ -102,6 +108,17 @@ class VideoStudioActivity : AppCompatActivity() {
     private lateinit var toolCanvas: LinearLayout
     private lateinit var toolSettings: LinearLayout
 
+    private lateinit var ivToolAudio: ImageView
+    private lateinit var tvToolAudio: TextView
+    private lateinit var ivToolEffects: ImageView
+    private lateinit var tvToolEffects: TextView
+    private lateinit var ivToolText: ImageView
+    private lateinit var tvToolText: TextView
+    private lateinit var ivToolCanvas: ImageView
+    private lateinit var tvToolCanvas: TextView
+    private lateinit var ivToolSettings: ImageView
+    private lateinit var tvToolSettings: TextView
+
     // State
     private var selectedMotion = "STARS"
     private var selectedAudio = "oud" // Autoplay soothing Oud by default
@@ -113,13 +130,18 @@ class VideoStudioActivity : AppCompatActivity() {
     private var selectedAnimSpeed = 1.0f
     private var selectedImageFramingMode = "cover" // "cover", "fit_blur", "zoom"
     private var selectedImageFocusY = 0.5f // 0f = top, 0.5f = center, 1.0f = bottom
+    private var selectedImagePanX = 0f
+    private var selectedImagePanY = 0f
+    private var selectedImageZoomScale = 1.0f
     private var showAuthor = true
     private var showTag = false
 
     private var customImageBitmap: Bitmap? = null
     private var customAudioUri: Uri? = null
     private var downloadedAudioPath: String? = null
+    private val downloadingAudioProgressMap = mutableMapOf<String, Int>()
     private var currentBgCategory = "all" // "all", "motion", "dark", "nature"
+    private var selectedExportQuality = "1080p" // "1080p", "720p", "480p"
 
     private var postContent = ""
     private var postAuthorName = ""
@@ -137,14 +159,25 @@ class VideoStudioActivity : AppCompatActivity() {
         }
     }
 
-    // Audio Picker
-    private val pickAudioLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    // Audio Picker (Strictly restricted to Audio files only)
+    private val pickAudioLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri != null) {
+            try {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (_: Exception) {}
             loadCustomAudio(uri)
         }
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocaleHelper.applyLayoutDirection(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_studio)
 
@@ -252,8 +285,29 @@ class VideoStudioActivity : AppCompatActivity() {
         toolCanvas = findViewById(R.id.toolCanvas)
         toolSettings = findViewById(R.id.toolSettings)
 
+        ivToolAudio = findViewById(R.id.ivToolAudio)
+        tvToolAudio = findViewById(R.id.tvToolAudio)
+        tvToolAudio.text = getString(R.string.studio_audio)
+        ivToolEffects = findViewById(R.id.ivToolEffects)
+        tvToolEffects = findViewById(R.id.tvToolEffects)
+        tvToolEffects.text = getString(R.string.studio_animations)
+        ivToolText = findViewById(R.id.ivToolText)
+        tvToolText = findViewById(R.id.tvToolText)
+        tvToolText.text = getString(R.string.studio_texts)
+        ivToolCanvas = findViewById(R.id.ivToolCanvas)
+        tvToolCanvas = findViewById(R.id.tvToolCanvas)
+        tvToolCanvas.text = getString(R.string.studio_backgrounds)
+        ivToolSettings = findViewById(R.id.ivToolSettings)
+        tvToolSettings = findViewById(R.id.tvToolSettings)
+        tvToolSettings.text = getString(R.string.studio_settings)
+
+        btnQuickEditText = findViewById(R.id.btnQuickEditText)
+        btnEditTextInTypography = findViewById(R.id.btnEditTextInTypography)
+
         tvTimeTotal.text = formatTime(selectedDuration * 1000L)
         tvTopRatioBadge.text = selectedRatio
+        updateSettingsHighlights()
+        updateToolBarHighlights(-1)
     }
 
     private fun applyWindowInsets() {
@@ -291,10 +345,22 @@ class VideoStudioActivity : AppCompatActivity() {
             showExportActionSheet()
         }
 
-        // Tap video canvas toggles play/pause
-        videoMotionView.setOnClickListener {
-            videoMotionView.togglePlay()
-            showPlayPauseFeedback(!videoMotionView.isPlaying)
+        // Quick Edit Quote Text
+        btnQuickEditText?.setOnClickListener {
+            showEditTextDialog()
+        }
+        btnEditTextInTypography?.setOnClickListener {
+            showEditTextDialog()
+        }
+
+        // Direct finger gesture support on canvas (Pan & Pinch-to-Zoom)
+        videoMotionView.onImageFramingChanged = { pX, pY, zoom ->
+            selectedImagePanX = pX
+            selectedImagePanY = pY
+            selectedImageZoomScale = zoom
+        }
+        videoMotionView.onCanvasTap = {
+            showPlayPauseFeedback(videoMotionView.isPlaying)
         }
 
         // Center Play/Pause button
@@ -310,7 +376,7 @@ class VideoStudioActivity : AppCompatActivity() {
             )
             Toast.makeText(
                 this,
-                if (videoMotionView.isMuted) "تم كتم الصوت" else "تم تشغيل الصوت",
+                if (videoMotionView.isMuted) getString(R.string.studio_audio_muted) else getString(R.string.studio_audio_unmuted),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -379,7 +445,7 @@ class VideoStudioActivity : AppCompatActivity() {
             btn.setOnClickListener {
                 selectedDuration = sec
                 layoutCustomDurationSlider.visibility = View.GONE
-                updateDurationPillHighlights(btn)
+                updateSettingsHighlights()
                 tvTimeTotal.text = formatTime(selectedDuration * 1000L)
                 updateConfig()
                 videoMotionView.restart()
@@ -397,34 +463,26 @@ class VideoStudioActivity : AppCompatActivity() {
         btnRatioStory.setOnClickListener {
             selectedRatio = "9:16"
             tvTopRatioBadge.text = "9:16"
-            btnRatioStory.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnRatioStory.setTextColor(Color.WHITE)
-            btnRatioSquare.background = null
-            btnRatioSquare.setTextColor(Color.parseColor("#94A3B8"))
+            updateSettingsHighlights()
             updateConfig()
         }
         btnRatioSquare.setOnClickListener {
             selectedRatio = "1:1"
             tvTopRatioBadge.text = "1:1"
-            btnRatioSquare.setBackgroundResource(R.drawable.bg_segment_btn_active)
-            btnRatioSquare.setTextColor(Color.WHITE)
-            btnRatioStory.background = null
-            btnRatioStory.setTextColor(Color.parseColor("#94A3B8"))
+            updateSettingsHighlights()
             updateConfig()
         }
 
         // Visibility Toggles
         btnToggleAuthor.setOnClickListener {
             showAuthor = !showAuthor
-            btnToggleAuthor.setBackgroundResource(if (showAuthor) R.drawable.bg_segment_btn_active else R.drawable.bg_segment_container)
-            btnToggleAuthor.setTextColor(if (showAuthor) Color.WHITE else Color.parseColor("#94A3B8"))
+            updateSettingsHighlights()
             updateConfig()
         }
 
         btnToggleTag.setOnClickListener {
             showTag = !showTag
-            btnToggleTag.setBackgroundResource(if (showTag) R.drawable.bg_segment_btn_active else R.drawable.bg_segment_container)
-            btnToggleTag.setTextColor(if (showTag) Color.WHITE else Color.parseColor("#94A3B8"))
+            updateSettingsHighlights()
             updateConfig()
         }
     }
@@ -497,11 +555,64 @@ class VideoStudioActivity : AppCompatActivity() {
         val allDur = listOf(btnDur15s, btnDur30s, btnDur45s, btnDur60s, btnDurCustom)
         for (b in allDur) {
             if (b == activeBtn) {
-                b.setBackgroundResource(R.drawable.bg_segment_btn_active)
+                b.setBackgroundResource(R.drawable.bg_pill_active)
                 b.setTextColor(Color.WHITE)
             } else {
-                b.background = null
+                b.setBackgroundResource(R.drawable.bg_pill_inactive)
                 b.setTextColor(Color.parseColor("#94A3B8"))
+            }
+        }
+    }
+
+    private fun updateSettingsHighlights() {
+        val durBtn = when (selectedDuration) {
+            15 -> btnDur15s
+            30 -> btnDur30s
+            45 -> btnDur45s
+            60 -> btnDur60s
+            else -> btnDurCustom
+        }
+        updateDurationPillHighlights(durBtn)
+
+        if (selectedRatio == "9:16") {
+            btnRatioStory.setBackgroundResource(R.drawable.bg_pill_active)
+            btnRatioStory.setTextColor(Color.WHITE)
+            btnRatioSquare.setBackgroundResource(R.drawable.bg_pill_inactive)
+            btnRatioSquare.setTextColor(Color.parseColor("#94A3B8"))
+        } else {
+            btnRatioSquare.setBackgroundResource(R.drawable.bg_pill_active)
+            btnRatioSquare.setTextColor(Color.WHITE)
+            btnRatioStory.setBackgroundResource(R.drawable.bg_pill_inactive)
+            btnRatioStory.setTextColor(Color.parseColor("#94A3B8"))
+        }
+
+        btnToggleAuthor.setBackgroundResource(if (showAuthor) R.drawable.bg_pill_active else R.drawable.bg_pill_inactive)
+        btnToggleAuthor.setTextColor(if (showAuthor) Color.WHITE else Color.parseColor("#94A3B8"))
+        btnToggleAuthor.text = if (showAuthor) getString(R.string.studio_profile_enabled) else getString(R.string.studio_profile_disabled)
+
+        btnToggleTag.setBackgroundResource(if (showTag) R.drawable.bg_pill_active else R.drawable.bg_pill_inactive)
+        btnToggleTag.setTextColor(if (showTag) Color.WHITE else Color.parseColor("#94A3B8"))
+        btnToggleTag.text = if (showTag) getString(R.string.studio_tag_enabled) else getString(R.string.studio_tag_disabled)
+    }
+
+    private fun updateToolBarHighlights(index: Int) {
+        val tools = listOf(
+            Triple(toolAudio, ivToolAudio, tvToolAudio),
+            Triple(toolEffects, ivToolEffects, tvToolEffects),
+            Triple(toolText, ivToolText, tvToolText),
+            Triple(toolCanvas, ivToolCanvas, tvToolCanvas),
+            Triple(toolSettings, ivToolSettings, tvToolSettings)
+        )
+        for (i in tools.indices) {
+            val (container, icon, text) = tools[i]
+            if (i == index) {
+                container.setBackgroundResource(R.drawable.bg_tool_card_selected)
+                icon.setColorFilter(Color.parseColor("#38BDF8"))
+                text.setTextColor(Color.parseColor("#38BDF8"))
+            } else {
+                container.background = null
+                icon.setColorFilter(Color.parseColor("#94A3B8"))
+                text.setTextColor(Color.parseColor("#94A3B8"))
             }
         }
     }
@@ -538,6 +649,7 @@ class VideoStudioActivity : AppCompatActivity() {
 
         activeToolIndex = index
         layoutToolPanelContainer.visibility = View.VISIBLE
+        updateToolBarHighlights(index)
 
         scrollAudio.visibility = if (index == 0) View.VISIBLE else View.GONE
         panelEffectsContainer.visibility = if (index == 1) View.VISIBLE else View.GONE
@@ -545,18 +657,23 @@ class VideoStudioActivity : AppCompatActivity() {
         panelCanvasContainer.visibility = if (index == 3) View.VISIBLE else View.GONE
         panelSettingsContainer.visibility = if (index == 4) View.VISIBLE else View.GONE
 
+        if (index == 4) {
+            updateSettingsHighlights()
+        }
+
         tvToolPanelTitle.text = when (index) {
-            0 -> "Audio (الصوت والموسيقى)"
-            1 -> "Effects (حركات النص والسرعة)"
-            2 -> "Typography (الخطوط والألوان)"
-            3 -> "Canvas (الخلفيات والتأثيرات)"
-            else -> "Settings (المدة والأبعاد)"
+            0 -> getString(R.string.studio_audio)
+            1 -> getString(R.string.studio_animations)
+            2 -> getString(R.string.studio_texts)
+            3 -> getString(R.string.studio_backgrounds)
+            else -> getString(R.string.studio_settings)
         }
     }
 
     private fun closeToolPanel() {
         activeToolIndex = -1
         layoutToolPanelContainer.visibility = View.GONE
+        updateToolBarHighlights(-1)
     }
 
     private fun showPlayPauseFeedback(playing: Boolean) {
@@ -568,6 +685,52 @@ class VideoStudioActivity : AppCompatActivity() {
             .setDuration(400)
             .withEndAction { ivPlayPauseIndicator.visibility = View.GONE }
             .start()
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 0. Quote Text Editing Bottom Sheet
+    // ─────────────────────────────────────────────────────────────
+    private fun showEditTextDialog() {
+        val dialog = BottomSheetDialog(this)
+        val sheetView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_edit_quote, null, false)
+        dialog.setContentView(sheetView)
+
+        val etContent = sheetView.findViewById<EditText>(R.id.etEditQuoteContent)
+        val tvCharCount = sheetView.findViewById<TextView>(R.id.tvEditCharCount)
+        val btnCancel = sheetView.findViewById<View>(R.id.btnCancelEditQuote)
+        val btnSave = sheetView.findViewById<View>(R.id.btnSaveEditQuote)
+
+        etContent?.setText(postContent)
+        etContent?.setSelection(postContent.length)
+        tvCharCount?.text = getString(R.string.studio_char_count_format, postContent.length)
+
+        etContent?.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val len = s?.length ?: 0
+                tvCharCount?.text = getString(R.string.studio_char_count_format, len)
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSave?.setOnClickListener {
+            val newText = etContent?.text?.toString()?.trim() ?: ""
+            if (newText.isNotEmpty()) {
+                postContent = newText
+                updateConfig()
+                videoMotionView.restart()
+                dialog.dismiss()
+                Toast.makeText(this, getString(R.string.studio_text_updated), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, getString(R.string.studio_text_invalid), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -594,7 +757,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 setColorFilter(Color.parseColor(if (isSelected) "#38BDF8" else "#94A3B8"))
             }
             val tv = TextView(this@VideoStudioActivity).apply {
-                text = "بدون صوت"
+                text = getString(R.string.studio_audio_silent)
                 setTextColor(Color.parseColor(if (isSelected) "#FFFFFF" else "#94A3B8"))
                 textSize = 10f
                 gravity = Gravity.CENTER
@@ -607,6 +770,9 @@ class VideoStudioActivity : AppCompatActivity() {
                 customAudioUri = null
                 downloadedAudioPath = null
                 videoMotionView.customAudioUri = null
+                videoMotionView.isMuted = true
+                ivMuteToggle.setImageResource(R.drawable.ic_volume_off)
+                videoMotionView.playAudioImmediately("none")
                 updateConfig()
                 populateAudioPresets()
             }
@@ -630,7 +796,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 setColorFilter(Color.parseColor(if (isSelected) "#38BDF8" else "#94A3B8"))
             }
             val tv = TextView(this@VideoStudioActivity).apply {
-                text = "من الهاتف"
+                text = getString(R.string.studio_audio_my_device)
                 setTextColor(Color.parseColor(if (isSelected) "#FFFFFF" else "#94A3B8"))
                 textSize = 10f
                 gravity = Gravity.CENTER
@@ -639,17 +805,27 @@ class VideoStudioActivity : AppCompatActivity() {
             addView(iv)
             addView(tv)
             setOnClickListener {
-                pickAudioLauncher.launch("audio/*")
+                pickAudioLauncher.launch(
+                    arrayOf(
+                        "audio/*",
+                        "audio/mpeg",
+                        "audio/mp3",
+                        "audio/wav",
+                        "audio/ogg",
+                        "audio/m4a",
+                        "audio/aac",
+                        "audio/flac"
+                    )
+                )
             }
         }
         layoutAudioPresets.addView(customCard)
 
-        // Option C: Built-in Studio Loops
+        // Option C: Built-in Studio Loops (Pure Instrumental - No Rain/Thunder/Cafe)
         val builtInLoops = listOf(
-            Triple("oud", "عود أندلسي", R.drawable.ic_capcut_audio),
-            Triple("piano", "بيانو هادئ", R.drawable.ic_capcut_audio),
-            Triple("rain", "صوت المطر", R.drawable.ic_capcut_audio),
-            Triple("nature", "طبيعة ورياح", R.drawable.ic_capcut_audio)
+            Triple("oud", getString(R.string.audio_oud), R.drawable.ic_capcut_audio),
+            Triple("piano", getString(R.string.audio_piano), R.drawable.ic_capcut_audio),
+            Triple("nature", getString(R.string.audio_nature), R.drawable.ic_capcut_audio)
         )
         for ((id, title, iconRes) in builtInLoops) {
             val isSelected = selectedAudio == id && customAudioUri == null && downloadedAudioPath == null
@@ -682,6 +858,8 @@ class VideoStudioActivity : AppCompatActivity() {
                     downloadedAudioPath = null
                     videoMotionView.customAudioUri = null
                     videoMotionView.isMuted = false
+                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                    videoMotionView.playAudioImmediately(id)
                     updateConfig()
                     populateAudioPresets()
                 }
@@ -689,10 +867,12 @@ class VideoStudioActivity : AppCompatActivity() {
             layoutAudioPresets.addView(card)
         }
 
-        // Option D: Online Curated Tracks with Real Download Percentage
+        // Option D: Online Curated Tracks with Real Download Percentage & Smooth Non-blocking Progress
         for (onlineAudio in StudioAssetManager.onlineAudios) {
             val isDownloaded = StudioAssetManager.isAudioDownloaded(this, onlineAudio.id)
-            val isSelected = downloadedAudioPath != null && downloadedAudioPath!!.contains(onlineAudio.id)
+            val isDownloading = downloadingAudioProgressMap.containsKey(onlineAudio.id)
+            val downloadPercent = downloadingAudioProgressMap[onlineAudio.id] ?: 0
+            val isSelected = (selectedAudio == onlineAudio.id) || (downloadedAudioPath != null && downloadedAudioPath!!.contains(onlineAudio.id))
 
             val frame = FrameLayout(this).apply {
                 layoutParams = LinearLayout.LayoutParams((120 * dp).toInt(), (76 * dp).toInt()).apply {
@@ -720,7 +900,8 @@ class VideoStudioActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER
                 }
                 val tvStatus = TextView(this@VideoStudioActivity).apply {
-                    text = if (isDownloaded) "جاهز ✓" else "تحميل 📥"
+                    tag = "status_${onlineAudio.id}"
+                    text = if (isDownloaded) getString(R.string.studio_audio_downloaded) else getString(R.string.studio_audio_download)
                     setTextColor(Color.parseColor(if (isDownloaded) "#10B981" else "#38BDF8"))
                     textSize = 9.5f
                     gravity = Gravity.CENTER
@@ -732,19 +913,22 @@ class VideoStudioActivity : AppCompatActivity() {
             }
             frame.addView(contentLayout)
 
-            // Progress Overlay
+            // Progress Overlay (Shown when downloading)
             val progressOverlay = LinearLayout(this).apply {
+                tag = "overlay_${onlineAudio.id}"
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                visibility = View.GONE
-                setBackgroundColor(Color.parseColor("#CC0D1117"))
+                visibility = if (isDownloading) View.VISIBLE else View.GONE
+                setBackgroundColor(Color.parseColor("#E60D1117"))
                 layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 
                 val pb = ProgressBar(this@VideoStudioActivity, null, android.R.attr.progressBarStyleSmall)
                 val tvPercent = TextView(this@VideoStudioActivity).apply {
-                    text = "0%"
-                    setTextColor(Color.WHITE)
-                    textSize = 10f
+                    tag = "percent_${onlineAudio.id}"
+                    text = "${downloadPercent}%"
+                    setTextColor(Color.parseColor("#38BDF8"))
+                    textSize = 10.5f
+                    typeface = android.graphics.Typeface.DEFAULT_BOLD
                     gravity = Gravity.CENTER
                     setPadding(0, (2 * dp).toInt(), 0, 0)
                 }
@@ -755,35 +939,50 @@ class VideoStudioActivity : AppCompatActivity() {
 
             frame.setOnClickListener {
                 if (StudioAssetManager.isAudioDownloaded(this, onlineAudio.id)) {
-                    downloadedAudioPath = StudioAssetManager.getDownloadedAudioPath(this, onlineAudio.id)
+                    val path = StudioAssetManager.getDownloadedAudioPath(this, onlineAudio.id)
+                    downloadedAudioPath = path
                     selectedAudio = onlineAudio.id
                     customAudioUri = null
                     videoMotionView.customAudioUri = null
                     videoMotionView.isMuted = false
-                    updateConfig()
+                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                    videoMotionView.playAudioPreset(onlineAudio.id, localPath = path)
                     populateAudioPresets()
                 } else {
-                    progressOverlay.visibility = View.VISIBLE
-                    val tvPercent = progressOverlay.getChildAt(1) as TextView
+                    if (downloadingAudioProgressMap.containsKey(onlineAudio.id)) {
+                        return@setOnClickListener
+                    }
+                    downloadingAudioProgressMap[onlineAudio.id] = 0
+                    selectedAudio = onlineAudio.id
+                    customAudioUri = null
+                    downloadedAudioPath = null
+                    videoMotionView.customAudioUri = null
+                    videoMotionView.isMuted = false
+                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                    videoMotionView.playAudioPreset(onlineAudio.id, streamUrl = onlineAudio.url)
+                    populateAudioPresets()
 
                     StudioAssetManager.downloadAudio(
                         this,
                         onlineAudio,
                         onProgress = { percent ->
-                            tvPercent.text = "${percent}%"
+                            downloadingAudioProgressMap[onlineAudio.id] = percent
+                            // Ultra-smooth non-blocking direct view update: NO view inflation on main thread!
+                            val overlay = layoutAudioPresets.findViewWithTag<View>("overlay_${onlineAudio.id}")
+                            val tvPercent = layoutAudioPresets.findViewWithTag<TextView>("percent_${onlineAudio.id}")
+                            overlay?.visibility = View.VISIBLE
+                            tvPercent?.text = "$percent%"
                         },
                         onSuccess = { savedPath ->
-                            progressOverlay.visibility = View.GONE
+                            downloadingAudioProgressMap.remove(onlineAudio.id)
                             downloadedAudioPath = savedPath
-                            selectedAudio = onlineAudio.id
-                            customAudioUri = null
-                            videoMotionView.customAudioUri = null
-                            videoMotionView.isMuted = false
-                            updateConfig()
+                            videoMotionView.playAudioPreset(onlineAudio.id, localPath = savedPath)
                             populateAudioPresets()
+                            Toast.makeText(this, getString(R.string.studio_audio_download_success), Toast.LENGTH_SHORT).show()
                         },
                         onError = { err ->
-                            progressOverlay.visibility = View.GONE
+                            downloadingAudioProgressMap.remove(onlineAudio.id)
+                            populateAudioPresets()
                             Toast.makeText(this, err, Toast.LENGTH_SHORT).show()
                         }
                     )
@@ -801,13 +1000,14 @@ class VideoStudioActivity : AppCompatActivity() {
         val dp = resources.displayMetrics.density
 
         val effectsList = listOf(
-            Triple("typewriter", "Typewriter", R.drawable.ic_fx_typewriter),
-            Triple("word_by_word", "Word by Word", R.drawable.ic_fx_words),
-            Triple("fade", "Fade In", R.drawable.ic_fx_fade),
-            Triple("zoom", "Zoom Pop", R.drawable.ic_fx_zoom),
-            Triple("glow", "Glow Pulse", R.drawable.ic_fx_glow),
-            Triple("slide_up", "Slide Up", R.drawable.ic_fx_slide),
-            Triple("blur_in", "Blur Reveal", R.drawable.ic_fx_blur)
+            Triple("typewriter", getString(R.string.fx_typewriter), R.drawable.ic_fx_typewriter),
+            Triple("scroll_up", getString(R.string.fx_scroll_up), R.drawable.ic_fx_scroll),
+            Triple("word_by_word", getString(R.string.fx_words), R.drawable.ic_fx_words),
+            Triple("fade", getString(R.string.fx_fade), R.drawable.ic_fx_fade),
+            Triple("zoom", getString(R.string.fx_zoom), R.drawable.ic_fx_zoom),
+            Triple("glow", getString(R.string.fx_glow), R.drawable.ic_fx_glow),
+            Triple("slide_up", getString(R.string.fx_slide_up), R.drawable.ic_fx_slide),
+            Triple("blur_in", getString(R.string.fx_blur_in), R.drawable.ic_fx_blur)
         )
 
         for ((id, title, iconRes) in effectsList) {
@@ -961,30 +1161,43 @@ class VideoStudioActivity : AppCompatActivity() {
         val dp = resources.displayMetrics.density
 
         // Card 1: Custom Image from Phone (+ من الهاتف)
-        val customCard = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
-            layoutParams = LinearLayout.LayoutParams((86 * dp).toInt(), (76 * dp).toInt()).apply {
+        val customCard = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams((80 * dp).toInt(), (96 * dp).toInt()).apply {
                 marginEnd = (8 * dp).toInt()
             }
-            val isSelected = customImageBitmap != null
-            setBackgroundResource(if (isSelected) R.drawable.bg_tool_card_selected else R.drawable.bg_tool_card_normal)
+            val isSelected = customImageBitmap != null && selectedMotion == "CUSTOM_IMAGE"
+            background = GradientDrawable().apply {
+                cornerRadius = 10 * dp
+                if (isSelected) {
+                    setStroke((2.5f * dp).toInt(), Color.parseColor("#38BDF8"))
+                    setColor(Color.parseColor("#1A202C"))
+                } else {
+                    setStroke((1 * dp).toInt(), Color.parseColor("#26FFFFFF"))
+                    setColor(Color.parseColor("#151820"))
+                }
+            }
+            clipToOutline = true
 
-            val iv = ImageView(this@VideoStudioActivity).apply {
-                layoutParams = LinearLayout.LayoutParams((22 * dp).toInt(), (22 * dp).toInt())
-                setImageResource(R.drawable.ic_gallery)
-                setColorFilter(Color.parseColor(if (isSelected) "#38BDF8" else "#94A3B8"))
-            }
-            val tv = TextView(this@VideoStudioActivity).apply {
-                text = "من الهاتف"
-                setTextColor(Color.parseColor(if (isSelected) "#FFFFFF" else "#94A3B8"))
-                textSize = 10f
+            val content = LinearLayout(this@VideoStudioActivity).apply {
+                orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                setPadding(0, (4 * dp).toInt(), 0, 0)
+                layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+                val iv = ImageView(this@VideoStudioActivity).apply {
+                    layoutParams = LinearLayout.LayoutParams((24 * dp).toInt(), (24 * dp).toInt())
+                    setImageResource(R.drawable.ic_gallery)
+                    setColorFilter(Color.parseColor(if (isSelected) "#38BDF8" else "#94A3B8"))
+                }
+                val tv = TextView(this@VideoStudioActivity).apply {
+                    text = getString(R.string.studio_audio_my_device)
+                    setTextColor(Color.parseColor(if (isSelected) "#FFFFFF" else "#94A3B8"))
+                    textSize = 10f
+                    gravity = Gravity.CENTER
+                    setPadding(0, (6 * dp).toInt(), 0, 0)
+                }
+                addView(iv)
+                addView(tv)
             }
-            addView(iv)
-            addView(tv)
+            addView(content)
             setOnClickListener {
                 pickImageLauncher.launch("image/*")
             }
@@ -993,42 +1206,52 @@ class VideoStudioActivity : AppCompatActivity() {
 
         // Shaders List
         val shaderList = listOf(
-            Triple("STARS", "نجوم متحركة", "#0B1329"),
-            Triple("NEBULA", "سديم كوني", "#1E112A"),
-            Triple("AURORA", "شفق قطبي", "#082F24"),
-            Triple("GOLD", "ذهب فاخر", "#281D05"),
-            Triple("OCEAN", "أعماق البحر", "#042036")
+            Triple("STARS", getString(R.string.bg_stars), "#0B1329"),
+            Triple("NEBULA", getString(R.string.bg_nebula), "#1E112A"),
+            Triple("AURORA", getString(R.string.bg_aurora), "#082F24"),
+            Triple("GOLD", getString(R.string.bg_gold), "#281D05"),
+            Triple("OCEAN", getString(R.string.bg_ocean), "#042036")
         )
 
         if (currentBgCategory == "all" || currentBgCategory == "motion") {
             for ((id, title, colorHex) in shaderList) {
                 val isSelected = selectedMotion == id && customImageBitmap == null
-                val card = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL
-                    gravity = Gravity.CENTER
-                    setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
-                    layoutParams = LinearLayout.LayoutParams((90 * dp).toInt(), (76 * dp).toInt()).apply {
+                val card = FrameLayout(this).apply {
+                    layoutParams = LinearLayout.LayoutParams((80 * dp).toInt(), (96 * dp).toInt()).apply {
                         marginEnd = (8 * dp).toInt()
                     }
-                    setBackgroundResource(if (isSelected) R.drawable.bg_tool_card_selected else R.drawable.bg_tool_card_normal)
-
-                    val previewDot = View(this@VideoStudioActivity).apply {
-                        layoutParams = LinearLayout.LayoutParams((20 * dp).toInt(), (20 * dp).toInt())
-                        background = GradientDrawable().apply {
-                            shape = GradientDrawable.OVAL
-                            setColor(Color.parseColor(colorHex))
-                            setStroke((1.5f * dp).toInt(), Color.parseColor("#44FFFFFF"))
+                    background = GradientDrawable().apply {
+                        cornerRadius = 10 * dp
+                        if (isSelected) {
+                            setStroke((2.5f * dp).toInt(), Color.parseColor("#38BDF8"))
+                        } else {
+                            setStroke((1 * dp).toInt(), Color.parseColor("#26FFFFFF"))
                         }
+                        setColor(Color.parseColor(colorHex))
                     }
-                    val tv = TextView(this@VideoStudioActivity).apply {
-                        text = title
-                        setTextColor(Color.parseColor(if (isSelected) "#FFFFFF" else "#94A3B8"))
-                        textSize = 10f
+                    clipToOutline = true
+
+                    val content = LinearLayout(this@VideoStudioActivity).apply {
+                        orientation = LinearLayout.VERTICAL
                         gravity = Gravity.CENTER
-                        setPadding(0, (4 * dp).toInt(), 0, 0)
+                        layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+                        val iv = ImageView(this@VideoStudioActivity).apply {
+                            layoutParams = LinearLayout.LayoutParams((22 * dp).toInt(), (22 * dp).toInt())
+                            setImageResource(R.drawable.ic_fx_glow)
+                            setColorFilter(Color.WHITE)
+                        }
+                        val tv = TextView(this@VideoStudioActivity).apply {
+                            text = title
+                            setTextColor(Color.WHITE)
+                            textSize = 9.5f
+                            gravity = Gravity.CENTER
+                            maxLines = 1
+                            setPadding(0, (6 * dp).toInt(), 0, 0)
+                        }
+                        addView(iv)
+                        addView(tv)
                     }
-                    addView(previewDot)
-                    addView(tv)
+                    addView(content)
                     setOnClickListener {
                         selectedMotion = id
                         customImageBitmap = null
@@ -1041,7 +1264,7 @@ class VideoStudioActivity : AppCompatActivity() {
             }
         }
 
-        // Online Unsplash Aesthetics with Real-time Progress Bar
+        // Online Unsplash Aesthetics with Real-time Progress Bar & Glide Thumbnails (Stable Curated Order)
         val filteredBgs = if (currentBgCategory == "all") {
             StudioAssetManager.onlineBackgrounds
         } else {
@@ -1053,51 +1276,88 @@ class VideoStudioActivity : AppCompatActivity() {
             val isSelected = selectedMotion == bg.id && customImageBitmap != null
 
             val frame = FrameLayout(this).apply {
-                layoutParams = LinearLayout.LayoutParams((110 * dp).toInt(), (76 * dp).toInt()).apply {
+                layoutParams = LinearLayout.LayoutParams((80 * dp).toInt(), (96 * dp).toInt()).apply {
                     marginEnd = (8 * dp).toInt()
                 }
-                setBackgroundResource(if (isSelected) R.drawable.bg_tool_card_selected else R.drawable.bg_tool_card_normal)
-            }
-
-            val contentLayout = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-
-                val previewDot = View(this@VideoStudioActivity).apply {
-                    layoutParams = LinearLayout.LayoutParams((18 * dp).toInt(), (18 * dp).toInt())
-                    background = GradientDrawable().apply {
-                        shape = GradientDrawable.OVAL
-                        setColor(Color.parseColor(bg.previewColor))
-                        setStroke((1.5f * dp).toInt(), Color.parseColor("#44FFFFFF"))
+                background = GradientDrawable().apply {
+                    cornerRadius = 10 * dp
+                    if (isSelected) {
+                        setStroke((2.5f * dp).toInt(), Color.parseColor("#38BDF8"))
+                        setColor(Color.parseColor("#1A202C"))
+                    } else {
+                        setStroke((1 * dp).toInt(), Color.parseColor("#22FFFFFF"))
+                        setColor(Color.parseColor("#151820"))
                     }
                 }
+                clipToOutline = true
+            }
+
+            // Real Photo Thumbnail with Glide
+            val ivThumb = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            }
+            Glide.with(this)
+                .load(bg.thumbUrl)
+                .placeholder(ColorDrawable(Color.parseColor(bg.previewColor)))
+                .error(ColorDrawable(Color.parseColor(bg.previewColor)))
+                .centerCrop()
+                .into(ivThumb)
+            frame.addView(ivThumb)
+
+            // Bottom Gradient Scrim to ensure text readability
+            val scrim = View(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    (42 * dp).toInt(),
+                    Gravity.BOTTOM
+                )
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    intArrayOf(Color.TRANSPARENT, Color.parseColor("#EE0D1117"))
+                )
+            }
+            frame.addView(scrim)
+
+            // Text Info & Download Badge
+            val infoLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM
+                ).apply {
+                    bottomMargin = (4 * dp).toInt()
+                    leftMargin = (2 * dp).toInt()
+                    rightMargin = (2 * dp).toInt()
+                }
+
                 val tvTitle = TextView(this@VideoStudioActivity).apply {
                     text = bg.title
-                    setTextColor(Color.parseColor(if (isSelected) "#38BDF8" else "#FFFFFF"))
-                    textSize = 10f
+                    setTextColor(Color.WHITE)
+                    textSize = 9.5f
                     maxLines = 1
                     gravity = Gravity.CENTER
-                    setPadding(0, (2 * dp).toInt(), 0, 0)
+                    typeface = Typeface.DEFAULT_BOLD
                 }
                 val tvStatus = TextView(this@VideoStudioActivity).apply {
-                    text = if (isDownloaded) "جاهز ✓" else "تحميل 📥"
+                    text = if (isDownloaded) getString(R.string.studio_audio_downloaded) else getString(R.string.studio_audio_download)
                     setTextColor(Color.parseColor(if (isDownloaded) "#10B981" else "#38BDF8"))
-                    textSize = 9f
+                    textSize = 8.5f
                     gravity = Gravity.CENTER
                 }
-                addView(previewDot)
                 addView(tvTitle)
                 addView(tvStatus)
             }
-            frame.addView(contentLayout)
+            frame.addView(infoLayout)
 
-            // Progress Overlay
+            // Progress Overlay (when downloading)
             val progressOverlay = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
                 visibility = View.GONE
-                setBackgroundColor(Color.parseColor("#CC0D1117"))
+                setBackgroundColor(Color.parseColor("#D9000000"))
                 layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 
                 val pb = ProgressBar(this@VideoStudioActivity, null, android.R.attr.progressBarStyleSmall)
@@ -1106,6 +1366,7 @@ class VideoStudioActivity : AppCompatActivity() {
                     setTextColor(Color.WHITE)
                     textSize = 10f
                     gravity = Gravity.CENTER
+                    typeface = Typeface.DEFAULT_BOLD
                     setPadding(0, (2 * dp).toInt(), 0, 0)
                 }
                 addView(pb)
@@ -1232,7 +1493,10 @@ class VideoStudioActivity : AppCompatActivity() {
             downloadedAudioPath = downloadedAudioPath,
             animSpeed = selectedAnimSpeed,
             imageFramingMode = selectedImageFramingMode,
-            imageFocusY = selectedImageFocusY
+            imageFocusY = selectedImageFocusY,
+            imagePanX = selectedImagePanX,
+            imagePanY = selectedImagePanY,
+            imageZoomScale = selectedImageZoomScale
         )
         videoMotionView.config = config
     }
@@ -1251,7 +1515,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 showFramingAdjusterDialog()
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "تعذر قراءة الصورة", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.studio_image_read_error), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1264,9 +1528,9 @@ class VideoStudioActivity : AppCompatActivity() {
             videoMotionView.isMuted = false
             updateConfig()
             populateAudioPresets()
-            Toast.makeText(this, "تم اختيار الصوت بنجاح", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.studio_audio_pick_success), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(this, "تعذر تحميل الصوت", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.studio_audio_pick_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1293,19 +1557,87 @@ class VideoStudioActivity : AppCompatActivity() {
         }
 
         val tvSheetTitle = TextView(this).apply {
-            text = "تصدير الفيديو ومشاركته"
+            text = getString(R.string.studio_export_title)
             setTextColor(Color.WHITE)
             textSize = 16f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setPadding(0, 0, 0, (18 * density).toInt())
+            setPadding(0, 0, 0, (14 * density).toInt())
         }
         container.addView(tvSheetTitle)
 
+        // Video Export Quality Selector (1080p FHD, 720p HD, 480p SD)
+        val layoutQualitySection = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, 0, 0, (18 * density).toInt())
+        }
+
+        val tvQualityLabel = TextView(this).apply {
+            text = getString(R.string.studio_resolution_prompt)
+            setTextColor(Color.parseColor("#94A3B8"))
+            textSize = 12f
+            gravity = Gravity.START
+            setPadding(0, 0, 0, (8 * density).toInt())
+        }
+        layoutQualitySection.addView(tvQualityLabel)
+
+        val rowQualityPills = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            background = GradientDrawable().apply {
+                cornerRadius = 12 * density
+                setColor(Color.parseColor("#10131A"))
+                setStroke((1 * density).toInt(), Color.parseColor("#22FFFFFF"))
+            }
+            setPadding((4 * density).toInt(), (4 * density).toInt(), (4 * density).toInt(), (4 * density).toInt())
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (44 * density).toInt())
+        }
+
+        val qualityList = listOf(
+            Triple("1080p", "1080p FHD ★", "دقة فائقة"),
+            Triple("720p", "720p HD", "متوازنة"),
+            Triple("480p", "480p SD", "خفيفة")
+        )
+
+        val qualityBtnViews = mutableListOf<TextView>()
+        for ((qId, qTitle, _) in qualityList) {
+            val pill = TextView(this).apply {
+                text = qTitle
+                textSize = 11.5f
+                typeface = android.graphics.Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+                val isSel = selectedExportQuality.lowercase() == qId
+                if (isSel) {
+                    setBackgroundResource(R.drawable.bg_pill_active)
+                    setTextColor(Color.WHITE)
+                } else {
+                    background = null
+                    setTextColor(Color.parseColor("#94A3B8"))
+                }
+            }
+            pill.setOnClickListener {
+                selectedExportQuality = qId
+                for (i in qualityList.indices) {
+                    val targetView = qualityBtnViews[i]
+                    if (qualityList[i].first == qId) {
+                        targetView.setBackgroundResource(R.drawable.bg_pill_active)
+                        targetView.setTextColor(Color.WHITE)
+                    } else {
+                        targetView.background = null
+                        targetView.setTextColor(Color.parseColor("#94A3B8"))
+                    }
+                }
+            }
+            qualityBtnViews.add(pill)
+            rowQualityPills.addView(pill)
+        }
+        layoutQualitySection.addView(rowQualityPills)
+        container.addView(layoutQualitySection)
+
         // 1. WhatsApp Status Option
         val btnWhatsApp = createExportOptionRow(
-            title = "مشاركة في حالة واتساب (Status)",
-            desc = "نشر الفيديو مباشرة كحالة واتساب بجودة عالية",
+            title = getString(R.string.studio_whatsapp_status_title),
+            desc = getString(R.string.studio_whatsapp_status_desc),
             iconRes = R.drawable.ic_whatsapp,
             accentColor = "#25D366"
         ) {
@@ -1318,8 +1650,8 @@ class VideoStudioActivity : AppCompatActivity() {
 
         // 2. Save to Gallery Option
         val btnGallery = createExportOptionRow(
-            title = "حفظ الفيديو في المعرض (HD MP4)",
-            desc = "تخزين دائم في ألبوم Manchorati بجودة أصلية",
+            title = getString(R.string.studio_save_gallery_title),
+            desc = getString(R.string.studio_save_gallery_desc),
             iconRes = R.drawable.ic_download,
             accentColor = "#0284C7"
         ) {
@@ -1327,9 +1659,9 @@ class VideoStudioActivity : AppCompatActivity() {
             startExport { file ->
                 val uri = VideoExporter.saveVideoToGallery(this, file, postAuthorName)
                 if (uri != null) {
-                    Toast.makeText(this, "تم حفظ الفيديو بنجاح في ألبوم Manchorati!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.studio_save_gallery_success), Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(this, "حدث خطأ أثناء حفظ الفيديو", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.studio_save_gallery_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -1337,8 +1669,8 @@ class VideoStudioActivity : AppCompatActivity() {
 
         // 3. General Share Option
         val btnGeneral = createExportOptionRow(
-            title = "مشاركة في تطبيقات أخرى...",
-            desc = "إنستغرام، تيك توك، فيسبوك، تيليجرام...",
+            title = getString(R.string.studio_share_other_apps_title),
+            desc = getString(R.string.studio_share_other_apps_desc),
             iconRes = R.drawable.ic_share_card,
             accentColor = "#8B5CF6"
         ) {
@@ -1440,7 +1772,7 @@ class VideoStudioActivity : AppCompatActivity() {
         }
 
         val tvTitle = TextView(this).apply {
-            text = "جاري معالجة وتصدير الفيديو..."
+            text = getString(R.string.studio_exporting_progress)
             setTextColor(Color.WHITE)
             textSize = 15f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
@@ -1481,6 +1813,7 @@ class VideoStudioActivity : AppCompatActivity() {
             context = this,
             config = videoMotionView.config,
             customAudioUri = customAudioUri,
+            quality = selectedExportQuality,
             onProgress = { percent ->
                 runOnUiThread {
                     progressBar.progress = percent
@@ -1496,7 +1829,7 @@ class VideoStudioActivity : AppCompatActivity() {
             onError = { exc ->
                 runOnUiThread {
                     dialog.dismiss()
-                    Toast.makeText(this, "حدث خطأ أثناء تصدير الفيديو: ${exc.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.studio_export_error, exc.message ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         )

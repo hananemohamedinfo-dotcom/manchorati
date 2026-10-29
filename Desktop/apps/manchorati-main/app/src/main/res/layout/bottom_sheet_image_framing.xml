@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="18dp"
-        android:text="ضبط تموضع الصورة في الفيديو"
+        android:text="@string/framing_title"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="طريقة العرض:"
+        android:text="@string/framing_mode_label"
         android:textColor="#94A3B8"
         android:textSize="12sp" />
 
@@ -53,7 +53,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="ملء الشاشة"
+            android:text="@string/framing_fill_screen"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -67,7 +67,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="توسيط مع ضبابية"
+            android:text="@string/framing_center_blur"
             android:textColor="#94A3B8"
             android:textSize="12sp" />
 
@@ -80,7 +80,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="تكبير (Zoom)"
+            android:text="@string/framing_zoom"
             android:textColor="#94A3B8"
             android:textSize="12sp" />
     </LinearLayout>
@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="التركيز العمودي:"
+        android:text="@string/framing_focus_label"
         android:textColor="#94A3B8"
         android:textSize="12sp" />
 
@@ -112,7 +112,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="أعلى الصورة"
+            android:text="@string/framing_focus_top"
             android:textColor="#94A3B8"
             android:textSize="12sp" />
 
@@ -125,7 +125,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="المنتصف"
+            android:text="@string/framing_focus_center"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -139,7 +139,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="أسفل الصورة"
+            android:text="@string/framing_focus_bottom"
             android:textColor="#94A3B8"
             android:textSize="12sp" />
     </LinearLayout>
@@ -157,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="تطبيق"
+            android:text="@string/framing_apply"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold" />

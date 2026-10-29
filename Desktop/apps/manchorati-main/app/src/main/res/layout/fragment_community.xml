@@ -67,6 +67,34 @@
                         app:tint="@color/text_secondary" />
                 </LinearLayout>
 
+                <!-- زر كُتّاب الأسبوع والمتصدرون -->
+                <LinearLayout
+                    android:id="@+id/btnExploreWritersCommunity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_trophy" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/community_writers_badge"
+                        android:textColor="#F59E0B"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
@@ -134,7 +162,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="كيف تشعر اليوم؟ 💭"
+                    android:text="@string/mood_selector_title"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -148,7 +176,7 @@
                     android:id="@+id/tvActiveMoodSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="اختر مزاجك لتخصيص الخواطر"
+                    android:text="@string/mood_selector_subtitle"
                     android:textColor="@color/text_secondary"
                     android:textSize="10.5sp" />
             </LinearLayout>
@@ -177,7 +205,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_active"
-                        android:text="🌟 الكل"
+                        android:text="@string/mood_all"
                         android:textColor="#FFFFFF"
                         android:textSize="11.5sp"
                         android:textStyle="bold" />
@@ -191,7 +219,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="☕ رايق وهادئ"
+                        android:text="@string/mood_calm"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
@@ -204,7 +232,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="💪 محتاج تحفيز"
+                        android:text="@string/mood_motivation"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
@@ -217,7 +245,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="😔 مهموم وحزين"
+                        android:text="@string/mood_sad"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
@@ -230,7 +258,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="😊 متفائل وسعيد"
+                        android:text="@string/mood_happy"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
@@ -243,7 +271,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="❤️ حب وامتنان"
+                        android:text="@string/mood_love"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
@@ -256,7 +284,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="11dp"
                         android:background="@drawable/bg_mood_chip_idle"
-                        android:text="🤲 أدعية وسكينة"
+                        android:text="@string/mood_dua"
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
                 </LinearLayout>
@@ -305,7 +333,7 @@
                     android:background="@drawable/bg_tool_chip_active"
                     android:gravity="center"
                     android:paddingHorizontal="8dp"
-                    android:text="اكتب ✍️"
+                    android:text="@string/mood_write_btn"
                     android:textColor="#FFFFFF"
                     android:textSize="10.5sp"
                     android:textStyle="bold" />

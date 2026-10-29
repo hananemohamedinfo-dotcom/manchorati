@@ -223,6 +223,12 @@ class CommunityFragment : Fragment() {
         setupTagSelector(view)
         setupMoodSelector(view)
 
+        val btnExploreWriters = view.findViewById<View>(R.id.btnExploreWritersCommunity)
+        btnExploreWriters?.setOnClickListener {
+            val intent = Intent(requireContext(), WritersActivity::class.java)
+            startActivity(intent)
+        }
+
         rvCommunity.layoutManager = LinearLayoutManager(requireContext())
 
         communityAdapter = CommunityAdapter(
@@ -321,7 +327,7 @@ class CommunityFragment : Fragment() {
                 isCheckable = true
                 isChecked = (sortMode == 1)
             }
-            popup.menu.add(0, 3, 2, "الكُتّاب الذين أتابعهم 👥").apply {
+            popup.menu.add(0, 3, 2, getString(R.string.following_feed_menu)).apply {
                 isCheckable = true
                 isChecked = (sortMode == 2)
             }
@@ -344,7 +350,7 @@ class CommunityFragment : Fragment() {
                     3 -> {
                         val user = FirebaseAuth.getInstance().currentUser
                         if (user == null) {
-                            Toast.makeText(requireContext(), "يرجى تسجيل الدخول لعرض منشورات من تتابعهم", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), getString(R.string.login_required_following), Toast.LENGTH_SHORT).show()
                             showLoginDialog()
                         } else {
                             sortMode = 2
@@ -413,12 +419,12 @@ class CommunityFragment : Fragment() {
 
             if (mood == MoodType.ALL) {
                 layoutMoodBanner.visibility = View.GONE
-                tvActiveMoodSubtitle.text = "اختر مزاجك لتخصيص الخواطر"
+                tvActiveMoodSubtitle.text = getString(R.string.mood_selector_subtitle)
             } else {
                 layoutMoodBanner.visibility = View.VISIBLE
                 tvMoodBannerEmoji.text = mood.emoji
                 tvMoodBannerText.text = mood.bannerPhrase
-                tvActiveMoodSubtitle.text = "معروض الآن: ${mood.title}"
+                tvActiveMoodSubtitle.text = getString(R.string.mood_active_display, mood.title)
             }
 
             applyFilterAndSort()
@@ -623,14 +629,14 @@ class CommunityFragment : Fragment() {
         if (list.isEmpty()) {
             layoutEmptyCommunity.visibility = View.VISIBLE
             if (sortMode == 2) {
-                tvEmptyTitle.text = "لا توجد منشورات لمن تتابعهم"
-                tvEmptySubtitle.text = "تابع بعض الكتّاب والمبدعين لتظهر منشوراتهم هنا ✨"
+                tvEmptyTitle.text = getString(R.string.following_feed_empty_title)
+                tvEmptySubtitle.text = getString(R.string.following_feed_empty_subtitle)
             } else if (currentTagFilter == "المحفوظات") {
                 tvEmptyTitle.text = getString(R.string.saved_posts)
                 tvEmptySubtitle.text = getString(R.string.no_posts_yet)
             } else if (selectedMood != MoodType.ALL) {
-                tvEmptyTitle.text = "لا توجد منشورات بهذا المزاج حالياً"
-                tvEmptySubtitle.text = "كن أول من يشارك خاطرة مناسبة لمزاج: ${selectedMood.title} ✨"
+                tvEmptyTitle.text = getString(R.string.mood_empty_title)
+                tvEmptySubtitle.text = getString(R.string.mood_empty_subtitle, selectedMood.title)
             } else if (currentTagFilter != "الكل") {
                 tvEmptyTitle.text = "${getString(R.string.no_posts_yet)} (${getLocalizedTagLabel(currentTagFilter)})"
                 tvEmptySubtitle.text = getString(R.string.share_first_post)
@@ -759,7 +765,11 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    private fun checkUserAndOpenPostDialog(initialTag: String = "") {
+    fun openPostDialogWithContent(content: String, tag: String = "") {
+        checkUserAndOpenPostDialog(initialTag = tag, initialContent = content)
+    }
+
+    private fun checkUserAndOpenPostDialog(initialTag: String = "", initialContent: String = "") {
         val user = AuthManager.currentUser
         if (user == null) {
             Toast.makeText(requireContext(), getString(R.string.login_required_post), Toast.LENGTH_SHORT).show()
@@ -778,14 +788,14 @@ class CommunityFragment : Fragment() {
                     val displayName = doc.getString("displayName")
                         ?.takeIf { it.isNotBlank() }
                         ?: defaultDisplayName
-                    showPostBottomSheet(user.uid, displayName, username, null, initialTag)
+                    showPostBottomSheet(user.uid, displayName, username, null, initialTag, initialContent)
                 } else {
-                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag)
+                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag, initialContent)
                 }
             }
             .addOnFailureListener {
                 if (!isAdded) return@addOnFailureListener
-                showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag)
+                showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag, initialContent)
             }
     }
 
@@ -1379,7 +1389,8 @@ class CommunityFragment : Fragment() {
         authorName: String,
         authorUsername: String,
         editingPost: CommunityPost?,
-        initialTag: String = ""
+        initialTag: String = "",
+        initialContent: String = ""
     ) {
         CommunityPostDialogHelper.show(
             context = requireContext(),
@@ -1388,6 +1399,7 @@ class CommunityFragment : Fragment() {
             authorUsername = authorUsername,
             editingPost = editingPost,
             initialTag = initialTag,
+            initialContent = initialContent,
             onAuthRequired = { showLoginDialog() }
         )
     }

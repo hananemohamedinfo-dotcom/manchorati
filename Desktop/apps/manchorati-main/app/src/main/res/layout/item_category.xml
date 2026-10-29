@@ -23,7 +23,7 @@
             android:background="@drawable/badge_new_bg"
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
-            android:text="جديد"
+            android:text="@string/badge_new"
             android:textColor="#DC2626"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -39,14 +39,15 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
-        <!-- العداد في الأسفل -->
+        <!-- العداد مخفي حتى لا يظهر عدد المنشورات -->
         <TextView
             android:id="@+id/tvCategoryCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:textColor="#EF4444"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
 
     </FrameLayout>
 </androidx.cardview.widget.CardView>

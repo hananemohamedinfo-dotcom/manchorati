@@ -12,7 +12,32 @@ data class UserBadge(
     val tierLevel: Int = 1,
     val minFollowers: Long = 0L,
     val description: String = ""
-)
+) {
+    fun getLocalizedTitle(context: android.content.Context): String {
+        return when (id) {
+            "admin" -> context.getString(R.string.badge_admin)
+            "official" -> context.getString(R.string.app_name)
+            "legendary" -> context.getString(R.string.badge_legendary)
+            "elite" -> context.getString(R.string.badge_elite)
+            "distinguished" -> context.getString(R.string.badge_distinguished)
+            "rising" -> context.getString(R.string.badge_rising)
+            "beginner" -> context.getString(R.string.badge_beginner)
+            else -> title
+        }
+    }
+
+    fun getLocalizedDescription(context: android.content.Context): String {
+        return when (id) {
+            "admin" -> context.getString(R.string.badge_admin_desc)
+            "legendary" -> context.getString(R.string.badge_legendary_desc)
+            "elite" -> context.getString(R.string.badge_elite_desc)
+            "distinguished" -> context.getString(R.string.badge_distinguished_desc)
+            "rising" -> context.getString(R.string.badge_rising_desc)
+            "beginner" -> context.getString(R.string.badge_beginner_desc)
+            else -> description
+        }
+    }
+}
 
 data class MilestoneBadge(
     val id: String,
@@ -22,6 +47,26 @@ data class MilestoneBadge(
     val emoji: String
 ) {
     fun isUnlocked(followersCount: Long): Boolean = followersCount >= targetFollowers
+
+    fun getLocalizedTitle(context: android.content.Context): String {
+        return when (id) {
+            "milestone_1k" -> context.getString(R.string.milestone_1k)
+            "milestone_5k" -> context.getString(R.string.milestone_5k)
+            "milestone_7k" -> context.getString(R.string.milestone_7k)
+            "milestone_10k" -> context.getString(R.string.milestone_10k)
+            else -> title
+        }
+    }
+
+    fun getLocalizedDescription(context: android.content.Context): String {
+        return when (id) {
+            "milestone_1k" -> context.getString(R.string.milestone_1k_desc)
+            "milestone_5k" -> context.getString(R.string.milestone_5k_desc)
+            "milestone_7k" -> context.getString(R.string.milestone_7k_desc)
+            "milestone_10k" -> context.getString(R.string.milestone_10k_desc)
+            else -> description
+        }
+    }
 }
 
 object BadgeHelper {

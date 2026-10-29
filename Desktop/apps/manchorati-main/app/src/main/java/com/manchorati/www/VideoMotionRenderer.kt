@@ -30,7 +30,10 @@ object VideoMotionRenderer {
         val downloadedAudioPath: String? = null,
         val animSpeed: Float = 1.0f, // 0.5f, 1.0f, 1.5f, 2.0f, 3.0f
         val imageFramingMode: String = "cover", // "cover", "fit_blur", "zoom"
-        val imageFocusY: Float = 0.5f // 0.0f = top, 0.5f = center, 1.0f = bottom
+        val imageFocusY: Float = 0.5f, // 0.0f = top, 0.5f = center, 1.0f = bottom
+        val imagePanX: Float = 0f, // Relative horizontal pan (-1f to 1f)
+        val imagePanY: Float = 0f, // Relative vertical pan (-1f to 1f)
+        val imageZoomScale: Float = 1.0f // Touch pinch zoom multiplier (0.5f to 5.0f)
     )
 
     // Pre-allocated deterministic particles
@@ -147,33 +150,60 @@ object VideoMotionRenderer {
         val hasTag = config.showTag && config.tag.isNotEmpty()
 
         if (hasAuthor) {
-            // Author Name & Badge
+            // 1. Sleek Profile Avatar Circle on the Right
+            val avatarRadius = 18f * S
+            val avatarCenterX = cardRight - padX - avatarRadius
+            val avatarCenterY = headerY + 10f * S
+
+            val avatarBg = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                shader = LinearGradient(
+                    avatarCenterX - avatarRadius, avatarCenterY - avatarRadius,
+                    avatarCenterX + avatarRadius, avatarCenterY + avatarRadius,
+                    intArrayOf(Color.parseColor("#38BDF8"), Color.parseColor("#0284C7")),
+                    null, Shader.TileMode.CLAMP
+                )
+            }
+            canvas.drawCircle(avatarCenterX, avatarCenterY, avatarRadius, avatarBg)
+
+            val avatarBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#4DFFFFFF")
+                style = Paint.Style.STROKE
+                strokeWidth = 1.2f * S
+            }
+            canvas.drawCircle(avatarCenterX, avatarCenterY, avatarRadius, avatarBorder)
+
+            val initialPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                textSize = 15f * S
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                textAlign = Paint.Align.CENTER
+            }
+            val initial = config.authorName.trim().take(1).ifEmpty { "م" }
+            canvas.drawText(initial, avatarCenterX, avatarCenterY + 5.5f * S, initialPaint)
+
+            // 2. Author Name & Username (Left of Avatar, NO 'verified' word)
+            val textRight = avatarCenterX - avatarRadius - 10f * S
             val authorPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Color.WHITE
-                textSize = (if (isStory) 24f else 22f) * S
+                textSize = (if (isStory) 23f else 21f) * S
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
                 textAlign = Paint.Align.RIGHT
             }
             val usernamePaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Color.parseColor("#94A3B8")
-                textSize = 17f * S
+                textSize = 15f * S
                 textAlign = Paint.Align.RIGHT
             }
 
-            val rawAuthor = if (config.authorBadge.isNotEmpty() && config.authorBadge != "beginner") {
-                "${config.authorName}  ${config.authorBadge}"
-            } else {
-                config.authorName
+            val maxAuthorW = (textRight - (if (hasTag) (cardLeft + 140f * S) else (cardLeft + padX))).coerceAtLeast(100f)
+            val ellipAuthor = TextUtils.ellipsize(config.authorName, authorPaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+            canvas.drawText(ellipAuthor, textRight, headerY + 4f * S, authorPaint)
+
+            if (config.authorUsername.isNotEmpty()) {
+                val cleanUser = "@${config.authorUsername.removePrefix("@")}"
+                val ellipUser = TextUtils.ellipsize(cleanUser, usernamePaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
+                canvas.drawText(ellipUser, textRight, headerY + 28f * S, usernamePaint)
             }
-
-            val maxAuthorW = (cardRight - cardLeft) * 0.52f
-            val ellipAuthor = TextUtils.ellipsize(rawAuthor, authorPaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
-            val authorX = cardRight - padX
-            canvas.drawText(ellipAuthor, authorX, headerY, authorPaint)
-
-            val usernameText = "@${config.authorUsername}"
-            val ellipUser = TextUtils.ellipsize(usernameText, usernamePaint, maxAuthorW, TextUtils.TruncateAt.END).toString()
-            canvas.drawText(ellipUser, authorX, headerY + 26f * S, usernamePaint)
         }
 
         // Tag Chip (Top Left inside card)
@@ -279,7 +309,11 @@ object VideoMotionRenderer {
                 textAlpha = (fadeProgress * 255).toInt()
             }
             "zoom" -> {
-                scale = 0.95f + 0.10f * animProgress
+                val popProgress = (animProgress / 0.35f).coerceIn(0f, 1f)
+                val ease = sin(popProgress * Math.PI.toFloat() / 2f)
+                scale = 0.80f + (0.20f * ease) + (0.02f * sin(progress * 2 * Math.PI.toFloat()))
+                val fade = (popProgress / 0.6f).coerceIn(0f, 1f)
+                textAlpha = (fade * 255).toInt()
             }
             "glow" -> {
                 val pulse = 0.5f + 0.5f * sin(progress * 4 * Math.PI.toFloat() * speed)
@@ -287,19 +321,33 @@ object VideoMotionRenderer {
                 textPaint.setShadowLayer(glowRadius, 0f, 0f, Color.parseColor("#38BDF8"))
             }
             "slide_up" -> {
-                val slideProgress = (animProgress / 0.25f).coerceIn(0f, 1f)
+                val slideProgress = (animProgress / 0.30f).coerceIn(0f, 1f)
                 val ease = 1f - (1f - slideProgress).pow(2)
-                translateY = (1f - ease) * 35f * S
+                translateY = -(1f - ease) * 45f * S
                 textAlpha = (ease * 255).toInt()
             }
+            "scroll_up", "rise", "scroll" -> {
+                // Smooth cinematic scroll: text starts at bottom, scrolls up smoothly through the center, and floats out off the top until it completely disappears
+                val startDownShift = (cardBottom - cardTop) * 0.45f + 40f * S
+                val endUpShift = (cardBottom - cardTop) * 0.50f + 50f * S
+                val totalDistance = startDownShift + endUpShift
+                translateY = -startDownShift + (animProgress * totalDistance)
+                textAlpha = when {
+                    animProgress < 0.12f -> ((animProgress / 0.12f) * 255).toInt().coerceIn(0, 255)
+                    animProgress > 0.86f -> (((1f - animProgress) / 0.14f) * 255).toInt().coerceIn(0, 255)
+                    else -> 255
+                }
+            }
             "blur_in" -> {
-                if (animProgress < 0.25f) {
-                    val blurProgress = 1f - (animProgress / 0.25f)
-                    val blurRadius = blurProgress * 12f * S
-                    if (blurRadius >= 1f) {
-                        textPaint.maskFilter = BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL)
+                val blurTime = (animProgress / 0.35f).coerceIn(0f, 1f)
+                if (blurTime < 1.0f) {
+                    val blurRemaining = 1f - blurTime
+                    textAlpha = (blurTime * 255).toInt()
+                    scale = 0.94f + (0.06f * blurTime)
+                    val glow = blurRemaining * 14f * S
+                    if (glow > 0.5f) {
+                        textPaint.setShadowLayer(glow, 0f, 0f, textPaint.color)
                     }
-                    textAlpha = ((1f - blurProgress * 0.35f) * 255).toInt()
                 }
             }
         }
@@ -329,6 +377,8 @@ object VideoMotionRenderer {
         val textStartY = textTopLimit + ((textAvailableHeight - staticLayout.height) / 2f).coerceAtLeast(0f)
 
         canvas.save()
+        // Clip text strictly inside card content bounds so scroll-up flows seamlessly
+        canvas.clipRect(cardLeft + 12f * S, textTopLimit - 10f * S, cardRight - 12f * S, textBottomLimit + 10f * S)
         if (scale != 1.0f) {
             canvas.scale(scale, scale, w / 2f, textStartY + staticLayout.height / 2f)
         }
@@ -371,8 +421,8 @@ object VideoMotionRenderer {
 
         if (config.customImageBitmap != null) {
             val bmp = config.customImageBitmap!!
-            val kenBurnsScale = 1.0f + 0.05f * sin(progress * Math.PI.toFloat())
-            val kenBurnsShift = 8f * sin(progress * 2 * Math.PI.toFloat()) * S
+            val kenBurnsScale = 1.0f + 0.03f * sin(progress * Math.PI.toFloat())
+            val touchZoom = config.imageZoomScale.coerceIn(0.5f, 5.0f)
             val focusY = config.imageFocusY.coerceIn(0f, 1f)
 
             canvas.save()
@@ -383,29 +433,26 @@ object VideoMotionRenderer {
                     canvas.drawBitmap(bmp, null, bgDst, bgPaint)
                     canvas.drawColor(Color.parseColor("#99000000"))
 
-                    // Aspect-fit centered
-                    val fitScale = minOf(w / bmp.width.toFloat(), h / bmp.height.toFloat())
+                    // Aspect-fit centered with touch zoom & pan
+                    val fitScale = minOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * touchZoom
                     val fw = bmp.width.toFloat() * fitScale
                     val fh = bmp.height.toFloat() * fitScale
-                    val fitDst = RectF((w - fw) / 2f, (h - fh) / 2f, (w + fw) / 2f, (h + fh) / 2f)
+                    val panX = config.imagePanX * w
+                    val panY = config.imagePanY * h
+                    val left = (w - fw) / 2f + panX
+                    val top = (h - fh) / 2f + panY
+                    val fitDst = RectF(left, top, left + fw, top + fh)
                     canvas.drawBitmap(bmp, null, fitDst, bgPaint)
                 }
-                "zoom" -> {
-                    val baseScale = maxOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * 1.30f * kenBurnsScale
-                    val drawW = bmp.width.toFloat() * baseScale
-                    val drawH = bmp.height.toFloat() * baseScale
-                    val top = -((drawH - h) * focusY)
-                    val left = (w - drawW) / 2f + kenBurnsShift
-                    val dstRect = RectF(left, top, left + drawW, top + drawH)
-                    canvas.drawBitmap(bmp, null, dstRect, bgPaint)
-                }
                 else -> {
-                    // "cover" with focusY alignment
-                    val baseScale = maxOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * kenBurnsScale
+                    // Free touch gesture mode: Zoom + Pan horizontally & vertically anywhere!
+                    val baseScale = maxOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * touchZoom * kenBurnsScale
                     val drawW = bmp.width.toFloat() * baseScale
                     val drawH = bmp.height.toFloat() * baseScale
-                    val top = -((drawH - h) * focusY)
-                    val left = (w - drawW) / 2f + kenBurnsShift
+                    val panX = config.imagePanX * w
+                    val panY = (config.imagePanY + (0.5f - focusY)) * h
+                    val left = (w - drawW) / 2f + panX
+                    val top = (h - drawH) / 2f + panY
                     val dstRect = RectF(left, top, left + drawW, top + drawH)
                     canvas.drawBitmap(bmp, null, dstRect, bgPaint)
                 }

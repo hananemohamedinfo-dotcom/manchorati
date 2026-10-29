@@ -418,4 +418,211 @@
     <string name="auth_success">تم تسجيل الدخول بنجاح!</string>
     <string name="enter_email_to_reset">يرجى كتابة بريدك الإلكتروني في الخانة أولاً لإرسال الرابط</string>
 
+
+    <!-- كاتب الخواطر بالذكاء الاصطناعي (AI Writer) -->
+    <string name="ai_writer_title">كاتب الخواطر بالذكاء الاصطناعي</string>
+    <string name="ai_quota_badge">المحاولات المتبقية: %1$d / %2$d ✨</string>
+    <string name="ai_topic_label">اختر موضوع الخاطرة:</string>
+    <string name="ai_style_label">اختر أسلوب الكتابة:</string>
+    <string name="ai_custom_prompt_hint">أضف توجيهات خاصة (اختياري)...</string>
+    <string name="ai_generate_btn">✨ توليد خاطرة جديدة</string>
+    <string name="ai_generating">جاري التفكير والتوليد... ✨</string>
+    <string name="ai_copy_btn">نسخ</string>
+    <string name="ai_image_btn">صورة فنية</string>
+    <string name="ai_video_btn">فيديو AI</string>
+    <string name="ai_publish_btn">نشر</string>
+    <string name="ai_copied_toast">تم نسخ الخاطرة بنجاح ✨</string>
+    <string name="ai_quota_exceeded">لقد استنفدت محاولاتك اليومية. عد غداً ✨</string>
+    <string name="ai_topic_wisdom">حكم وحكمة</string>
+    <string name="ai_topic_motivation">تحفيز ودافع</string>
+    <string name="ai_topic_love">حب وعاطفة</string>
+    <string name="ai_topic_dua">دعاء وابتهال</string>
+    <string name="ai_topic_calm">هدوء وسكينة</string>
+    <string name="ai_topic_farewell">رحيل وفراق</string>
+    <string name="ai_style_wisdom">نثر حكيم</string>
+    <string name="ai_style_short">خاطرة قصيرة</string>
+    <string name="ai_style_poem">شعر منثور</string>
+    <string name="drawer_ai_writer">كاتب الخواطر الذكي ✨</string>
+
+    <!-- AI Writer & Video Cooldown / Errors -->
+    <string name="ai_wait_seconds">يرجى الانتظار %d ثوانٍ قبل التوليد مرة أخرى ⏱️</string>
+    <string name="ai_generate_again_btn">✨ توليد خاطرة أخرى</string>
+
+    <!-- Video Studio & Reel Player -->
+    <string name="studio_title">استوديو الفيديو</string>
+    <string name="studio_save">حفظ</string>
+    <string name="studio_edit">تعديل</string>
+    <string name="studio_audio">صوت</string>
+    <string name="studio_speed">السرعة:</string>
+    <string name="studio_all">الكل</string>
+    <string name="studio_animated">متحركة</string>
+    <string name="studio_dark">داكنة</string>
+    <string name="studio_nature">طبيعة</string>
+    <string name="studio_framing">ضبط الموضع</string>
+    <string name="studio_duration">المدة:</string>
+    <string name="studio_custom">مخصص</string>
+    <string name="studio_sec_format">%s ث</string>
+    <string name="studio_author">الكاتب</string>
+    <string name="studio_tag">الوسم</string>
+    <string name="studio_animations">حركات</string>
+    <string name="studio_texts">نصوص</string>
+    <string name="studio_backgrounds">خلفيات</string>
+    <string name="studio_settings">إعدادات</string>
+    <string name="studio_edit_quote_title">تعديل نص المنشور</string>
+    <string name="studio_edit_quote_subtitle">عدّل النص ليظهر فوراً بتأثيرات الحركة في الفيديو</string>
+    <string name="studio_edit_quote_hint">اكتب أو الصق نص المنشور هنا...</string>
+    <string name="studio_char_count_format">%d حرف</string>
+    <string name="studio_save_apply">حفظ وتطبيق</string>
+    <string name="studio_text_updated">تم تحديث النص بنجاح</string>
+    <string name="studio_text_invalid">يرجى كتابة نص صالح</string>
+    <string name="studio_audio_silent">صامت</string>
+    <string name="studio_audio_my_device">هاتفي</string>
+    <string name="studio_audio_downloaded">جاهز ✓</string>
+    <string name="studio_audio_download">تحميل 📥</string>
+    <string name="studio_audio_download_success">تم تحميل الصوت بنجاح ✓</string>
+    <string name="studio_audio_pick_success">تم اختيار الصوت بنجاح</string>
+    <string name="studio_audio_pick_failed">تعذر تحميل الصوت</string>
+    <string name="studio_image_read_error">تعذر قراءة الصورة</string>
+    <string name="studio_export_title">تصدير الفيديو ومشاركته</string>
+    <string name="studio_resolution_prompt">اختر دقة الفيديو المطلوبة:</string>
+    <string name="studio_whatsapp_status_title">مشاركة في حالة واتساب (Status)</string>
+    <string name="studio_whatsapp_status_desc">نشر الفيديو مباشرة كحالة واتساب بجودة عالية</string>
+    <string name="studio_save_gallery_title">حفظ الفيديو في المعرض (HD MP4)</string>
+    <string name="studio_save_gallery_desc">تخزين دائم في ألبوم Manchorati بجودة أصلية</string>
+    <string name="studio_save_gallery_success">تم حفظ الفيديو بنجاح في ألبوم Manchorati!</string>
+    <string name="studio_save_gallery_error">حدث خطأ أثناء حفظ الفيديو</string>
+    <string name="studio_share_other_apps_title">مشاركة في تطبيقات أخرى...</string>
+    <string name="studio_share_other_apps_desc">إنستغرام، تيك توك، فيسبوك، تيليجرام...</string>
+    <string name="studio_exporting_progress">جاري معالجة وتصدير الفيديو...</string>
+    <string name="studio_export_error">حدث خطأ أثناء تصدير الفيديو: %s</string>
+
+    <!-- Image Framing BottomSheet -->
+    <string name="framing_title">ضبط تموضع الصورة في الفيديو</string>
+    <string name="framing_mode_label">طريقة العرض:</string>
+    <string name="framing_fill_screen">ملء الشاشة</string>
+    <string name="framing_center_blur">توسيط مع ضبابية</string>
+    <string name="framing_zoom">تكبير (Zoom)</string>
+    <string name="framing_focus_label">التركيز العمودي:</string>
+    <string name="framing_focus_top">أعلى الصورة</string>
+    <string name="framing_focus_center">المنتصف</string>
+    <string name="framing_focus_bottom">أسفل الصورة</string>
+    <string name="framing_apply">تطبيق</string>
+
+    <!-- Reel Player -->
+    <string name="reel_player_title">🎬 ريل منشوراتي</string>
+    <string name="reel_export_mp4">تصدير MP4</string>
+    <string name="reel_whatsapp_status">حالة واتساب</string>
+    <string name="reel_saved_gallery_success">تم حفظ الفيديو بنجاح في المعرض! 🎉</string>
+    <string name="reel_exporting_progress">🎬 جاري تجهيز وتصدير الريل كفيديو MP4...</string>
+    <string name="reel_export_failed">فشل تصدير الفيديو: %s</string>
+    <string name="reel_video_badge">ريل / فيديو 🎬</string>
+
+    <!-- Community & Mood Selector -->
+    <string name="mood_selector_title">كيف تشعر اليوم؟ 💭</string>
+    <string name="mood_selector_subtitle">اختر مزاجك لتخصيص الخواطر</string>
+    <string name="mood_all">🌟 الكل</string>
+    <string name="mood_calm">☕ رايق وهادئ</string>
+    <string name="mood_motivation">💪 محتاج تحفيز</string>
+    <string name="mood_sad">😔 مهموم وحزين</string>
+    <string name="mood_happy">😊 متفائل وسعيد</string>
+    <string name="mood_love">❤️ حب وامتنان</string>
+    <string name="mood_dua">🤲 أدعية وسكينة</string>
+    <string name="mood_write_btn">اكتب ✍️</string>
+    <string name="mood_active_display">معروض الآن: %s</string>
+    <string name="following_feed_menu">الكُتّاب الذين أتابعهم 👥</string>
+    <string name="following_feed_empty_title">لا توجد منشورات لمن تتابعهم</string>
+    <string name="following_feed_empty_subtitle">تابع بعض الكتّاب والمبدعين لتظهر منشوراتهم هنا ✨</string>
+    <string name="mood_empty_title">لا توجد منشورات بهذا المزاج حالياً</string>
+    <string name="mood_empty_subtitle">كن أول من يشارك خاطرة مناسبة لمزاج: %s ✨</string>
+
+    <!-- Daily Streak Dialog -->
+    <string name="streak_days_consecutive">أيام متتالية</string>
+    <string name="streak_longest">أطول سلسلة ⚡</string>
+    <string name="streak_total_active">إجمالي الأيام النشطة 📅</string>
+    <string name="streak_day_format">%d يوم</string>
+    <string name="streak_medals_title">أوسمة المثابرة والإلهام</string>
+    <string name="streak_share_btn">شارك إنجازك اليومي 🚀</string>
+    <string name="streak_continue_reading">متابعة القراءة</string>
+    <string name="streak_unlocked">✓ تم الفتح</string>
+    <string name="streak_remaining_days">باقي %d أيام</string>
+    <string name="day_sat">سبت</string>
+    <string name="day_sun">أحد</string>
+    <string name="day_mon">إثنين</string>
+    <string name="day_tue">ثلاثاء</string>
+    <string name="day_wed">أربعاء</string>
+    <string name="day_thu">خميس</string>
+    <string name="day_fri">جمعة</string>
+
+    <!-- Misc UI -->
+    <string name="badge_new">جديد</string>
+    <string name="widget_quote_title">خاطرة اليوم</string>
+    <string name="anonymous_author">فاعل خير</string>
+    <string name="user_default_handle">@مستخدم</string>
+
+
+    <string name="studio_profile_enabled">البروفايل: مفعّل ✓</string>
+    <string name="studio_profile_disabled">البروفايل: معطّل ✕</string>
+    <string name="studio_tag_enabled">الوسم: مفعّل ✓</string>
+    <string name="studio_tag_disabled">الوسم: معطّل ✕</string>
+    <string name="studio_audio_muted">تم كتم الصوت</string>
+    <string name="studio_audio_unmuted">تم تشغيل الصوت</string>
+
+    <string name="login_required_following">يرجى تسجيل الدخول لعرض منشورات من تتابعهم</string>
+
+    <string name="tier_for_all_new_members">لجميع الأعضاء الجدد</string>
+    <string name="tier_followers_plus">%d+ متابع</string>
+
+    <!-- Tier Descriptions -->
+    <string name="badge_admin_desc">عضو رسمي في إدارة وتطوير تطبيق منشوراتي.</string>
+    <string name="badge_legendary_desc">بلغ قمة التأثير والإبداع مع أكثر من 10,000 متابع حقيقي!</string>
+    <string name="badge_elite_desc">من نخبة الكتّاب الأكثر تميزاً وتفاعلاً مع أكثر من 5,000 متابع.</string>
+    <string name="badge_distinguished_desc">تجاوز 1,000 متابع ويحظى بحضور قوي في المجتمع.</string>
+    <string name="badge_rising_desc">كاتب موهوب بدأ بالصعود وتجاوز 100 متابع.</string>
+    <string name="badge_beginner_desc">يخطو أولى خطواته في نشر الكلمات والخواطر ومشاركة الإلهام.</string>
+
+    <!-- Video Studio Animations -->
+    <string name="fx_typewriter">كاتبة</string>
+    <string name="fx_scroll_up">صعود</string>
+    <string name="fx_words">كلمات</string>
+    <string name="fx_fade">تلاشي</string>
+    <string name="fx_zoom">تكبير</string>
+    <string name="fx_glow">توهج</string>
+    <string name="fx_slide_up">انزلاق</string>
+    <string name="fx_blur_in">ضبابي</string>
+
+    <!-- Video Studio Audio Presets -->
+    <string name="audio_oud">عود</string>
+    <string name="audio_piano">بيانو</string>
+    <string name="audio_nature">طبيعة</string>
+
+    <!-- Video Studio Backgrounds -->
+    <string name="bg_stars">نجوم</string>
+    <string name="bg_nebula">سديم</string>
+    <string name="bg_aurora">شفق</string>
+    <string name="bg_gold">ذهب</string>
+    <string name="bg_ocean">محيط</string>
+
+    <!-- استكشاف الكتّاب والمتصدرون وكاتب الأسبوع -->
+    <string name="drawer_writers">كُتّاب الأسبوع والمتصدرون</string>
+    <string name="writers_title">استكشاف الكُتّاب والمتصدرون</string>
+    <string name="writer_of_the_week">كاتب الأسبوع 👑</string>
+    <string name="writer_of_the_week_desc">الكاتب الأكثر إلهاماً وتفاعلاً بنبض كلماته هذا الأسبوع</string>
+    <string name="writer_weekly_likes">%d إعجاب هذا الأسبوع</string>
+    <string name="writer_total_likes">%d إعجاب كلي</string>
+    <string name="writer_followers_count">%s متابع</string>
+    <string name="writer_posts_count">%d منشور</string>
+    <string name="challenge_ends_in_days">ينتهي التحدي الأسبوعي خلال %d أيام</string>
+    <string name="challenge_ends_tomorrow">ينتهي التحدي الأسبوعي غداً!</string>
+    <string name="challenge_ends_today">ينتهي التحدي الأسبوعي الليلة!</string>
+    <string name="tab_weekly_leaderboard">🏆 كُتّاب الأسبوع</string>
+    <string name="tab_top_followers">💎 الأكثر متابعة</string>
+    <string name="tab_all_writers">🌟 كل الكُتّاب</string>
+    <string name="search_writers_hint">ابحث باسم المستخدم @username أو الاسم...</string>
+    <string name="no_writers_found">لم يتم العثور على أي كاتب يطابق بحثك</string>
+    <string name="view_profile_btn">الملف الشخصي</string>
+    <string name="community_writers_badge">المتصدرون 🏆</string>
+    <string name="weekly_champion_congrats">مبروك للمتصدر! انشر وشارك خواطرك لتكون كاتب الأسبوع القادم 🔥</string>
+    <string name="no_weekly_posts_yet">كن أول من ينشر هذا الأسبوع ويحصد لقب كاتب الأسبوع!</string>
+    <string name="leaderboard_rank_format">#%d</string>
+    <string name="leaderboard_section_title">قائمة المتصدرين</string>
 </resources>

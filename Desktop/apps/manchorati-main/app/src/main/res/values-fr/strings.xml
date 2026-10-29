@@ -418,4 +418,211 @@
     <string name="auth_success">Connexion réussie !</string>
     <string name="enter_email_to_reset">Veuillez saisir votre e-mail ci-dessus pour recevoir le lien</string>
 
+
+    <!-- Écrivain IA -->
+    <string name="ai_writer_title">Écrivain de Citations IA</string>
+    <string name="ai_quota_badge">Tentatives restantes : %1$d / %2$d ✨</string>
+    <string name="ai_topic_label">Choisissez un sujet :</string>
+    <string name="ai_style_label">Choisissez le style d’écriture :</string>
+    <string name="ai_custom_prompt_hint">Ajoutez des instructions personnalisées (optionnel)...</string>
+    <string name="ai_generate_btn">✨ Générer une nouvelle citation</string>
+    <string name="ai_generating">Réflexion en cours... ✨</string>
+    <string name="ai_copy_btn">Copier</string>
+    <string name="ai_image_btn">Carte artistique</string>
+    <string name="ai_video_btn">Vidéo IA</string>
+    <string name="ai_publish_btn">Publier</string>
+    <string name="ai_copied_toast">Citation copiée avec succès ✨</string>
+    <string name="ai_quota_exceeded">Vous avez épuisé vos tentatives du jour. Revenez demain ✨</string>
+    <string name="ai_topic_wisdom">Sagesse &amp; Citations</string>
+    <string name="ai_topic_motivation">Motivation &amp; Élan</string>
+    <string name="ai_topic_love">Amour &amp; Sentiments</string>
+    <string name="ai_topic_dua">Dua &amp; Prière</string>
+    <string name="ai_topic_calm">Calme &amp; Sérénité</string>
+    <string name="ai_topic_farewell">Adieu &amp; Séparation</string>
+    <string name="ai_style_wisdom">Prose sage</string>
+    <string name="ai_style_short">Citation courte</string>
+    <string name="ai_style_poem">Vers libre</string>
+    <string name="drawer_ai_writer">Écrivain IA ✨</string>
+
+    <!-- Écrivain IA & Cooldown / Erreurs Vidéo -->
+    <string name="ai_wait_seconds">Veuillez patienter %d secondes avant de régénérer ⏱️</string>
+    <string name="ai_generate_again_btn">✨ Générer une autre citation</string>
+
+    <!-- Studio Vidéo & Lecteur de Reels -->
+    <string name="studio_title">Studio Vidéo</string>
+    <string name="studio_save">Enregistrer</string>
+    <string name="studio_edit">Modifier</string>
+    <string name="studio_audio">Audio</string>
+    <string name="studio_speed">Vitesse :</string>
+    <string name="studio_all">Tout</string>
+    <string name="studio_animated">Animés</string>
+    <string name="studio_dark">Sombres</string>
+    <string name="studio_nature">Nature</string>
+    <string name="studio_framing">Cadrage</string>
+    <string name="studio_duration">Durée :</string>
+    <string name="studio_custom">Personnalisé</string>
+    <string name="studio_sec_format">%s s</string>
+    <string name="studio_author">Auteur</string>
+    <string name="studio_tag">Tag</string>
+    <string name="studio_animations">Animations</string>
+    <string name="studio_texts">Textes</string>
+    <string name="studio_backgrounds">Fonds</string>
+    <string name="studio_settings">Paramètres</string>
+    <string name="studio_edit_quote_title">Modifier le texte de la publication</string>
+    <string name="studio_edit_quote_subtitle">Modifiez le texte pour l’afficher instantanément avec les effets vidéo</string>
+    <string name="studio_edit_quote_hint">Écrivez ou collez le texte ici...</string>
+    <string name="studio_char_count_format">%d caractères</string>
+    <string name="studio_save_apply">Enregistrer et appliquer</string>
+    <string name="studio_text_updated">Texte mis à jour avec succès</string>
+    <string name="studio_text_invalid">Veuillez saisir un texte valide</string>
+    <string name="studio_audio_silent">Muet</string>
+    <string name="studio_audio_my_device">Appareil</string>
+    <string name="studio_audio_downloaded">Prêt ✓</string>
+    <string name="studio_audio_download">Télécharger 📥</string>
+    <string name="studio_audio_download_success">Audio téléchargé avec succès ✓</string>
+    <string name="studio_audio_pick_success">Audio sélectionné avec succès</string>
+    <string name="studio_audio_pick_failed">Impossible de charger l’audio</string>
+    <string name="studio_image_read_error">Impossible de lire l’image</string>
+    <string name="studio_export_title">Exporter et partager la vidéo</string>
+    <string name="studio_resolution_prompt">Choisissez la résolution de la vidéo :</string>
+    <string name="studio_whatsapp_status_title">Partager en statut WhatsApp</string>
+    <string name="studio_whatsapp_status_desc">Publier directement la vidéo en statut WhatsApp en HD</string>
+    <string name="studio_save_gallery_title">Enregistrer dans la galerie (HD MP4)</string>
+    <string name="studio_save_gallery_desc">Stockage permanent dans l’album Manchorati en qualité d’origine</string>
+    <string name="studio_save_gallery_success">Vidéo enregistrée avec succès dans l’album Manchorati !</string>
+    <string name="studio_save_gallery_error">Une erreur est survenue lors de l’enregistrement</string>
+    <string name="studio_share_other_apps_title">Partager vers d’autres applications...</string>
+    <string name="studio_share_other_apps_desc">Instagram, TikTok, Facebook, Telegram...</string>
+    <string name="studio_exporting_progress">Traitement et exportation de la vidéo en cours...</string>
+    <string name="studio_export_error">Erreur lors de l’exportation de la vidéo : %s</string>
+
+    <!-- Cadrage d'image BottomSheet -->
+    <string name="framing_title">Ajuster le cadrage de l’image dans la vidéo</string>
+    <string name="framing_mode_label">Mode d’affichage :</string>
+    <string name="framing_fill_screen">Plein écran</string>
+    <string name="framing_center_blur">Centré avec flou</string>
+    <string name="framing_zoom">Zoom avant</string>
+    <string name="framing_focus_label">Focus vertical :</string>
+    <string name="framing_focus_top">Haut de l’image</string>
+    <string name="framing_focus_center">Centre</string>
+    <string name="framing_focus_bottom">Bas de l’image</string>
+    <string name="framing_apply">Appliquer</string>
+
+    <!-- Lecteur de Reels -->
+    <string name="reel_player_title">🎬 Reel Manchorati</string>
+    <string name="reel_export_mp4">Exporter MP4</string>
+    <string name="reel_whatsapp_status">Statut WhatsApp</string>
+    <string name="reel_saved_gallery_success">Vidéo enregistrée dans la galerie avec succès ! 🎉</string>
+    <string name="reel_exporting_progress">🎬 Préparation et exportation du Reel en MP4...</string>
+    <string name="reel_export_failed">Échec de l’exportation de la vidéo : %s</string>
+    <string name="reel_video_badge">Reel / Vidéo 🎬</string>
+
+    <!-- Communauté & Sélecteur d'humeur -->
+    <string name="mood_selector_title">Comment vous sentez-vous aujourd’hui ? 💭</string>
+    <string name="mood_selector_subtitle">Choisissez votre humeur pour personnaliser les citations</string>
+    <string name="mood_all">🌟 Tout</string>
+    <string name="mood_calm">☕ Calme &amp; Serein</string>
+    <string name="mood_motivation">💪 Besoin de motivation</string>
+    <string name="mood_sad">😔 Triste &amp; Mélancolique</string>
+    <string name="mood_happy">😊 Optimiste &amp; Heureux</string>
+    <string name="mood_love">❤️ Amour &amp; Gratitude</string>
+    <string name="mood_dua">🤲 Prières &amp; Sérénité</string>
+    <string name="mood_write_btn">Écrire ✍️</string>
+    <string name="mood_active_display">Affichage actuel : %s</string>
+    <string name="following_feed_menu">Auteurs que je suis 👥</string>
+    <string name="following_feed_empty_title">Aucune publication des auteurs suivis</string>
+    <string name="following_feed_empty_subtitle">Suivez des auteurs et créateurs pour afficher leurs publications ici ✨</string>
+    <string name="mood_empty_title">Aucune publication pour cette humeur actuellement</string>
+    <string name="mood_empty_subtitle">Soyez le premier à partager une citation pour l’humeur : %s ✨</string>
+
+    <!-- Dialog Série Quotidienne -->
+    <string name="streak_days_consecutive">Jours consécutifs</string>
+    <string name="streak_longest">Meilleure série ⚡</string>
+    <string name="streak_total_active">Total des jours actifs 📅</string>
+    <string name="streak_day_format">%d jours</string>
+    <string name="streak_medals_title">Badges de persévérance et d’inspiration</string>
+    <string name="streak_share_btn">Partager votre réussite quotidienne 🚀</string>
+    <string name="streak_continue_reading">Continuer la lecture</string>
+    <string name="streak_unlocked">✓ Débloqué</string>
+    <string name="streak_remaining_days">%d jours restants</string>
+    <string name="day_sat">Sam</string>
+    <string name="day_sun">Dim</string>
+    <string name="day_mon">Lun</string>
+    <string name="day_tue">Mar</string>
+    <string name="day_wed">Mer</string>
+    <string name="day_thu">Jeu</string>
+    <string name="day_fri">Ven</string>
+
+    <!-- Interface diverse -->
+    <string name="badge_new">Nouveau</string>
+    <string name="widget_quote_title">Citation du jour</string>
+    <string name="anonymous_author">Anonyme</string>
+    <string name="user_default_handle">@utilisateur</string>
+
+
+    <string name="studio_profile_enabled">Profil : Activé ✓</string>
+    <string name="studio_profile_disabled">Profil : Désactivé ✕</string>
+    <string name="studio_tag_enabled">Tag : Activé ✓</string>
+    <string name="studio_tag_disabled">Tag : Désactivé ✕</string>
+    <string name="studio_audio_muted">Audio coupé</string>
+    <string name="studio_audio_unmuted">Audio activé</string>
+
+    <string name="login_required_following">Veuillez vous connecter pour voir les publications de vos abonnements</string>
+
+    <string name="tier_for_all_new_members">Pour tous les nouveaux membres</string>
+    <string name="tier_followers_plus">%d+ abonnés</string>
+
+    <!-- Tier Descriptions -->
+    <string name="badge_admin_desc">Membre officiel de l’équipe de développement de Manchorati.</string>
+    <string name="badge_legendary_desc">A atteint le sommet de l’influence avec plus de 10 000 abonnés réels !</string>
+    <string name="badge_elite_desc">Parmi les auteurs d’élite avec plus de 5 000 abonnés engagés.</string>
+    <string name="badge_distinguished_desc">A dépassé 1 000 abonnés avec une forte présence communautaire.</string>
+    <string name="badge_rising_desc">Auteur talentueux en pleine ascension avec plus de 100 abonnés.</string>
+    <string name="badge_beginner_desc">Fait ses premiers pas dans le partage de pensées et d’inspiration.</string>
+
+    <!-- Video Studio Animations -->
+    <string name="fx_typewriter">Machine à écrire</string>
+    <string name="fx_scroll_up">Défilement</string>
+    <string name="fx_words">Mots</string>
+    <string name="fx_fade">Fondu</string>
+    <string name="fx_zoom">Zoom</string>
+    <string name="fx_glow">Lueur</string>
+    <string name="fx_slide_up">Glissement</string>
+    <string name="fx_blur_in">Flou</string>
+
+    <!-- Video Studio Audio Presets -->
+    <string name="audio_oud">Oud</string>
+    <string name="audio_piano">Piano</string>
+    <string name="audio_nature">Nature</string>
+
+    <!-- Video Studio Backgrounds -->
+    <string name="bg_stars">Étoiles</string>
+    <string name="bg_nebula">Nébuleuse</string>
+    <string name="bg_aurora">Aurore</string>
+    <string name="bg_gold">Or</string>
+    <string name="bg_ocean">Océan</string>
+
+    <!-- Découvrir les auteurs et classement hebdomadaire -->
+    <string name="drawer_writers">Auteurs &amp; Classement hebdo</string>
+    <string name="writers_title">Découvrir les auteurs &amp; Classement</string>
+    <string name="writer_of_the_week">Auteur de la semaine 👑</string>
+    <string name="writer_of_the_week_desc">L\'auteur le plus inspirant et actif cette semaine</string>
+    <string name="writer_weekly_likes">%d j\'aime cette semaine</string>
+    <string name="writer_total_likes">%d j\'aime au total</string>
+    <string name="writer_followers_count">%s abonnés</string>
+    <string name="writer_posts_count">%d publications</string>
+    <string name="challenge_ends_in_days">Le défi hebdo se termine dans %d jours</string>
+    <string name="challenge_ends_tomorrow">Le défi hebdo se termine demain !</string>
+    <string name="challenge_ends_today">Le défi hebdo se termine ce soir !</string>
+    <string name="tab_weekly_leaderboard">🏆 Étoiles de la semaine</string>
+    <string name="tab_top_followers">💎 Plus suivis</string>
+    <string name="tab_all_writers">🌟 Tous les auteurs</string>
+    <string name="search_writers_hint">Rechercher par @username ou nom...</string>
+    <string name="no_writers_found">Aucun auteur ne correspond à votre recherche</string>
+    <string name="view_profile_btn">Profil</string>
+    <string name="community_writers_badge">Top Auteurs 🏆</string>
+    <string name="weekly_champion_congrats">Bravo au leader ! Publiez vos citations pour devenir la star de la semaine 🔥</string>
+    <string name="no_weekly_posts_yet">Soyez le premier à publier cette semaine pour remporter le titre !</string>
+    <string name="leaderboard_rank_format">#%d</string>
+    <string name="leaderboard_section_title">Classement des auteurs</string>
 </resources>

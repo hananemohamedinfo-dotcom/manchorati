@@ -88,7 +88,13 @@ class CommunityAdapter(
         fun bind(post: CommunityPost) {
             itemView.tag = post.id
             tvAuthor.text = post.authorName
-            tvUsername.text = "@${post.authorUsername}"
+            val cleanAuthorHandle = post.authorUsername.removePrefix("@").trim()
+            if (cleanAuthorHandle.isNotEmpty()) {
+                tvUsername.visibility = View.VISIBLE
+                tvUsername.text = "@$cleanAuthorHandle"
+            } else {
+                tvUsername.text = itemView.context.getString(R.string.user_default_handle)
+            }
             tvContent.text = post.content
 
             val isVideo = false
@@ -358,7 +364,7 @@ class CommunityAdapter(
             tvAuthorBadge.setOnClickListener {
                 Toast.makeText(
                     itemView.context,
-                    "${badge.iconEmoji} ${badge.title}\n${badge.description}",
+                    "${badge.getLocalizedTitle(itemView.context)}\n${badge.getLocalizedDescription(itemView.context)}",
                     Toast.LENGTH_SHORT
                 ).show()
                 onAuthorClicked(post.authorId, post.authorName)

@@ -89,11 +89,31 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <!-- زر كاتب الذكاء الاصطناعي AI Writer -->
+                        <FrameLayout
+                            android:id="@+id/btnAiWriterTop"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:padding="7dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="كاتب الذكاء الاصطناعي">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_sparkle_ai"
+                                app:tint="#38BDF8" />
+                        </FrameLayout>
+
                         <!-- زر فتح البحث المصغر -->
                         <ImageView
                             android:id="@+id/btnSearchToggle"
                             android:layout_width="38dp"
                             android:layout_height="38dp"
+                            android:layout_marginStart="2dp"
                             android:padding="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"

@@ -121,13 +121,13 @@ object ThemeHelper {
     }
 
     fun getFontTypeface(context: Context, fontId: String): Typeface? {
-        val fontRes = when (fontId) {
-            "arefruqaa" -> R.font.arefruqaa
-            "blakahollow" -> R.font.blakahollow
-            "cairoplay" -> R.font.cairoplay
-            "kufam" -> R.font.kufam
+        val fontRes = when (fontId.lowercase()) {
+            "arefruqaa", "ruqaa" -> R.font.arefruqaa
+            "blakahollow", "blaka" -> R.font.blakahollow
+            "cairoplay", "cairo" -> R.font.cairoplay
+            "kufam", "kufi" -> R.font.kufam
             "marhey" -> R.font.marhey
-            "notonastaliqurdu" -> R.font.notonastaliqurdu
+            "notonastaliqurdu", "nastaliq" -> R.font.notonastaliqurdu
             "oi" -> R.font.oi
             "tajawal" -> R.font.tajawal
             else -> R.font.tajawal
@@ -135,7 +135,7 @@ object ThemeHelper {
         return try {
             ResourcesCompat.getFont(context, fontRes)
         } catch (e: Exception) {
-            null
+            Typeface.DEFAULT
         }
     }
 

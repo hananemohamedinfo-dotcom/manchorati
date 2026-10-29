@@ -188,6 +188,14 @@ private fun copyDatabaseFromAssetsIfNeeded() {
         )
     }
 
+    fun getPostById(postId: Int): Post? {
+        val list = queryPosts(
+            "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE p.$COL_POST_ID = ?",
+            arrayOf(postId.toString())
+        )
+        return list.firstOrNull()
+    }
+
     private fun queryPosts(sql: String, selectionArgs: Array<String>?): List<Post> {
         val list = mutableListOf<Post>()
         val db = readableDatabase

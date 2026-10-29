@@ -321,7 +321,7 @@ class UserProfileActivity : AppCompatActivity() {
                     currentBadge = BadgeHelper.getBadgeForProfile(explicitBadge, email, totalLikes, currentFollowersCount)
                     BadgeHelper.setCachedBadge(targetUserId, currentBadge)
                     tvProfileBadge.visibility = View.VISIBLE
-                    tvProfileBadge.text = "${currentBadge.iconEmoji} ${currentBadge.title}"
+                    tvProfileBadge.text = currentBadge.getLocalizedTitle(this@UserProfileActivity)
                     tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
                     tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
 
@@ -343,7 +343,7 @@ class UserProfileActivity : AppCompatActivity() {
                         currentBadge = BadgeHelper.getBadgeForProfile(null, currentUser.email, 0L, currentFollowersCount)
                         BadgeHelper.setCachedBadge(targetUserId, currentBadge)
                         tvProfileBadge.visibility = View.VISIBLE
-                        tvProfileBadge.text = "${currentBadge.iconEmoji} ${currentBadge.title}"
+                        tvProfileBadge.text = currentBadge.getLocalizedTitle(this@UserProfileActivity)
                         tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
                         tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
                     } else {
@@ -388,7 +388,7 @@ class UserProfileActivity : AppCompatActivity() {
         btnDone.setOnClickListener { dialog.dismiss() }
 
         // 1. الرتبة الحالية
-        tvRankPill.text = "${badge.iconEmoji} ${badge.title}"
+        tvRankPill.text = badge.getLocalizedTitle(this@UserProfileActivity)
         tvRankPill.setBackgroundResource(badge.bgResId)
         tvRankPill.setTextColor(Color.parseColor(badge.textColorHex))
 
@@ -402,9 +402,9 @@ class UserProfileActivity : AppCompatActivity() {
             val pct = ((currentInTier.toFloat() / range.toFloat()) * 100).toInt().coerceIn(0, 100)
 
             pbProgress.progress = pct
-            tvProgressText.text = "${followersCount} / ${nextTier.minFollowers} متابع للترقية إلى ${nextTier.title} ($pct%)"
+            tvProgressText.text = "${followersCount} / ${nextTier.minFollowers} (${pct}%) -> ${nextTier.getLocalizedTitle(this@UserProfileActivity)}"
             val remaining = (nextTier.minFollowers - followersCount).coerceAtLeast(0L)
-            tvRemaining.text = "متبقي $remaining متابع للترقية 🚀"
+            tvRemaining.text = getString(R.string.next_tier_remaining, remaining)
             tvRemaining.visibility = View.VISIBLE
         } else {
             pbProgress.progress = 100
@@ -432,7 +432,7 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             val tvTierBadge = TextView(this).apply {
-                text = "${tier.iconEmoji} ${tier.title}"
+                text = tier.getLocalizedTitle(this@UserProfileActivity)
                 textSize = 12f
                 setTypeface(null, android.graphics.Typeface.BOLD)
                 setTextColor(Color.parseColor(tier.textColorHex))
@@ -448,14 +448,14 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             val tvFollowersReq = TextView(this).apply {
-                text = if (tier.minFollowers == 0L) "لجميع الأعضاء الجدد" else "${tier.minFollowers}+ متابع"
+                text = if (tier.minFollowers == 0L) getString(R.string.tier_for_all_new_members) else getString(R.string.tier_followers_plus, tier.minFollowers)
                 textSize = 11f
                 setTypeface(null, android.graphics.Typeface.BOLD)
                 setTextColor(Color.parseColor("#E2E8F0"))
             }
 
             val tvDesc = TextView(this).apply {
-                text = tier.description
+                text = tier.getLocalizedDescription(this@UserProfileActivity)
                 textSize = 10f
                 setTextColor(Color.parseColor("#94A3B8"))
             }
@@ -468,7 +468,7 @@ class UserProfileActivity : AppCompatActivity() {
 
             if (tier.id == badge.id) {
                 val tvActiveBadge = TextView(this).apply {
-                    text = "رتبتك الحالية"
+                    text = getString(R.string.current_tier_label).replace(":", "").trim()
                     textSize = 10f
                     setTextColor(Color.parseColor("#10B981"))
                     setTypeface(null, android.graphics.Typeface.BOLD)
@@ -506,14 +506,14 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             val tvTitle = TextView(this).apply {
-                text = ms.title
+                text = ms.getLocalizedTitle(this@UserProfileActivity)
                 textSize = 12f
                 setTypeface(null, android.graphics.Typeface.BOLD)
                 setTextColor(if (isUnlocked) Color.parseColor("#F59E0B") else Color.parseColor("#94A3B8"))
             }
 
             val tvSub = TextView(this).apply {
-                text = ms.description
+                text = ms.getLocalizedDescription(this@UserProfileActivity)
                 textSize = 10f
                 setTextColor(Color.parseColor("#64748B"))
             }

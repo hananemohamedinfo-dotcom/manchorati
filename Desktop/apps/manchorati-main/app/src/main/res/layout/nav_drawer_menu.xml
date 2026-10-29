@@ -58,59 +58,6 @@
             android:orientation="vertical"
             android:paddingTop="10dp">
 
-            <!-- زر استوديو صانع الفيديو والستوري -->
-            <LinearLayout
-                android:id="@+id/btnDrawerVideoStudio"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_video_reel"
-                    app:tint="#EF4444" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="صانع الفيديو والستوري 🎬"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ريلز وستوريات متحركة مع مؤثرات صوتية"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/badge_new_bg"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:text="جديد"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
             <!-- خيار الوضع الليلي: هلال / hilal -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -233,6 +180,63 @@
                     android:text="@string/drawer_notifications"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- زر كاتب الخواطر بالذكاء الاصطناعي -->
+            <LinearLayout
+                android:id="@+id/btnDrawerAiWriter"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_sparkle_ai"
+                    app:tint="#38BDF8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_ai_writer"
+                    android:textColor="#38BDF8"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- زر كُتّاب الأسبوع والمتصدرون -->
+            <LinearLayout
+                android:id="@+id/btnDrawerWriters"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_trophy" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/drawer_writers"
+                    android:textColor="#F59E0B"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- زر إضافة ودجت للشاشة الرئيسية -->

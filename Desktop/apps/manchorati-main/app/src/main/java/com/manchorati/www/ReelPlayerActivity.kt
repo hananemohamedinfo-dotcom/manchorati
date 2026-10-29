@@ -1,5 +1,7 @@
 package com.manchorati.www
 
+import android.content.Context
+
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -36,7 +38,12 @@ class ReelPlayerActivity : AppCompatActivity() {
     private var likesCount = 0L
     private var isLiked = false
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocaleHelper.applyLayoutDirection(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reel_player)
 
@@ -106,7 +113,7 @@ class ReelPlayerActivity : AppCompatActivity() {
         btnReelLike.setOnClickListener {
             val uid = AuthManager.currentUser?.uid ?: ""
             if (uid.isEmpty()) {
-                Toast.makeText(this, "يرجى تسجيل الدخول للإعجاب", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_required_like), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -123,7 +130,7 @@ class ReelPlayerActivity : AppCompatActivity() {
             exportVideoAndProceed { file ->
                 val uri = VideoExporter.saveVideoToGallery(this, file, postAuthorName)
                 if (uri != null) {
-                    Toast.makeText(this, "تم حفظ الفيديو بنجاح في المعرض! 🎉", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.reel_saved_gallery_success), Toast.LENGTH_LONG).show()
                 } else {
                     VideoExporter.shareVideoGeneral(this, file)
                 }
@@ -174,7 +181,7 @@ class ReelPlayerActivity : AppCompatActivity() {
             gravity = android.view.Gravity.CENTER
         }
         val tvTitle = TextView(this).apply {
-            text = "🎬 جاري تجهيز وتصدير الريل كفيديو MP4..."
+            text = getString(R.string.reel_exporting_progress)
             setTextColor(Color.WHITE)
             textSize = 15f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
@@ -220,7 +227,7 @@ class ReelPlayerActivity : AppCompatActivity() {
             },
             onError = { e ->
                 dialog.dismiss()
-                Toast.makeText(this, "فشل تصدير الفيديو: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.reel_export_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         )
     }

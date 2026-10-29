@@ -80,23 +80,25 @@ class PostAdapter(
             Toast.makeText(context, context.getString(R.string.post_text_copied), Toast.LENGTH_SHORT).show()
         }
 
+        val shareText = "«${post.content}»\n\nتطبيق منشوراتي"
+
         // زر مشاركة واتساب مباشرة
         holder.btnShareWhatsapp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 setPackage("com.whatsapp")
-                putExtra(Intent.EXTRA_TEXT, post.content)
+                putExtra(Intent.EXTRA_TEXT, shareText)
             }
             try {
                 context.startActivity(intent)
             } catch (e: Exception) {
-                shareGeneralText(post.content)
+                shareGeneralText(shareText)
             }
         }
 
         // زر المشاركة العامة
         holder.btnShareGeneral.setOnClickListener {
-            shareGeneralText(post.content)
+            shareGeneralText(shareText)
         }
     }
 

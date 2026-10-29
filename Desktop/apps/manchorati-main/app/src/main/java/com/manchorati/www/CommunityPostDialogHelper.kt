@@ -33,6 +33,7 @@ object CommunityPostDialogHelper {
         authorUsername: String,
         editingPost: CommunityPost? = null,
         initialTag: String = "",
+        initialContent: String = "",
         onAuthRequired: (() -> Unit)? = null,
         onSuccess: (() -> Unit)? = null
     ) {
@@ -160,6 +161,23 @@ object CommunityPostDialogHelper {
             }
         }
         updatePreview()
+
+        // Handle initial text from editing or AI generator
+        if (editingPost != null) {
+            etContent.setText(editingPost.content)
+            etContent.setSelection(editingPost.content.length)
+        } else if (initialContent.isNotEmpty()) {
+            etContent.setText(initialContent)
+            etContent.setSelection(initialContent.length)
+        }
+
+        val btnAiInPost = dialogView.findViewById<View>(R.id.btnAiInPost)
+        btnAiInPost?.setOnClickListener {
+            AiWriterBottomSheetDialog.show(context) { generatedQuote ->
+                etContent.setText(generatedQuote)
+                etContent.setSelection(generatedQuote.length)
+            }
+        }
 
         // Character counter watcher
         fun updateCharCounterState(len: Int) {

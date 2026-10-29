@@ -25,7 +25,7 @@ class CategoryAdapter(
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categories[position]
         holder.tvTitle.text = category.name
-        holder.tvCount.text = category.postsCount.toString()
+        holder.tvCount.visibility = View.GONE
         holder.badgeNew.visibility = if (category.hasNew) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {

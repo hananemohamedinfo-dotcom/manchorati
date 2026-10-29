@@ -28,9 +28,13 @@ class SplashActivity : AppCompatActivity() {
 
         // مؤقت الانتظار قبل فتح MainActivity
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this@SplashActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish() // إغلاق شاشة الـ Splash لكي لا يعود إليها المستخدم عند الضغط على زر الرجوع
+            val mainIntent = Intent(this@SplashActivity, MainActivity::class.java).apply {
+                data = intent?.data
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                if (intent?.extras != null) putExtras(intent.extras!!)
+            }
+            startActivity(mainIntent)
+            finish()
         }, splashDuration)
     }
 }

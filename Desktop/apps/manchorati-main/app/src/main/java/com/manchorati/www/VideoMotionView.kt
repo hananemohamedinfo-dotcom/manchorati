@@ -7,6 +7,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.Choreographer
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import java.io.File
 
@@ -15,6 +17,8 @@ class VideoMotionView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), Choreographer.FrameCallback {
+
+    private var isInternalAudioUpdate = false
 
     var config: VideoMotionRenderer.VideoConfig = VideoMotionRenderer.VideoConfig(
         content = "",
@@ -26,11 +30,14 @@ class VideoMotionView @JvmOverloads constructor(
             val oldPath = field.downloadedAudioPath
             val oldDur = field.durationSec
             field = value
-            if (oldAudio != value.audioPreset || oldPath != value.downloadedAudioPath) {
-                updateAudioPlayback()
+
+            if (!isInternalAudioUpdate && (oldAudio != value.audioPreset || oldPath != value.downloadedAudioPath)) {
+                if (isAttached) {
+                    playAudioPreset(value.audioPreset, value.downloadedAudioPath, streamAudioUrl)
+                }
             }
+
             if (oldDur != value.durationSec) {
-                // Keep progress within bounds
                 pausedTimeOffsetMs = pausedTimeOffsetMs % (value.durationSec * 1000L).coerceAtLeast(1000L)
             }
             requestLayout()
@@ -40,13 +47,17 @@ class VideoMotionView @JvmOverloads constructor(
     var customAudioUri: Uri? = null
         set(value) {
             field = value
-            updateAudioPlayback()
+            if (isAttached && value != null) {
+                playAudioPreset("custom", null, null)
+            }
         }
+
+    var streamAudioUrl: String? = null
 
     var isMuted: Boolean = false
         set(value) {
             field = value
-            val vol = if (value) 0f else 1f
+            val vol = if (value) 0f else 0.9f
             try {
                 mediaPlayer?.setVolume(vol, vol)
             } catch (_: Exception) {}
@@ -63,12 +74,42 @@ class VideoMotionView @JvmOverloads constructor(
     var onPlayStateChanged: ((Boolean) -> Unit)? = null
     var onProgressUpdate: ((elapsedMs: Long, totalMs: Long, ratio: Float) -> Unit)? = null
 
+    // Touch gesture callbacks for direct manipulation of custom background
+    var onImageFramingChanged: ((panX: Float, panY: Float, zoom: Float) -> Unit)? = null
+    var onCanvasTap: (() -> Unit)? = null
+
+    // Touch gesture state
+    private var panX = 0f
+    private var panY = 0f
+    private var zoomScale = 1.0f
+
+    private var downX = 0f
+    private var downY = 0f
+    private var lastX = 0f
+    private var lastY = 0f
+    private var isDragging = false
+
+    private val scaleDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+            if (config.customImageBitmap != null) {
+                zoomScale = (zoomScale * detector.scaleFactor).coerceIn(0.5f, 4.0f)
+                config = config.copy(imageZoomScale = zoomScale)
+                onImageFramingChanged?.invoke(panX, panY, zoomScale)
+                invalidate()
+                return true
+            }
+            return false
+        }
+    })
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         isAttached = true
         startTimeNs = System.nanoTime()
         Choreographer.getInstance().postFrameCallback(this)
-        startAudio()
+        if (mediaPlayer == null) {
+            playAudioPreset(config.audioPreset, config.downloadedAudioPath, streamAudioUrl)
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -128,6 +169,57 @@ class VideoMotionView @JvmOverloads constructor(
         VideoMotionRenderer.renderFrame(context, canvas, width, height, currentElapsedMs, config)
     }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (config.customImageBitmap != null) {
+            scaleDetector.onTouchEvent(event)
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    downY = event.y
+                    lastX = event.x
+                    lastY = event.y
+                    isDragging = true
+                    parent?.requestDisallowInterceptTouchEvent(true)
+                    return true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (!scaleDetector.isInProgress && event.pointerCount == 1 && isDragging) {
+                        val dx = event.x - lastX
+                        val dy = event.y - lastY
+                        lastX = event.x
+                        lastY = event.y
+                        val viewW = width.toFloat().coerceAtLeast(1f)
+                        val viewH = height.toFloat().coerceAtLeast(1f)
+                        panX = (panX + (dx / viewW)).coerceIn(-1.5f, 1.5f)
+                        panY = (panY + (dy / viewH)).coerceIn(-1.5f, 1.5f)
+                        config = config.copy(imagePanX = panX, imagePanY = panY)
+                        onImageFramingChanged?.invoke(panX, panY, zoomScale)
+                        invalidate()
+                    }
+                    return true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    isDragging = false
+                    parent?.requestDisallowInterceptTouchEvent(false)
+                    val totalDistance = Math.hypot((event.x - downX).toDouble(), (event.y - downY).toDouble())
+                    if (totalDistance < 25 && event.eventTime - event.downTime < 250) {
+                        togglePlay()
+                        onCanvasTap?.invoke()
+                    }
+                    return true
+                }
+            }
+        } else {
+            if (event.action == MotionEvent.ACTION_UP) {
+                togglePlay()
+                onCanvasTap?.invoke()
+                return true
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     fun togglePlay() {
         if (isPlaying) {
             pause()
@@ -140,9 +232,13 @@ class VideoMotionView @JvmOverloads constructor(
         if (isPlaying) return
         isPlaying = true
         startTimeNs = System.nanoTime()
-        try {
-            mediaPlayer?.start()
-        } catch (_: Exception) {}
+        if (mediaPlayer == null) {
+            playAudioPreset(config.audioPreset, config.downloadedAudioPath, streamAudioUrl)
+        } else {
+            try {
+                mediaPlayer?.start()
+            } catch (_: Exception) {}
+        }
         onPlayStateChanged?.invoke(true)
         invalidate()
     }
@@ -165,7 +261,7 @@ class VideoMotionView @JvmOverloads constructor(
         pausedTimeOffsetMs = 0L
         try {
             mediaPlayer?.seekTo(0)
-            if (isPlaying) mediaPlayer?.start()
+            if (isPlaying && !isMuted) mediaPlayer?.start()
         } catch (_: Exception) {}
         invalidate()
     }
@@ -188,41 +284,62 @@ class VideoMotionView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun updateAudioPlayback() {
-        stopAudio()
-        if (isAttached && isPlaying) {
-            startAudio()
-        }
+    fun playAudioImmediately(presetId: String, localPath: String? = null, streamUrl: String? = null) {
+        playAudioPreset(presetId, localPath, streamUrl)
     }
 
-    private fun startAudio() {
+    @Synchronized
+    fun playAudioPreset(presetId: String, localPath: String? = null, streamUrl: String? = null) {
         stopAudio()
-        if (config.audioPreset.lowercase() in listOf("mute", "none", "off", "silent")) return
+
+        isMuted = false
+        isPlaying = true
+        this.streamAudioUrl = streamUrl
+
+        isInternalAudioUpdate = true
+        config = config.copy(
+            audioPreset = presetId,
+            downloadedAudioPath = localPath
+        )
+        isInternalAudioUpdate = false
+
+        if (presetId.lowercase() in listOf("none", "mute", "off", "silent")) {
+            onPlayStateChanged?.invoke(true)
+            invalidate()
+            return
+        }
 
         try {
-            // 1. Downloaded Audio file path
-            val downloadedPath = config.downloadedAudioPath
-            if (downloadedPath != null && File(downloadedPath).exists()) {
-                mediaPlayer = MediaPlayer().apply {
+            val vol = 0.9f
+
+            // Case 1: Downloaded Audio local file
+            if (localPath != null && File(localPath).exists()) {
+                val mp = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build()
                     )
-                    setDataSource(downloadedPath)
+                    setDataSource(localPath)
                     isLooping = true
-                    val vol = if (isMuted) 0f else 1f
                     setVolume(vol, vol)
+                    setOnErrorListener { p, _, _ ->
+                        try { p.reset(); p.release() } catch (_: Exception) {}
+                        true
+                    }
                     prepare()
-                    if (isPlaying) start()
+                    start()
                 }
+                mediaPlayer = mp
+                onPlayStateChanged?.invoke(true)
+                invalidate()
                 return
             }
 
-            // 2. Custom User Selected Audio URI
+            // Case 2: Custom Picked Audio URI
             if (customAudioUri != null) {
-                mediaPlayer = MediaPlayer().apply {
+                val mp = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -231,41 +348,72 @@ class VideoMotionView @JvmOverloads constructor(
                     )
                     setDataSource(context, customAudioUri!!)
                     isLooping = true
-                    val vol = if (isMuted) 0f else 1f
                     setVolume(vol, vol)
+                    setOnErrorListener { p, _, _ ->
+                        try { p.reset(); p.release() } catch (_: Exception) {}
+                        true
+                    }
                     prepare()
-                    if (isPlaying) start()
+                    start()
                 }
+                mediaPlayer = mp
+                onPlayStateChanged?.invoke(true)
+                invalidate()
                 return
             }
 
-            // 3. Built-in Raw Resources
-            val rawRes = when (config.audioPreset.lowercase()) {
+            // Case 3: Online Streaming MP3
+            if (!streamUrl.isNullOrEmpty()) {
+                val mp = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(context, Uri.parse(streamUrl))
+                    isLooping = true
+                    setVolume(vol, vol)
+                    setOnErrorListener { p, _, _ ->
+                        try { p.reset(); p.release() } catch (_: Exception) {}
+                        true
+                    }
+                    setOnPreparedListener { player ->
+                        try {
+                            if (!isMuted) player.start()
+                        } catch (_: Exception) {}
+                    }
+                    prepareAsync()
+                }
+                mediaPlayer = mp
+                onPlayStateChanged?.invoke(true)
+                invalidate()
+                return
+            }
+
+            // Case 4: Rock-solid Built-in Raw Resources
+            val rawRes = when (presetId.lowercase()) {
                 "rain" -> R.raw.ambient_rain
                 "oud" -> R.raw.ambient_oud
                 "nature" -> R.raw.ambient_nature
                 else -> R.raw.ambient_piano
             }
 
-            val afd = context.resources.openRawResourceFd(rawRes) ?: return
-            mediaPlayer = MediaPlayer().apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-                afd.close()
+            val mp = MediaPlayer.create(context, rawRes)?.apply {
                 isLooping = true
-                val vol = if (isMuted) 0f else 1f
                 setVolume(vol, vol)
-                prepare()
-                if (isPlaying) start()
+                setOnErrorListener { p, _, _ ->
+                    try { p.reset(); p.release() } catch (_: Exception) {}
+                    true
+                }
+                start()
             }
+            mediaPlayer = mp
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        onPlayStateChanged?.invoke(true)
+        invalidate()
     }
 
     private fun stopAudio() {

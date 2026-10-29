@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainBadgeNotificationDot: View
     private lateinit var layoutNormalHeader: View
     private lateinit var layoutSearchHeader: View
+    private lateinit var btnAiWriterTop: View
     private lateinit var btnSearchToggle: ImageView
     private lateinit var btnSearchClose: ImageView
     private lateinit var btnSearchClear: ImageView
@@ -150,12 +151,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         handleNotificationIntent(intent)
+        handleDeepLinkIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
         handleNotificationIntent(intent)
+        handleDeepLinkIntent(intent)
     }
 
     private fun checkAndRequestNotificationPermission() {
@@ -215,6 +218,7 @@ class MainActivity : AppCompatActivity() {
         mainBadgeNotificationDot = findViewById(R.id.mainBadgeNotificationDot)
         layoutNormalHeader = findViewById(R.id.layoutNormalHeader)
         layoutSearchHeader = findViewById(R.id.layoutSearchHeader)
+        btnAiWriterTop = findViewById(R.id.btnAiWriterTop)
         btnSearchToggle = findViewById(R.id.btnSearchToggle)
         btnSearchClose = findViewById(R.id.btnSearchClose)
         btnSearchClear = findViewById(R.id.btnSearchClear)
@@ -222,12 +226,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupHeaderActions() {
-        val streakInfo = StreakManager.checkAndUpdateStreak(this) { newCount ->
-            Toast.makeText(this, "🔥 رائع! حافظت على سلسلتك اليومية: $newCount أيام متتالية!", Toast.LENGTH_LONG).show()
-        }
-        tvStreakCount.text = streakInfo.currentStreak.toString()
+        val initialStreak = StreakManager.getStreakInfo(this)
+        tvStreakCount.text = initialStreak.currentStreak.toString()
         btnDailyStreak.setOnClickListener {
             StreakManager.showStreakDialog(this)
+        }
+
+        // Delay streak update by 3.5s so it never collides with startup notification dialogs
+        btnDailyStreak.postDelayed({
+            if (isFinishing || isDestroyed) return@postDelayed
+            val updatedStreak = StreakManager.checkAndUpdateStreak(this) { newCount ->
+                // Elegant pulse animation on the streak badge instead of a disruptive toast
+                tvStreakCount.text = newCount.toString()
+                btnDailyStreak.animate()
+                    .scaleX(1.30f)
+                    .scaleY(1.30f)
+                    .setDuration(350)
+                    .withEndAction {
+                        btnDailyStreak.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(280)
+                            .start()
+                    }
+                    .start()
+            }
+            tvStreakCount.text = updatedStreak.currentStreak.toString()
+        }, 3500)
+
+        btnAiWriterTop.setOnClickListener {
+            AiWriterBottomSheetDialog.show(this)
         }
 
         btnMainNotificationsContainer.setOnClickListener {
@@ -365,6 +393,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }, 300)
         }
+    }
+
+    private fun handleDeepLinkIntent(intent: Intent?) {
+        // Deep link disabled
     }
 
     private fun showNotificationsBottomSheet() {
@@ -608,10 +640,6 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
-        findViewById<View>(R.id.btnDrawerVideoStudio)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, VideoStudioActivity::class.java))
-        }
 
         val switchDarkMode = findViewById<SwitchCompat>(R.id.switchDarkMode)
         val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
@@ -679,6 +707,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationSettingsActivity::class.java))
         }
 
+        findViewById<View>(R.id.btnDrawerAiWriter)?.setOnClickListener {
+            drawerLayout.closeDrawers()
+            AiWriterBottomSheetDialog.show(this)
+        }
+
+        findViewById<View>(R.id.btnDrawerWriters)?.setOnClickListener {
+            drawerLayout.closeDrawers()
+            startActivity(Intent(this, WritersActivity::class.java))
+        }
+
         findViewById<View>(R.id.btnDrawerAddWidget)?.setOnClickListener {
             drawerLayout.closeDrawers()
             pinQuoteWidget()
@@ -736,6 +774,8 @@ class MainActivity : AppCompatActivity() {
             else -> "العربية"
         }
 
+        if (isFinishing || isDestroyed) return
+
         if (user != null) {
             // جلب الاسم المحدث من SharedPreferences
             val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -746,15 +786,7 @@ class MainActivity : AppCompatActivity() {
             btnLogout?.visibility = View.VISIBLE
 
             val photoUrl = user.photoUrl?.toString()
-            if (!photoUrl.isNullOrEmpty()) {
-                Glide.with(this)
-                    .load(photoUrl)
-                    .circleCrop()
-                    .placeholder(R.drawable.ic_profile)
-                    .into(ivAvatar)
-            } else {
-                ivAvatar?.setImageResource(R.drawable.ic_profile)
-            }
+            ivAvatar?.loadUserAvatar(photoUrl)
 
             // ---- كود الانتقال للملف الشخصي ----
             val goToProfile = View.OnClickListener {
@@ -819,6 +851,17 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
         }
+    }
+
+    fun openAddPostWithQuote(quote: String, topic: String) {
+        viewPager.currentItem = 0
+        viewPager.postDelayed({
+            supportFragmentManager.fragments.forEach { fragment ->
+                if (fragment is CommunityFragment) {
+                    fragment.openPostDialogWithContent(quote, topic)
+                }
+            }
+        }, 250)
     }
 
     private fun shareApp() {

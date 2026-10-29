@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="أيام متتالية"
+                android:text="@string/streak_days_consecutive"
                 android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="سبت"
+                    android:text="@string/day_sat"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="أحد"
+                    android:text="@string/day_sun"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -154,7 +154,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="إثنين"
+                    android:text="@string/day_mon"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -184,7 +184,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ثلاثاء"
+                    android:text="@string/day_tue"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -214,7 +214,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="أربعاء"
+                    android:text="@string/day_wed"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -244,7 +244,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="خميس"
+                    android:text="@string/day_thu"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -274,7 +274,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="جمعة"
+                    android:text="@string/day_fri"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <FrameLayout
@@ -322,7 +322,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="أطول سلسلة ⚡"
+                    android:text="@string/streak_longest"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -357,7 +357,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="إجمالي الأيام النشطة 📅"
+                    android:text="@string/streak_total_active"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -379,7 +379,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="أوسمة المثابرة والإلهام"
+        android:text="@string/streak_medals_title"
         android:textColor="@color/text_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -589,7 +589,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_button_gradient_primary"
             android:gravity="center"
-            android:text="شارك إنجازك اليومي 🚀"
+            android:text="@string/streak_share_btn"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -601,7 +601,7 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:paddingHorizontal="16dp"
-            android:text="متابعة القراءة"
+            android:text="@string/streak_continue_reading"
             android:textColor="@color/text_secondary"
             android:textSize="13.5sp" />
     </LinearLayout>

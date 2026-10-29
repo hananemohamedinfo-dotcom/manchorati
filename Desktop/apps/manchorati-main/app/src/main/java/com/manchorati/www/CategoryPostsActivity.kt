@@ -48,7 +48,7 @@ class CategoryPostsActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val posts = dbHelper.getPostsByCategory(categoryId)
+        val posts = dbHelper.getPostsByCategory(categoryId).shuffled()
         postAdapter = PostAdapter(this, posts, currentFontSize) {
             imagePickerLauncher.launch("image/*")
         }
