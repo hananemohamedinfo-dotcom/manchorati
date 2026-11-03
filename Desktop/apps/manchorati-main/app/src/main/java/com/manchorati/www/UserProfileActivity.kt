@@ -346,6 +346,21 @@ class UserProfileActivity : AppCompatActivity() {
                         tvProfileBadge.text = currentBadge.getLocalizedTitle(this@UserProfileActivity)
                         tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
                         tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
+                    } else if (targetUserId.startsWith("persona_")) {
+                        val persona = VirtualCommunityManager.getPersonaById(targetUserId)
+                        tvName.text = persona.name
+                        tvProfileUsername.visibility = View.VISIBLE
+                        tvProfileUsername.text = "@${persona.username}"
+                        ivProfileAvatar.loadUserAvatar(persona.avatarResource)
+                        tvBio.text = persona.bio
+                        val followers = (18 + (Math.abs(persona.id.hashCode()) % 80)).toLong()
+                        val following = (6 + (Math.abs(persona.id.hashCode() / 2) % 25)).toLong()
+                        tvFollowersCount.text = followers.formatCount()
+                        tvFollowingCount.text = following.formatCount()
+                        if (persona.badge.isNotEmpty()) {
+                            tvProfileBadge.visibility = View.VISIBLE
+                            tvProfileBadge.text = if (persona.badge == "verified") "موثّق ⭐" else "كاتب مميز ✍️"
+                        }
                     } else {
                         tvName.text = targetUserName
                         if (tvBio.text.isNullOrEmpty()) {
@@ -798,9 +813,26 @@ class UserProfileActivity : AppCompatActivity() {
         postsListener?.remove()
         postsListener = FirestoreManager.listenToUserPosts(targetUserId) { posts ->
             runOnUiThread {
-                adapter.updateData(posts)
-                tvPostsCount.text = posts.size.formatCount()
-                layoutEmpty.visibility = if (posts.isEmpty()) View.VISIBLE else View.GONE
+                val effectivePosts = if (posts.isEmpty() && targetUserId.startsWith("persona_")) {
+                    val dbHelper = DatabaseHelper(this)
+                    val raw = dbHelper.getRandomCuratedPosts(6)
+                    raw.mapIndexed { idx, p ->
+                        VirtualCommunityManager.toVirtualCommunityPost(
+                            p,
+                            this,
+                            staggerMinutesAgo = (idx + 1) * 360L
+                        ).copy(
+                            authorId = targetUserId,
+                            authorName = targetUserName,
+                            authorUsername = currentUsername
+                        )
+                    }
+                } else {
+                    posts
+                }
+                adapter.updateData(effectivePosts)
+                tvPostsCount.text = effectivePosts.size.formatCount()
+                layoutEmpty.visibility = if (effectivePosts.isEmpty()) View.VISIBLE else View.GONE
                 swipeRefresh.isRefreshing = false
             }
         }

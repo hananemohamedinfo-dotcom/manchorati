@@ -117,7 +117,21 @@ object ThemeHelper {
     )
 
     fun getCardTemplate(id: String): CardTemplate? {
-        return CARD_TEMPLATES.find { it.id.equals(id, ignoreCase = true) }
+        val direct = CARD_TEMPLATES.find { it.id.equals(id, ignoreCase = true) }
+        if (direct != null) return direct
+
+        val mappedId = when (id.lowercase()) {
+            "card_ocean_dark", "ocean_dark" -> "card_ocean_breeze"
+            "card_navy_gold", "navy_gold" -> "card_luxury"
+            "card_forest_leaf", "forest_leaf" -> "card_emerald"
+            "card_charcoal", "charcoal" -> "card_luxury"
+            "card_warm_sunset", "warm_sunset" -> "card_sunset"
+            "card_royal_purple", "royal_purple" -> "card_glass_royal"
+            else -> null
+        }
+        return if (mappedId != null) {
+            CARD_TEMPLATES.find { it.id.equals(mappedId, ignoreCase = true) }
+        } else null
     }
 
     fun getFontTypeface(context: Context, fontId: String): Typeface? {
@@ -207,7 +221,7 @@ object ThemeHelper {
             val luminance = androidx.core.graphics.ColorUtils.calculateLuminance(color)
             if (luminance > 0.55) Color.parseColor("#0F172A") else Color.WHITE
         } catch (e: Exception) {
-            Color.WHITE
+            Color.parseColor("#0F172A")
         }
     }
 }

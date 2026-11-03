@@ -136,15 +136,19 @@ class CommunityAdapter(
             // تلوين بطاقة المنشور والخط
             ThemeHelper.applyBackground(layoutPostCard, post.bgId, 12f)
             tvContent.typeface = ThemeHelper.getFontTypeface(itemView.context, post.fontId)
-            if (!post.textColor.isNullOrEmpty()) {
+            val template = ThemeHelper.getCardTemplate(post.bgId)
+            val effectiveTextColor = if (template != null) {
+                template.textColor
+            } else if (!post.textColor.isNullOrEmpty()) {
                 try {
-                    tvContent.setTextColor(Color.parseColor(post.textColor))
+                    Color.parseColor(post.textColor)
                 } catch (e: Exception) {
-                    tvContent.setTextColor(ThemeHelper.getTextColor(post.bgId))
+                    ThemeHelper.getTextColor(post.bgId)
                 }
             } else {
-                tvContent.setTextColor(ThemeHelper.getTextColor(post.bgId))
+                ThemeHelper.getTextColor(post.bgId)
             }
+            tvContent.setTextColor(effectiveTextColor)
 
             // العدادات السفلية بصيغة K / M
             tvLikesCount.text = post.likesCount.formatCount()
@@ -160,6 +164,31 @@ class CommunityAdapter(
             fun performLikeToggle() {
                 val currentUid = getEffectiveUserId()
                 if (currentUid.isEmpty()) {
+                    if (post.id.startsWith("curated_") || post.id.startsWith("vpost_")) {
+                        val guestUid = "local_guest"
+                        val currentlyLiked = post.likedBy.contains(guestUid)
+                        val willBeLiked = !currentlyLiked
+                        val updatedLikedBy = if (willBeLiked) listOf(guestUid) else emptyList<String>()
+                        val updatedLikesCount = if (willBeLiked) post.likesCount + 1 else maxOf(0L, post.likesCount - 1)
+                        val updatedPost = post.copy(
+                            likedBy = updatedLikedBy,
+                            likesCount = updatedLikesCount
+                        )
+                        val pos = bindingAdapterPosition
+                        if (pos != RecyclerView.NO_POSITION && pos < postsList.size) {
+                            postsList[pos] = updatedPost
+                        }
+                        updateLikeUI(willBeLiked, updatedLikesCount)
+                        btnLike.animate()
+                            .scaleX(1.3f)
+                            .scaleY(1.3f)
+                            .setDuration(120)
+                            .withEndAction {
+                                btnLike.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+                            }.start()
+                        onLikeClicked(post, currentlyLiked)
+                        return
+                    }
                     onLikeClicked(post, false)
                     return
                 }

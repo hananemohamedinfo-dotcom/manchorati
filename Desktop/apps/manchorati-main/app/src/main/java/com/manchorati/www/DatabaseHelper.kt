@@ -174,6 +174,11 @@ private fun copyDatabaseFromAssetsIfNeeded() {
         return queryPosts(sql, args)
     }
 
+    fun getRandomCuratedPosts(limit: Int = 35): List<Post> {
+        val sql = "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE LENGTH(p.$COL_POST_CONTENT) >= 20 AND LENGTH(p.$COL_POST_CONTENT) <= 350 ORDER BY RANDOM() LIMIT $limit"
+        return queryPosts(sql, null)
+    }
+
     fun getFeaturedPosts(): List<Post> {
         return queryPosts(
             "SELECT p.*, c.$COL_CAT_NAME FROM $TABLE_POSTS p JOIN $TABLE_CATEGORIES c ON p.$COL_POST_CAT_ID = c.$COL_CAT_ID WHERE p.$COL_POST_FEATURED = 1",

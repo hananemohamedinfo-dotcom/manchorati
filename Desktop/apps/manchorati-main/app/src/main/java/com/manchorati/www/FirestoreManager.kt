@@ -62,6 +62,7 @@ fun listenToUserPosts(
         textColor: String = "",
         tag: String = "",
         authorBadge: String = "",
+        context: android.content.Context? = null,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
@@ -92,6 +93,16 @@ fun listenToUserPosts(
             .add(postMap)
             .addOnSuccessListener { docRef ->
                 notifyFollowersOfNewPost(authorId, authorName, docRef.id)
+                if (context != null) {
+                    VirtualCommunityManager.scheduleAutoEngagement(
+                        context = context,
+                        postId = docRef.id,
+                        authorId = authorId,
+                        authorName = authorName,
+                        content = content,
+                        tag = tag
+                    )
+                }
                 onSuccess()
             }
             .addOnFailureListener { onFailure(it) }
@@ -111,6 +122,7 @@ fun listenToUserPosts(
         textColor: String = "#FFFFFF",
         tag: String = "فيديو",
         authorBadge: String = "",
+        context: android.content.Context? = null,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
@@ -146,6 +158,16 @@ fun listenToUserPosts(
             .add(postMap)
             .addOnSuccessListener { docRef ->
                 notifyFollowersOfNewPost(authorId, authorName, docRef.id)
+                if (context != null) {
+                    VirtualCommunityManager.scheduleAutoEngagement(
+                        context = context,
+                        postId = docRef.id,
+                        authorId = authorId,
+                        authorName = authorName,
+                        content = content,
+                        tag = tag
+                    )
+                }
                 onSuccess()
             }
             .addOnFailureListener { onFailure(it) }

@@ -216,6 +216,8 @@ class CommunityFragment : Fragment() {
         tvEmptySubtitle = view.findViewById(R.id.tvEmptySubtitle)
         swipeRefreshCommunity.setColorSchemeColors(Color.parseColor("#0284C7"))
         swipeRefreshCommunity.setOnRefreshListener {
+            VirtualCommunityManager.getCuratedFeedPosts(requireContext(), forceRefresh = true)
+            VirtualCommunityManager.maybeSeedDailyFirestorePost(requireContext())
             startListeningToPosts()
         }
 
@@ -235,7 +237,7 @@ class CommunityFragment : Fragment() {
             posts = emptyList(),
             currentUserId = getActiveUserId(),
             onLikeClicked = { post, isLiked ->
-                if (post.id.startsWith("curated_")) {
+                if (post.id.startsWith("curated_") || post.id.startsWith("vpost_")) {
                     LocalLikesManager.toggleLike(requireContext(), post.id)
                     return@CommunityAdapter
                 }
@@ -261,10 +263,6 @@ class CommunityFragment : Fragment() {
                 }
             },
             onCommentClicked = { post ->
-                if (post.id.startsWith("curated_")) {
-                    Toast.makeText(requireContext(), "هذا منشور من مكتبة منشوراتي، يمكنك مشاركته كصورة أو نسخه!", Toast.LENGTH_SHORT).show()
-                    return@CommunityAdapter
-                }
                 val currentUser = AuthManager.currentUser
                 if (currentUser == null) {
                     Toast.makeText(requireContext(), getString(R.string.login_required_comment), Toast.LENGTH_SHORT).show()
@@ -274,10 +272,6 @@ class CommunityFragment : Fragment() {
                 }
             },
             onAuthorClicked = { authorId, authorName ->
-                if (authorId == "manchorati_curated") {
-                    Toast.makeText(requireContext(), "منشوراتي", Toast.LENGTH_SHORT).show()
-                    return@CommunityAdapter
-                }
                 val intent = Intent(requireContext(), UserProfileActivity::class.java).apply {
                     putExtra("USER_ID", authorId)
                     putExtra("USER_NAME", authorName)
@@ -585,7 +579,7 @@ class CommunityFragment : Fragment() {
             }
         }
 
-        // 2. تصفية حسب المزاج المختار (Mood filter - قسم المعروضات)
+        // 2. تصفية حسب المزاج المختار أو الدمج الهجين في التغذية العامة
         if (selectedMood != MoodType.ALL) {
             val moodKeywords = selectedMood.keywords
             val userPostsMatching = list.filter { post ->
@@ -594,18 +588,39 @@ class CommunityFragment : Fragment() {
                 post.tag == selectedMood.title || post.tag == selectedMood.defaultTag || moodKeywords.any { kw -> content.contains(kw) }
             }
 
-            // سحب منشورات رسمية معروضة من مكتبة منشوراتي المحلية للمزاج المختار بأفاتار كرتوني رسمي فقط
             if (isAdded) {
                 try {
                     val dbHelper = DatabaseHelper(requireContext())
-                    val curatedRaw = dbHelper.getCuratedPostsForCategoryIds(selectedMood.categoryIds, limit = 20)
-                    val curatedPosts = curatedRaw.map { it.toCuratedCommunityPost(selectedMood, requireContext()) }
+                    val curatedRaw = dbHelper.getCuratedPostsForCategoryIds(selectedMood.categoryIds, limit = 25)
+                    val curatedPosts = curatedRaw.mapIndexed { idx, p ->
+                        VirtualCommunityManager.toVirtualCommunityPost(
+                            p,
+                            requireContext(),
+                            targetTag = selectedMood.title,
+                            staggerMinutesAgo = 10L + idx * 25L
+                        )
+                    }
                     list = curatedPosts + userPostsMatching
                 } catch (e: Exception) {
                     list = userPostsMatching
                 }
             } else {
                 list = userPostsMatching
+            }
+        } else {
+            // التغذية العامة (ALL): دمج ذكي مع مكتبة المنشورات لضمان عدم توقف الفيد أبداً
+            if (isAdded && currentTagFilter != "المحفوظات") {
+                val curatedFeed = VirtualCommunityManager.getCuratedFeedPosts(requireContext())
+                val filteredCurated = if (currentTagFilter != "الكل") {
+                    val cleanCurrent = currentTagFilter.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                    curatedFeed.filter { post ->
+                        val cleanPostTag = (post.tag ?: "").replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                        cleanPostTag.contains(cleanCurrent) || cleanCurrent.contains(cleanPostTag)
+                    }
+                } else {
+                    curatedFeed
+                }
+                list = list + filteredCurated
             }
         }
 
@@ -1216,15 +1231,39 @@ class CommunityFragment : Fragment() {
 
         FirestoreManager.listenToComments(post.id) { list ->
             activity?.runOnUiThread {
-                commentsAdapter.updateData(list)
-                if (list.isEmpty()) {
+                val displayList = if (list.isEmpty() && (post.id.startsWith("vpost_") || post.id.startsWith("curated_"))) {
+                    val p1 = VirtualCommunityManager.getPersonaForId(post.id.hashCode() + 1)
+                    val p2 = VirtualCommunityManager.getPersonaForId(post.id.hashCode() + 3)
+                    listOf(
+                        Comment(
+                            id = "seed_c1_${post.id}",
+                            authorId = p1.id,
+                            authorName = p1.name,
+                            authorPhotoUrl = p1.avatarResource,
+                            content = VirtualCommunityManager.getContextualComment(post.content, post.tag),
+                            timestamp = post.getTimeMillis() + 180000L
+                        ),
+                        Comment(
+                            id = "seed_c2_${post.id}",
+                            authorId = p2.id,
+                            authorName = p2.name,
+                            authorPhotoUrl = p2.avatarResource,
+                            content = "ما شاء الله، ذوق راقٍ واختيار مميز 🌸",
+                            timestamp = post.getTimeMillis() + 450000L
+                        )
+                    )
+                } else {
+                    list
+                }
+                commentsAdapter.updateData(displayList)
+                if (displayList.isEmpty()) {
                     layoutEmptyComments?.visibility = View.VISIBLE
                     tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), 0)
                 } else {
                     layoutEmptyComments?.visibility = View.GONE
-                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), list.size)
+                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), displayList.size)
                     rvComments.post {
-                        rvComments.scrollToPosition(list.size - 1)
+                        rvComments.scrollToPosition(displayList.size - 1)
                     }
                 }
             }
@@ -1310,6 +1349,27 @@ class CommunityFragment : Fragment() {
                             postId = post.id,
                             message = "علّق $currentAuthorName على منشورك: \"${text.take(30)}...\""
                         )
+                    }
+
+                    if (post.id.startsWith("vpost_") || post.id.startsWith("curated_")) {
+                        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                            if (isAdded) {
+                                val replyText = listOf(
+                                    "شكراً جزيلاً على ذوقك وكلماتك الطيبة 🌸",
+                                    "تسلم، أسعدني تعليقك الراقي جداً ✨",
+                                    "شكراً لك، دمت بألف خير وسعادة 🤍",
+                                    "مرورك العطر زاد المنشور جمالاً، شكراً لك 🌿"
+                                ).random()
+                                FirestoreManager.addComment(
+                                    postId = post.id,
+                                    authorId = post.authorId,
+                                    authorName = post.authorName,
+                                    authorPhotoUrl = post.authorPhotoUrl,
+                                    content = replyText,
+                                    replyToAuthorName = currentAuthorName
+                                ) {}
+                            }
+                        }, 9000L)
                     }
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.comment_error), Toast.LENGTH_SHORT).show()

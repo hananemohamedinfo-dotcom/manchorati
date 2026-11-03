@@ -762,6 +762,7 @@ object CommunityPostDialogHelper {
                     fontId = selectedFont,
                     textColor = selectedTextColor,
                     tag = selectedTag,
+                    context = context,
                     onSuccess = {
                         dialog.dismiss()
                         Toast.makeText(context, context.getString(R.string.post_published_success), Toast.LENGTH_SHORT).show()

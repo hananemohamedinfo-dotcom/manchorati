@@ -121,6 +121,8 @@ class MainActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
         syncManager = SyncManager(this, dbHelper)
+        VirtualCommunityManager.ensurePersonasInFirestore(this)
+        VirtualCommunityManager.maybeSeedDailyFirestorePost(this)
 
         initViews()
         setupViewPager()
