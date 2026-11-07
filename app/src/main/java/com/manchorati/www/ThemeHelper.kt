@@ -139,15 +139,15 @@ object ThemeHelper {
             "arefruqaa", "ruqaa" -> R.font.arefruqaa
             "blakahollow", "blaka" -> R.font.blakahollow
             "cairoplay", "cairo" -> R.font.cairoplay
-            "kufam", "kufi" -> R.font.kufam
+            "kufam", "kufi", "reem_kufi", "noto_kufi" -> R.font.kufam
             "marhey" -> R.font.marhey
-            "notonastaliqurdu", "nastaliq" -> R.font.notonastaliqurdu
+            "notonastaliqurdu", "nastaliq", "amiri" -> R.font.notonastaliqurdu
             "oi" -> R.font.oi
-            "tajawal" -> R.font.tajawal
+            "tajawal", "almarai", "changa", "el_messiri" -> R.font.tajawal
             else -> R.font.tajawal
         }
         return try {
-            ResourcesCompat.getFont(context, fontRes)
+            ResourcesCompat.getFont(context, fontRes) ?: Typeface.DEFAULT
         } catch (e: Exception) {
             Typeface.DEFAULT
         }

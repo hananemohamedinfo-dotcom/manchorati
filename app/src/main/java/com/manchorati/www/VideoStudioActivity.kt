@@ -223,17 +223,17 @@ class VideoStudioActivity : AppCompatActivity() {
 
     private var selectedColorFilter = "none"
 
-    // VN Multi-Track Timeline Views
-    private lateinit var layoutVnTracksContainer: LinearLayout
-    private lateinit var vnTrackText: LinearLayout
-    private lateinit var tvVnTrackTextContent: TextView
-    private lateinit var tvVnTrackTextAnimBadge: TextView
-    private lateinit var vnTrackAudio: LinearLayout
-    private lateinit var tvVnTrackAudioTitle: TextView
-    private lateinit var tvVnTrackAudioTimeBadge: TextView
-    private lateinit var vnTrackCanvas: LinearLayout
-    private lateinit var tvVnTrackCanvasTitle: TextView
-    private lateinit var tvVnTrackFilterBadge: TextView
+    // VN Multi-Track Timeline Views (Removed to maximize screen space)
+    private var layoutVnTracksContainer: LinearLayout? = null
+    private var vnTrackText: LinearLayout? = null
+    private var tvVnTrackTextContent: TextView? = null
+    private var tvVnTrackTextAnimBadge: TextView? = null
+    private var vnTrackAudio: LinearLayout? = null
+    private var tvVnTrackAudioTitle: TextView? = null
+    private var tvVnTrackAudioTimeBadge: TextView? = null
+    private var vnTrackCanvas: LinearLayout? = null
+    private var tvVnTrackCanvasTitle: TextView? = null
+    private var tvVnTrackFilterBadge: TextView? = null
 
     // VN Filters Panel
     private lateinit var panelFiltersContainer: LinearLayout
@@ -704,32 +704,11 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        layoutVnTracksContainer = findViewById(R.id.layoutVnTracksContainer)
-        vnTrackText = findViewById(R.id.vnTrackText)
-        tvVnTrackTextContent = findViewById(R.id.tvVnTrackTextContent)
-        tvVnTrackTextAnimBadge = findViewById(R.id.tvVnTrackTextAnimBadge)
-        vnTrackAudio = findViewById(R.id.vnTrackAudio)
-        tvVnTrackAudioTitle = findViewById(R.id.tvVnTrackAudioTitle)
-        tvVnTrackAudioTimeBadge = findViewById(R.id.tvVnTrackAudioTimeBadge)
-        vnTrackCanvas = findViewById(R.id.vnTrackCanvas)
-        tvVnTrackCanvasTitle = findViewById(R.id.tvVnTrackCanvasTitle)
-        tvVnTrackFilterBadge = findViewById(R.id.tvVnTrackFilterBadge)
-
         panelFiltersContainer = findViewById(R.id.panelFiltersContainer)
         layoutFilterCards = findViewById(R.id.layoutFilterCards)
         toolFilters = findViewById(R.id.toolFilters)
         ivToolFilters = findViewById(R.id.ivToolFilters)
         tvToolFilters = findViewById(R.id.tvToolFilters)
-
-        vnTrackText.setOnClickListener { showEditTextDialog() }
-        vnTrackAudio.setOnClickListener {
-            when {
-                customAudioUri != null -> showAudioTrimmerDialog(customAudioUri!!)
-                downloadedAudioPath != null -> showAudioTrimmerDialog(Uri.fromFile(java.io.File(downloadedAudioPath!!)))
-                else -> openToolPanel(1)
-            }
-        }
-        vnTrackCanvas.setOnClickListener { openToolPanel(5) }
 
         toolAudio = findViewById(R.id.toolAudio)
 
@@ -959,9 +938,9 @@ class VideoStudioActivity : AppCompatActivity() {
 
                 tvTimeCurrent.text = formatTime(curMs)
 
-                if (::tvVnTrackAudioTimeBadge.isInitialized) {
+                tvVnTrackAudioTimeBadge?.let { badge ->
                     val baseStart = if (customAudioUri != null) audioStartOffsetMs else 0L
-                    tvVnTrackAudioTimeBadge.text = "${formatTime(baseStart + curMs)} / ${formatTime(baseStart + totalMs)}"
+                    badge.text = "${formatTime(baseStart + curMs)} / ${formatTime(baseStart + totalMs)}"
                 }
             }
 
@@ -2001,56 +1980,44 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        // Option C: Built-in Studio Loops ("عود", "بيانو", "طبيعة")
-
+        // Option C: Built-in Studio Loops ("عود", "بيانو", "طبيعة") with Interactive CapCut Audio Trimmer
         val builtInLoops = listOf(
-
             Triple("oud", getString(R.string.audio_oud), R.drawable.ic_capcut_audio),
-
             Triple("piano", getString(R.string.audio_piano), R.drawable.ic_capcut_audio),
-
             Triple("nature", getString(R.string.audio_nature), R.drawable.ic_capcut_audio)
-
         )
 
         for ((id, title, iconRes) in builtInLoops) {
-
-            val isSelected = selectedAudio == id && customAudioUri == null && downloadedAudioPath == null
-
+            val isSelected = (selectedAudio == id) && (downloadedAudioPath == null)
+            val subtitle = if (isSelected) "تعديل القص ✂️" else null
             val card = createAudioCard(
-
                 title = title,
-
                 iconRes = iconRes,
-
                 isSelected = isSelected,
-
+                subtitle = subtitle,
                 onClick = {
-
-                    selectedAudio = id
-
-                    customAudioUri = null
-
-                    downloadedAudioPath = null
-
-                    videoMotionView.customAudioUri = null
-
-                    videoMotionView.isMuted = false
-
-                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
-
-                    videoMotionView.playAudioImmediately(id)
-
-                    updateConfig()
-
-                    populateAudioPresets()
-
+                    val audioUri = getAudioUriForBuiltInPreset(id)
+                    if (isSelected) {
+                        // Already active: open trimmer directly to adjust start/end
+                        showAudioTrimmerDialog(audioUri)
+                    } else {
+                        // First click: select and play immediately
+                        selectedAudio = id
+                        customAudioTitle = title
+                        customAudioUri = audioUri
+                        audioStartOffsetMs = 0L
+                        downloadedAudioPath = null
+                        videoMotionView.audioStartOffsetMs = 0L
+                        videoMotionView.customAudioUri = audioUri
+                        videoMotionView.isMuted = false
+                        ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                        videoMotionView.playAudioPreset(id)
+                        updateConfig()
+                        populateAudioPresets()
+                    }
                 }
-
             )
-
             layoutAudioPresets.addView(card)
-
         }
 
 
@@ -2204,22 +2171,25 @@ class VideoStudioActivity : AppCompatActivity() {
                 if (StudioAssetManager.isAudioDownloaded(this, onlineAudio.id)) {
 
                     val path = StudioAssetManager.getDownloadedAudioPath(this, onlineAudio.id)
+                    val fileUri = Uri.fromFile(File(path))
+                    val isAlreadySelected = (selectedAudio == onlineAudio.id)
 
-                    downloadedAudioPath = path
-
-                    selectedAudio = onlineAudio.id
-
-                    customAudioUri = null
-
-                    videoMotionView.customAudioUri = null
-
-                    videoMotionView.isMuted = false
-
-                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
-
-                    videoMotionView.playAudioPreset(onlineAudio.id, localPath = path)
-
-                    populateAudioPresets()
+                    if (isAlreadySelected) {
+                        // Already selected: open audio trimmer directly
+                        showAudioTrimmerDialog(fileUri)
+                    } else {
+                        downloadedAudioPath = path
+                        selectedAudio = onlineAudio.id
+                        customAudioUri = fileUri
+                        customAudioTitle = onlineAudio.title
+                        audioStartOffsetMs = 0L
+                        videoMotionView.audioStartOffsetMs = 0L
+                        videoMotionView.customAudioUri = fileUri
+                        videoMotionView.isMuted = false
+                        ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                        videoMotionView.playAudioPreset(onlineAudio.id, localPath = path)
+                        populateAudioPresets()
+                    }
 
                 } else {
 
@@ -2543,33 +2513,25 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        // Sleek Modern Font Cards
-
+        // Sleek Modern Font Cards with the 8 Real Built-in Typography Fonts
         val fontList = listOf(
-
-            "amiri" to "خط أميري",
-
-            "cairo" to "خط كايرو",
-
             "tajawal" to "خط تجوال",
-
-            "reem_kufi" to "ريم كوفي",
-
-            "almarai" to "خط المراعي",
-
-            "changa" to "خط تشانغا",
-
-            "noto_kufi" to "نوتو كوفي",
-
-            "el_messiri" to "المسيري",
-
-            "ruqaa" to "خط الرقعة"
-
+            "cairo" to "خط كايرو",
+            "kufam" to "خط كوفي",
+            "arefruqaa" to "خط الرقعة",
+            "notonastaliqurdu" to "خط نستعليق",
+            "marhey" to "خط مرحي",
+            "blakahollow" to "خط بلاكا",
+            "oi" to "خط عريض Oi"
         )
 
         for ((id, name) in fontList) {
-
-            val isSelected = selectedFont == id
+            val isSelected = selectedFont.equals(id, ignoreCase = true) ||
+                (id == "cairo" && selectedFont.equals("cairoplay", ignoreCase = true)) ||
+                (id == "kufam" && (selectedFont.equals("kufi", ignoreCase = true) || selectedFont.equals("reem_kufi", ignoreCase = true))) ||
+                (id == "arefruqaa" && selectedFont.equals("ruqaa", ignoreCase = true)) ||
+                (id == "notonastaliqurdu" && (selectedFont.equals("nastaliq", ignoreCase = true) || selectedFont.equals("amiri", ignoreCase = true))) ||
+                (id == "blakahollow" && selectedFont.equals("blaka", ignoreCase = true))
 
             val card = LinearLayout(this).apply {
 
@@ -3401,6 +3363,29 @@ class VideoStudioActivity : AppCompatActivity() {
     }
 
 
+
+    private fun getAudioUriForBuiltInPreset(presetId: String): Uri {
+        val rawResId = when (presetId.lowercase()) {
+            "rain" -> R.raw.ambient_rain
+            "oud" -> R.raw.ambient_oud
+            "nature" -> R.raw.ambient_nature
+            else -> R.raw.ambient_piano
+        }
+        val cacheFile = File(cacheDir, "preset_${presetId.lowercase()}.wav")
+        if (!cacheFile.exists() || cacheFile.length() == 0L) {
+            try {
+                resources.openRawResource(rawResId).use { input ->
+                    cacheFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return Uri.parse("android.resource://$packageName/$rawResId")
+            }
+        }
+        return Uri.fromFile(cacheFile)
+    }
 
     private fun loadCustomAudio(uri: Uri, startOffsetMs: Long = 0L) {
 
@@ -4658,9 +4643,9 @@ var trackTitle = "مقطع صوتي"
     }
 
     private fun updateVnTracksUI() {
-        if (!::tvVnTrackTextContent.isInitialized) return
-        tvVnTrackTextContent.text = postContent
-        tvVnTrackTextAnimBadge.text = when(selectedAnim.lowercase()) {
+        val tvContent = tvVnTrackTextContent ?: return
+        tvContent.text = postContent
+        tvVnTrackTextAnimBadge?.text = when(selectedAnim.lowercase()) {
             "typewriter" -> "آلة كاتبة"
             "word_by_word" -> "كلمة بكلمة"
             "fade" -> "تلاشي ناعم"
@@ -4682,8 +4667,8 @@ var trackTitle = "مقطع صوتي"
                 else -> selectedAudio
             }
         }
-        tvVnTrackAudioTitle.text = audioTitle
-        tvVnTrackAudioTimeBadge.text = if (customAudioUri != null) {
+        tvVnTrackAudioTitle?.text = audioTitle
+        tvVnTrackAudioTimeBadge?.text = if (customAudioUri != null) {
             "قص: ${formatTime(audioStartOffsetMs)} ✂️"
         } else {
             "00:00 / ${formatTime((selectedDuration * 1000L))}"
@@ -4701,9 +4686,9 @@ var trackTitle = "مقطع صوتي"
                 else -> selectedMotion
             }
         }
-        tvVnTrackCanvasTitle.text = "$bgTitle • $selectedRatio"
+        tvVnTrackCanvasTitle?.text = "$bgTitle • $selectedRatio"
 
-        tvVnTrackFilterBadge.text = when(selectedColorFilter.lowercase()) {
+        tvVnTrackFilterBadge?.text = when(selectedColorFilter.lowercase()) {
             "teal_orange" -> "فلتر: Teal & Orange"
             "moody" -> "فلتر: Moody"
             "vintage_90s" -> "فلتر: Vintage 90s"

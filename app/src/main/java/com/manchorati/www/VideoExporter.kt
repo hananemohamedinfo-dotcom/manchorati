@@ -411,7 +411,19 @@ object VideoExporter {
                     decoder.releaseOutputBuffer(outIndex, false)
                 }
             }
-            outputStream.toByteArray()
+            val decoded = outputStream.toByteArray()
+            if (decoded.isNotEmpty() && decoded.size < maxBytesNeeded) {
+                val fullBytes = ByteArray(maxBytesNeeded)
+                var written = 0
+                while (written < maxBytesNeeded) {
+                    val chunk = minOf(decoded.size, maxBytesNeeded - written)
+                    System.arraycopy(decoded, 0, fullBytes, written, chunk)
+                    written += chunk
+                }
+                fullBytes
+            } else {
+                decoded
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             null
