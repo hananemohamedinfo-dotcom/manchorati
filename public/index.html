@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشوراتي - خواطر واقتباسات وتصميم الفيديوهات</title>
+    <meta name="description" content="اقرأ وصمم أجمل الخواطر والاقتباسات مع تطبيق منشوراتي. تصميم صور، استوديو فيديو بالذكاء الاصطناعي، ومشاركة سريعة.">
+    <meta property="og:title" content="تطبيق منشوراتي">
+    <meta property="og:description" content="اقرأ وصمم أجمل الخواطر والاقتباسات وشاركها مع أصدقائك.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background-color: #0d1117;
+            color: #f0f6fc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.8) 0%, #0d1117 80%);
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+        }
+        .app-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: #38bdf8;
+            margin-bottom: 24px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .card {
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 24px;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.4);
+            font-size: 40px;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+        .quote-box {
+            background: rgba(13, 17, 23, 0.7);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #e2e8f0;
+            position: relative;
+        }
+        .quote-box::before {
+            content: "«";
+            font-size: 28px;
+            color: #38bdf8;
+            display: block;
+        }
+        .quote-box::after {
+            content: "»";
+            font-size: 28px;
+            color: #38bdf8;
+            display: block;
+        }
+        p.desc {
+            font-size: 15px;
+            color: #94a3b8;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 12px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.2s;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        footer {
+            font-size: 13px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-badge">
+            ✨ تطبيق منشوراتي الرسمي
+        </div>
+
+        <div class="card">
+            <div class="icon">📖</div>
+            <h1>تطبيق منشوراتي</h1>
+            <p class="desc">روائع الاقتباسات والخواطر اليومية مع استوديو لتصميم الصور وفيديوهات الذكاء الاصطناعي</p>
+
+            <div class="quote-box" id="quoteContainer">
+                <span id="quoteText">جاري تحميل الاقتباس...</span>
+            </div>
+
+            <a id="btnOpenApp" href="#" class="btn-primary">
+                🚀 فتح الاقتباس في التطبيق
+            </a>
+
+            <a href="https://play.google.com/store/apps/details?id=com.manchorati.www" class="btn-secondary" target="_blank">
+                📱 تحميل التطبيق من Google Play
+            </a>
+        </div>
+
+        <footer>
+            جميع الحقوق محفوظة © منشوراتي 2026
+        </footer>
+    </div>
+
+    <script>
+        // قراءة معرّف الاقتباس من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id') || '1';
+
+        // روابط الـ Deep Link لفتح التطبيق مباشرة إذا كان مثبتاً
+        const appDeepLink = `manchorati://post?id=${postId}`;
+        const appIntentLink = `intent://post?id=${postId}#Intent;scheme=manchorati;package=com.manchorati.www;end`;
+
+        const openBtn = document.getElementById('btnOpenApp');
+        openBtn.href = appDeepLink;
+
+        document.getElementById('quoteText').innerText = 'اضغط لفتح هذا المنشور مباشرة في التطبيق لتصميمه أو مشاركته مع أصدقائك.';
+
+        // محاولة الفتح التلقائي إذا كان الجهاز يدعم ذلك
+        if (/Android/i.test(navigator.userAgent)) {
+            openBtn.href = appIntentLink;
+        }
+    </script>
+</body>
+</html>

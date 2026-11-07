@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- الألوان الديناميكية للوضع الفاتح -->
+    <color name="bg_main">#F8F9FB</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_drawer">#FFFFFF</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider_color">#E2E8F0</color>
+    <color name="search_bg">#FFFFFF</color>
+    <color name="comment_text_color">#1E293B</color>
+
+    <!-- هوية منشوراتي الرسمية من اللوغو الجديد -->
+    <color name="brand_primary">#0284C7</color> <!-- أزرق سماوي كهربائي حيوي -->
+    <color name="brand_primary_glow">#38BDF8</color> <!-- توهج سماوي ساطع -->
+    <color name="brand_gold">#D4AF37</color> <!-- ذهبي إمبراطوري فاخر -->
+    <color name="brand_gold_warm">#F59E0B</color> <!-- ذهبي دافئ -->
+    <color name="brand_gold_light">#FEF08A</color> <!-- لمعان ذهبي ناعم -->
+    <color name="brand_navy_dark">#0F172A</color> <!-- كحلي ليلي فخم -->
+    <color name="brand_navy_surface">#1E2A3A</color> <!-- خلفية اللوغو الرسمية -->
+
+    <color name="ic_launcher_background">#141F2E</color>
+    <color name="chip_idle_bg">#E2E8F0</color>
+    <color name="chip_idle_stroke">#CBD5E1</color>
+    <color name="chip_idle_text">#1E293B</color>
+</resources>

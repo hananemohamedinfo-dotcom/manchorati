@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- الألوان الديناميكية للوضع الليلي -->
+    <color name="bg_main">#0B131F</color> <!-- كحلي ليلي عميق متناسق مع اللوغو -->
+    <color name="bg_card">#141E2E</color>
+    <color name="bg_drawer">#141E2E</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider_color">#1E2A3A</color>
+    <color name="search_bg">#1E2A3A</color>
+    <color name="comment_text_color">#F1F5F9</color>
+
+    <!-- هوية منشوراتي الرسمية للوضع الليلي -->
+    <color name="brand_primary">#38BDF8</color>
+    <color name="brand_primary_glow">#7DD3FC</color>
+    <color name="brand_gold">#F59E0B</color>
+    <color name="brand_gold_warm">#D4AF37</color>
+    <color name="brand_gold_light">#FEF08A</color>
+    <color name="brand_navy_dark">#080E18</color>
+    <color name="brand_navy_surface">#1E2A3A</color>
+
+    <color name="ic_launcher_background">#141F2E</color>
+    <color name="chip_idle_bg">#1E2A3A</color>
+    <color name="chip_idle_stroke">#334155</color>
+    <color name="chip_idle_text">#CBD5E1</color>
+</resources>

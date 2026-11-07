@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nom de l’application -->
+    <string name="app_name">منشوراتي</string>
+
+    <!-- Onglets de navigation inférieure -->
+    <string name="tab_community">Communauté</string>
+    <string name="tab_categories">Catégories</string>
+    <string name="tab_favorites">Favoris</string>
+    <string name="tab_profile">Mon profil</string>
+
+    <!-- Recherche, Tri et Filtres -->
+    <string name="search_hint">Rechercher dans les publications...</string>
+    <string name="sort_by">Trier par :</string>
+    <string name="sort_latest">Plus récents</string>
+    <string name="sort_trending">Plus populaires</string>
+    <string name="tag_all">Tous</string>
+    <string name="saved_posts">Enregistrements</string>
+    <string name="choose_category">Choisir une catégorie</string>
+    <string name="category_label">Catégorie</string>
+
+    <!-- Tags prédéfinis -->
+    <string name="tag_wisdom">Sagesse &amp; Citations</string>
+    <string name="tag_thoughts">Pensées</string>
+    <string name="tag_dua">Invocations &amp; Douas</string>
+    <string name="tag_motivation">Motivation &amp; Succès</string>
+    <string name="tag_humor">Humour &amp; Rires</string>
+    <string name="tag_poetry">Poésie &amp; Littérature</string>
+    <string name="tag_coffee">Café &amp; Soirée</string>
+    <string name="tag_general">Général</string>
+
+    <!-- Menu latéral (Drawer) -->
+    <string name="drawer_dark_mode">Mode sombre</string>
+    <string name="drawer_language">Langue de l’application</string>
+    <string name="drawer_contact">Contactez-nous &amp; Suggestions</string>
+    <string name="drawer_notifications">Paramètres des notifications</string>
+    <string name="drawer_rate">Évaluer l’application</string>
+    <string name="drawer_share">Partager l’application</string>
+    <string name="drawer_more_apps">Plus d’applications</string>
+    <string name="drawer_logout">Déconnexion</string>
+    <string name="drawer_version">Version 1.0.0</string>
+
+    <!-- Commentaires &amp; Interactions -->
+    <string name="comment_hint">Écrire un commentaire...</string>
+    <string name="edit_comment_hint">Modifiez votre commentaire...</string>
+    <string name="reply_button">Répondre</string>
+    <string name="edit_button">Modifier</string>
+    <string name="delete_button">Supprimer</string>
+    <string name="edited_badge">(Modifié)</string>
+    <string name="reply_prefix">Réponse à</string>
+    <string name="edit_comment_title">Modifier votre commentaire</string>
+    <string name="reply_to_user">Répondre à %s</string>
+    <string name="comments_dialog_title">Commentaires</string>
+    <string name="no_comments_title">Aucun commentaire pour le moment</string>
+    <string name="no_comments_subtitle">Soyez le premier à commenter !</string>
+    <string name="time_just_now">À l’instant</string>
+    <string name="comment_edited_success">Commentaire modifié avec succès</string>
+    <string name="comment_error">Échec de l’envoi du commentaire, réessayez plus tard</string>
+    <string name="comment_edit_error">Échec de la modification du commentaire</string>
+    <string name="comment_bad_words">Le commentaire contient des mots inappropriés</string>
+    <string name="login_required_to_comment">Veuillez vous connecter pour commenter</string>
+    <string name="comments_count_format">%d commentaires</string>
+
+    <!-- Actions sur les publications -->
+    <string name="post_action_like">J’aime</string>
+    <string name="post_action_comment">Commenter</string>
+    <string name="post_action_share_story">Partager en Story / Carte</string>
+    <string name="post_action_bookmark">Enregistrer la publication</string>
+    <string name="post_action_remove_bookmark">Retirer des enregistrements</string>
+    <string name="post_action_copy">Copier le texte</string>
+    <string name="post_action_edit">Modifier</string>
+    <string name="post_action_delete">Supprimer</string>
+    <string name="post_action_report">Signaler la publication</string>
+    <string name="post_copied_toast">Texte copié dans le presse-papiers</string>
+    <string name="confirm_delete_post">Voulez-vous vraiment supprimer cette publication ?</string>
+    <string name="confirm_delete_comment">Voulez-vous vraiment supprimer ce commentaire ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Annuler</string>
+    <string name="confirm">Confirmer</string>
+
+    <!-- Profil et Paramètres du compte -->
+    <string name="profile_title">Profil</string>
+    <string name="account_settings_title">Paramètres du compte</string>
+    <string name="change_profile_photo">Changer la photo de profil</string>
+    <string name="select_avatar_title">Choisir une photo de profil</string>
+    <string name="display_name_label">Nom d’affichage</string>
+    <string name="display_name_hint">Entrez votre nom ou pseudonyme</string>
+    <string name="username_label">Nom d’utilisateur unique</string>
+    <string name="username_desc">Identifiant unique avec @ qui ne peut être utilisé par personne d’autre.</string>
+    <string name="username_available">Nom d’utilisateur disponible ✓</string>
+    <string name="username_current">Votre nom d’utilisateur actuel</string>
+    <string name="username_too_short">Le nom d’utilisateur doit contenir au moins 3 caractères</string>
+    <string name="username_invalid_chars">Uniquement lettres anglaises, chiffres, _ et .</string>
+    <string name="username_taken">Nom d’utilisateur déjà pris, veuillez en choisir un autre</string>
+    <string name="username_checking">Vérification de la disponibilité...</string>
+    <string name="bio_label">Biographie (Bio)</string>
+    <string name="bio_hint">Écrivez une courte biographie, vos centres d’intérêt ou citation...</string>
+    <string name="bio_default">Aucune biographie pour le moment.</string>
+    <string name="save_changes">Enregistrer les modifications</string>
+    <string name="profile_saved_success">Paramètres du compte enregistrés avec succès</string>
+    <string name="photo_updated_success">Photo de profil mise à jour avec succès</string>
+    <string name="save_error">Échec de l’enregistrement, veuillez réessayer</string>
+    <string name="edit_profile_btn">Modifier</string>
+    <string name="menu_edit_profile">Modifier le profil</string>
+    <string name="follow">+ Suivre</string>
+    <string name="following">Abonné ✓</string>
+    <string name="posts_count_label">Publications</string>
+    <string name="followers_label">Abonnés</string>
+    <string name="following_label">Abonnements</string>
+    <string name="shared_posts_label">Publications partagées</string>
+    <string name="no_posts_yet">Aucune publication pour cet utilisateur pour le moment</string>
+    <string name="share_first_post">Partagez votre première publication dans la communauté</string>
+    <string name="logout">Déconnexion</string>
+    <string name="confirm_logout">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+
+    <!-- Paramètres des notifications -->
+    <string name="notification_settings_title">Paramètres des notifications</string>
+    <string name="enable_daily_notifications">Activer les notifications quotidiennes</string>
+    <string name="daily_notifications_desc">Recevez deux notifications quotidiennes des meilleures publications</string>
+    <string name="morning_post_title">Publication du matin</string>
+    <string name="evening_post_title">Publication du soir</string>
+    <string name="random_post_title">Publication aléatoire supplémentaire</string>
+    <string name="random_post_desc">Notification surprise à un moment aléatoire de la journée</string>
+    <string name="alarm_time_label">Heure de notification :</string>
+    <string name="post_category_label">Catégorie de publication :</string>
+    <string name="save_notification_settings">Enregistrer les paramètres</string>
+    <string name="settings_saved_success">Paramètres de notification enregistrés avec succès</string>
+    <string name="default_all">Par défaut (Tous)</string>
+
+    <!-- Ajouter et Modifier une publication -->
+    <string name="add_post_title">Nouvelle publication</string>
+    <string name="edit_post_title">Modifier la publication</string>
+    <string name="add_post_hint">Que voulez-vous partager ? Écrivez votre pensée, citation...</string>
+    <string name="publish">Publier</string>
+    <string name="save_edit_post">Enregistrer</string>
+    <string name="tab_background">Arrière-plan</string>
+    <string name="tab_tag">Catégorie</string>
+    <string name="tab_text_color">Couleur</string>
+    <string name="tab_font">Police</string>
+    <string name="post_published_success">Publication partagée avec succès</string>
+    <string name="post_updated_success">Publication modifiée avec succès</string>
+
+    <!-- Langues -->
+    <string name="select_language">Choisir la langue</string>
+    <string name="lang_ar">العربية</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_en">English</string>
+
+    <!-- Éditeur de cartes et Story -->
+    <string name="editor_title">Éditeur de cartes</string>
+    <string name="editor_subtitle">Studio de création</string>
+    <string name="save_btn">Enregistrer</string>
+    <string name="share_btn">Partager</string>
+    <string name="dimming_label">Assombrissement :</string>
+    <string name="blur_label">Flou :</string>
+    <string name="blur_none">Aucun</string>
+    <string name="blur_soft">Léger</string>
+    <string name="blur_strong">Intense</string>
+    <string name="filter_label">Filtre :</string>
+    <string name="filter_normal">Normal</string>
+    <string name="filter_warm">Chaud</string>
+    <string name="filter_night">Nuit</string>
+    <string name="filter_emerald">Émeraude</string>
+    <string name="filter_classic">Classique</string>
+    <string name="lines_normal">Lignes normales</string>
+    <string name="lines_loose">Lignes espacées</string>
+    <string name="letter_spacing">Espacement lettres ↔️</string>
+    <string name="text_gradient_normal">Dégradé texte : Normal</string>
+    <string name="text_gradient_gold">Dégradé : Or royal</string>
+    <string name="text_gradient_neon">Dégradé : Cyber néon</string>
+    <string name="text_gradient_sunset">Dégradé : Coucher magique</string>
+    <string name="text_gradient_emerald">Dégradé : Émeraude vif</string>
+    <string name="text_highlight">Surlignage</string>
+    <string name="text_shadow_none">Sans ombre</string>
+    <string name="text_shadow_soft">Ombre douce</string>
+    <string name="text_shadow_deep">Ombre marquée</string>
+    <string name="text_shadow_glow">Lueur néon</string>
+    <string name="ratio_square">Carré 1:1 ■</string>
+    <string name="ratio_portrait">Portrait 4:5 ▍</string>
+    <string name="ratio_story">Story 9:16 ▌</string>
+    <string name="ratio_landscape">Paysage 16:9 ▬</string>
+    <string name="alignment_label">Alignement :</string>
+    <string name="corners_label">Bords :</string>
+    <string name="corner_sharp">Droits 0</string>
+    <string name="corner_rounded">Arrondis 18</string>
+    <string name="corner_pill">Pilule 30</string>
+    <string name="card_border">Bordure</string>
+    <string name="card_border_none">Cadre : Aucun</string>
+    <string name="card_border_soft">Cadre : Discret</string>
+    <string name="card_border_gold">Cadre : Doré</string>
+    <string name="card_border_neon">Cadre : Néon</string>
+    <string name="quote_none">Guillemets : Aucun</string>
+    <string name="quote_quotes">Guillemets : “ ”</string>
+    <string name="quote_guillemets">Guillemets : « »</string>
+    <string name="quote_brackets">Guillemets : ❝ ❞</string>
+    <string name="author_signature">Signature auteur</string>
+    <string name="watermark_label">Filigrane</string>
+    <string name="instant_presets_subtitle">Modèles prêts en un clic :</string>
+    <string name="tab_size">Format</string>
+    <string name="tab_border">Cadre</string>
+    <string name="tab_templates">Modèles</string>
+    <string name="my_photo">Ma photo</string>
+    <string name="remove_photo">Supprimer</string>
+    <string name="pick_photo_not_supported">Sélection d’image non disponible</string>
+    <string name="bg_applied_success">Image d’arrière-plan appliquée</string>
+    <string name="bg_removed">Arrière-plan supprimé</string>
+    <string name="template_applied">Modèle appliqué : %s</string>
+    <string name="reset_design_success">Style d’origine restauré</string>
+    <string name="image_saved_success">Carte enregistrée dans la galerie</string>
+    <string name="image_save_error">Impossible d’enregistrer l’image</string>
+    <string name="share_card_via">Partager la carte via</string>
+
+    <!-- Noms des modèles -->
+    <string name="template_dark_luxury">Luxe sombre</string>
+    <string name="template_classic_paper">Papier classique</string>
+    <string name="template_neon_cyber">Néo-cyber</string>
+    <string name="template_calm_sunset">Coucher doux</string>
+    <string name="template_glass">Effet verre</string>
+    <string name="template_pure_minimal">Minimaliste pur</string>
+
+    <!-- Noms des polices -->
+    <string name="font_tajawal">Tajawal</string>
+    <string name="font_cairo">Cairo</string>
+    <string name="font_ruqaa">Ruqaa</string>
+    <string name="font_kufam">Kufam</string>
+    <string name="font_marhey">Marhey</string>
+    <string name="font_nastaliq">Nastaliq</string>
+    <string name="font_blaka">Blaka</string>
+    <string name="font_bold">Gras</string>
+
+    <!-- Ajouter et Modifier une publication additionnels -->
+    <string name="you_author">Vous</string>
+    <string name="clear_text">Effacer le texte</string>
+    <string name="tag_none">Sans tag</string>
+    <string name="color_auto">Automatique</string>
+    <string name="color_white">Blanc</string>
+    <string name="color_dark">Sombre</string>
+    <string name="color_gold">Doré</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_green">Vert</string>
+    <string name="color_pink">Rose</string>
+    <string name="color_purple">Violet</string>
+    <string name="custom_color">Personnalisé A</string>
+    <string name="font_size_label">Taille de police :</string>
+    <string name="write_post_error">Veuillez écrire votre publication</string>
+    <string name="post_bad_words">Le texte contient des mots non conformes</string>
+    <string name="login_required_to_post">Veuillez vous connecter pour publier</string>
+    <string name="post_failed">Échec de la publication, réessayez plus tard</string>
+    <string name="post_edit_failed">Échec de la modification, réessayez</string>
+
+    <!-- Page Contact et Suggestions -->
+    <string name="contact_us_title">Contactez-nous &amp; Suggestions</string>
+    <string name="feedback_type_label">Type de message</string>
+    <string name="feedback_type_suggest_quote">Suggérer une citation ou un post</string>
+    <string name="feedback_type_suggest_feature">Idée ou amélioration de l’application</string>
+    <string name="feedback_type_report_bug">Signaler un problème technique</string>
+    <string name="feedback_type_general">Message général à l’administration</string>
+    <string name="feedback_message_title">Votre message ou proposition</string>
+    <string name="feedback_message_hint">Écrivez les détails de votre suggestion, remarque ou citation...</string>
+    <string name="send_feedback">Envoyer le message</string>
+    <string name="feedback_empty_error">Veuillez saisir votre message</string>
+    <string name="feedback_sent_success">Merci ! Votre message a été envoyé avec succès</string>
+    <string name="feedback_send_failed">Échec de l’envoi, réessayez plus tard</string>
+
+    <!-- Notifications et Alertes -->
+    <string name="notifications_title">Notifications</string>
+    <string name="swipe_to_dismiss">Glissez pour supprimer la notification</string>
+    <string name="clear_all">Tout effacer</string>
+    <string name="no_notifications_yet">Aucune notification pour le moment</string>
+    <string name="login_required_notifications">Connectez-vous pour voir les notifications</string>
+    <string name="clear_notifications_title">Effacer les notifications</string>
+    <string name="clear_notifications_confirm">Voulez-vous vraiment effacer toutes les notifications ?</string>
+    <string name="notifications_cleared">Toutes les notifications ont été effacées</string>
+    <string name="notif_liked_post">%s a aimé votre publication</string>
+    <string name="notif_commented_post">%s a commenté votre publication</string>
+    <string name="notif_followed_you">%s a commencé à vous suivre</string>
+    <string name="notif_new_post">%s a publié un nouveau post</string>
+    <string name="notif_replied_comment">%s a répondu à votre commentaire</string>
+
+    <!-- Éléments additionnels de profil et interface -->
+    <string name="featured_writer">⭐ Rédacteur d’élite</string>
+    <string name="badge_admin">👑 Administrateur</string>
+    <string name="badge_writer">⭐ Rédacteur d’élite</string>
+    <string name="user_shared_posts_desc">Les pensées et textes partagés apparaîtront ici</string>
+    <string name="select_profile_picture_title">Choisir une photo de profil</string>
+    <string name="followers_title">Abonnés</string>
+    <string name="no_users_found">Aucun utilisateur pour le moment</string>
+
+    <!-- Connexion Google -->
+    <string name="login_title">Connexion</string>
+    <string name="login_desc">Connectez-vous avec Google pour publier avec votre profil.</string>
+    <string name="continue_with_google">Continuer avec Google</string>
+    <string name="choose_username_title">Choisissez un nom d’utilisateur unique :</string>
+    <string name="username_example_hint">Ex : alex_95</string>
+    <string name="confirm_and_continue">Confirmer et continuer</string>
+
+    <!-- Chaînes supplémentaires traduites -->
+    <string name="post_added_to_favorites">Ajouté aux favoris</string>
+    <string name="post_removed_from_favorites">Retiré des favoris</string>
+    <string name="post_text_copied">Texte copié</string>
+    <string name="share_post_chooser">Partager la publication via</string>
+    <string name="guest_user">Visiteur</string>
+    <string name="tap_to_login">Appuyez pour vous connecter</string>
+    <string name="logout_confirm_title">Déconnexion</string>
+    <string name="logout_confirm_msg">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="logout_success">Déconnexion réussie</string>
+    <string name="press_back_again_to_exit">Appuyez à nouveau pour quitter</string>
+    <string name="login_required_profile">Veuillez vous connecter pour voir votre profil</string>
+    <string name="login_required_post">Veuillez vous connecter pour ajouter une publication</string>
+    <string name="login_required_like">Veuillez vous connecter pour aimer cette publication</string>
+    <string name="login_required_comment">Veuillez vous connecter pour commenter</string>
+    <string name="login_required_follow">Veuillez vous connecter pour vous abonner</string>
+    <string name="login_required_report">Veuillez vous connecter pour signaler</string>
+    <string name="delete_post_title">Supprimer la publication</string>
+    <string name="delete_post_confirm">Voulez-vous vraiment supprimer définitivement cette publication ?</string>
+    <string name="post_deleted_success">Publication supprimée avec succès</string>
+    <string name="preparing_story">Préparation de la story en cours...</string>
+    <string name="share_story_chooser">Partager en Story</string>
+    <string name="report_post_title">Motif du signalement de cette publication</string>
+    <string name="send_report">Envoyer le signalement</string>
+    <string name="report_received_success">Signalement reçu, merci de préserver la communauté</string>
+    <string name="report_error">Une erreur est survenue lors du signalement</string>
+    <string name="report_reason_inappropriate">Contenu inapproprié ou explicite</string>
+    <string name="report_reason_profanity">Propos vulgaires ou insultes</string>
+    <string name="report_reason_religion">Atteinte aux croyances religieuses</string>
+    <string name="report_reason_hate">Discours de haine ou harcèlement</string>
+    <string name="report_reason_spam">Contenu trompeur, arnaque ou spam</string>
+    <string name="report_reason_other">Autre</string>
+    <string name="following_title">Abonnements</string>
+    <string name="profile_picture_updated">Photo de profil mise à jour avec succès</string>
+    <string name="profile_picture_update_failed">Échec de la mise à jour de la photo</string>
+    <string name="username_change_failed">Impossible de modifier le nom d’utilisateur</string>
+    <string name="comment_inappropriate_words">Le commentaire contient des mots inappropriés</string>
+    <string name="comments_count_zero">0 commentaire</string>
+    <string name="default_user_name">Utilisateur</string>
+    <string name="share_app_text">Téléchargez l’application Manchorati pour les plus belles citations et pensées : https://play.google.com/store/apps/details?id=%s</string>
+    <string name="share_app_chooser">Partager l’application via</string>
+    <string name="notif_friday">Bon vendredi</string>
+    <string name="notif_morning">Bonjour</string>
+    <string name="notif_evening">Bonsoir</string>
+    <string name="notif_daily_quote">Une pensée pour votre journée</string>
+    <string name="copy">Copier</string>
+    <string name="daily_notifications_channel">Notifications quotidiennes</string>
+    <string name="notif_default_body">Souriez et soyez optimiste, passez une excellente journée.</string>
+    <string name="letter_spacing_medium">Lettres : moyennes</string>
+    <string name="letter_spacing_wide">Lettres : espacées</string>
+    <string name="color_custom">Couleur personnalisée</string>
+    <string name="no_bio_yet">Aucune bio pour le moment.</string>
+
+    <!-- Politique de confidentialité et conditions (RGPD &amp; Google Play) -->
+    <string name="drawer_privacy_policy">Confidentialité &amp; Conditions</string>
+    <string name="privacy_dialog_title">Politique de confidentialité &amp; Conditions</string>
+    <string name="privacy_dialog_subtitle">Conforme aux normes RGPD (UE) et aux politiques de Google Play</string>
+    <string name="privacy_checkbox_consent">"J’atteste avoir lu et j’accepte la politique de confidentialité et les conditions d’utilisation"</string>
+    <string name="privacy_btn_agree_continue">Accepter et continuer</string>
+    <string name="privacy_btn_close">Fermer</string>
+    <string name="privacy_toast_must_accept">Veuillez accepter les conditions pour continuer</string>
+    <string name="tab_card_templates">Cartes prêtes</string>
+    <string name="template_emerald">Émeraude calme</string>
+    <string name="template_crimson_brand">Rouge Manchorati</string>
+    <string name="template_ocean_breeze">Brise océane</string>
+    <string name="download_post_image">Télécharger la carte</string>
+    <string name="post_image_saved_success">Image de la carte enregistrée dans la galerie avec succès</string>
+    <string name="post_image_save_failed">"Impossible d’enregistrer l’image"</string>
+    <string name="saving_post_image">"Enregistrement de l’image dans la galerie..."</string>
+    <string name="widget_quote_name">Pensée du jour</string>
+    <string name="widget_quote_description">"Affichez de belles citations sur votre écran d’accueil avec actualisation rapide."</string>
+    <string name="widget_copied_toast">Citation copiée avec succès 📋</string>
+    <string name="drawer_add_widget">"Ajouter le Widget à l’écran"</string>
+    <string name="widget_pin_instructions">"Appuyez longuement sur l’écran d’accueil, choisissez Widgets puis Manchorati 🌸"</string>
+
+    <!-- Supprimer le compte -->
+    <string name="delete_account">Supprimer le compte</string>
+    <string name="delete_account_confirm_title">Supprimer définitivement le compte</string>
+    <string name="delete_account_warning">Attention : Votre compte, vos publications et vos données seront définitivement supprimés de nos serveurs.\n\nVeuillez patienter pour confirmer...</string>
+    <string name="delete_account_confirm_btn">Confirmer la suppression définitive</string>
+    <string name="delete_account_progress">Suppression du compte en cours...</string>
+    <string name="delete_account_success">Compte et données supprimés définitivement</string>
+    <string name="delete_account_error">Échec de la suppression du compte</string>
+
+    <!-- Rangs et défis d’écrivain -->
+    <string name="badge_legendary">👑 Écrivain Légendaire</string>
+    <string name="badge_elite">💎 Écrivain d’Élite</string>
+    <string name="badge_distinguished">⭐ Écrivain Distingué</string>
+    <string name="badge_rising">🥈 Écrivain Émergent</string>
+    <string name="badge_beginner">🥉 Écrivain Débutant</string>
+    <string name="writer_challenges_title">Rangs et défis d’auteur</string>
+    <string name="writer_challenges_desc">Partagez vos citations et développez votre audience pour monter en grade et débloquer des badges exclusifs !</string>
+    <string name="current_tier_label">Votre rang actuel :</string>
+    <string name="next_tier_progress">%1$d sur %2$d abonnés pour le rang suivant</string>
+    <string name="next_tier_remaining">%d abonnés restants pour la promotion 🚀</string>
+    <string name="max_tier_reached">Vous avez atteint le sommet ! Plus haut rang obtenu 🏆</string>
+    <string name="ranks_guide_title">Guide des rangs et niveaux</string>
+    <string name="milestones_title">Badges de réalisations et défis</string>
+    <string name="milestone_1k">Club du premier millier (1K)</string>
+    <string name="milestone_1k_desc">Dépasser 1 000 véritables abonnés</string>
+    <string name="milestone_5k">Badge d’Élite (5K)</string>
+    <string name="milestone_5k_desc">Inspirer plus de 5 000 abonnés</string>
+    <string name="milestone_7k">Badge du Sommet (7K)</string>
+    <string name="milestone_7k_desc">Atteindre 7 000 abonnés et une large audience</string>
+    <string name="milestone_10k">Bouclier d’Or Légendaire (10K)</string>
+    <string name="milestone_10k_desc">Plus de 10 000 abonnés dans la communauté</string>
+    <string name="badge_unlocked_label">Débloqué et accompli ✨</string>
+    <string name="badge_locked_label">%d abonnés restants 🔒</string>
+    <string name="btn_close_challenges">Compris, continuons à créer !</string>
+
+    <!-- Authentification par E-mail et Mot de passe -->
+    <string name="or_divider">Ou avec E-mail</string>
+    <string name="email_hint">Adresse e-mail</string>
+    <string name="password_hint">Mot de passe (min 6 caractères)</string>
+    <string name="sign_in_btn">Se connecter</string>
+    <string name="sign_up_btn">Créer un nouveau compte</string>
+    <string name="dont_have_account">Vous n’avez pas de compte ? S’inscrire</string>
+    <string name="already_have_account">Vous avez déjà un compte ? Se connecter</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="reset_link_sent">Lien de réinitialisation envoyé à votre e-mail</string>
+    <string name="auth_field_empty">Veuillez remplir tous les champs obligatoires</string>
+    <string name="auth_success">Connexion réussie !</string>
+    <string name="enter_email_to_reset">Veuillez saisir votre e-mail ci-dessus pour recevoir le lien</string>
+
+
+    <!-- Écrivain IA -->
+    <string name="ai_writer_title">Écrivain de Citations IA</string>
+    <string name="ai_quota_badge">Tentatives restantes : %1$d / %2$d ✨</string>
+    <string name="ai_topic_label">Choisissez un sujet :</string>
+    <string name="ai_style_label">Choisissez le style d’écriture :</string>
+    <string name="ai_custom_prompt_hint">Ajoutez des instructions personnalisées (optionnel)...</string>
+    <string name="ai_generate_btn">✨ Générer une nouvelle citation</string>
+    <string name="ai_generating">Réflexion en cours... ✨</string>
+    <string name="ai_copy_btn">Copier</string>
+    <string name="ai_image_btn">Carte artistique</string>
+    <string name="ai_video_btn">Vidéo IA</string>
+    <string name="ai_publish_btn">Publier</string>
+    <string name="ai_use_in_post_btn">Insérer dans le post ✨</string>
+    <string name="ai_style_polish">Améliorer &amp; Peaufiner</string>
+    <string name="ai_key_settings_title">Clé Gemini AI</string>
+    <string name="ai_key_settings_desc">Entrez votre clé Google Gemini API pour activer la génération IA en direct :</string>
+    <string name="ai_key_settings_hint">AIzaSy...</string>
+    <string name="ai_key_save">Enregistrer</string>
+    <string name="ai_key_get_free">Obtenir une clé gratuite</string>
+    <string name="ai_key_saved_toast">Clé API enregistrée avec succès ✨</string>
+    <string name="ai_key_missing_toast">Veuillez configurer la cl\u00e9 Gemini API pour activer l\'IA \u2728</string>
+    <string name="ai_offline_fallback_toast">Impossible de joindre l\'IA, citation locale sugg\u00e9r\u00e9e utilis\u00e9e \u2728</string>
+    <string name="ai_copied_toast">Citation copiée avec succès ✨</string>
+    <string name="ai_quota_exceeded">Vous avez épuisé vos tentatives du jour. Revenez demain ✨</string>
+    <string name="ai_topic_wisdom">Sagesse &amp; Citations</string>
+    <string name="ai_topic_motivation">Motivation &amp; Élan</string>
+    <string name="ai_topic_love">Amour &amp; Sentiments</string>
+    <string name="ai_topic_dua">Dua &amp; Prière</string>
+    <string name="ai_topic_calm">Calme &amp; Sérénité</string>
+    <string name="ai_topic_farewell">Adieu &amp; Séparation</string>
+    <string name="ai_style_wisdom">Prose sage</string>
+    <string name="ai_style_short">Citation courte</string>
+    <string name="ai_style_poem">Vers libre</string>
+    <string name="drawer_ai_writer">Écrivain IA ✨</string>
+
+    <!-- Écrivain IA & Cooldown / Erreurs Vidéo -->
+    <string name="ai_wait_seconds">Veuillez patienter %d secondes avant de régénérer ⏱️</string>
+    <string name="ai_generate_again_btn">✨ Générer une autre citation</string>
+
+    <!-- Studio Vidéo & Lecteur de Reels -->
+    <string name="studio_title">Studio Vidéo</string>
+    <string name="studio_save">Enregistrer</string>
+    <string name="studio_edit">Modifier</string>
+    <string name="studio_audio">Audio</string>
+    <string name="studio_speed">Vitesse :</string>
+    <string name="studio_all">Tout</string>
+    <string name="studio_animated">Animés</string>
+    <string name="studio_dark">Sombres</string>
+    <string name="studio_nature">Nature</string>
+    <string name="studio_framing">Cadrage</string>
+    <string name="studio_duration">Durée :</string>
+    <string name="studio_custom">Personnalisé</string>
+    <string name="studio_sec_format">%s s</string>
+    <string name="studio_author">Auteur</string>
+    <string name="studio_tag">Tag</string>
+    <string name="studio_animations">Animations</string>
+    <string name="studio_texts">Textes</string>
+    <string name="studio_backgrounds">Fonds</string>
+    <string name="studio_settings">Paramètres</string>
+    <string name="studio_edit_quote_title">Modifier le texte de la publication</string>
+    <string name="studio_edit_quote_subtitle">Modifiez le texte pour l’afficher instantanément avec les effets vidéo</string>
+    <string name="studio_edit_quote_hint">Écrivez ou collez le texte ici...</string>
+    <string name="studio_char_count_format">%d caractères</string>
+    <string name="studio_save_apply">Enregistrer et appliquer</string>
+    <string name="studio_text_updated">Texte mis à jour avec succès</string>
+    <string name="studio_text_invalid">Veuillez saisir un texte valide</string>
+    <string name="studio_audio_silent">Muet</string>
+    <string name="studio_audio_my_device">Appareil</string>
+    <string name="studio_audio_downloaded">Prêt ✓</string>
+    <string name="studio_audio_download">Télécharger 📥</string>
+    <string name="studio_audio_download_success">Audio téléchargé avec succès ✓</string>
+    <string name="studio_audio_pick_success">Audio sélectionné avec succès</string>
+    <string name="studio_audio_pick_failed">Impossible de charger l’audio</string>
+    <string name="studio_image_read_error">Impossible de lire l’image</string>
+    <string name="studio_export_title">Exporter et partager la vidéo</string>
+    <string name="studio_resolution_prompt">Choisissez la résolution de la vidéo :</string>
+    <string name="studio_whatsapp_status_title">Partager en statut WhatsApp</string>
+    <string name="studio_whatsapp_status_desc">Publier directement la vidéo en statut WhatsApp en HD</string>
+    <string name="studio_save_gallery_title">Enregistrer dans la galerie (HD MP4)</string>
+    <string name="studio_save_gallery_desc">Stockage permanent dans l’album Manchorati en qualité d’origine</string>
+    <string name="studio_save_gallery_success">Vidéo enregistrée avec succès dans l’album Manchorati !</string>
+    <string name="studio_save_gallery_error">Une erreur est survenue lors de l’enregistrement</string>
+    <string name="studio_share_other_apps_title">Partager vers d’autres applications...</string>
+    <string name="studio_share_other_apps_desc">Instagram, TikTok, Facebook, Telegram...</string>
+    <string name="studio_exporting_progress">Traitement et exportation de la vidéo en cours...</string>
+    <string name="studio_export_error">Erreur lors de l’exportation de la vidéo : %s</string>
+
+    <!-- Cadrage d'image BottomSheet -->
+    <string name="framing_title">Ajuster le cadrage de l’image dans la vidéo</string>
+    <string name="framing_mode_label">Mode d’affichage :</string>
+    <string name="framing_fill_screen">Plein écran</string>
+    <string name="framing_center_blur">Centré avec flou</string>
+    <string name="framing_zoom">Zoom avant</string>
+    <string name="framing_focus_label">Focus vertical :</string>
+    <string name="framing_focus_top">Haut de l’image</string>
+    <string name="framing_focus_center">Centre</string>
+    <string name="framing_focus_bottom">Bas de l’image</string>
+    <string name="framing_apply">Appliquer</string>
+
+    <!-- Lecteur de Reels -->
+    <string name="reel_player_title">🎬 Reel Manchorati</string>
+    <string name="reel_export_mp4">Exporter MP4</string>
+    <string name="reel_whatsapp_status">Statut WhatsApp</string>
+    <string name="reel_saved_gallery_success">Vidéo enregistrée dans la galerie avec succès ! 🎉</string>
+    <string name="reel_exporting_progress">🎬 Préparation et exportation du Reel en MP4...</string>
+    <string name="reel_export_failed">Échec de l’exportation de la vidéo : %s</string>
+    <string name="reel_video_badge">Reel / Vidéo 🎬</string>
+
+    <!-- Communauté & Sélecteur d'humeur -->
+    <string name="mood_selector_title">Comment vous sentez-vous aujourd’hui ? 💭</string>
+    <string name="mood_selector_subtitle">Choisissez votre humeur pour personnaliser les citations</string>
+    <string name="mood_all">🌟 Tout</string>
+    <string name="mood_calm">☕ Calme &amp; Serein</string>
+    <string name="mood_motivation">💪 Besoin de motivation</string>
+    <string name="mood_sad">😔 Triste &amp; Mélancolique</string>
+    <string name="mood_happy">😊 Optimiste &amp; Heureux</string>
+    <string name="mood_love">❤️ Amour &amp; Gratitude</string>
+    <string name="mood_dua">🤲 Prières &amp; Sérénité</string>
+    <string name="mood_write_btn">Écrire ✍️</string>
+    <string name="mood_active_display">Affichage actuel : %s</string>
+    <string name="following_feed_menu">Auteurs que je suis 👥</string>
+    <string name="following_feed_empty_title">Aucune publication des auteurs suivis</string>
+    <string name="following_feed_empty_subtitle">Suivez des auteurs et créateurs pour afficher leurs publications ici ✨</string>
+    <string name="mood_empty_title">Aucune publication pour cette humeur actuellement</string>
+    <string name="mood_empty_subtitle">Soyez le premier à partager une citation pour l’humeur : %s ✨</string>
+
+    <!-- Dialog Série Quotidienne -->
+    <string name="streak_days_consecutive">Jours consécutifs</string>
+    <string name="streak_longest">Meilleure série ⚡</string>
+    <string name="streak_total_active">Total des jours actifs 📅</string>
+    <string name="streak_day_format">%d jours</string>
+    <string name="streak_medals_title">Badges de persévérance et d’inspiration</string>
+    <string name="streak_share_btn">Partager votre réussite quotidienne 🚀</string>
+    <string name="streak_continue_reading">Continuer la lecture</string>
+    <string name="streak_unlocked">✓ Débloqué</string>
+    <string name="streak_remaining_days">%d jours restants</string>
+    <string name="day_sat">Sam</string>
+    <string name="day_sun">Dim</string>
+    <string name="day_mon">Lun</string>
+    <string name="day_tue">Mar</string>
+    <string name="day_wed">Mer</string>
+    <string name="day_thu">Jeu</string>
+    <string name="day_fri">Ven</string>
+
+    <!-- Interface diverse -->
+    <string name="badge_new">Nouveau</string>
+    <string name="widget_quote_title">Citation du jour</string>
+    <string name="anonymous_author">Anonyme</string>
+    <string name="user_default_handle">@utilisateur</string>
+
+
+    <string name="studio_profile_enabled">Profil : Activé ✓</string>
+    <string name="studio_profile_disabled">Profil : Désactivé ✕</string>
+    <string name="studio_tag_enabled">Tag : Activé ✓</string>
+    <string name="studio_tag_disabled">Tag : Désactivé ✕</string>
+    <string name="studio_audio_muted">Audio coupé</string>
+    <string name="studio_audio_unmuted">Audio activé</string>
+
+    <string name="login_required_following">Veuillez vous connecter pour voir les publications de vos abonnements</string>
+
+    <string name="tier_for_all_new_members">Pour tous les nouveaux membres</string>
+    <string name="tier_followers_plus">%d+ abonnés</string>
+
+    <!-- Tier Descriptions -->
+    <string name="badge_admin_desc">Membre officiel de l’équipe de développement de Manchorati.</string>
+    <string name="badge_legendary_desc">A atteint le sommet de l’influence avec plus de 10 000 abonnés réels !</string>
+    <string name="badge_elite_desc">Parmi les auteurs d’élite avec plus de 5 000 abonnés engagés.</string>
+    <string name="badge_distinguished_desc">A dépassé 1 000 abonnés avec une forte présence communautaire.</string>
+    <string name="badge_rising_desc">Auteur talentueux en pleine ascension avec plus de 100 abonnés.</string>
+    <string name="badge_beginner_desc">Fait ses premiers pas dans le partage de pensées et d’inspiration.</string>
+
+    <!-- Video Studio Animations -->
+    <string name="fx_typewriter">Machine à écrire</string>
+    <string name="fx_scroll_up">Défilement</string>
+    <string name="fx_words">Mots</string>
+    <string name="fx_fade">Fondu</string>
+    <string name="fx_zoom">Zoom</string>
+    <string name="fx_glow">Lueur</string>
+    <string name="fx_slide_up">Glissement</string>
+    <string name="fx_blur_in">Flou</string>
+
+    <!-- Video Studio Audio Presets -->
+    <string name="audio_oud">Oud</string>
+    <string name="audio_piano">Piano</string>
+    <string name="audio_nature">Nature</string>
+
+    <!-- Video Studio Backgrounds -->
+    <string name="bg_stars">Étoiles</string>
+    <string name="bg_nebula">Nébuleuse</string>
+    <string name="bg_aurora">Aurore</string>
+    <string name="bg_gold">Or</string>
+    <string name="bg_ocean">Océan</string>
+
+    <!-- Découvrir les auteurs et classement hebdomadaire -->
+    <string name="drawer_writers">Auteurs &amp; Classement hebdo</string>
+    <string name="writers_title">Découvrir les auteurs &amp; Classement</string>
+    <string name="writer_of_the_week">Auteur de la semaine 👑</string>
+    <string name="writer_of_the_week_desc">L\'auteur le plus inspirant et actif cette semaine</string>
+    <string name="writer_weekly_likes">%d j\'aime cette semaine</string>
+    <string name="writer_total_likes">%d j\'aime au total</string>
+    <string name="writer_followers_count">%s abonnés</string>
+    <string name="writer_posts_count">%d publications</string>
+    <string name="challenge_ends_in_days">Le défi hebdo se termine dans %d jours</string>
+    <string name="challenge_ends_tomorrow">Le défi hebdo se termine demain !</string>
+    <string name="challenge_ends_today">Le défi hebdo se termine ce soir !</string>
+    <string name="tab_weekly_leaderboard">🏆 Étoiles de la semaine</string>
+    <string name="tab_top_followers">💎 Plus suivis</string>
+    <string name="tab_all_writers">🌟 Tous les auteurs</string>
+    <string name="search_writers_hint">Rechercher par @username ou nom...</string>
+    <string name="no_writers_found">Aucun auteur ne correspond à votre recherche</string>
+    <string name="view_profile_btn">Profil</string>
+    <string name="community_writers_badge">Top Auteurs 🏆</string>
+    <string name="weekly_champion_congrats">Bravo au leader ! Publiez vos citations pour devenir la star de la semaine 🔥</string>
+    <string name="no_weekly_posts_yet">Soyez le premier à publier cette semaine pour remporter le titre !</string>
+    <string name="leaderboard_rank_format">#%d</string>
+    <string name="leaderboard_section_title">Classement des auteurs</string>
+</resources>

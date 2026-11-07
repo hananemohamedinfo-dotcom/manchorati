@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "52451964200",
+    "project_id": "manchorati-4ace8",
+    "storage_bucket": "manchorati-4ace8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52451964200:android:428b633c42a3de50b7cc1d",
+        "android_client_info": {
+          "package_name": "com.manchorati.www"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52451964200-7lgk7hda5de7t0qmt4hnok4ki763vs8l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manchorati.www",
+            "certificate_hash": "3ddc7c232dc9ebb7e9b9d8e209af6984f3a7fa2c"
+          }
+        },
+        {
+          "client_id": "52451964200-4s0u76duru4450k52hl0dm5va4ce50ic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6z0FAV1puTKcF9CN85UyvQ19uKoVyjNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52451964200-4s0u76duru4450k52hl0dm5va4ce50ic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
