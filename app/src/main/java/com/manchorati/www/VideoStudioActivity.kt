@@ -959,6 +959,10 @@ class VideoStudioActivity : AppCompatActivity() {
 
                 tvTimeCurrent.text = formatTime(curMs)
 
+                if (::tvVnTrackAudioTimeBadge.isInitialized) {
+                    val baseStart = if (customAudioUri != null) audioStartOffsetMs else 0L
+                    tvVnTrackAudioTimeBadge.text = "${formatTime(baseStart + curMs)} / ${formatTime(baseStart + totalMs)}"
+                }
             }
 
         }
@@ -3350,13 +3354,14 @@ class VideoStudioActivity : AppCompatActivity() {
             imageZoomScale = selectedImageZoomScale,
 
             audioStartOffsetMs = audioStartOffsetMs
-
-        )
+,
+            colorFilter = selectedColorFilter        )
 
         videoMotionView.audioStartOffsetMs = audioStartOffsetMs
 
         videoMotionView.config = config
 
+        updateVnTracksUI()
     }
 
 
@@ -3852,6 +3857,44 @@ var trackTitle = "مقطع صوتي"
         })
 
 
+
+                // Nudge Controls: [-5s] [-1s] [Reset 00:00] [+1s] [+5s]
+        val btnNudgeMinus5s = dialogView.findViewById<TextView?>(R.id.btnNudgeMinus5s)
+        val btnNudgeMinus1s = dialogView.findViewById<TextView?>(R.id.btnNudgeMinus1s)
+        val btnNudgeResetStart = dialogView.findViewById<TextView?>(R.id.btnNudgeResetStart)
+        val btnNudgePlus1s = dialogView.findViewById<TextView?>(R.id.btnNudgePlus1s)
+        val btnNudgePlus5s = dialogView.findViewById<TextView?>(R.id.btnNudgePlus5s)
+
+        btnNudgeMinus5s?.setOnClickListener {
+            timelineView?.nudgeStartMs(-5000L)
+            currentStartMs = timelineView?.currentStartMs ?: currentStartMs
+            updateTimeDisplay()
+            if (isPreviewPlaying) previewPlayer?.seekTo(currentStartMs.toInt())
+        }
+        btnNudgeMinus1s?.setOnClickListener {
+            timelineView?.nudgeStartMs(-1000L)
+            currentStartMs = timelineView?.currentStartMs ?: currentStartMs
+            updateTimeDisplay()
+            if (isPreviewPlaying) previewPlayer?.seekTo(currentStartMs.toInt())
+        }
+        btnNudgeResetStart?.setOnClickListener {
+            timelineView?.currentStartMs = 0L
+            currentStartMs = 0L
+            updateTimeDisplay()
+            if (isPreviewPlaying) previewPlayer?.seekTo(0)
+        }
+        btnNudgePlus1s?.setOnClickListener {
+            timelineView?.nudgeStartMs(1000L)
+            currentStartMs = timelineView?.currentStartMs ?: currentStartMs
+            updateTimeDisplay()
+            if (isPreviewPlaying) previewPlayer?.seekTo(currentStartMs.toInt())
+        }
+        btnNudgePlus5s?.setOnClickListener {
+            timelineView?.nudgeStartMs(5000L)
+            currentStartMs = timelineView?.currentStartMs ?: currentStartMs
+            updateTimeDisplay()
+            if (isPreviewPlaying) previewPlayer?.seekTo(currentStartMs.toInt())
+        }
 
         val btnPickOther = dialogView.findViewById<TextView?>(R.id.btnPickOtherInTrimmer)
         btnPickOther?.setOnClickListener {

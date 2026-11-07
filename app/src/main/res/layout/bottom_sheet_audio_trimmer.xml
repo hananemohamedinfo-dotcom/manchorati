@@ -1,305 +1,700 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#0A0F1D"
-    android:orientation="vertical"
-    android:paddingTop="12dp"
-    android:paddingBottom="26dp">
-
-    <!-- Bottom Sheet Drag Handle -->
-    <View
-        android:layout_width="44dp"
-        android:layout_height="4dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="14dp"
-        android:background="@drawable/bg_segment_container"
-        android:backgroundTint="#334155" />
-
-    <!-- 1. Header: Icon & Track Info -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp">
-
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_button_gradient_primary">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_capcut_audio"
-                app:tint="#FFFFFF" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="محرر مقطع الموسيقى"
-                android:textColor="#F8FAFC"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvTrimmerTrackName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Japan - Anthony Keyrouz.mp3"
-                android:textColor="#38BDF8"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Video Target Duration Badge -->
-        <TextView
-            android:id="@+id/tvTrimmerVideoDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_segment_container"
-            android:backgroundTint="#1E293B"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:text="المدة: 15 ثانية"
-            android:textColor="#38BDF8"
-            android:textSize="11.5sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- 2. Studio Player Control Bar (Exact CapCut style matching user screenshot) -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="16dp"
-        android:background="#0F172A"
-        android:paddingHorizontal="20dp">
-
-        <!-- Time Position Display (e.g. 00:20 / 03:20) -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvTrimmerStartTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="00:00"
-                android:textColor="#38BDF8"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="4dp"
-                android:text="/"
-                android:textColor="#64748B"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/tvTrimmerTotalDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="00:30"
-                android:textColor="#94A3B8"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <!-- Center Player Transport Controls: (Rewind 5s) - (Play/Pause) - (Forward 5s) -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <!-- Rewind 5s Button -->
-            <FrameLayout
-                android:id="@+id/btnTrimmerRewind5s"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_icon_button"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_reset"
-                    app:tint="#CBD5E1" />
-            </FrameLayout>
-
-            <!-- Main Play / Pause Circle Button -->
-            <FrameLayout
-                android:id="@+id/btnTrimmerPlayPause"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_button_gradient_primary"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:id="@+id/ivTrimmerPlayIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_video_play"
-                    app:tint="#FFFFFF" />
-            </FrameLayout>
-
-            <!-- Forward 5s Button -->
-            <FrameLayout
-                android:id="@+id/btnTrimmerForward5s"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/bg_icon_button"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="center"
-                    android:rotation="180"
-                    android:src="@drawable/ic_reset"
-                    app:tint="#CBD5E1" />
-            </FrameLayout>
-        </LinearLayout>
-
-        <!-- Selected End Time Badge on Right -->
-        <TextView
-            android:id="@+id/tvTrimmerEndTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="monospace"
-            android:text="00:15"
-            android:textColor="#F8FAFC"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <!-- 3. Professional Interactive Audio Timeline Trimmer View -->
-    <com.manchorati.www.AudioTimelineTrimmerView
-        android:id="@+id/audioTimelineTrimmerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp" />
-
-    <!-- Help hint text -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="20dp"
-        android:text="اسحب المسار الأزرق يميناً ويساراً لاختيار مقطعك المفضل بدقة"
-        android:textColor="#64748B"
-        android:textSize="11.5sp" />
-
-    <!-- Hidden compatibility views for existing references -->
-    <SeekBar
-        android:id="@+id/sbAudioTrimmer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tvTrimmerMaxTime"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/btnTrimmerPlayContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvTrimmerPlayLabel"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-    </LinearLayout>
-
-    <!-- 4. Bottom Actions: Confirm & Cancel -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp">
-
-        <TextView
-            android:id="@+id/btnCancelTrim"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_segment_container"
-            android:backgroundTint="#1E293B"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="إلغاء"
-            android:textColor="#94A3B8"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/btnPickOtherInTrimmer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="6dp"
-            android:background="@drawable/bg_segment_container"
-            android:backgroundTint="#152438"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:paddingHorizontal="10dp"
-            android:text="تغيير الصوت 🔄"
-            android:textColor="#38BDF8"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/btnConfirmTrim"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_weight="2"
-            android:background="@drawable/bg_button_gradient_primary"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="تأكيد واستخدام المقطع ✓"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+
+    android:background="#0A0F1D"
+
+    android:orientation="vertical"
+
+    android:paddingTop="12dp"
+
+    android:paddingBottom="26dp">
+
+
+
+    <!-- Bottom Sheet Drag Handle -->
+
+    <View
+
+        android:layout_width="44dp"
+
+        android:layout_height="4dp"
+
+        android:layout_gravity="center_horizontal"
+
+        android:layout_marginBottom="14dp"
+
+        android:background="@drawable/bg_segment_container"
+
+        android:backgroundTint="#334155" />
+
+
+
+    <!-- 1. Header: Icon & Track Info -->
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:gravity="center_vertical"
+
+        android:orientation="horizontal"
+
+        android:paddingHorizontal="20dp">
+
+
+
+        <FrameLayout
+
+            android:layout_width="44dp"
+
+            android:layout_height="44dp"
+
+            android:background="@drawable/bg_button_gradient_primary">
+
+
+
+            <ImageView
+
+                android:layout_width="22dp"
+
+                android:layout_height="22dp"
+
+                android:layout_gravity="center"
+
+                android:src="@drawable/ic_capcut_audio"
+
+                app:tint="#FFFFFF" />
+
+        </FrameLayout>
+
+
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="14dp"
+
+            android:layout_weight="1"
+
+            android:orientation="vertical">
+
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="محرر مقطع الموسيقى"
+
+                android:textColor="#F8FAFC"
+
+                android:textSize="16sp"
+
+                android:textStyle="bold" />
+
+
+
+            <TextView
+
+                android:id="@+id/tvTrimmerTrackName"
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="2dp"
+
+                android:ellipsize="end"
+
+                android:maxLines="1"
+
+                android:text="Japan - Anthony Keyrouz.mp3"
+
+                android:textColor="#38BDF8"
+
+                android:textSize="12sp"
+
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+
+        <!-- Video Target Duration Badge -->
+
+        <TextView
+
+            android:id="@+id/tvTrimmerVideoDuration"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/bg_segment_container"
+
+            android:backgroundTint="#1E293B"
+
+            android:paddingHorizontal="10dp"
+
+            android:paddingVertical="5dp"
+
+            android:text="المدة: 15 ثانية"
+
+            android:textColor="#38BDF8"
+
+            android:textSize="11.5sp"
+
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+
+    <!-- 2. Studio Player Control Bar (Exact CapCut style matching user screenshot) -->
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="52dp"
+
+        android:layout_marginTop="16dp"
+
+        android:background="#0F172A"
+
+        android:paddingHorizontal="20dp">
+
+
+
+        <!-- Time Position Display (e.g. 00:20 / 03:20) -->
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+
+            android:layout_centerVertical="true"
+
+            android:gravity="center_vertical"
+
+            android:orientation="horizontal">
+
+
+
+            <TextView
+
+                android:id="@+id/tvTrimmerStartTime"
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:fontFamily="monospace"
+
+                android:text="00:00"
+
+                android:textColor="#38BDF8"
+
+                android:textSize="14sp"
+
+                android:textStyle="bold" />
+
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:paddingHorizontal="4dp"
+
+                android:text="/"
+
+                android:textColor="#64748B"
+
+                android:textSize="13sp" />
+
+
+
+            <TextView
+
+                android:id="@+id/tvTrimmerTotalDuration"
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:fontFamily="monospace"
+
+                android:text="00:30"
+
+                android:textColor="#94A3B8"
+
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+
+
+        <!-- Center Player Transport Controls: (Rewind 5s) - (Play/Pause) - (Forward 5s) -->
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_centerInParent="true"
+
+            android:gravity="center_vertical"
+
+            android:orientation="horizontal">
+
+
+
+            <!-- Rewind 5s Button -->
+
+            <FrameLayout
+
+                android:id="@+id/btnTrimmerRewind5s"
+
+                android:layout_width="38dp"
+
+                android:layout_height="38dp"
+
+                android:layout_marginEnd="10dp"
+
+                android:background="@drawable/bg_icon_button"
+
+                android:clickable="true"
+
+                android:focusable="true">
+
+
+
+                <ImageView
+
+                    android:layout_width="19dp"
+
+                    android:layout_height="19dp"
+
+                    android:layout_gravity="center"
+
+                    android:src="@drawable/ic_reset"
+
+                    app:tint="#CBD5E1" />
+
+            </FrameLayout>
+
+
+
+            <!-- Main Play / Pause Circle Button -->
+
+            <FrameLayout
+
+                android:id="@+id/btnTrimmerPlayPause"
+
+                android:layout_width="44dp"
+
+                android:layout_height="44dp"
+
+                android:background="@drawable/bg_button_gradient_primary"
+
+                android:clickable="true"
+
+                android:focusable="true">
+
+
+
+                <ImageView
+
+                    android:id="@+id/ivTrimmerPlayIcon"
+
+                    android:layout_width="22dp"
+
+                    android:layout_height="22dp"
+
+                    android:layout_gravity="center"
+
+                    android:src="@drawable/ic_video_play"
+
+                    app:tint="#FFFFFF" />
+
+            </FrameLayout>
+
+
+
+            <!-- Forward 5s Button -->
+
+            <FrameLayout
+
+                android:id="@+id/btnTrimmerForward5s"
+
+                android:layout_width="38dp"
+
+                android:layout_height="38dp"
+
+                android:layout_marginStart="10dp"
+
+                android:background="@drawable/bg_icon_button"
+
+                android:clickable="true"
+
+                android:focusable="true">
+
+
+
+                <ImageView
+
+                    android:layout_width="19dp"
+
+                    android:layout_height="19dp"
+
+                    android:layout_gravity="center"
+
+                    android:rotation="180"
+
+                    android:src="@drawable/ic_reset"
+
+                    app:tint="#CBD5E1" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+
+        <!-- Selected End Time Badge on Right -->
+
+        <TextView
+
+            android:id="@+id/tvTrimmerEndTime"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+
+            android:layout_centerVertical="true"
+
+            android:fontFamily="monospace"
+
+            android:text="00:15"
+
+            android:textColor="#F8FAFC"
+
+            android:textSize="13sp"
+
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+
+    <!-- 3. Professional Interactive Audio Timeline Trimmer View -->
+
+    <com.manchorati.www.AudioTimelineTrimmerView
+
+        android:id="@+id/audioTimelineTrimmerView"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginVertical="10dp" />
+
+    <!-- Fine-Tune Nudge Controls Row: [-5s] [-1s] [Reset 00:00] [+1s] [+5s] -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/btnNudgeMinus5s"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/bg_segment_container"
+            android:backgroundTint="#152438"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="-5 ث"
+            android:textColor="#94A3B8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnNudgeMinus1s"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/bg_segment_container"
+            android:backgroundTint="#152438"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="-1 ث"
+            android:textColor="#94A3B8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnNudgeResetStart"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/bg_segment_container"
+            android:backgroundTint="#2638BDF8"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:text="البداية 00:00"
+            android:textColor="#38BDF8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnNudgePlus1s"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/bg_segment_container"
+            android:backgroundTint="#152438"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="+1 ث"
+            android:textColor="#94A3B8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnNudgePlus5s"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/bg_segment_container"
+            android:backgroundTint="#152438"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="+5 ث"
+            android:textColor="#94A3B8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+
+    <!-- Help hint text -->
+
+    <TextView
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:gravity="center"
+
+        android:paddingHorizontal="20dp"
+
+        android:text="اسحب المسار الأزرق يميناً ويساراً لاختيار مقطعك المفضل بدقة"
+
+        android:textColor="#64748B"
+
+        android:textSize="11.5sp" />
+
+
+
+    <!-- Hidden compatibility views for existing references -->
+
+    <SeekBar
+
+        android:id="@+id/sbAudioTrimmer"
+
+        android:layout_width="0dp"
+
+        android:layout_height="0dp"
+
+        android:visibility="gone" />
+
+
+
+    <TextView
+
+        android:id="@+id/tvTrimmerMaxTime"
+
+        android:layout_width="0dp"
+
+        android:layout_height="0dp"
+
+        android:visibility="gone" />
+
+
+
+    <LinearLayout
+
+        android:id="@+id/btnTrimmerPlayContainer"
+
+        android:layout_width="0dp"
+
+        android:layout_height="0dp"
+
+        android:visibility="gone">
+
+
+
+        <TextView
+
+            android:id="@+id/tvTrimmerPlayLabel"
+
+            android:layout_width="0dp"
+
+            android:layout_height="0dp" />
+
+    </LinearLayout>
+
+
+
+    <!-- 4. Bottom Actions: Confirm & Cancel -->
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="48dp"
+
+        android:layout_marginTop="16dp"
+
+        android:orientation="horizontal"
+
+        android:paddingHorizontal="20dp">
+
+
+
+        <TextView
+
+            android:id="@+id/btnCancelTrim"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_marginEnd="6dp"
+
+            android:layout_weight="1"
+
+            android:background="@drawable/bg_segment_container"
+
+            android:backgroundTint="#1E293B"
+
+            android:clickable="true"
+
+            android:focusable="true"
+
+            android:gravity="center"
+
+            android:text="إلغاء"
+
+            android:textColor="#94A3B8"
+
+            android:textSize="13sp"
+
+            android:textStyle="bold" />
+
+
+
+        <TextView
+
+            android:id="@+id/btnPickOtherInTrimmer"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="match_parent"
+
+            android:layout_marginEnd="6dp"
+
+            android:background="@drawable/bg_segment_container"
+
+            android:backgroundTint="#152438"
+
+            android:clickable="true"
+
+            android:focusable="true"
+
+            android:gravity="center"
+
+            android:paddingHorizontal="10dp"
+
+            android:text="تغيير الصوت 🔄"
+
+            android:textColor="#38BDF8"
+
+            android:textSize="12sp"
+
+            android:textStyle="bold" />
+
+
+
+        <TextView
+
+            android:id="@+id/btnConfirmTrim"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_marginStart="8dp"
+
+            android:layout_weight="2"
+
+            android:background="@drawable/bg_button_gradient_primary"
+
+            android:clickable="true"
+
+            android:focusable="true"
+
+            android:gravity="center"
+
+            android:text="تأكيد واستخدام المقطع ✓"
+
+            android:textColor="#FFFFFF"
+
+            android:textSize="14sp"
+
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

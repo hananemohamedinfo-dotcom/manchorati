@@ -11,6 +11,14 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * CapCut & VN Style Interactive Audio Timeline Trimmer View
+ * - Supports arbitrary audio lengths (15s up to 2 hours) without ruler text overlapping
+ * - Smooth horizontal scroll scrubbing with high precision
+ * - Distinct highlighted blue clip block with waveform, handles < >, and track title
+ * - Non-overlapping major/minor ruler ticks with readable timestamps
+ * - Cyan central playhead indicator with smooth playback sync
+ */
 class AudioTimelineTrimmerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -27,7 +35,8 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
     var clipDurationMs: Long = 15000L
         set(value) {
             field = max(1000L, min(value, totalDurationMs))
-            currentStartMs = currentStartMs.coerceIn(0L, max(0L, totalDurationMs - field))
+            val maxStart = max(0L, totalDurationMs - field)
+            currentStartMs = currentStartMs.coerceIn(0L, maxStart)
             invalidate()
         }
 
@@ -56,14 +65,14 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
     private val density = resources.displayMetrics.density
 
     // Dimensions
-    private val rulerHeight = 26f * density
-    private val trackHeight = 56f * density
+    private val rulerHeight = 28f * density
+    private val trackHeight = 60f * density
     private val cornerRadius = 10f * density
-    private val handleWidth = 16f * density
+    private val handleWidth = 18f * density
 
-    // Paints
+    // Ruler Paints
     private val rulerBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#0B1120")
+        color = Color.parseColor("#090D16")
         style = Paint.Style.FILL
     }
 
@@ -74,13 +83,13 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
 
     private val rulerTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#94A3B8")
-        textSize = 10f * density
+        textSize = 9.5f * density
         typeface = Typeface.MONOSPACE
         textAlign = Paint.Align.CENTER
     }
 
     private val majorTickPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#475569")
+        color = Color.parseColor("#64748B")
         strokeWidth = 1.5f * density
     }
 
@@ -91,24 +100,24 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
 
     // Audio Track Paints
     private val trackBaseBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#1E293B")
+        color = Color.parseColor("#111827")
         style = Paint.Style.FILL
     }
 
     private val trackActiveBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#2563EB") // CapCut Vibrant Royal Blue
+        color = Color.parseColor("#2563EB") // CapCut / VN Vibrant Royal Blue
         style = Paint.Style.FILL
     }
 
     private val trackDimOverlayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#B30F172A") // 70% dim on unselected parts
+        color = Color.parseColor("#C0090D16") // 75% dim on unselected parts
         style = Paint.Style.FILL
     }
 
     private val selectionBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         style = Paint.Style.STROKE
-        strokeWidth = 2.2f * density
+        strokeWidth = 2.4f * density
     }
 
     private val handlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -118,7 +127,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
 
     private val handleArrowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#0F172A")
-        strokeWidth = 1.8f * density
+        strokeWidth = 2f * density
         strokeCap = Paint.Cap.ROUND
     }
 
@@ -135,7 +144,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
     }
 
     private val wavePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#93C5FD") // Light blue wave bars
+        color = Color.parseColor("#60A5FA")
         strokeWidth = 2.2f * density
         strokeCap = Paint.Cap.ROUND
     }
@@ -144,7 +153,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         color = Color.parseColor("#38BDF8") // Cyan Needle Line
         strokeWidth = 2.5f * density
         strokeCap = Paint.Cap.ROUND
-        setShadowLayer(4f * density, 0f, 0f, Color.parseColor("#80000000"))
+        setShadowLayer(5f * density, 0f, 0f, Color.parseColor("#99000000"))
     }
 
     private val playheadCapPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -157,13 +166,14 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
-    // Interaction State
-    private var isDraggingTrim = false
+    // Touch interaction
+    private var isDragging = false
     private var isDraggingPlayhead = false
-    private var lastTouchX = 0f
+    private var touchStartX = 0f
+    private var initialStartMs = 0L
 
-    // Simulated waveform heights (0.1f .. 0.9f)
-    private val waveformPoints = FloatArray(120)
+    // Waveform simulation
+    private val waveformPoints = FloatArray(160)
 
     init {
         generateWaveform()
@@ -172,7 +182,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
     private fun generateWaveform() {
         val seed = abs(trackTitle.hashCode() + totalDurationMs.toInt())
         for (i in waveformPoints.indices) {
-            val v = (Math.sin(i * 0.45 + seed) * 0.35 + Math.cos(i * 0.22) * 0.25 + 0.5).toFloat()
+            val v = (Math.sin(i * 0.42 + seed) * 0.36 + Math.cos(i * 0.19) * 0.28 + 0.52).toFloat()
             waveformPoints[i] = v.coerceIn(0.18f, 0.95f)
         }
     }
@@ -194,31 +204,51 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         val availableTrackW = w - (paddingHorizontal * 2f)
         if (availableTrackW <= 0f) return
 
+        val totalSec = max(1, (totalDurationMs / 1000L).toInt())
+
         // 1. Draw Time Ruler (y=0 to y=rulerHeight)
         canvas.drawRect(0f, 0f, w, rulerHeight, rulerBgPaint)
         canvas.drawLine(0f, rulerHeight, w, rulerHeight, rulerBorderPaint)
 
-        val totalSec = max(1, (totalDurationMs / 1000L).toInt())
+        // Calculate dynamic, non-overlapping tick intervals based on total duration and screen width
+        // A readable time label takes at least 55dp of space
+        val maxLabels = max(2, (availableTrackW / (58f * density)).toInt())
+        val rawStepSec = max(1, totalSec / maxLabels)
         val tickStepSec = when {
-            totalSec <= 30 -> 5
-            totalSec <= 90 -> 10
-            totalSec <= 180 -> 15
-            else -> 30
+            rawStepSec <= 2 -> 2
+            rawStepSec <= 5 -> 5
+            rawStepSec <= 10 -> 10
+            rawStepSec <= 15 -> 15
+            rawStepSec <= 30 -> 30
+            rawStepSec <= 60 -> 60
+            rawStepSec <= 120 -> 120
+            rawStepSec <= 300 -> 300
+            else -> 600
         }
 
-        for (s in 0..totalSec) {
+        var s = 0
+        while (s <= totalSec) {
             val ratio = s.toFloat() / totalSec.toFloat()
             val x = paddingHorizontal + (ratio * availableTrackW)
 
-            if (s % tickStepSec == 0 || s == 0 || s == totalSec) {
-                // Major tick with label
-                canvas.drawLine(x, rulerHeight - 9f * density, x, rulerHeight, majorTickPaint)
-                val timeStr = String.format(Locale.US, "%02d:%02d", s / 60, s % 60)
-                canvas.drawText(timeStr, x, rulerHeight - 12f * density, rulerTextPaint)
-            } else {
-                // Minor tick
-                canvas.drawLine(x, rulerHeight - 5f * density, x, rulerHeight, minorTickPaint)
+            // Major tick with time text
+            canvas.drawLine(x, rulerHeight - 9f * density, x, rulerHeight, majorTickPaint)
+            val timeStr = String.format(Locale.US, "%02d:%02d", s / 60, s % 60)
+            canvas.drawText(timeStr, x, rulerHeight - 11f * density, rulerTextPaint)
+
+            // Draw up to 4 minor ticks between major ticks if space permits
+            val minorStep = tickStepSec / 5
+            if (minorStep >= 1) {
+                for (m in 1..4) {
+                    val minorSec = s + (m * minorStep)
+                    if (minorSec < totalSec && minorSec < s + tickStepSec) {
+                        val mRatio = minorSec.toFloat() / totalSec.toFloat()
+                        val mx = paddingHorizontal + (mRatio * availableTrackW)
+                        canvas.drawLine(mx, rulerHeight - 5f * density, mx, rulerHeight, minorTickPaint)
+                    }
+                }
             }
+            s += tickStepSec
         }
 
         // 2. Audio Track Pill
@@ -240,6 +270,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
             val barH = waveformPoints[i] * maxBarH
             val by1 = trackCenterY - (barH / 2f)
             val by2 = trackCenterY + (barH / 2f)
+            wavePaint.color = Color.parseColor("#475569") // Dim wave base
             canvas.drawLine(bx, by1, bx, by2, wavePaint)
         }
 
@@ -248,14 +279,23 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         val endMs = min(totalDurationMs, currentStartMs + clipDurationMs)
         val endRatio = endMs.toFloat() / totalDurationMs.toFloat()
 
-        val winLeft = paddingHorizontal + (startRatio * availableTrackW)
-        val winRight = paddingHorizontal + (endRatio * availableTrackW)
+        // Calculate visual window with a generous minimum width so users can easily tap and see it
+        val rawLeft = paddingHorizontal + (startRatio * availableTrackW)
+        var rawRight = paddingHorizontal + (endRatio * availableTrackW)
+        val minVisualWidth = 44f * density
+        if (rawRight - rawLeft < minVisualWidth) {
+            rawRight = min(paddingHorizontal + availableTrackW, rawLeft + minVisualWidth)
+        }
+
+        val winLeft = rawLeft
+        val winRight = rawRight
         val winRect = RectF(winLeft, trackTop, winRight, trackBottom)
 
         // Highlight active blue segment
         canvas.save()
         canvas.clipRect(winRect)
         canvas.drawRoundRect(trackRect, cornerRadius, cornerRadius, trackActiveBgPaint)
+
         // Redraw active waveform inside blue area with white tint
         wavePaint.color = Color.parseColor("#BFDBFE")
         for (i in 0 until barCount) {
@@ -268,7 +308,6 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
             }
         }
         canvas.restore()
-        wavePaint.color = Color.parseColor("#64748B")
 
         // Draw Inactive Dim Regions (left and right of selection)
         if (winLeft > paddingHorizontal) {
@@ -310,7 +349,7 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         val textY = trackTop + 20f * density
         canvas.drawText("♫", iconX, textY, musicIconPaint)
 
-        val cleanTitle = if (trackTitle.length > 28) trackTitle.take(26) + "…" else trackTitle
+        val cleanTitle = if (trackTitle.length > 26) trackTitle.take(24) + "…" else trackTitle
         canvas.drawText(cleanTitle, iconX + 16f * density, textY - 1f * density, titleTextPaint)
         canvas.restore()
 
@@ -333,7 +372,8 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                lastTouchX = event.x
+                touchStartX = event.x
+                initialStartMs = currentStartMs
                 val touchY = event.y
 
                 // If touched near ruler, seek playhead
@@ -345,30 +385,27 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
                 }
 
                 // If touched track, drag the trim selection window
-                isDraggingTrim = true
+                isDragging = true
                 parent?.requestDisallowInterceptTouchEvent(true)
                 performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                 return true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                val dx = event.x - lastTouchX
-                lastTouchX = event.x
-
                 if (isDraggingPlayhead) {
                     seekToTouch(event.x, availableTrackW, paddingHorizontal)
                     return true
                 }
 
-                if (isDraggingTrim) {
+                if (isDragging) {
+                    val dx = event.x - touchStartX
                     val deltaRatio = dx / availableTrackW
                     val deltaMs = (deltaRatio * totalDurationMs).toLong()
                     val maxStart = max(0L, totalDurationMs - clipDurationMs)
-                    val newStart = (currentStartMs + deltaMs).coerceIn(0L, maxStart)
+                    val newStart = (initialStartMs + deltaMs).coerceIn(0L, maxStart)
 
                     if (newStart != currentStartMs) {
                         currentStartMs = newStart
-                        // Keep playhead within selection
                         currentPlayheadMs = currentStartMs
                         invalidate()
                         onTrimChanged?.invoke(currentStartMs, min(totalDurationMs, currentStartMs + clipDurationMs))
@@ -378,8 +415,8 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (isDraggingTrim || isDraggingPlayhead) {
-                    isDraggingTrim = false
+                if (isDragging || isDraggingPlayhead) {
+                    isDragging = false
                     isDraggingPlayhead = false
                     parent?.requestDisallowInterceptTouchEvent(false)
                     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -390,19 +427,26 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    private fun seekToTouch(touchX: Float, availableTrackW: Float, paddingHorizontal: Float) {
-        val clampedX = touchX.coerceIn(paddingHorizontal, paddingHorizontal + availableTrackW)
-        val ratio = (clampedX - paddingHorizontal) / availableTrackW
-        val targetMs = (ratio * totalDurationMs).toLong().coerceIn(0L, totalDurationMs)
+    private fun seekToTouch(touchX: Float, availableW: Float, paddingH: Float) {
+        val relX = (touchX - paddingH).coerceIn(0f, availableW)
+        val ratio = relX / availableW
+        val targetMs = (ratio * totalDurationMs).toLong()
         currentPlayheadMs = targetMs
         invalidate()
         onSeek?.invoke(targetMs)
     }
 
-    fun seekRelative(deltaMs: Long) {
-        val targetMs = (currentPlayheadMs + deltaMs).coerceIn(0L, totalDurationMs)
-        currentPlayheadMs = targetMs
-        invalidate()
-        onSeek?.invoke(targetMs)
+    /**
+     * Nudge start offset by a given delta in milliseconds (e.g. +1000ms or -1000ms)
+     */
+    fun nudgeStartMs(deltaMs: Long) {
+        val maxStart = max(0L, totalDurationMs - clipDurationMs)
+        val newStart = (currentStartMs + deltaMs).coerceIn(0L, maxStart)
+        if (newStart != currentStartMs) {
+            currentStartMs = newStart
+            currentPlayheadMs = currentStartMs
+            invalidate()
+            onTrimChanged?.invoke(currentStartMs, min(totalDurationMs, currentStartMs + clipDurationMs))
+        }
     }
 }
