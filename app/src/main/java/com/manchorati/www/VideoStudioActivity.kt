@@ -7,6 +7,7 @@ import android.text.TextUtils
 
 
 import android.content.Context
+import android.webkit.MimeTypeMap
 
 
 
@@ -338,6 +339,7 @@ class VideoStudioActivity : AppCompatActivity() {
     private var customImageBitmap: Bitmap? = null
 
     private var customAudioUri: Uri? = null
+    private var customAudioTitle: String = "صوتي الخاص"
 
     private var audioStartOffsetMs: Long = 0L
 
@@ -383,17 +385,34 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-    // Audio Picker (Strictly restricted to Audio files only)
+    // Audio Picker & Internal Storage Cache
+    private fun copyAudioUriToInternalStorage(sourceUri: Uri): Uri? {
+        return try {
+            val ext = try {
+                val mime = contentResolver.getType(sourceUri)
+                if (mime != null) MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "mp3" else "mp3"
+            } catch (_: Exception) { "mp3" }
+            val destFile = java.io.File(filesDir, "current_custom_audio.$ext")
+            contentResolver.openInputStream(sourceUri)?.use { input ->
+                destFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            Uri.fromFile(destFile)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     private val pickAudioLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-
         if (uri != null) {
-
-            showAudioTrimmerDialog(uri)
-
+            val safeUri = copyAudioUriToInternalStorage(uri) ?: uri
+            customAudioUri = safeUri
+            showAudioTrimmerDialog(safeUri)
         }
-
     }
+
 
 
 
@@ -439,7 +458,11 @@ class VideoStudioActivity : AppCompatActivity() {
 
         populateMotionPresets()
 
+        populateFilterCards()
+
         updateConfig()
+
+        updateVnTracksUI()
 
     }
 
@@ -700,10 +723,10 @@ class VideoStudioActivity : AppCompatActivity() {
 
         vnTrackText.setOnClickListener { showEditTextDialog() }
         vnTrackAudio.setOnClickListener {
-            if (customAudioUri != null) {
-                showAudioTrimmerDialog(customAudioUri!!)
-            } else {
-                openToolPanel(1)
+            when {
+                customAudioUri != null -> showAudioTrimmerDialog(customAudioUri!!)
+                downloadedAudioPath != null -> showAudioTrimmerDialog(Uri.fromFile(java.io.File(downloadedAudioPath!!)))
+                else -> openToolPanel(1)
             }
         }
         vnTrackCanvas.setOnClickListener { openToolPanel(5) }
@@ -994,19 +1017,14 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        // Bottom 6 Tools (Themes, Audio, Effects, Text, Canvas, Settings)
-
+        // Bottom 7 Tools (Themes, Audio, Effects, Filters, Text, Canvas, Settings)
         toolThemes.setOnClickListener { openToolPanel(0) }
-
         toolAudio.setOnClickListener { openToolPanel(1) }
-
         toolEffects.setOnClickListener { openToolPanel(2) }
-
-        toolText.setOnClickListener { openToolPanel(3) }
-
-        toolCanvas.setOnClickListener { openToolPanel(4) }
-
-        toolSettings.setOnClickListener { openToolPanel(5) }
+        toolFilters.setOnClickListener { openToolPanel(3) }
+        toolText.setOnClickListener { openToolPanel(4) }
+        toolCanvas.setOnClickListener { openToolPanel(5) }
+        toolSettings.setOnClickListener { openToolPanel(6) }
 
 
 
@@ -1355,22 +1373,15 @@ class VideoStudioActivity : AppCompatActivity() {
     private fun updateToolBarHighlights(index: Int) {
 
         val tools = listOf(
-
             toolThemes to ivToolThemes,
-
             toolAudio to ivToolAudio,
-
             toolEffects to ivToolEffects,
-
+            toolFilters to ivToolFilters,
             toolText to ivToolText,
-
             toolCanvas to ivToolCanvas,
-
             toolSettings to ivToolSettings
-
         )
-
-        val textViews = listOf(tvToolThemes, tvToolAudio, tvToolEffects, tvToolText, tvToolCanvas, tvToolSettings)
+        val textViews = listOf(tvToolThemes, tvToolAudio, tvToolEffects, tvToolFilters, tvToolText, tvToolCanvas, tvToolSettings)
 
         textViews.forEach { it.visibility = View.GONE }
 
@@ -1449,63 +1460,39 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
     private fun openToolPanel(index: Int) {
-
         if (activeToolIndex == index && layoutToolPanelContainer.visibility == View.VISIBLE) {
-
             closeToolPanel()
-
             return
-
         }
-
-
 
         activeToolIndex = index
-
         layoutToolPanelContainer.visibility = View.VISIBLE
-
         updateToolBarHighlights(index)
 
-
-
         panelThemesContainer.visibility = if (index == 0) View.VISIBLE else View.GONE
-
         scrollAudio.visibility = if (index == 1) View.VISIBLE else View.GONE
-
         panelEffectsContainer.visibility = if (index == 2) View.VISIBLE else View.GONE
+        panelFiltersContainer.visibility = if (index == 3) View.VISIBLE else View.GONE
+        panelFontContainer.visibility = if (index == 4) View.VISIBLE else View.GONE
+        panelCanvasContainer.visibility = if (index == 5) View.VISIBLE else View.GONE
+        panelSettingsContainer.visibility = if (index == 6) View.VISIBLE else View.GONE
 
-        panelFontContainer.visibility = if (index == 3) View.VISIBLE else View.GONE
-
-        panelCanvasContainer.visibility = if (index == 4) View.VISIBLE else View.GONE
-
-        panelSettingsContainer.visibility = if (index == 5) View.VISIBLE else View.GONE
-
-
-
-        if (index == 5) {
-
-            updateSettingsHighlights()
-
+        if (index == 3) {
+            populateFilterCards()
         }
-
-
+        if (index == 6) {
+            updateSettingsHighlights()
+        }
 
         tvToolPanelTitle.text = when (index) {
-
             0 -> "قوالب وثيمات جاهزة"
-
             1 -> getString(R.string.studio_audio)
-
             2 -> getString(R.string.studio_animations)
-
-            3 -> getString(R.string.studio_texts)
-
-            4 -> getString(R.string.studio_backgrounds)
-
+            3 -> "فلاتر تلوين سينمائية (LUTs)"
+            4 -> getString(R.string.studio_texts)
+            5 -> getString(R.string.studio_backgrounds)
             else -> getString(R.string.studio_settings)
-
         }
-
     }
 
 
@@ -1972,45 +1959,41 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        // Option B: "هاتفي" / Custom Audio from Phone
-
-        val isCustomSelected = customAudioUri != null
-
-        val customCard = createAudioCard(
-
-            title = getString(R.string.studio_audio_my_device),
-
-            iconRes = if (isCustomSelected) R.drawable.ic_capcut_audio else R.drawable.ic_plus,
-
-            isSelected = isCustomSelected,
-
-            subtitle = if (isCustomSelected) formatTime(audioStartOffsetMs) else null,
-
-            onClick = {
-
-                if (customAudioUri != null) {
-
+        // Option B: Custom Audio from Phone (Dedicated Trim & Change cards)
+        if (customAudioUri != null) {
+            val trimCard = createAudioCard(
+                title = if (customAudioTitle.isNotBlank()) customAudioTitle else getString(R.string.studio_audio_my_device),
+                iconRes = R.drawable.ic_capcut_audio,
+                isSelected = true,
+                subtitle = "تعديل القص ✂️",
+                onClick = {
                     showAudioTrimmerDialog(customAudioUri!!)
-
-                } else {
-
-                    pickAudioLauncher.launch("audio/*")
-
                 }
+            )
+            layoutAudioPresets.addView(trimCard)
 
-            },
-
-            onLongClick = {
-
-                pickAudioLauncher.launch("audio/*")
-
-                true
-
-            }
-
-        )
-
-        layoutAudioPresets.addView(customCard)
+            val changeCard = createAudioCard(
+                title = "صوت آخر",
+                iconRes = R.drawable.ic_plus,
+                isSelected = false,
+                subtitle = "من الهاتف",
+                onClick = {
+                    pickAudioLauncher.launch("audio/*")
+                }
+            )
+            layoutAudioPresets.addView(changeCard)
+        } else {
+            val customCard = createAudioCard(
+                title = getString(R.string.studio_audio_my_device),
+                iconRes = R.drawable.ic_plus,
+                isSelected = false,
+                subtitle = "من هاتفي",
+                onClick = {
+                    pickAudioLauncher.launch("audio/*")
+                }
+            )
+            layoutAudioPresets.addView(customCard)
+        }
 
 
 
@@ -3456,7 +3439,9 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        var trackTitle = "مقطع صوتي"
+        
+        val safeUri = if (uri.scheme == "content") copyAudioUriToInternalStorage(uri) ?: uri else uri
+var trackTitle = "مقطع صوتي"
 
         var trackDurationMs = 0L
 
@@ -3466,7 +3451,7 @@ class VideoStudioActivity : AppCompatActivity() {
 
             val retriever = MediaMetadataRetriever()
 
-            retriever.setDataSource(this, uri)
+            retriever.setDataSource(this, safeUri)
 
             val title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
 
@@ -3534,7 +3519,7 @@ class VideoStudioActivity : AppCompatActivity() {
 
                 )
 
-                setDataSource(this@VideoStudioActivity, uri)
+                setDataSource(this@VideoStudioActivity, safeUri)
 
                 prepare()
 
@@ -3868,24 +3853,28 @@ class VideoStudioActivity : AppCompatActivity() {
 
 
 
-        btnConfirm.setOnClickListener {
-
+        val btnPickOther = dialogView.findViewById<TextView?>(R.id.btnPickOtherInTrimmer)
+        btnPickOther?.setOnClickListener {
             pausePreview()
-
             try {
-
                 previewPlayer?.stop()
-
                 previewPlayer?.release()
-
                 previewPlayer = null
-
             } catch (_: Exception) {}
-
             bottomSheet.dismiss()
+            pickAudioLauncher.launch("audio/*")
+        }
 
-            loadCustomAudio(uri, currentStartMs)
-
+        btnConfirm.setOnClickListener {
+            pausePreview()
+            try {
+                previewPlayer?.stop()
+                previewPlayer?.release()
+                previewPlayer = null
+            } catch (_: Exception) {}
+            bottomSheet.dismiss()
+            customAudioTitle = trackTitle
+            loadCustomAudio(safeUri, currentStartMs)
         }
 
 
@@ -4640,7 +4629,7 @@ class VideoStudioActivity : AppCompatActivity() {
             else -> selectedAnim
         }
         val audioTitle = when {
-            customAudioUri != null -> "صوتي الخاص"
+            customAudioUri != null -> if (customAudioTitle.isNotBlank()) customAudioTitle else "صوتي الخاص"
             downloadedAudioPath != null -> StudioAssetManager.onlineAudios.find { it.id == selectedAudio }?.title ?: selectedAudio
             else -> when(selectedAudio) {
                 "oud" -> "عود شرقي"
@@ -4651,7 +4640,11 @@ class VideoStudioActivity : AppCompatActivity() {
             }
         }
         tvVnTrackAudioTitle.text = audioTitle
-        tvVnTrackAudioTimeBadge.text = "00:00 / ${formatTime((selectedDuration * 1000L))}"
+        tvVnTrackAudioTimeBadge.text = if (customAudioUri != null) {
+            "قص: ${formatTime(audioStartOffsetMs)} ✂️"
+        } else {
+            "00:00 / ${formatTime((selectedDuration * 1000L))}"
+        }
 
         val bgTitle = when {
             customImageBitmap != null -> "صورتي الخاصة"
