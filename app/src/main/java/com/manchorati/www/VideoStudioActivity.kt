@@ -220,6 +220,27 @@ class VideoStudioActivity : AppCompatActivity() {
 
     private lateinit var btnToggleTag: TextView
 
+    private var selectedColorFilter = "none"
+
+    // VN Multi-Track Timeline Views
+    private lateinit var layoutVnTracksContainer: LinearLayout
+    private lateinit var vnTrackText: LinearLayout
+    private lateinit var tvVnTrackTextContent: TextView
+    private lateinit var tvVnTrackTextAnimBadge: TextView
+    private lateinit var vnTrackAudio: LinearLayout
+    private lateinit var tvVnTrackAudioTitle: TextView
+    private lateinit var tvVnTrackAudioTimeBadge: TextView
+    private lateinit var vnTrackCanvas: LinearLayout
+    private lateinit var tvVnTrackCanvasTitle: TextView
+    private lateinit var tvVnTrackFilterBadge: TextView
+
+    // VN Filters Panel
+    private lateinit var panelFiltersContainer: LinearLayout
+    private lateinit var layoutFilterCards: LinearLayout
+    private lateinit var toolFilters: LinearLayout
+    private lateinit var ivToolFilters: ImageView
+    private lateinit var tvToolFilters: TextView
+
 
 
     // Panel 0: Themes
@@ -659,6 +680,33 @@ class VideoStudioActivity : AppCompatActivity() {
         tvToolThemes = findViewById(R.id.tvToolThemes)
 
 
+
+        layoutVnTracksContainer = findViewById(R.id.layoutVnTracksContainer)
+        vnTrackText = findViewById(R.id.vnTrackText)
+        tvVnTrackTextContent = findViewById(R.id.tvVnTrackTextContent)
+        tvVnTrackTextAnimBadge = findViewById(R.id.tvVnTrackTextAnimBadge)
+        vnTrackAudio = findViewById(R.id.vnTrackAudio)
+        tvVnTrackAudioTitle = findViewById(R.id.tvVnTrackAudioTitle)
+        tvVnTrackAudioTimeBadge = findViewById(R.id.tvVnTrackAudioTimeBadge)
+        vnTrackCanvas = findViewById(R.id.vnTrackCanvas)
+        tvVnTrackCanvasTitle = findViewById(R.id.tvVnTrackCanvasTitle)
+        tvVnTrackFilterBadge = findViewById(R.id.tvVnTrackFilterBadge)
+
+        panelFiltersContainer = findViewById(R.id.panelFiltersContainer)
+        layoutFilterCards = findViewById(R.id.layoutFilterCards)
+        toolFilters = findViewById(R.id.toolFilters)
+        ivToolFilters = findViewById(R.id.ivToolFilters)
+        tvToolFilters = findViewById(R.id.tvToolFilters)
+
+        vnTrackText.setOnClickListener { showEditTextDialog() }
+        vnTrackAudio.setOnClickListener {
+            if (customAudioUri != null) {
+                showAudioTrimmerDialog(customAudioUri!!)
+            } else {
+                openToolPanel(1)
+            }
+        }
+        vnTrackCanvas.setOnClickListener { openToolPanel(5) }
 
         toolAudio = findViewById(R.id.toolAudio)
 
@@ -4506,7 +4554,128 @@ class VideoStudioActivity : AppCompatActivity() {
 
         videoMotionView.pause()
 
-    }
 
 }
 
+
+    // ─────────────────────────────────────────────────────────────
+    // VN Style Cinematic Filters & LUTs + Multi-Track Updates
+    // ─────────────────────────────────────────────────────────────
+    private fun populateFilterCards() {
+        layoutFilterCards.removeAllViews()
+        val dp = resources.displayMetrics.density
+
+        data class FilterPreset(val id: String, val name: String, val previewColor1: String, val previewColor2: String)
+
+        val filters = listOf(
+            FilterPreset("none", "أصلي (None)", "#1E293B", "#0F172A"),
+            FilterPreset("teal_orange", "سينمائي (Teal & Orange)", "#0E7490", "#EA580C"),
+            FilterPreset("moody", "مودي (Moody Film)", "#1E1B4B", "#312E81"),
+            FilterPreset("vintage_90s", "ريترو (Vintage 90s)", "#78350F", "#D97706"),
+            FilterPreset("noir_bw", "أبيض وأسود (Noir B&W)", "#18181B", "#71717A"),
+            FilterPreset("cyberpunk", "سايبر (Cyberpunk)", "#4C1D95", "#0284C7"),
+            FilterPreset("sunset_gold", "غروب (Golden Hour)", "#9A3412", "#F59E0B")
+        )
+
+        for (flt in filters) {
+            val isSelected = selectedColorFilter == flt.id
+            val card = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), (6 * dp).toInt())
+                layoutParams = LinearLayout.LayoutParams((90 * dp).toInt(), (52 * dp).toInt()).apply {
+                    marginEnd = (6 * dp).toInt()
+                }
+                setBackgroundResource(if (isSelected) R.drawable.bg_tool_card_selected else R.drawable.bg_tool_card_normal)
+
+                val swatch = View(this@VideoStudioActivity).apply {
+                    layoutParams = LinearLayout.LayoutParams((28 * dp).toInt(), (14 * dp).toInt()).apply {
+                        bottomMargin = (4 * dp).toInt()
+                    }
+                    background = GradientDrawable(
+                        GradientDrawable.Orientation.TL_BR,
+                        intArrayOf(Color.parseColor(flt.previewColor1), Color.parseColor(flt.previewColor2))
+                    ).apply {
+                        cornerRadius = 7 * dp
+                        if (isSelected) {
+                            setStroke((1.5f * dp).toInt(), Color.parseColor("#38BDF8"))
+                        }
+                    }
+                }
+
+                val tvName = TextView(this@VideoStudioActivity).apply {
+                    text = flt.name
+                    setTextColor(if (isSelected) Color.WHITE else Color.parseColor("#94A3B8"))
+                    textSize = 9.5f
+                    typeface = Typeface.DEFAULT_BOLD
+                    gravity = Gravity.CENTER
+                    maxLines = 1
+                }
+
+                addView(swatch)
+                addView(tvName)
+
+                setOnClickListener {
+                    selectedColorFilter = flt.id
+                    updateConfig()
+                    populateFilterCards()
+                }
+            }
+            layoutFilterCards.addView(card)
+        }
+    }
+
+    private fun updateVnTracksUI() {
+        if (!::tvVnTrackTextContent.isInitialized) return
+        tvVnTrackTextContent.text = postContent
+        tvVnTrackTextAnimBadge.text = when(selectedAnim.lowercase()) {
+            "typewriter" -> "آلة كاتبة"
+            "word_by_word" -> "كلمة بكلمة"
+            "fade" -> "تلاشي ناعم"
+            "zoom" -> "تكبير بوب"
+            "glow" -> "توهج مضيء"
+            "slide_up" -> "انزلاق سينمائي"
+            "scroll_up", "scroll" -> "تصاعد عمودي"
+            "blur_in" -> "ظهور ضبابي"
+            else -> selectedAnim
+        }
+        val audioTitle = when {
+            customAudioUri != null -> "صوتي الخاص"
+            downloadedAudioPath != null -> StudioAssetManager.onlineAudios.find { it.id == selectedAudio }?.title ?: selectedAudio
+            else -> when(selectedAudio) {
+                "oud" -> "عود شرقي"
+                "piano" -> "بيانو هادئ"
+                "nature" -> "أصوات الطبيعة"
+                "mute" -> "بدون صوت"
+                else -> selectedAudio
+            }
+        }
+        tvVnTrackAudioTitle.text = audioTitle
+        tvVnTrackAudioTimeBadge.text = "00:00 / ${formatTime((selectedDuration * 1000L))}"
+
+        val bgTitle = when {
+            customImageBitmap != null -> "صورتي الخاصة"
+            selectedMotion.startsWith("unsplash_") -> StudioAssetManager.onlineBackgrounds.find { it.id == selectedMotion }?.title ?: "صورة جمالية"
+            else -> when(selectedMotion) {
+                "STARS" -> "نجوم متحركة"
+                "RAIN" -> "أمطار سينمائية"
+                "AURORA" -> "شفق قطبي"
+                "GOLD" -> "جزيئات ذهبية"
+                "OCEAN" -> "أمواج هادئة"
+                else -> selectedMotion
+            }
+        }
+        tvVnTrackCanvasTitle.text = "$bgTitle • $selectedRatio"
+
+        tvVnTrackFilterBadge.text = when(selectedColorFilter.lowercase()) {
+            "teal_orange" -> "فلتر: Teal & Orange"
+            "moody" -> "فلتر: Moody"
+            "vintage_90s" -> "فلتر: Vintage 90s"
+            "noir_bw" -> "فلتر: Noir B&W"
+            "cyberpunk" -> "فلتر: Cyberpunk"
+            "sunset_gold" -> "فلتر: Sunset Gold"
+            else -> "فلتر: أصلي"
+        }
+    }
+
+}

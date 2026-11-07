@@ -34,7 +34,8 @@ object VideoMotionRenderer {
         val imagePanX: Float = 0f, // Relative horizontal pan (-1f to 1f)
         val imagePanY: Float = 0f, // Relative vertical pan (-1f to 1f)
         val imageZoomScale: Float = 1.0f, // Touch pinch zoom multiplier (0.5f to 5.0f)
-        val audioStartOffsetMs: Long = 0L // Trimming start offset for custom music
+        val audioStartOffsetMs: Long = 0L, // Trimming start offset for custom music
+        val colorFilter: String = "none" // VN Cinematic LUTs: none, teal_orange, moody, vintage_90s, noir_bw, cyberpunk, sunset_gold
     )
 
     // Pre-allocated deterministic particles
@@ -82,6 +83,63 @@ object VideoMotionRenderer {
         }
     }
 
+    fun getFilterPaint(filterId: String): Paint? {
+        val colorMatrix = when (filterId.lowercase()) {
+            "teal_orange", "hollywood" -> ColorMatrix(floatArrayOf(
+                1.15f, 0.0f,  0.0f,  0.0f, 15f,
+                0.0f,  1.02f, 0.0f,  0.0f, 5f,
+                0.0f,  0.0f,  1.25f, 0.0f, 25f,
+                0.0f,  0.0f,  0.0f,  1.0f, 0f
+            ))
+            "moody", "cinema" -> ColorMatrix(floatArrayOf(
+                0.90f, 0.0f,  0.0f,  0.0f, -10f,
+                0.0f,  0.95f, 0.0f,  0.0f, -5f,
+                0.0f,  0.0f,  1.10f, 0.0f, 12f,
+                0.0f,  0.0f,  0.0f,  1.0f, 0f
+            )).apply {
+                val sat = ColorMatrix().apply { setSaturation(0.78f) }
+                postConcat(sat)
+            }
+            "vintage_90s", "retro" -> ColorMatrix(floatArrayOf(
+                1.15f, 0.0f,  0.0f,  0.0f, 18f,
+                0.0f,  1.05f, 0.0f,  0.0f, 8f,
+                0.0f,  0.0f,  0.82f, 0.0f, -12f,
+                0.0f,  0.0f,  0.0f,  1.0f, 0f
+            )).apply {
+                val sepia = ColorMatrix().apply {
+                    setScale(1.0f, 0.95f, 0.82f, 1.0f)
+                }
+                postConcat(sepia)
+            }
+            "noir_bw", "bw" -> ColorMatrix().apply {
+                setSaturation(0f)
+                val contrast = ColorMatrix(floatArrayOf(
+                    1.28f, 0f, 0f, 0f, -22f,
+                    0f, 1.28f, 0f, 0f, -22f,
+                    0f, 0f, 1.28f, 0f, -22f,
+                    0f, 0f, 0f, 1f, 0f
+                ))
+                postConcat(contrast)
+            }
+            "cyberpunk", "neon" -> ColorMatrix(floatArrayOf(
+                1.18f, 0.0f,  0.18f, 0.0f, 22f,
+                0.0f,  0.88f, 0.0f,  0.0f, -8f,
+                0.12f, 0.0f,  1.32f, 0.0f, 32f,
+                0.0f,  0.0f,  0.0f,  1.0f, 0f
+            ))
+            "sunset_gold", "warm" -> ColorMatrix(floatArrayOf(
+                1.22f, 0.06f, 0.0f,  0.0f, 24f,
+                0.0f,  1.08f, 0.0f,  0.0f, 14f,
+                0.0f,  0.0f,  0.82f, 0.0f, -16f,
+                0.0f,  0.0f,  0.0f,  1.0f, 0f
+            ))
+            else -> return null
+        }
+        return Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            colorFilter = ColorMatrixColorFilter(colorMatrix)
+        }
+    }
+
     fun renderFrame(
         context: Context,
         canvas: Canvas,
@@ -103,6 +161,9 @@ object VideoMotionRenderer {
         val totalMs = (config.durationSec * 1000L).coerceAtLeast(1000L)
         val loopTimeMs = timeMs % totalMs
         val progress = loopTimeMs.toFloat() / totalMs.toFloat()
+
+        val filterPaint = getFilterPaint(config.colorFilter)
+        val saveCount = if (filterPaint != null) canvas.saveLayer(0f, 0f, w, h, filterPaint) else -1
 
         // 1. Draw Motion Background
         drawMotionBackground(canvas, w, h, loopTimeMs, progress, config, S)
@@ -406,6 +467,10 @@ object VideoMotionRenderer {
         if (brandY + 24f * S < h) {
             canvas.drawText("من منشوراتي", w / 2f, brandY, brandPaint)
             canvas.drawText("تطبيق منشوراتي للاقتباسات والخواطر", w / 2f, brandY + 22f * S, subBrandPaint)
+        }
+
+        if (saveCount != -1) {
+            canvas.restoreToCount(saveCount)
         }
     }
 
