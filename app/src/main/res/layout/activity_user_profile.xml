@@ -137,7 +137,7 @@
                         android:paddingEnd="8dp"
                         android:paddingBottom="2dp"
                         android:singleLine="true"
-                        android:text="🥉 كاتب مبتدئ"
+                        android:text="كاتب مبتدئ"
                         android:textColor="#D97706"
                         android:textSize="11sp"
                         android:textStyle="bold"

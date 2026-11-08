@@ -106,7 +106,7 @@ class QuoteWidgetProvider : AppWidgetProvider() {
         return if (!cached.isNullOrBlank()) {
             Pair(cached, cachedTag ?: "خاطرة اليوم")
         } else {
-            Pair("ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸", "خاطرة اليوم")
+            Pair("ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة", "خاطرة اليوم")
         }
     }
 

@@ -242,7 +242,7 @@ object ImageUtils {
 
                     editDialog.dismiss()
 
-                    Toast.makeText(context, "تم تحديث نص الاقتباس بنجاح ✨", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "تم تحديث نص الاقتباس بنجاح", Toast.LENGTH_SHORT).show()
 
                 } else {
 
@@ -979,7 +979,7 @@ fun applyEditorTheme(isDark: Boolean) {
                                 originalCustomBitmap = bmp
                                 applyBackgroundEffects()
                                 tvContent.setTextColor(Color.WHITE)
-                                Toast.makeText(context, "تم تطبيق خلفية: ${bg.title} بنجاح ✓", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "تم تطبيق خلفية: ${bg.title} بنجاح", Toast.LENGTH_SHORT).show()
                             },
                             onError = { err ->
                                 tvName.text = bg.title
@@ -2153,7 +2153,7 @@ fun applyEditorTheme(isDark: Boolean) {
             val randomTmpl = ThemeHelper.CARD_TEMPLATES.random()
             applyCardTemplate(randomTmpl)
             view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-            Toast.makeText(context, "✨ تم تطبيق قالب: ${context.getString(randomTmpl.nameRes)}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "تم تطبيق قالب: ${context.getString(randomTmpl.nameRes)}", Toast.LENGTH_SHORT).show()
         }
 
         layoutPresetsContainer.removeAllViews()

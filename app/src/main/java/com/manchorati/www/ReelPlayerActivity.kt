@@ -1,5 +1,7 @@
 package com.manchorati.www
 
+import androidx.core.content.ContextCompat
+
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -120,9 +122,18 @@ class ReelPlayerActivity : AppCompatActivity() {
             tvReelAuthorBadge.visibility = View.GONE
         } else {
             val badge = BadgeHelper.getBadgeForProfile(explicitBadge = postAuthorBadge, email = null)
-            if (badge.iconEmoji.isNotEmpty() && badge.id != BadgeHelper.BADGE_BEGINNER.id && badge.id != "official") {
-                tvReelAuthorBadge.visibility = View.VISIBLE
-                tvReelAuthorBadge.text = badge.iconEmoji
+            if (badge.iconResId != 0 && badge.id != BadgeHelper.BADGE_BEGINNER.id && badge.id != "official") {
+                val badgeDrawable = ContextCompat.getDrawable(this, badge.iconResId)?.mutate()
+                if (badgeDrawable != null) {
+                    badgeDrawable.setTint(Color.parseColor(badge.textColorHex))
+                    val sizePx = (14 * resources.displayMetrics.density).toInt()
+                    badgeDrawable.setBounds(0, 0, sizePx, sizePx)
+                    tvReelAuthorBadge.setCompoundDrawables(badgeDrawable, null, null, null)
+                    tvReelAuthorBadge.text = ""
+                    tvReelAuthorBadge.visibility = View.VISIBLE
+                } else {
+                    tvReelAuthorBadge.visibility = View.GONE
+                }
             } else {
                 tvReelAuthorBadge.visibility = View.GONE
             }
@@ -138,12 +149,12 @@ class ReelPlayerActivity : AppCompatActivity() {
 
         // Audio preset label
         val audioLabel = when (audioPreset.lowercase()) {
-            "piano" -> "عزف بيانو هادئ 🎹"
-            "rain" -> "صوت المطر والسكينة 🌧️"
-            "oud" -> "تقاسيم عود شرقي 🪕"
-            "nature" -> "طبيعة وأجواء هادئة 🌿"
-            "mute" -> "فيديو صامت 🔇"
-            else -> "موسيقى تصويرية 🎵"
+            "piano" -> "عزف بيانو هادئ"
+            "rain" -> "صوت المطر والسكينة"
+            "oud" -> "تقاسيم عود شرقي"
+            "nature" -> "طبيعة وأجواء هادئة"
+            "mute" -> "فيديو صامت"
+            else -> "موسيقى تصويرية"
         }
         tvReelAudioTrack.text = audioLabel
 

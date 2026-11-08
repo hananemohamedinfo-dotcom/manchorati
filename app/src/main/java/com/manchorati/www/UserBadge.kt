@@ -6,12 +6,13 @@ import java.util.concurrent.ConcurrentHashMap
 data class UserBadge(
     val id: String,
     val title: String,
-    val iconEmoji: String,
+    val iconEmoji: String = "",
     val bgResId: Int,
     val textColorHex: String,
     val tierLevel: Int = 1,
     val minFollowers: Long = 0L,
-    val description: String = ""
+    val description: String = "",
+    val iconResId: Int = 0
 ) {
     fun getLocalizedTitle(context: android.content.Context): String {
         return when (id) {
@@ -44,7 +45,8 @@ data class MilestoneBadge(
     val title: String,
     val description: String,
     val targetFollowers: Long,
-    val emoji: String
+    val emoji: String = "",
+    val iconResId: Int = 0
 ) {
     fun isUnlocked(followersCount: Long): Boolean = followersCount >= targetFollowers
 
@@ -82,7 +84,8 @@ object BadgeHelper {
     val BADGE_ADMIN = UserBadge(
         id = "admin",
         title = "مشرف التطبيق",
-        iconEmoji = "🛡️",
+        iconEmoji = "",
+        iconResId = R.drawable.ic_security_shield,
         bgResId = R.drawable.bg_badge_admin,
         textColorHex = "#818CF8",
         tierLevel = 6,
@@ -104,7 +107,8 @@ object BadgeHelper {
     val BADGE_LEGENDARY = UserBadge(
         id = "legendary",
         title = "كاتب أسطوري",
-        iconEmoji = "👑",
+        iconEmoji = "",
+        iconResId = R.drawable.ic_crown,
         bgResId = R.drawable.bg_badge_legendary,
         textColorHex = "#F59E0B",
         tierLevel = 5,
@@ -115,7 +119,8 @@ object BadgeHelper {
     val BADGE_ELITE = UserBadge(
         id = "elite",
         title = "كاتب نخبة",
-        iconEmoji = "💎",
+        iconEmoji = "",
+        iconResId = R.drawable.ic_diamond,
         bgResId = R.drawable.bg_badge_elite,
         textColorHex = "#38BDF8",
         tierLevel = 4,
@@ -126,7 +131,8 @@ object BadgeHelper {
     val BADGE_DISTINGUISHED = UserBadge(
         id = "distinguished",
         title = "كاتب متميز",
-        iconEmoji = "⭐",
+        iconEmoji = "",
+        iconResId = R.drawable.ic_bookmark_filled,
         bgResId = R.drawable.bg_badge_writer,
         textColorHex = "#FBBF24",
         tierLevel = 3,
@@ -137,7 +143,8 @@ object BadgeHelper {
     val BADGE_RISING = UserBadge(
         id = "rising",
         title = "كاتب صاعد",
-        iconEmoji = "🥈",
+        iconEmoji = "",
+        iconResId = R.drawable.ic_medal,
         bgResId = R.drawable.bg_badge_rising,
         textColorHex = "#94A3B8",
         tierLevel = 2,
@@ -148,7 +155,8 @@ object BadgeHelper {
     val BADGE_BEGINNER = UserBadge(
         id = "beginner",
         title = "كاتب مبتدئ",
-        iconEmoji = "🥉",
+        iconEmoji = "",
+        iconResId = 0,
         bgResId = R.drawable.bg_badge_beginner,
         textColorHex = "#D97706",
         tierLevel = 1,
@@ -170,28 +178,28 @@ object BadgeHelper {
             title = "نادي الألفية الأولى (1K)",
             description = "تخطي حاجز 1,000 متابع في المجتمع",
             targetFollowers = 1000L,
-            emoji = "🎖️"
+            emoji = "", iconResId = R.drawable.ic_medal
         ),
         MilestoneBadge(
             id = "milestone_5k",
             title = "وسام النخبة (5K)",
             description = "الوصول إلى 5,000 متابع نشط",
             targetFollowers = 5000L,
-            emoji = "💎"
+            emoji = "", iconResId = R.drawable.ic_diamond
         ),
         MilestoneBadge(
             id = "milestone_7k",
             title = "وسام القمة الذهبي (7K)",
             description = "تخطي 7,000 متابع وتحقيق انتشار واسع",
             targetFollowers = 7000L,
-            emoji = "⭐"
+            emoji = "", iconResId = R.drawable.ic_sparkle_ai
         ),
         MilestoneBadge(
             id = "milestone_10k",
             title = "درع الأسطورة الذهبي (10K)",
             description = "بلوغ 10,000 متابع وتربع قمة المجتمع",
             targetFollowers = 10000L,
-            emoji = "🏆"
+            emoji = "", iconResId = R.drawable.ic_crown
         )
     )
 

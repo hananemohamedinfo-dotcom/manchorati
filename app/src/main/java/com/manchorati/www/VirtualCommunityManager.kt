@@ -34,26 +34,26 @@ object VirtualCommunityManager {
     private const val KEY_LAST_AUTO_POST_TIME = "last_auto_post_time"
 
     val PERSONAS = listOf(
-        VirtualPersona("persona_sara_b", "سارة بناني", "sara_bennani", "avatar_2", "verified", "شغوفة بالأدب والفكر والكلمة الطيبة 🌸"),
-        VirtualPersona("persona_yassine_a", "ياسين العلمي", "yassine_al", "avatar_9", "writer", "كاتب ومهتم بتطوير الذات وبناء العادات ✍️"),
-        VirtualPersona("persona_hamza_s", "حمزة الصالحي", "hamza_s", "avatar_11", "", "باحث عن الحكمة والهدوء في تفاصيل الحياة ☕"),
-        VirtualPersona("persona_ilham_m", "إلهام المنصوري", "ilham_m", "avatar_4", "writer", "أكتب لأجد نفسي بين السطور والخواطر 🕊️"),
-        VirtualPersona("persona_amine_f", "أمين الفاسي", "amine_elfassi", "avatar_5", "", "مهتم بالقراءة ونشر الطاقة الإيجابية ✨"),
-        VirtualPersona("persona_maryam_i", "مريم الإدريسي", "maryam_idrissi", "avatar_10", "verified", "محبة للأدب الراقي ولحظات التأمل 🤍"),
-        VirtualPersona("persona_omar_t", "عمر التازي", "omar_tazi", "avatar_7", "", "عاشق للهدوء والكتب وفنجان قهوة الصباح 📖"),
-        VirtualPersona("persona_kaoutar_m", "كوثر المرابط", "kaoutar_m", "avatar_13", "writer", "الكلمات أثر لا يزول.. أشارككم ما راق لي 🌿"),
-        VirtualPersona("persona_nabil_c", "نبيل الشريف", "nabil_cherif", "avatar_12", "", "طالب معرفة ومحب للحكم والأمثال القديمة 🌟"),
-        VirtualPersona("persona_fz_zahra", "فاطمة الزهراء", "fz_zahra", "avatar_15", "", "ابتسم فالحياة أجمل بحسن الظن بالله 🌸"),
-        VirtualPersona("persona_karim_n", "كريم الناصري", "karim_n", "avatar_14", "writer", "كلمات تصنع الفارق وأفكار تبني العزيمة 🔥"),
-        VirtualPersona("persona_houda_a", "هدى العمراني", "houda_amrani", "avatar_16", "", "خواطر وكلمات دافئة من القلب إلى القلب 🕊️"),
-        VirtualPersona("persona_tariq_b", "طارق بنسودة", "tariq_b", "avatar_19", "", "النجاح يبدأ بخطوة واستمرار لا يتوقف 💪"),
-        VirtualPersona("persona_sanaa_b", "سناء بوزيد", "sanaa_b", "avatar_17", "verified", "مؤسسة نادي قراء ومحبة لنشر الإيجابية 💖"),
-        VirtualPersona("persona_youssef_r", "يوسف الرحماني", "youssef_r", "avatar_20", "", "في رحلة مستمرة للتعلم واكتساب الحكمة 🚀"),
-        VirtualPersona("persona_zineb_y", "زينب اليعقوبي", "zineb_y", "avatar_18", "", "أحب التفاصيل الصغيرة واللحظات الصادقة ✨"),
-        VirtualPersona("persona_adel_m", "عادل المتوكل", "adel_m", "avatar_6", "writer", "حروف تنبض بالحياة ورسائل أمل دائمة ✍️"),
-        VirtualPersona("persona_wafaa_s", "وفاء الصنهاجي", "wafaa_s", "avatar_1", "", "اللهم سعة وسلاماً يغمر القلب 🤲"),
-        VirtualPersona("persona_mostafa_w", "مصطفى الوديع", "mostafa_w", "avatar_8", "", "الهدوء نعمة، والكلمة الطيبة صدقة 🌿"),
-        VirtualPersona("persona_nadia_b", "نادية برادة", "nadia_barrada", "avatar_3", "", "نور وأمل يزهر في كل مكان 💫")
+ VirtualPersona("persona_sara_b", "سارة بناني", "sara_bennani", "avatar_2", "verified", "شغوفة بالأدب والفكر والكلمة الطيبة "),
+ VirtualPersona("persona_yassine_a", "ياسين العلمي", "yassine_al", "avatar_9", "writer", "كاتب ومهتم بتطوير الذات وبناء العادات "),
+ VirtualPersona("persona_hamza_s", "حمزة الصالحي", "hamza_s", "avatar_11", "", "باحث عن الحكمة والهدوء في تفاصيل الحياة "),
+ VirtualPersona("persona_ilham_m", "إلهام المنصوري", "ilham_m", "avatar_4", "writer", "أكتب لأجد نفسي بين السطور والخواطر "),
+ VirtualPersona("persona_amine_f", "أمين الفاسي", "amine_elfassi", "avatar_5", "", "مهتم بالقراءة ونشر الطاقة الإيجابية "),
+ VirtualPersona("persona_maryam_i", "مريم الإدريسي", "maryam_idrissi", "avatar_10", "verified", "محبة للأدب الراقي ولحظات التأمل "),
+ VirtualPersona("persona_omar_t", "عمر التازي", "omar_tazi", "avatar_7", "", "عاشق للهدوء والكتب وفنجان قهوة الصباح "),
+ VirtualPersona("persona_kaoutar_m", "كوثر المرابط", "kaoutar_m", "avatar_13", "writer", "الكلمات أثر لا يزول.. أشارككم ما راق لي "),
+ VirtualPersona("persona_nabil_c", "نبيل الشريف", "nabil_cherif", "avatar_12", "", "طالب معرفة ومحب للحكم والأمثال القديمة "),
+ VirtualPersona("persona_fz_zahra", "فاطمة الزهراء", "fz_zahra", "avatar_15", "", "ابتسم فالحياة أجمل بحسن الظن بالله "),
+ VirtualPersona("persona_karim_n", "كريم الناصري", "karim_n", "avatar_14", "writer", "كلمات تصنع الفارق وأفكار تبني العزيمة "),
+ VirtualPersona("persona_houda_a", "هدى العمراني", "houda_amrani", "avatar_16", "", "خواطر وكلمات دافئة من القلب إلى القلب "),
+ VirtualPersona("persona_tariq_b", "طارق بنسودة", "tariq_b", "avatar_19", "", "النجاح يبدأ بخطوة واستمرار لا يتوقف "),
+ VirtualPersona("persona_sanaa_b", "سناء بوزيد", "sanaa_b", "avatar_17", "verified", "مؤسسة نادي قراء ومحبة لنشر الإيجابية "),
+ VirtualPersona("persona_youssef_r", "يوسف الرحماني", "youssef_r", "avatar_20", "", "في رحلة مستمرة للتعلم واكتساب الحكمة "),
+ VirtualPersona("persona_zineb_y", "زينب اليعقوبي", "zineb_y", "avatar_18", "", "أحب التفاصيل الصغيرة واللحظات الصادقة "),
+ VirtualPersona("persona_adel_m", "عادل المتوكل", "adel_m", "avatar_6", "writer", "حروف تنبض بالحياة ورسائل أمل دائمة "),
+ VirtualPersona("persona_wafaa_s", "وفاء الصنهاجي", "wafaa_s", "avatar_1", "", "اللهم سعة وسلاماً يغمر القلب "),
+ VirtualPersona("persona_mostafa_w", "مصطفى الوديع", "mostafa_w", "avatar_8", "", "الهدوء نعمة، والكلمة الطيبة صدقة "),
+ VirtualPersona("persona_nadia_b", "نادية برادة", "nadia_barrada", "avatar_3", "", "نور وأمل يزهر في كل مكان ")
     )
 
     private val BG_PRESETS = listOf(
@@ -160,51 +160,51 @@ object VirtualCommunityManager {
             lower.contains("تحفيز") || lower.contains("نجاح") || lower.contains("هدف") ||
                     lower.contains("عزيمة") || lower.contains("تطوير") || lower.contains("طموح") -> {
                 listOf(
-                    "طاقة إيجابية نحتاجها في بداية يومنا، شكراً لك ✨",
-                    "كلام محفز وفي الصميم، استمر يا بطل 💪",
-                    "بالفعل، لا شيء مستحيل مع الإصرار والعزيمة 🔥",
-                    "مشاركاتك دائماً تعطي دفعة أمل كبيرة 👏",
-                    "مبدع كالعادة، كلام يبني الهمم 🚀"
+ "طاقة إيجابية نحتاجها في بداية يومنا، شكراً لك ",
+ "كلام محفز وفي الصميم، استمر يا بطل ",
+ "بالفعل، لا شيء مستحيل مع الإصرار والعزيمة ",
+ "مشاركاتك دائماً تعطي دفعة أمل كبيرة ",
+ "مبدع كالعادة، كلام يبني الهمم "
                 ).random()
             }
             lower.contains("دعاء") || lower.contains("يارب") || lower.contains("الله") ||
                     lower.contains("سكينة") || lower.contains("استغفار") || lower.contains("أذكار") ||
                     lower.contains("جمعة") -> {
                 listOf(
-                    "اللهم آمين يا رب العالمين، جزاك الله كل خير 🤲🕊️",
-                    "ونعم بالله العلي العظيم، كلمات تريح القلب والروح 🤍",
-                    "بارك الله فيك ونفع بك، أثابك الله 🌿",
-                    "ألا بذكر الله تطمئن القلوب.. تذكير طيب ومبارك 🌸",
-                    "ما أجمل هذا الدعاء، ربي يتقبل منا ومنكم 🕊️"
+ "اللهم آمين يا رب العالمين، جزاك الله كل خير ",
+ "ونعم بالله العلي العظيم، كلمات تريح القلب والروح ",
+ "بارك الله فيك ونفع بك، أثابك الله ",
+ "ألا بذكر الله تطمئن القلوب.. تذكير طيب ومبارك ",
+ "ما أجمل هذا الدعاء، ربي يتقبل منا ومنكم "
                 ).random()
             }
             lower.contains("حزن") || lower.contains("صبر") || lower.contains("فراق") ||
                     lower.contains("ألم") || lower.contains("تعب") || lower.contains("هم") -> {
                 listOf(
-                    "طبطبة رقيقة على القلب.. كل مرٍّ سيمر بإذن الله 🤍",
-                    "فرج الله قريب، ما ضاقت إلا لتفرج، دمت بخير 🕊️",
-                    "كلمات صادقة تلامس أعماق الروح، ربي يسعد قلبك 🌸",
-                    "إن بعد العسر يسراً.. كلام معبّر جداً 🤍"
+ "طبطبة رقيقة على القلب.. كل مرٍّ سيمر بإذن الله ",
+ "فرج الله قريب، ما ضاقت إلا لتفرج، دمت بخير ",
+ "كلمات صادقة تلامس أعماق الروح، ربي يسعد قلبك ",
+ "إن بعد العسر يسراً.. كلام معبّر جداً "
                 ).random()
             }
             lower.contains("حب") || lower.contains("شعر") || lower.contains("خواطر") ||
                     lower.contains("وفاء") || lower.contains("قلب") -> {
                 listOf(
-                    "ما أرق هذه الحروف وأجمل معانيها 🌸",
-                    "إحساس عالي وذوق رفيع جداً ✨",
-                    "حفظت المنشور عندي من جمال ما قرأت 🤍",
-                    "كلام يقطر عذوبة وجمالاً، سلمت أناملك ✍️"
+ "ما أرق هذه الحروف وأجمل معانيها ",
+ "إحساس عالي وذوق رفيع جداً ",
+ "حفظت المنشور عندي من جمال ما قرأت ",
+ "كلام يقطر عذوبة وجمالاً، سلمت أناملك "
                 ).random()
             }
             else -> {
                 listOf(
-                    "كلمات راقية جداً وفي الصميم ✨",
-                    "ما شاء الله، ذوق رفيع واختيار موفق 👏",
-                    "كلام يلامس القلب.. شكراً على هذه المشاركة 🤍",
-                    "أبدعت! استمر في هذا العطاء الجميل 🌿",
-                    "صدقت، نحتاج لمثل هذه الكلمات دائماً 👌",
-                    "تبارك الله عليك، كلام موزون وجميل 💫",
-                    "راقت لي هذه الكلمات كثيراً، سلمت يمينك 🌸"
+ "كلمات راقية جداً وفي الصميم ",
+ "ما شاء الله، ذوق رفيع واختيار موفق ",
+ "كلام يلامس القلب.. شكراً على هذه المشاركة ",
+ "أبدعت! استمر في هذا العطاء الجميل ",
+ "صدقت، نحتاج لمثل هذه الكلمات دائماً ",
+ "تبارك الله عليك، كلام موزون وجميل ",
+ "راقت لي هذه الكلمات كثيراً، سلمت يمينك "
                 ).random()
             }
         }

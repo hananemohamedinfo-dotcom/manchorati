@@ -1,5 +1,7 @@
 package com.manchorati.www
 
+import androidx.core.content.ContextCompat
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -464,10 +466,10 @@ class CommunityAdapter(
                 val ctx = view.context
                 val popup = PopupMenu(ctx, view)
                 if (isVideo) {
-                    popup.menu.add(0, 15, 0, "فتح في الاستوديو 🎬")
+                    popup.menu.add(0, 15, 0, "فتح في الاستوديو")
                 }
-                popup.menu.add(0, 16, 1, "تحويل إلى فيديو / ستوري 🎬")
-                popup.menu.add(0, 14, 2, "مشاركة في حالة واتساب 🟢")
+                popup.menu.add(0, 16, 1, "تحويل إلى فيديو / ستوري")
+                popup.menu.add(0, 14, 2, "مشاركة في حالة واتساب")
                 popup.menu.add(0, 13, 1, ctx.getString(R.string.download_post_image))
                 popup.menu.add(0, 10, 2, ctx.getString(R.string.post_action_share_story))
                 popup.menu.add(0, 11, 3, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
@@ -527,22 +529,29 @@ class CommunityAdapter(
         }
 
         private fun bindAuthorBadge(badge: UserBadge, post: CommunityPost) {
-            // إخفاء أي شارة أو علامة ذهبية لمنشورات تطبيق "منشوراتي" الرسمية بناءً على طلب المستخدم
+            // إخفاء أي شارة أو علامة لمنشورات تطبيق "منشوراتي" الرسمية أو المبتدئين
             if (post.authorId == "manchorati_curated" ||
                 post.authorBadge == "official" ||
                 post.authorName == "منشوراتي" ||
                 post.authorUsername.equals("manchorati", ignoreCase = true) ||
                 badge.id == "official" ||
-                badge.iconEmoji.isEmpty() ||
+                badge.iconResId == 0 ||
                 badge.id == BadgeHelper.BADGE_BEGINNER.id) {
                 tvAuthorBadge.visibility = View.GONE
                 return
             }
 
-            tvAuthorBadge.visibility = View.VISIBLE
-            tvAuthorBadge.text = badge.iconEmoji
-            tvAuthorBadge.background = null
-            tvAuthorBadge.setPadding(0, 0, 0, 0)
+            val badgeDrawable = ContextCompat.getDrawable(itemView.context, badge.iconResId)?.mutate()
+            if (badgeDrawable != null) {
+                badgeDrawable.setTint(Color.parseColor(badge.textColorHex))
+                val sizePx = (14 * itemView.context.resources.displayMetrics.density).toInt()
+                badgeDrawable.setBounds(0, 0, sizePx, sizePx)
+                tvAuthorBadge.setCompoundDrawables(badgeDrawable, null, null, null)
+                tvAuthorBadge.text = ""
+                tvAuthorBadge.visibility = View.VISIBLE
+            } else {
+                tvAuthorBadge.visibility = View.GONE
+            }
             tvAuthorBadge.setOnClickListener {
                 Toast.makeText(
                     itemView.context,

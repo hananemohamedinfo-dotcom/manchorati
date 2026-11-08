@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (adminWarning.isNotBlank()) {
                     androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setTitle("⚠️ تنبيه من الإدارة")
+                        .setTitle("تنبيه من الإدارة")
                         .setMessage(adminWarning)
                         .setCancelable(false)
                         .setPositiveButton("فهمت ذلك") { d, _ ->
@@ -267,7 +267,7 @@ class MainActivity : AppCompatActivity() {
                     prefs.edit().putLong("last_seen_announcement_ts", ts).apply()
                     NotificationHelper.showAnnouncementNotification(this@MainActivity, title, message)
                     androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setTitle("📢 $title")
+                        .setTitle(title)
                         .setMessage(message)
                         .setPositiveButton("حسناً", null)
                         .show()

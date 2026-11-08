@@ -175,7 +175,7 @@ object AiWriterBottomSheetDialog {
                 btnGenerate.text = context.getString(R.string.ai_generate_again_btn)
 
                 if (isRealAi) {
-                    Toast.makeText(context, "تمت الصياغة بنجاح بواسطة الذكاء الاصطناعي ✨", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "تمت الصياغة بنجاح بواسطة الذكاء الاصطناعي", Toast.LENGTH_SHORT).show()
                 } else if (!statusMsg.isNullOrEmpty()) {
                     Toast.makeText(context, statusMsg, Toast.LENGTH_LONG).show()
                 }
@@ -258,7 +258,7 @@ object AiWriterBottomSheetDialog {
 
                 if (isAdmin && newKey.isNotEmpty()) {
                     AiWriterManager.saveApiKeyToFirestore(newKey, onSuccess = {
-                        Toast.makeText(context, "تم حفظ المفتاح وتعميمه في السحابة بنجاح ✨", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "تم حفظ المفتاح وتعميمه في السحابة بنجاح", Toast.LENGTH_SHORT).show()
                     }, onFailure = {
                         Toast.makeText(context, context.getString(R.string.ai_key_saved_toast), Toast.LENGTH_SHORT).show()
                     })

@@ -105,7 +105,7 @@ object NotificationHelper {
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ANNOUNCEMENTS)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("📢 $title")
+            .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_HIGH)

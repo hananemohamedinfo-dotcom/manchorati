@@ -1,5 +1,7 @@
 package com.manchorati.www
 
+import androidx.core.content.ContextCompat
+
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -112,12 +114,12 @@ class ReelsAdapter(
             // Audio Preset Label
             val audioKey = post.audioPreset.ifEmpty { "piano" }
             val audioLabel = when (audioKey.lowercase()) {
-                "piano" -> "عزف بيانو هادئ 🎹"
-                "rain" -> "صوت المطر والسكينة 🌧️"
-                "oud" -> "تقاسيم عود شرقي 🪕"
-                "nature" -> "طبيعة وأجواء هادئة 🌿"
-                "mute" -> "فيديو صامت 🔇"
-                else -> "موسيقى تصويرية 🎵"
+                "piano" -> "عزف بيانو هادئ"
+                "rain" -> "صوت المطر والسكينة"
+                "oud" -> "تقاسيم عود شرقي"
+                "nature" -> "طبيعة وأجواء هادئة"
+                "mute" -> "فيديو صامت"
+                else -> "موسيقى تصويرية"
             }
             tvReelAudioTrack.text = audioLabel
 

@@ -496,7 +496,7 @@ class WritersActivity : AppCompatActivity() {
         // تحديث إحصائيات كاتب الأسبوع (الإعجابات + المتابعون المتزامنون)
         val likesFormatted = champion.weeklyLikes
         val followersFormatted = champion.followersCount.formatCount()
-        tvWriterOfWeekStats.text = "❤️ " + getString(R.string.writer_weekly_likes, likesFormatted) + " • 👥 " + getString(R.string.writer_followers_count, followersFormatted)
+        tvWriterOfWeekStats.text = getString(R.string.writer_weekly_likes, likesFormatted) + " • " + getString(R.string.writer_followers_count, followersFormatted)
 
         if (activeUserId.isNotEmpty() && champion.userId == activeUserId) {
             btnWriterOfWeekFollow.visibility = View.GONE

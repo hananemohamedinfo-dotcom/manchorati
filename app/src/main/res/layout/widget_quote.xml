@@ -106,7 +106,7 @@
             android:shadowDx="1.5"
             android:shadowDy="1.5"
             android:shadowRadius="4"
-            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸"
+            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة"
             android:textColor="#FFFFFF"
             android:textSize="15.5sp"
             android:textStyle="bold" />
@@ -123,7 +123,7 @@
             android:shadowDx="1.5"
             android:shadowDy="1.5"
             android:shadowRadius="4"
-            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸"
+            android:text="ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة"
             android:textColor="#FFFFFF"
             android:textSize="15.5sp"
             android:textStyle="bold" />

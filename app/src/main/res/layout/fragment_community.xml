@@ -190,7 +190,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <!-- 🌟 الكل -->
+                    <!-- الكل -->
                     <TextView
                         android:id="@+id/chipMoodAll"
                         android:layout_width="wrap_content"
@@ -203,7 +203,7 @@
                         android:textSize="11.5sp"
                         android:textStyle="bold" />
 
-                    <!-- ☕ رايق وهادئ -->
+                    <!-- رايق وهادئ -->
                     <TextView
                         android:id="@+id/chipMoodChill"
                         android:layout_width="wrap_content"
@@ -216,7 +216,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
-                    <!-- 💪 محتاج تحفيز -->
+                    <!-- محتاج تحفيز -->
                     <TextView
                         android:id="@+id/chipMoodMotivated"
                         android:layout_width="wrap_content"
@@ -229,7 +229,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
-                    <!-- 😔 مهموم وحزين -->
+                    <!-- مهموم وحزين -->
                     <TextView
                         android:id="@+id/chipMoodSad"
                         android:layout_width="wrap_content"
@@ -242,7 +242,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
-                    <!-- 😊 متفائل وسعيد -->
+                    <!-- متفائل وسعيد -->
                     <TextView
                         android:id="@+id/chipMoodHappy"
                         android:layout_width="wrap_content"
@@ -255,7 +255,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
-                    <!-- ❤️ حب وامتنان -->
+                    <!-- حب وامتنان -->
                     <TextView
                         android:id="@+id/chipMoodLove"
                         android:layout_width="wrap_content"
@@ -268,7 +268,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="11.5sp" />
 
-                    <!-- 🤲 أدعية وسكينة -->
+                    <!-- أدعية وسكينة -->
                     <TextView
                         android:id="@+id/chipMoodPeace"
                         android:layout_width="wrap_content"
@@ -303,7 +303,7 @@
                     android:id="@+id/tvMoodBannerEmoji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💡"
+                    android:text=""
                     android:textSize="16sp" />
 
                 <TextView

@@ -44,23 +44,23 @@ enum class MoodType(
     val categoryIds: List<Int>,
     val defaultTag: String
 ) {
-    ALL("all", "الكل", "🌟", "", emptyList(), emptyList(), ""),
-    CHILL("chill", "رايق وهادئ", "☕", "كوب قهوة، وهدوء يملأ روحك.. اقرأ بروية وسلام ☕",
+    ALL("all", "الكل", "", "", emptyList(), emptyList(), ""),
+    CHILL("chill", "رايق وهادئ", "", "كوب قهوة، وهدوء يملأ روحك.. اقرأ بروية وسلام",
         listOf("قهوة", "مساء", "صباح", "هدوء", "راحة", "سكينة", "أمل", "سلام", "روقان", "رايق", "شاي", "عزلة", "بحر", "مطر", "ورد", "تأمل", "كتاب", "فنجان", "نسيم"),
         listOf(13, 14, 20), "قهوة ومساء"),
-    MOTIVATED("motivated", "محتاج تحفيز", "💪", "انهض! لا شيء مستحيل أمام إرادتك وعزيمتك الجبارة 🔥",
+    MOTIVATED("motivated", "محتاج تحفيز", "", "انهض! لا شيء مستحيل أمام إرادتك وعزيمتك الجبارة",
         listOf("تحفيز", "تطوير", "نجاح", "أمل", "قوة", "إصرار", "حلم", "هدف", "طموح", "شغف", "عزيمة", "تحدي", "إرادة", "صبر", "مستقبل", "إنجاز", "كفاح", "طاقة", "تفاؤل"),
         listOf(11, 18), "تحفيز وتطوير"),
-    SAD("sad", "مهموم وحزين", "😔", "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾ — كل مرٍّ سيمر، وهذه الكلمات لتُطبطب على قلبك 🤍",
+    SAD("sad", "مهموم وحزين", "", "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾ — كل مرٍّ سيمر، وهذه الكلمات لتُطبطب على قلبك",
         listOf("خواطر", "حزن", "صبر", "فراق", "ألم", "دعاء", "طبطبة", "فرج", "عسر", "مهموم", "وجع", "ضيق", "تعب", "هم", "دموع", "يارب", "فقد", "مواساة", "خيبة"),
         listOf(15, 4, 12), "خواطر"),
-    HAPPY("happy", "متفائل وسعيد", "😊", "ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة 🌸",
+    HAPPY("happy", "متفائل وسعيد", "", "ابتسم، فالحياة أجمل وأوسع عندما نراها بعين الرضا والبهجة",
         listOf("ابتسامة", "سعادة", "فرح", "ضحك", "فكاهة", "تفاؤل", "جمال", "فرفشة", "نكت", "وناسة", "سرور", "بهجة", "عيد", "أمل", "طاقة"),
         listOf(8, 6, 9, 7), "فكاهة وضحك"),
-    LOVE("love", "حب وامتنان", "❤️", "الحب والامتنان سر السعادة.. شارك من تحب كلمة طيبة وأثراً جميلاً 💖",
+    LOVE("love", "حب وامتنان", "", "الحب والامتنان سر السعادة.. شارك من تحب كلمة طيبة وأثراً جميلاً",
         listOf("حب", "عشق", "امتنان", "شوق", "وفاء", "صداقة", "أهل", "أمي", "أبي", "غرام", "مودة", "حبيبي", "صديق", "عتاب", "قلب", "مشاعر", "روحي", "تقدير"),
         listOf(2, 3, 21, 23), "شعر وأدب"),
-    PEACE("peace", "أدعية وسكينة", "🤲", "ألا بذكر الله تطمئن القلوب.. سكينة ونور ودعوات مستجابة 🕊️",
+    PEACE("peace", "أدعية وسكينة", "", "ألا بذكر الله تطمئن القلوب.. سكينة ونور ودعوات مستجابة",
         listOf("أدعية", "أذكار", "دعاء", "طمأنينة", "ذكر", "قرآن", "استغفار", "الله", "يارب", "اللهم", "الحمدلله", "سبحان", "سكينة", "إيمان", "صلاة", "رسول", "نبي", "تسبيح", "رحمة", "مغفرة", "جنة", "نور", "أجر"),
         listOf(1, 17, 10), "أدعية وأذكار")
 }
@@ -362,7 +362,7 @@ class CommunityFragment : Fragment() {
         fun updateSortUI() {
             tvActiveSortLabel.text = when (sortMode) {
                 1 -> getString(R.string.sort_trending)
-                2 -> "أتابعهم 👥"
+                2 -> "أتابعهم"
                 else -> getString(R.string.sort_latest)
             }
         }
@@ -473,7 +473,7 @@ class CommunityFragment : Fragment() {
                 tvActiveMoodSubtitle.text = getString(R.string.mood_selector_subtitle)
             } else {
                 layoutMoodBanner.visibility = View.VISIBLE
-                tvMoodBannerEmoji.text = mood.emoji
+                tvMoodBannerEmoji.visibility = View.GONE
                 tvMoodBannerText.text = mood.bannerPhrase
                 tvActiveMoodSubtitle.text = getString(R.string.mood_active_display, mood.title)
             }
@@ -977,7 +977,7 @@ class CommunityFragment : Fragment() {
                     }
                 }, 350)
             } else if (type.equals("LIKE", ignoreCase = true)) {
-                Toast.makeText(requireContext(), "أعجب أحدهم بهذا المنشور ❤️", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "أعجب أحدهم بهذا المنشور", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -1495,7 +1495,7 @@ class CommunityFragment : Fragment() {
                             authorId = p2.id,
                             authorName = p2.name,
                             authorPhotoUrl = p2.avatarResource,
-                            content = "ما شاء الله، ذوق راقٍ واختيار مميز 🌸",
+                            content = "ما شاء الله، ذوق راقٍ واختيار مميز",
                             timestamp = post.getTimeMillis() + 450000L
                         )
                     )
@@ -1602,10 +1602,10 @@ class CommunityFragment : Fragment() {
                         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
                             if (isAdded) {
                                 val replyText = listOf(
-                                    "شكراً جزيلاً على ذوقك وكلماتك الطيبة 🌸",
-                                    "تسلم، أسعدني تعليقك الراقي جداً ✨",
-                                    "شكراً لك، دمت بألف خير وسعادة 🤍",
-                                    "مرورك العطر زاد المنشور جمالاً، شكراً لك 🌿"
+                                    "شكراً جزيلاً على ذوقك وكلماتك الطيبة",
+                                    "تسلم، أسعدني تعليقك الراقي جداً",
+                                    "شكراً لك، دمت بألف خير وسعادة",
+                                    "مرورك العطر زاد المنشور جمالاً، شكراً لك"
                                 ).random()
                                 FirestoreManager.addComment(
                                     postId = post.id,

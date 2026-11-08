@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="116dp"
+    android:layout_height="110dp"
     android:layout_margin="6dp"
     android:clickable="true"
     android:focusable="true"
@@ -26,20 +26,27 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Category Icon Well -->
+            <!-- Category Vector Icon Well -->
             <FrameLayout
                 android:id="@+id/layoutEmojiContainer"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@drawable/bg_category_well">
 
+                <ImageView
+                    android:id="@+id/ivCategoryIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_categories"
+                    app:tint="#38BDF8" />
+
+                <!-- Hidden for backwards compatibility -->
                 <TextView
                     android:id="@+id/tvCategoryEmoji"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="17sp"
-                    tools:text="🕌" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
             </FrameLayout>
 
             <View
@@ -73,7 +80,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="14.5sp"
             android:textStyle="bold"
             tools:text="إسلامية" />
 
@@ -83,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvCategoryTitle"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             tools:text="140 منشور" />

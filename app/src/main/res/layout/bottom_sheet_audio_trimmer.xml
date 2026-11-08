@@ -654,7 +654,7 @@
 
             android:paddingHorizontal="10dp"
 
-            android:text="تغيير الصوت 🔄"
+            android:text="تغيير الصوت"
 
             android:textColor="#38BDF8"
 
@@ -684,7 +684,7 @@
 
             android:gravity="center"
 
-            android:text="تأكيد واستخدام المقطع ✓"
+            android:text="تأكيد واستخدام المقطع"
 
             android:textColor="#FFFFFF"
 

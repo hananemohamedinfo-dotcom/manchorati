@@ -88,7 +88,7 @@
     <string name="display_name_hint">أدخل اسمك الشخصي أو المستعار</string>
     <string name="username_label">اسم المستخدم الفريد</string>
     <string name="username_desc">معرّف فريد لحسابك يظهر مع @ ولا يمكن لأحد غيرك استخدامه.</string>
-    <string name="username_available">اسم المستخدم متاح للاستخدام ✓</string>
+ <string name="username_available">اسم المستخدم متاح للاستخدام</string>
     <string name="username_current">اسم المستخدم الحالي الخاص بك</string>
     <string name="username_too_short">يجب أن يتكون اسم المستخدم من 3 أحرف على الأقل</string>
     <string name="username_invalid_chars">يسمح فقط بالحروف الإنجليزية، الأرقام، _ و .</string>
@@ -104,7 +104,7 @@
     <string name="edit_profile_btn">تعديل</string>
     <string name="menu_edit_profile">تعديل الملف الشخصي</string>
     <string name="follow">+ متابعة</string>
-    <string name="following">متابع ✓</string>
+ <string name="following">متابع</string>
     <string name="posts_count_label">المنشورات</string>
     <string name="followers_label">متابعون</string>
     <string name="following_label">يتابعهم</string>
@@ -165,7 +165,7 @@
     <string name="filter_classic">كلاسيكي</string>
     <string name="lines_normal">أسطر عادية</string>
     <string name="lines_loose">أسطر متباعدة</string>
-    <string name="letter_spacing">تباعد الحروف ↔️</string>
+ <string name="letter_spacing">تباعد الحروف ↔</string>
     <string name="text_gradient_normal">تدرج النص: عادي</string>
     <string name="text_gradient_gold">تدرج: ذهبي ملكي</string>
     <string name="text_gradient_neon">تدرج: نيون سايبر</string>
@@ -193,7 +193,7 @@
     <string name="quote_none">اقتباس: بدون</string>
     <string name="quote_quotes">اقتباس: “ ”</string>
     <string name="quote_guillemets">اقتباس: « »</string>
-    <string name="quote_brackets">اقتباس: ❝ ❞</string>
+ <string name="quote_brackets">اقتباس: ❝ ❞</string>
     <string name="author_signature">توقيع الكاتب</string>
     <string name="watermark_label">العلامة المائية</string>
     <string name="instant_presets_subtitle">تطبيق فوري لتنسيق متكامل بنقرة واحدة:</string>
@@ -281,22 +281,22 @@
     <string name="notif_replied_comment">%s ردّ على تعليقك</string>
 
     <!-- عناصر إضافية في الملف الشخصي والواجهات -->
-    <string name="featured_writer">⭐ كاتب متميز</string>
-    <string name="badge_admin">🛡️ مشرف التطبيق</string>
-    <string name="badge_legendary">👑 كاتب أسطوري</string>
-    <string name="badge_elite">💎 كاتب نخبة</string>
-    <string name="badge_distinguished">⭐ كاتب متميز</string>
-    <string name="badge_rising">🥈 كاتب صاعد</string>
-    <string name="badge_beginner">🥉 كاتب مبتدئ</string>
-    <string name="badge_writer">⭐ كاتب متميز</string>
+ <string name="featured_writer">كاتب متميز</string>
+ <string name="badge_admin">مشرف التطبيق</string>
+ <string name="badge_legendary">كاتب أسطوري</string>
+ <string name="badge_elite">كاتب نخبة</string>
+ <string name="badge_distinguished">كاتب متميز</string>
+ <string name="badge_rising">كاتب صاعد</string>
+ <string name="badge_beginner">كاتب مبتدئ</string>
+ <string name="badge_writer">كاتب متميز</string>
 
     <!-- رتب وتحديات الكاتب والأوسمة -->
     <string name="writer_challenges_title">رتب وتحديات الكاتب</string>
     <string name="writer_challenges_desc">شارك كلماتك وابنِ جمهورك لترتقي برتبتك وتفتح أوسمة وتحديات حصرية!</string>
     <string name="current_tier_label">رتبتك الحالية:</string>
     <string name="next_tier_progress">%1$d من %2$d متابع للرتبة التالية</string>
-    <string name="next_tier_remaining">متبقي %d متابع للترقية 🚀</string>
-    <string name="max_tier_reached">لقد بلغت قمة المجد! أعلى رتبة متاحة 🏆</string>
+ <string name="next_tier_remaining">متبقي %d متابع للترقية</string>
+ <string name="max_tier_reached">لقد بلغت قمة المجد! أعلى رتبة متاحة</string>
     <string name="ranks_guide_title">دليل الرتب والمستويات</string>
     <string name="milestones_title">أوسمة الإنجازات والتحديات</string>
     <string name="milestone_1k">نادي الألفية الأولى (1K)</string>
@@ -307,8 +307,8 @@
     <string name="milestone_7k_desc">تحقيق 7,000 متابع وتأثير واسع</string>
     <string name="milestone_10k">درع الأسطورة الذهبي (10K)</string>
     <string name="milestone_10k_desc">أكثر من 10,000 متابع في المجتمع</string>
-    <string name="badge_unlocked_label">مكتمل ومفتوح ✨</string>
-    <string name="badge_locked_label">متبقي %d متابع 🔒</string>
+ <string name="badge_unlocked_label">مكتمل ومفتوح</string>
+ <string name="badge_locked_label">متبقي %d متابع</string>
     <string name="btn_close_challenges">فهمت، سأواصل الإبداع!</string>
     <string name="user_shared_posts_desc">الخواطر والكلمات التي تتم مشاركتها ستظهر هنا</string>
     <string name="select_profile_picture_title">اختر صورة الملف الشخصي</string>
@@ -394,9 +394,9 @@
     <string name="saving_post_image">جاري حفظ الصورة في المعرض...</string>
     <string name="widget_quote_name">خاطرة اليوم</string>
     <string name="widget_quote_description">عرض أجمل الخواطر والحكم على الشاشة الرئيسية مع التحديث والنسخ السريع.</string>
-    <string name="widget_copied_toast">تم نسخ الخاطرة بنجاح 📋</string>
+ <string name="widget_copied_toast">تم نسخ الخاطرة بنجاح</string>
     <string name="drawer_add_widget">إضافة ودجت للشاشة الرئيسية</string>
-    <string name="widget_pin_instructions">المس مطولاً على شاشة هاتفك الرئيسية، ثم اختر (الأدوات/Widgets) واختر (منشوراتي) 🌸</string>
+ <string name="widget_pin_instructions">المس مطولاً على شاشة هاتفك الرئيسية، ثم اختر (الأدوات/Widgets) واختر (منشوراتي)</string>
 
     <!-- حذف الحساب والبيانات -->
     <string name="delete_account">حذف الحساب نهائياً</string>
@@ -424,28 +424,28 @@
 
     <!-- كاتب الخواطر بالذكاء الاصطناعي (AI Writer) -->
     <string name="ai_writer_title">كاتب الخواطر بالذكاء الاصطناعي</string>
-    <string name="ai_quota_badge">المحاولات المتبقية: %1$d / %2$d ✨</string>
+ <string name="ai_quota_badge">المحاولات المتبقية: %1$d / %2$d</string>
     <string name="ai_topic_label">اختر موضوع الخاطرة:</string>
     <string name="ai_style_label">اختر أسلوب الكتابة:</string>
     <string name="ai_custom_prompt_hint">أضف توجيهات خاصة (اختياري)...</string>
-    <string name="ai_generate_btn">✨ توليد خاطرة جديدة</string>
-    <string name="ai_generating">جاري التفكير والتوليد... ✨</string>
+ <string name="ai_generate_btn">توليد خاطرة جديدة</string>
+ <string name="ai_generating">جاري التفكير والتوليد...</string>
     <string name="ai_copy_btn">نسخ</string>
     <string name="ai_image_btn">صورة فنية</string>
     <string name="ai_video_btn">فيديو AI</string>
     <string name="ai_publish_btn">نشر</string>
-    <string name="ai_use_in_post_btn">إدراج في المنشور ✨</string>
+ <string name="ai_use_in_post_btn">إدراج في المنشور</string>
     <string name="ai_style_polish">تحسين وبلاغة</string>
     <string name="ai_key_settings_title">مفتاح الذكاء الاصطناعي (Gemini)</string>
     <string name="ai_key_settings_desc">أدخل مفتاح Google Gemini API لتشغيل ميزة التوليد بالذكاء الاصطناعي الحقيقي:</string>
     <string name="ai_key_settings_hint">AIzaSy...</string>
     <string name="ai_key_save">حفظ المفتاح</string>
     <string name="ai_key_get_free">احصل على مفتاح مجاني</string>
-    <string name="ai_key_saved_toast">تم حفظ مفتاح الذكاء الاصطناعي بنجاح ✨</string>
-    <string name="ai_key_missing_toast">يرجى ضبط مفتاح Gemini API لتفعيل الذكاء الاصطناعي ✨</string>
-    <string name="ai_offline_fallback_toast">تعذر الاتصال بالذكاء الاصطناعي، تم استخدام اقتباس مقترح بديل ✨</string>
-    <string name="ai_copied_toast">تم نسخ الخاطرة بنجاح ✨</string>
-    <string name="ai_quota_exceeded">لقد استنفدت محاولاتك اليومية. عد غداً ✨</string>
+ <string name="ai_key_saved_toast">تم حفظ مفتاح الذكاء الاصطناعي بنجاح</string>
+ <string name="ai_key_missing_toast">يرجى ضبط مفتاح Gemini API لتفعيل الذكاء الاصطناعي</string>
+ <string name="ai_offline_fallback_toast">تعذر الاتصال بالذكاء الاصطناعي، تم استخدام اقتباس مقترح بديل</string>
+ <string name="ai_copied_toast">تم نسخ الخاطرة بنجاح</string>
+ <string name="ai_quota_exceeded">لقد استنفدت محاولاتك اليومية. عد غداً</string>
     <string name="ai_topic_wisdom">حكم وحكمة</string>
     <string name="ai_topic_motivation">تحفيز ودافع</string>
     <string name="ai_topic_love">حب وعاطفة</string>
@@ -455,11 +455,11 @@
     <string name="ai_style_wisdom">نثر حكيم</string>
     <string name="ai_style_short">خاطرة قصيرة</string>
     <string name="ai_style_poem">شعر منثور</string>
-    <string name="drawer_ai_writer">كاتب الخواطر الذكي ✨</string>
+ <string name="drawer_ai_writer">كاتب الخواطر الذكي</string>
 
     <!-- AI Writer & Video Cooldown / Errors -->
-    <string name="ai_wait_seconds">يرجى الانتظار %d ثوانٍ قبل التوليد مرة أخرى ⏱️</string>
-    <string name="ai_generate_again_btn">✨ توليد خاطرة أخرى</string>
+ <string name="ai_wait_seconds">يرجى الانتظار %d ثوانٍ قبل التوليد مرة أخرى</string>
+ <string name="ai_generate_again_btn">توليد خاطرة أخرى</string>
 
     <!-- Video Studio & Reel Player -->
     <string name="studio_title">استوديو الفيديو</string>
@@ -490,9 +490,9 @@
     <string name="studio_text_invalid">يرجى كتابة نص صالح</string>
     <string name="studio_audio_silent">صامت</string>
     <string name="studio_audio_my_device">هاتفي</string>
-    <string name="studio_audio_downloaded">جاهز ✓</string>
-    <string name="studio_audio_download">تحميل 📥</string>
-    <string name="studio_audio_download_success">تم تحميل الصوت بنجاح ✓</string>
+ <string name="studio_audio_downloaded">جاهز</string>
+ <string name="studio_audio_download">تحميل</string>
+ <string name="studio_audio_download_success">تم تحميل الصوت بنجاح</string>
     <string name="studio_audio_pick_success">تم اختيار الصوت بنجاح</string>
     <string name="studio_audio_pick_failed">تعذر تحميل الصوت</string>
     <string name="studio_image_read_error">تعذر قراءة الصورة</string>
@@ -522,13 +522,13 @@
     <string name="framing_apply">تطبيق</string>
 
     <!-- Reel Player -->
-    <string name="reel_player_title">🎬 ريل منشوراتي</string>
+ <string name="reel_player_title">ريل منشوراتي</string>
     <string name="reel_export_mp4">تصدير MP4</string>
     <string name="reel_whatsapp_status">حالة واتساب</string>
-    <string name="reel_saved_gallery_success">تم حفظ الفيديو بنجاح في المعرض! 🎉</string>
-    <string name="reel_exporting_progress">🎬 جاري تجهيز وتصدير الريل كفيديو MP4...</string>
+ <string name="reel_saved_gallery_success">تم حفظ الفيديو بنجاح في المعرض!</string>
+ <string name="reel_exporting_progress">جاري تجهيز وتصدير الريل كفيديو MP4...</string>
     <string name="reel_export_failed">فشل تصدير الفيديو: %s</string>
-    <string name="reel_video_badge">ريل / فيديو 🎬</string>
+ <string name="reel_video_badge">ريل / فيديو</string>
 
     <!-- Community & Mood Selector -->
     <string name="mood_selector_title">كيف تشعر اليوم؟</string>
@@ -542,21 +542,21 @@
     <string name="mood_dua">أدعية وراحة</string>
     <string name="mood_write_btn">اكتب الآن</string>
     <string name="mood_active_display">معروض الآن: %s</string>
-    <string name="following_feed_menu">الكُتّاب الذين أتابعهم 👥</string>
+ <string name="following_feed_menu">الكُتّاب الذين أتابعهم</string>
     <string name="following_feed_empty_title">لا توجد منشورات لمن تتابعهم</string>
-    <string name="following_feed_empty_subtitle">تابع بعض الكتّاب والمبدعين لتظهر منشوراتهم هنا ✨</string>
+ <string name="following_feed_empty_subtitle">تابع بعض الكتّاب والمبدعين لتظهر منشوراتهم هنا</string>
     <string name="mood_empty_title">لا توجد منشورات بهذا المزاج حالياً</string>
-    <string name="mood_empty_subtitle">كن أول من يشارك خاطرة مناسبة لمزاج: %s ✨</string>
+ <string name="mood_empty_subtitle">كن أول من يشارك خاطرة مناسبة لمزاج: %s</string>
 
     <!-- Daily Streak Dialog -->
     <string name="streak_days_consecutive">أيام متتالية</string>
-    <string name="streak_longest">أطول سلسلة ⚡</string>
-    <string name="streak_total_active">إجمالي الأيام النشطة 📅</string>
+ <string name="streak_longest">أطول سلسلة</string>
+ <string name="streak_total_active">إجمالي الأيام النشطة</string>
     <string name="streak_day_format">%d يوم</string>
     <string name="streak_medals_title">أوسمة المثابرة والإلهام</string>
-    <string name="streak_share_btn">شارك إنجازك اليومي 🚀</string>
+ <string name="streak_share_btn">شارك إنجازك اليومي</string>
     <string name="streak_continue_reading">متابعة القراءة</string>
-    <string name="streak_unlocked">✓ تم الفتح</string>
+ <string name="streak_unlocked">تم الفتح</string>
     <string name="streak_remaining_days">باقي %d أيام</string>
     <string name="day_sat">سبت</string>
     <string name="day_sun">أحد</string>
@@ -573,10 +573,10 @@
     <string name="user_default_handle">@مستخدم</string>
 
 
-    <string name="studio_profile_enabled">البروفايل: مفعّل ✓</string>
-    <string name="studio_profile_disabled">البروفايل: معطّل ✕</string>
-    <string name="studio_tag_enabled">الوسم: مفعّل ✓</string>
-    <string name="studio_tag_disabled">الوسم: معطّل ✕</string>
+ <string name="studio_profile_enabled">البروفايل: مفعّل</string>
+ <string name="studio_profile_disabled">البروفايل: معطّل</string>
+ <string name="studio_tag_enabled">الوسم: مفعّل</string>
+ <string name="studio_tag_disabled">الوسم: معطّل</string>
     <string name="studio_audio_muted">تم كتم الصوت</string>
     <string name="studio_audio_unmuted">تم تشغيل الصوت</string>
 
@@ -618,7 +618,7 @@
     <!-- استكشاف الكتّاب والمتصدرون وكاتب الأسبوع -->
     <string name="drawer_writers">كُتّاب الأسبوع والمتصدرون</string>
     <string name="writers_title">استكشاف الكُتّاب والمتصدرون</string>
-    <string name="writer_of_the_week">كاتب الأسبوع 👑</string>
+ <string name="writer_of_the_week">كاتب الأسبوع</string>
     <string name="writer_of_the_week_desc">الكاتب الأكثر إلهاماً وتفاعلاً بنبض كلماته هذا الأسبوع</string>
     <string name="writer_weekly_likes">%d إعجاب هذا الأسبوع</string>
     <string name="writer_total_likes">%d إعجاب كلي</string>
@@ -627,14 +627,14 @@
     <string name="challenge_ends_in_days">ينتهي التحدي الأسبوعي خلال %d أيام</string>
     <string name="challenge_ends_tomorrow">ينتهي التحدي الأسبوعي غداً!</string>
     <string name="challenge_ends_today">ينتهي التحدي الأسبوعي الليلة!</string>
-    <string name="tab_weekly_leaderboard">🏆 كُتّاب الأسبوع</string>
-    <string name="tab_top_followers">💎 الأكثر متابعة</string>
-    <string name="tab_all_writers">🌟 كل الكُتّاب</string>
+ <string name="tab_weekly_leaderboard">كُتّاب الأسبوع</string>
+ <string name="tab_top_followers">الأكثر متابعة</string>
+ <string name="tab_all_writers">كل الكُتّاب</string>
     <string name="search_writers_hint">ابحث باسم المستخدم @username أو الاسم...</string>
     <string name="no_writers_found">لم يتم العثور على أي كاتب يطابق بحثك</string>
     <string name="view_profile_btn">الملف الشخصي</string>
     <string name="community_writers_badge">المتصدرون</string>
-    <string name="weekly_champion_congrats">مبروك للمتصدر! انشر وشارك خواطرك لتكون كاتب الأسبوع القادم 🔥</string>
+ <string name="weekly_champion_congrats">مبروك للمتصدر! انشر وشارك خواطرك لتكون كاتب الأسبوع القادم</string>
     <string name="no_weekly_posts_yet">كن أول من ينشر هذا الأسبوع ويحصد لقب كاتب الأسبوع!</string>
     <string name="leaderboard_rank_format">#%d</string>
     <string name="leaderboard_section_title">قائمة المتصدرين</string>

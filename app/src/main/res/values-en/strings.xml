@@ -87,7 +87,7 @@
     <string name="display_name_hint">Enter your name or nickname</string>
     <string name="username_label">Unique Username</string>
     <string name="username_desc">Unique handle starting with @ that belongs only to you.</string>
-    <string name="username_available">Username available ✓</string>
+ <string name="username_available">Username available</string>
     <string name="username_current">Your current username</string>
     <string name="username_too_short">Username must be at least 3 characters</string>
     <string name="username_invalid_chars">Only letters, numbers, _ and . allowed</string>
@@ -103,7 +103,7 @@
     <string name="edit_profile_btn">Edit</string>
     <string name="menu_edit_profile">Edit Profile</string>
     <string name="follow">+ Follow</string>
-    <string name="following">Following ✓</string>
+ <string name="following">Following</string>
     <string name="posts_count_label">Posts</string>
     <string name="followers_label">Followers</string>
     <string name="following_label">Following</string>
@@ -164,7 +164,7 @@
     <string name="filter_classic">Classic</string>
     <string name="lines_normal">Normal Lines</string>
     <string name="lines_loose">Spaced Lines</string>
-    <string name="letter_spacing">Letter Spacing ↔️</string>
+ <string name="letter_spacing">Letter Spacing ↔</string>
     <string name="text_gradient_normal">Text Gradient: Normal</string>
     <string name="text_gradient_gold">Gradient: Royal Gold</string>
     <string name="text_gradient_neon">Gradient: Cyber Neon</string>
@@ -192,7 +192,7 @@
     <string name="quote_none">Quotes: None</string>
     <string name="quote_quotes">Quotes: “ ”</string>
     <string name="quote_guillemets">Quotes: « »</string>
-    <string name="quote_brackets">Quotes: ❝ ❞</string>
+ <string name="quote_brackets">Quotes: ❝ ❞</string>
     <string name="author_signature">Author Signature</string>
     <string name="watermark_label">Watermark</string>
     <string name="instant_presets_subtitle">One-click instant styles:</string>
@@ -278,9 +278,9 @@
     <string name="notif_replied_comment">%s replied to your comment</string>
 
     <!-- Additional Profile &amp; UI -->
-    <string name="featured_writer">⭐ Featured Writer</string>
-    <string name="badge_admin">👑 Admin</string>
-    <string name="badge_writer">⭐ Featured Writer</string>
+ <string name="featured_writer">Featured Writer</string>
+ <string name="badge_admin">Admin</string>
+ <string name="badge_writer">Featured Writer</string>
     <string name="user_shared_posts_desc">Shared thoughts and posts will appear here</string>
     <string name="select_profile_picture_title">Choose Profile Photo</string>
     <string name="followers_title">Followers</string>
@@ -365,9 +365,9 @@
     <string name="saving_post_image">Saving image to gallery...</string>
     <string name="widget_quote_name">Daily Quote</string>
     <string name="widget_quote_description">Display inspiring quotes on your home screen with quick refresh and copy.</string>
-    <string name="widget_copied_toast">Quote copied successfully 📋</string>
+ <string name="widget_copied_toast">Quote copied successfully</string>
     <string name="drawer_add_widget">Add Home Screen Widget</string>
-    <string name="widget_pin_instructions">Long-press on your home screen, tap Widgets, and choose Manchorati 🌸</string>
+ <string name="widget_pin_instructions">Long-press on your home screen, tap Widgets, and choose Manchorati</string>
 
     <!-- Delete Account -->
     <string name="delete_account">Delete Account</string>
@@ -379,17 +379,17 @@
     <string name="delete_account_error">Could not delete account, please try again</string>
 
     <!-- Writer Tiers &amp; Challenges -->
-    <string name="badge_legendary">👑 Legendary Writer</string>
-    <string name="badge_elite">💎 Elite Writer</string>
-    <string name="badge_distinguished">⭐ Distinguished Writer</string>
-    <string name="badge_rising">🥈 Rising Writer</string>
-    <string name="badge_beginner">🥉 Beginner Writer</string>
+ <string name="badge_legendary">Legendary Writer</string>
+ <string name="badge_elite">Elite Writer</string>
+ <string name="badge_distinguished">Distinguished Writer</string>
+ <string name="badge_rising">Rising Writer</string>
+ <string name="badge_beginner">Beginner Writer</string>
     <string name="writer_challenges_title">Writer Ranks &amp; Challenges</string>
     <string name="writer_challenges_desc">Share your quotes and grow your audience to level up your rank and unlock exclusive badges!</string>
     <string name="current_tier_label">Your Current Rank:</string>
     <string name="next_tier_progress">%1$d of %2$d followers to next rank</string>
-    <string name="next_tier_remaining">%d followers left for promotion 🚀</string>
-    <string name="max_tier_reached">You have reached the pinnacle! Maximum rank achieved 🏆</string>
+ <string name="next_tier_remaining">%d followers left for promotion</string>
+ <string name="max_tier_reached">You have reached the pinnacle! Maximum rank achieved</string>
     <string name="ranks_guide_title">Ranks &amp; Levels Guide</string>
     <string name="milestones_title">Achievements &amp; Milestone Badges</string>
     <string name="milestone_1k">First Millennium Club (1K)</string>
@@ -400,8 +400,8 @@
     <string name="milestone_7k_desc">Reach 7,000 followers and broad influence</string>
     <string name="milestone_10k">Golden Legend Shield (10K)</string>
     <string name="milestone_10k_desc">More than 10,000 followers in the community</string>
-    <string name="badge_unlocked_label">Unlocked &amp; Complete ✨</string>
-    <string name="badge_locked_label">%d followers remaining 🔒</string>
+ <string name="badge_unlocked_label">Unlocked &amp; Complete</string>
+ <string name="badge_locked_label">%d followers remaining</string>
     <string name="btn_close_challenges">Understood, Keep Creating!</string>
 
     <!-- Email &amp; Password Authentication -->
@@ -421,28 +421,28 @@
 
     <!-- AI Writer -->
     <string name="ai_writer_title">AI Quote Writer</string>
-    <string name="ai_quota_badge">Remaining attempts: %1$d / %2$d ✨</string>
+ <string name="ai_quota_badge">Remaining attempts: %1$d / %2$d</string>
     <string name="ai_topic_label">Choose a topic:</string>
     <string name="ai_style_label">Choose writing style:</string>
     <string name="ai_custom_prompt_hint">Add custom instructions (optional)...</string>
-    <string name="ai_generate_btn">✨ Generate New Quote</string>
-    <string name="ai_generating">Thinking and generating... ✨</string>
+ <string name="ai_generate_btn">Generate New Quote</string>
+ <string name="ai_generating">Thinking and generating...</string>
     <string name="ai_copy_btn">Copy</string>
     <string name="ai_image_btn">Art Card</string>
     <string name="ai_video_btn">AI Video</string>
     <string name="ai_publish_btn">Publish</string>
-    <string name="ai_use_in_post_btn">Insert into Post ✨</string>
+ <string name="ai_use_in_post_btn">Insert into Post</string>
     <string name="ai_style_polish">Polish &amp; Rephrase</string>
     <string name="ai_key_settings_title">Gemini AI Key</string>
     <string name="ai_key_settings_desc">Enter your Google Gemini API key to enable live AI generation:</string>
     <string name="ai_key_settings_hint">AIzaSy...</string>
     <string name="ai_key_save">Save Key</string>
     <string name="ai_key_get_free">Get Free Key</string>
-    <string name="ai_key_saved_toast">Gemini API Key saved successfully ✨</string>
-    <string name="ai_key_missing_toast">Please configure Gemini API key to enable AI generation ✨</string>
-    <string name="ai_offline_fallback_toast">Could not connect to AI, used offline suggested quote ✨</string>
-    <string name="ai_copied_toast">Quote copied successfully ✨</string>
-    <string name="ai_quota_exceeded">You have used all your daily attempts. Come back tomorrow ✨</string>
+ <string name="ai_key_saved_toast">Gemini API Key saved successfully</string>
+ <string name="ai_key_missing_toast">Please configure Gemini API key to enable AI generation</string>
+ <string name="ai_offline_fallback_toast">Could not connect to AI, used offline suggested quote</string>
+ <string name="ai_copied_toast">Quote copied successfully</string>
+ <string name="ai_quota_exceeded">You have used all your daily attempts. Come back tomorrow</string>
     <string name="ai_topic_wisdom">Wisdom &amp; Quotes</string>
     <string name="ai_topic_motivation">Motivation &amp; Drive</string>
     <string name="ai_topic_love">Love &amp; Feelings</string>
@@ -452,11 +452,11 @@
     <string name="ai_style_wisdom">Wise Prose</string>
     <string name="ai_style_short">Short Quote</string>
     <string name="ai_style_poem">Free Verse</string>
-    <string name="drawer_ai_writer">AI Quote Writer ✨</string>
+ <string name="drawer_ai_writer">AI Quote Writer</string>
 
     <!-- AI Writer & Video Cooldown / Errors -->
-    <string name="ai_wait_seconds">Please wait %d seconds before generating again ⏱️</string>
-    <string name="ai_generate_again_btn">✨ Generate Another Quote</string>
+ <string name="ai_wait_seconds">Please wait %d seconds before generating again</string>
+ <string name="ai_generate_again_btn">Generate Another Quote</string>
 
     <!-- Video Studio & Reel Player -->
     <string name="studio_title">Video Studio</string>
@@ -487,9 +487,9 @@
     <string name="studio_text_invalid">Please enter valid text</string>
     <string name="studio_audio_silent">Mute</string>
     <string name="studio_audio_my_device">Device</string>
-    <string name="studio_audio_downloaded">Ready ✓</string>
-    <string name="studio_audio_download">Download 📥</string>
-    <string name="studio_audio_download_success">Audio downloaded successfully ✓</string>
+ <string name="studio_audio_downloaded">Ready</string>
+ <string name="studio_audio_download">Download</string>
+ <string name="studio_audio_download_success">Audio downloaded successfully</string>
     <string name="studio_audio_pick_success">Audio selected successfully</string>
     <string name="studio_audio_pick_failed">Failed to load audio</string>
     <string name="studio_image_read_error">Failed to read image</string>
@@ -519,41 +519,41 @@
     <string name="framing_apply">Apply</string>
 
     <!-- Reel Player -->
-    <string name="reel_player_title">🎬 Manchorati Reel</string>
+ <string name="reel_player_title">Manchorati Reel</string>
     <string name="reel_export_mp4">Export MP4</string>
     <string name="reel_whatsapp_status">WhatsApp Status</string>
-    <string name="reel_saved_gallery_success">Video saved to gallery successfully! 🎉</string>
-    <string name="reel_exporting_progress">🎬 Preparing and exporting Reel as MP4...</string>
+ <string name="reel_saved_gallery_success">Video saved to gallery successfully!</string>
+ <string name="reel_exporting_progress">Preparing and exporting Reel as MP4...</string>
     <string name="reel_export_failed">Failed to export video: %s</string>
-    <string name="reel_video_badge">Reel / Video 🎬</string>
+ <string name="reel_video_badge">Reel / Video</string>
 
     <!-- Community & Mood Selector -->
-    <string name="mood_selector_title">How are you feeling today? 💭</string>
+ <string name="mood_selector_title">How are you feeling today?</string>
     <string name="mood_selector_subtitle">Choose your mood to personalize quotes</string>
-    <string name="mood_all">🌟 All</string>
-    <string name="mood_calm">☕ Calm &amp; Serene</string>
-    <string name="mood_motivation">💪 Need Motivation</string>
-    <string name="mood_sad">😔 Down &amp; Sad</string>
-    <string name="mood_happy">😊 Optimistic &amp; Happy</string>
-    <string name="mood_love">❤️ Love &amp; Gratitude</string>
-    <string name="mood_dua">🤲 Prayers &amp; Peace</string>
-    <string name="mood_write_btn">Write ✍️</string>
+ <string name="mood_all">All</string>
+ <string name="mood_calm">Calm &amp; Serene</string>
+ <string name="mood_motivation">Need Motivation</string>
+ <string name="mood_sad">Down &amp; Sad</string>
+ <string name="mood_happy">Optimistic &amp; Happy</string>
+ <string name="mood_love">Love &amp; Gratitude</string>
+ <string name="mood_dua">Prayers &amp; Peace</string>
+ <string name="mood_write_btn">Write</string>
     <string name="mood_active_display">Showing now: %s</string>
-    <string name="following_feed_menu">Writers I Follow 👥</string>
+ <string name="following_feed_menu">Writers I Follow</string>
     <string name="following_feed_empty_title">No posts from writers you follow</string>
-    <string name="following_feed_empty_subtitle">Follow some writers and creators to see their posts here ✨</string>
+ <string name="following_feed_empty_subtitle">Follow some writers and creators to see their posts here</string>
     <string name="mood_empty_title">No posts with this mood currently</string>
-    <string name="mood_empty_subtitle">Be the first to share a quote for mood: %s ✨</string>
+ <string name="mood_empty_subtitle">Be the first to share a quote for mood: %s</string>
 
     <!-- Daily Streak Dialog -->
     <string name="streak_days_consecutive">Consecutive Days</string>
-    <string name="streak_longest">Longest Streak ⚡</string>
-    <string name="streak_total_active">Total Active Days 📅</string>
+ <string name="streak_longest">Longest Streak</string>
+ <string name="streak_total_active">Total Active Days</string>
     <string name="streak_day_format">%d days</string>
     <string name="streak_medals_title">Perseverance &amp; Inspiration Badges</string>
-    <string name="streak_share_btn">Share Daily Achievement 🚀</string>
+ <string name="streak_share_btn">Share Daily Achievement</string>
     <string name="streak_continue_reading">Continue Reading</string>
-    <string name="streak_unlocked">✓ Unlocked</string>
+ <string name="streak_unlocked">Unlocked</string>
     <string name="streak_remaining_days">%d days left</string>
     <string name="day_sat">Sat</string>
     <string name="day_sun">Sun</string>
@@ -570,10 +570,10 @@
     <string name="user_default_handle">@user</string>
 
 
-    <string name="studio_profile_enabled">Profile: On ✓</string>
-    <string name="studio_profile_disabled">Profile: Off ✕</string>
-    <string name="studio_tag_enabled">Tag: On ✓</string>
-    <string name="studio_tag_disabled">Tag: Off ✕</string>
+ <string name="studio_profile_enabled">Profile: On</string>
+ <string name="studio_profile_disabled">Profile: Off</string>
+ <string name="studio_tag_enabled">Tag: On</string>
+ <string name="studio_tag_disabled">Tag: Off</string>
     <string name="studio_audio_muted">Audio muted</string>
     <string name="studio_audio_unmuted">Audio enabled</string>
 
@@ -615,7 +615,7 @@
     <!-- Explore Writers & Weekly Leaderboard -->
     <string name="drawer_writers">Writers &amp; Weekly Leaderboard</string>
     <string name="writers_title">Explore Writers &amp; Leaderboard</string>
-    <string name="writer_of_the_week">Writer of the Week 👑</string>
+ <string name="writer_of_the_week">Writer of the Week</string>
     <string name="writer_of_the_week_desc">The most inspiring and active writer this week</string>
     <string name="writer_weekly_likes">%d likes this week</string>
     <string name="writer_total_likes">%d total likes</string>
@@ -624,14 +624,14 @@
     <string name="challenge_ends_in_days">Weekly challenge ends in %d days</string>
     <string name="challenge_ends_tomorrow">Weekly challenge ends tomorrow!</string>
     <string name="challenge_ends_today">Weekly challenge ends tonight!</string>
-    <string name="tab_weekly_leaderboard">🏆 Weekly Stars</string>
-    <string name="tab_top_followers">💎 Most Followed</string>
-    <string name="tab_all_writers">🌟 All Writers</string>
+ <string name="tab_weekly_leaderboard">Weekly Stars</string>
+ <string name="tab_top_followers">Most Followed</string>
+ <string name="tab_all_writers">All Writers</string>
     <string name="search_writers_hint">Search by @username or name...</string>
     <string name="no_writers_found">No writers found matching your search</string>
     <string name="view_profile_btn">Profile</string>
-    <string name="community_writers_badge">Top Writers 🏆</string>
-    <string name="weekly_champion_congrats">Congrats to the leader! Post and share quotes to become next week\'s star 🔥</string>
+ <string name="community_writers_badge">Top Writers</string>
+ <string name="weekly_champion_congrats">Congrats to the leader! Post and share quotes to become next week\'s star</string>
     <string name="no_weekly_posts_yet">Be the first to post this week and claim Writer of the Week!</string>
     <string name="leaderboard_rank_format">#%d</string>
     <string name="leaderboard_section_title">Leaderboard Rankings</string>

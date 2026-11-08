@@ -345,12 +345,10 @@ class AudioTimelineTrimmerView @JvmOverloads constructor(
         // 4. Music Title & Icon inside the track (if space permits)
         canvas.save()
         canvas.clipRect(winLeft + handleWidth, trackTop, winRight - handleWidth, trackBottom)
-        val iconX = winLeft + handleWidth + 4f * density
+        val textX = winLeft + handleWidth + 6f * density
         val textY = trackTop + 20f * density
-        canvas.drawText("♫", iconX, textY, musicIconPaint)
-
         val cleanTitle = if (trackTitle.length > 26) trackTitle.take(24) + "…" else trackTitle
-        canvas.drawText(cleanTitle, iconX + 16f * density, textY - 1f * density, titleTextPaint)
+        canvas.drawText(cleanTitle, textX, textY - 1f * density, titleTextPaint)
         canvas.restore()
 
         // 5. Cyan Playhead Needle Line & Cursor

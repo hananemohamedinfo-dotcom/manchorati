@@ -95,7 +95,7 @@
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:visibility="gone"
-                tools:text="👑 أسطوري"
+                tools:text="أسطوري"
                 tools:visibility="visible" />
         </LinearLayout>
 
@@ -123,7 +123,7 @@
             android:singleLine="true"
             android:textColor="@color/text_secondary"
             android:textSize="11.5sp"
-            tools:text="❤️ 125 إعجاب هذا الأسبوع" />
+            tools:text="125 إعجاب هذا الأسبوع" />
     </LinearLayout>
 
     <!-- زر المتابعة Follow -->

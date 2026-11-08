@@ -199,11 +199,11 @@ object StreakManager {
         tvTotalActiveDays.text = context.getString(R.string.streak_day_format, info.totalActiveDays)
 
         tvStreakSubtitle.text = when {
-            info.currentStreak >= 30 -> "أسطورة حقيقية! لقد أكملت شهراً كاملاً من الإلهام المستمر 👑"
-            info.currentStreak >= 14 -> "رائع ومبهر! أسبوعان من العادة الإيجابية اليومية 💎"
-            info.currentStreak >= 7 -> "ممتاز! أتممت أسبوعاً كاملاً من الإلهام والقراءة ⭐"
-            info.currentStreak >= 3 -> "بداية قوية! حافظ على اشتعال شعلتك اليومية 🔥"
-            else -> "بداية موفقة! عد غداً لمتابعة سلسلتك وإشعال الشعلة 🚀"
+            info.currentStreak >= 30 -> "أسطورة حقيقية! لقد أكملت شهراً كاملاً من الإلهام المستمر"
+            info.currentStreak >= 14 -> "رائع ومبهر! أسبوعان من العادة الإيجابية اليومية"
+            info.currentStreak >= 7 -> "ممتاز! أتممت أسبوعاً كاملاً من الإلهام والقراءة"
+            info.currentStreak >= 3 -> "بداية قوية! حافظ على اشتعال شعلتك اليومية"
+            else -> "بداية موفقة! عد غداً لمتابعة سلسلتك وإشعال الشعلة"
         }
 
         // دوائر أيام الأسبوع (السبت، الأحد، الإثنين، الثلاثاء، الأربعاء، الخميس، الجمعة)
@@ -276,7 +276,7 @@ object StreakManager {
     }
 
     private fun shareStreakText(context: Context, streak: Int) {
-        val message = "🔥 أنا في اليوم $streak على التوالي من قراءة ونشر الإلهام في تطبيق #منشوراتي!\nحمل التطبيق وابدأ سلسلتك اليومية الآن ✨"
+        val message = "أنا في اليوم $streak على التوالي من قراءة ونشر الإلهام في تطبيق #منشوراتي!\nحمل التطبيق وابدأ سلسلتك اليومية الآن"
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, message)

@@ -302,7 +302,7 @@
                                         android:textColor="#F59E0B"
                                         android:textSize="10sp"
                                         android:textStyle="bold"
-                                        tools:text="👑 أسطوري" />
+                                        tools:text="أسطوري" />
                                 </LinearLayout>
 
                                 <TextView
@@ -322,7 +322,7 @@
                                     android:textColor="#FDE68A"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
-                                    tools:text="❤️ 180 إعجاب هذا الأسبوع • 👥 1.2k متابع" />
+                                    tools:text="180 إعجاب هذا الأسبوع • 1.2k متابع" />
                             </LinearLayout>
                         </LinearLayout>
 

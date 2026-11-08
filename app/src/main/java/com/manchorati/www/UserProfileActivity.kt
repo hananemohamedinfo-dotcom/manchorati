@@ -369,7 +369,7 @@ class UserProfileActivity : AppCompatActivity() {
                         tvFollowingCount.text = following.formatCount()
                         if (persona.badge.isNotEmpty()) {
                             tvProfileBadge.visibility = View.VISIBLE
-                            tvProfileBadge.text = if (persona.badge == "verified") "موثّق ⭐" else "كاتب مميز ✍️"
+                            tvProfileBadge.text = if (persona.badge == "verified") "موثّق" else "كاتب مميز"
                         }
                     } else {
                         tvName.text = targetUserName

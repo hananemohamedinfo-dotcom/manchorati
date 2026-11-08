@@ -126,13 +126,13 @@ class WritersAdapter(
             // الإحصائيات بحسب التبويب النشط
             when (tabMode) {
                 WritersTabMode.WEEKLY -> {
-                    tvStats.text = "❤️ " + context.getString(R.string.writer_weekly_likes, writer.weeklyLikes)
+                    tvStats.text = context.getString(R.string.writer_weekly_likes, writer.weeklyLikes)
                 }
                 WritersTabMode.FOLLOWERS -> {
-                    tvStats.text = "👥 " + context.getString(R.string.writer_followers_count, writer.followersCount.formatCount())
+                    tvStats.text = context.getString(R.string.writer_followers_count, writer.followersCount.formatCount())
                 }
                 WritersTabMode.ALL -> {
-                    tvStats.text = "✍️ " + context.getString(R.string.writer_posts_count, writer.postsCount)
+                    tvStats.text = context.getString(R.string.writer_posts_count, writer.postsCount)
                 }
             }
 

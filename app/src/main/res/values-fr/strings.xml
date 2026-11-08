@@ -87,7 +87,7 @@
     <string name="display_name_hint">Entrez votre nom ou pseudonyme</string>
     <string name="username_label">Nom d’utilisateur unique</string>
     <string name="username_desc">Identifiant unique avec @ qui ne peut être utilisé par personne d’autre.</string>
-    <string name="username_available">Nom d’utilisateur disponible ✓</string>
+ <string name="username_available">Nom d’utilisateur disponible</string>
     <string name="username_current">Votre nom d’utilisateur actuel</string>
     <string name="username_too_short">Le nom d’utilisateur doit contenir au moins 3 caractères</string>
     <string name="username_invalid_chars">Uniquement lettres anglaises, chiffres, _ et .</string>
@@ -103,7 +103,7 @@
     <string name="edit_profile_btn">Modifier</string>
     <string name="menu_edit_profile">Modifier le profil</string>
     <string name="follow">+ Suivre</string>
-    <string name="following">Abonné ✓</string>
+ <string name="following">Abonné</string>
     <string name="posts_count_label">Publications</string>
     <string name="followers_label">Abonnés</string>
     <string name="following_label">Abonnements</string>
@@ -164,7 +164,7 @@
     <string name="filter_classic">Classique</string>
     <string name="lines_normal">Lignes normales</string>
     <string name="lines_loose">Lignes espacées</string>
-    <string name="letter_spacing">Espacement lettres ↔️</string>
+ <string name="letter_spacing">Espacement lettres ↔</string>
     <string name="text_gradient_normal">Dégradé texte : Normal</string>
     <string name="text_gradient_gold">Dégradé : Or royal</string>
     <string name="text_gradient_neon">Dégradé : Cyber néon</string>
@@ -192,7 +192,7 @@
     <string name="quote_none">Guillemets : Aucun</string>
     <string name="quote_quotes">Guillemets : “ ”</string>
     <string name="quote_guillemets">Guillemets : « »</string>
-    <string name="quote_brackets">Guillemets : ❝ ❞</string>
+ <string name="quote_brackets">Guillemets :</string>
     <string name="author_signature">Signature auteur</string>
     <string name="watermark_label">Filigrane</string>
     <string name="instant_presets_subtitle">Modèles prêts en un clic :</string>
@@ -278,9 +278,9 @@
     <string name="notif_replied_comment">%s a répondu à votre commentaire</string>
 
     <!-- Éléments additionnels de profil et interface -->
-    <string name="featured_writer">⭐ Rédacteur d’élite</string>
-    <string name="badge_admin">👑 Administrateur</string>
-    <string name="badge_writer">⭐ Rédacteur d’élite</string>
+ <string name="featured_writer">Rédacteur d’élite</string>
+ <string name="badge_admin">Administrateur</string>
+ <string name="badge_writer">Rédacteur d’élite</string>
     <string name="user_shared_posts_desc">Les pensées et textes partagés apparaîtront ici</string>
     <string name="select_profile_picture_title">Choisir une photo de profil</string>
     <string name="followers_title">Abonnés</string>
@@ -365,9 +365,9 @@
     <string name="saving_post_image">"Enregistrement de l’image dans la galerie..."</string>
     <string name="widget_quote_name">Pensée du jour</string>
     <string name="widget_quote_description">"Affichez de belles citations sur votre écran d’accueil avec actualisation rapide."</string>
-    <string name="widget_copied_toast">Citation copiée avec succès 📋</string>
+ <string name="widget_copied_toast">Citation copiée avec succès</string>
     <string name="drawer_add_widget">"Ajouter le Widget à l’écran"</string>
-    <string name="widget_pin_instructions">"Appuyez longuement sur l’écran d’accueil, choisissez Widgets puis Manchorati 🌸"</string>
+ <string name="widget_pin_instructions">"Appuyez longuement sur l’écran d’accueil, choisissez Widgets puis Manchorati "</string>
 
     <!-- Supprimer le compte -->
     <string name="delete_account">Supprimer le compte</string>
@@ -379,17 +379,17 @@
     <string name="delete_account_error">Échec de la suppression du compte</string>
 
     <!-- Rangs et défis d’écrivain -->
-    <string name="badge_legendary">👑 Écrivain Légendaire</string>
-    <string name="badge_elite">💎 Écrivain d’Élite</string>
-    <string name="badge_distinguished">⭐ Écrivain Distingué</string>
-    <string name="badge_rising">🥈 Écrivain Émergent</string>
-    <string name="badge_beginner">🥉 Écrivain Débutant</string>
+ <string name="badge_legendary">Écrivain Légendaire</string>
+ <string name="badge_elite">Écrivain d’Élite</string>
+ <string name="badge_distinguished">Écrivain Distingué</string>
+ <string name="badge_rising">Écrivain Émergent</string>
+ <string name="badge_beginner">Écrivain Débutant</string>
     <string name="writer_challenges_title">Rangs et défis d’auteur</string>
     <string name="writer_challenges_desc">Partagez vos citations et développez votre audience pour monter en grade et débloquer des badges exclusifs !</string>
     <string name="current_tier_label">Votre rang actuel :</string>
     <string name="next_tier_progress">%1$d sur %2$d abonnés pour le rang suivant</string>
-    <string name="next_tier_remaining">%d abonnés restants pour la promotion 🚀</string>
-    <string name="max_tier_reached">Vous avez atteint le sommet ! Plus haut rang obtenu 🏆</string>
+ <string name="next_tier_remaining">%d abonnés restants pour la promotion</string>
+ <string name="max_tier_reached">Vous avez atteint le sommet ! Plus haut rang obtenu</string>
     <string name="ranks_guide_title">Guide des rangs et niveaux</string>
     <string name="milestones_title">Badges de réalisations et défis</string>
     <string name="milestone_1k">Club du premier millier (1K)</string>
@@ -400,8 +400,8 @@
     <string name="milestone_7k_desc">Atteindre 7 000 abonnés et une large audience</string>
     <string name="milestone_10k">Bouclier d’Or Légendaire (10K)</string>
     <string name="milestone_10k_desc">Plus de 10 000 abonnés dans la communauté</string>
-    <string name="badge_unlocked_label">Débloqué et accompli ✨</string>
-    <string name="badge_locked_label">%d abonnés restants 🔒</string>
+ <string name="badge_unlocked_label">Débloqué et accompli</string>
+ <string name="badge_locked_label">%d abonnés restants</string>
     <string name="btn_close_challenges">Compris, continuons à créer !</string>
 
     <!-- Authentification par E-mail et Mot de passe -->
@@ -421,28 +421,28 @@
 
     <!-- Écrivain IA -->
     <string name="ai_writer_title">Écrivain de Citations IA</string>
-    <string name="ai_quota_badge">Tentatives restantes : %1$d / %2$d ✨</string>
+ <string name="ai_quota_badge">Tentatives restantes : %1$d / %2$d</string>
     <string name="ai_topic_label">Choisissez un sujet :</string>
     <string name="ai_style_label">Choisissez le style d’écriture :</string>
     <string name="ai_custom_prompt_hint">Ajoutez des instructions personnalisées (optionnel)...</string>
-    <string name="ai_generate_btn">✨ Générer une nouvelle citation</string>
-    <string name="ai_generating">Réflexion en cours... ✨</string>
+ <string name="ai_generate_btn">Générer une nouvelle citation</string>
+ <string name="ai_generating">Réflexion en cours...</string>
     <string name="ai_copy_btn">Copier</string>
     <string name="ai_image_btn">Carte artistique</string>
     <string name="ai_video_btn">Vidéo IA</string>
     <string name="ai_publish_btn">Publier</string>
-    <string name="ai_use_in_post_btn">Insérer dans le post ✨</string>
+ <string name="ai_use_in_post_btn">Insérer dans le post</string>
     <string name="ai_style_polish">Améliorer &amp; Peaufiner</string>
     <string name="ai_key_settings_title">Clé Gemini AI</string>
     <string name="ai_key_settings_desc">Entrez votre clé Google Gemini API pour activer la génération IA en direct :</string>
     <string name="ai_key_settings_hint">AIzaSy...</string>
     <string name="ai_key_save">Enregistrer</string>
     <string name="ai_key_get_free">Obtenir une clé gratuite</string>
-    <string name="ai_key_saved_toast">Clé API enregistrée avec succès ✨</string>
+ <string name="ai_key_saved_toast">Clé API enregistrée avec succès</string>
     <string name="ai_key_missing_toast">Veuillez configurer la cl\u00e9 Gemini API pour activer l\'IA \u2728</string>
     <string name="ai_offline_fallback_toast">Impossible de joindre l\'IA, citation locale sugg\u00e9r\u00e9e utilis\u00e9e \u2728</string>
-    <string name="ai_copied_toast">Citation copiée avec succès ✨</string>
-    <string name="ai_quota_exceeded">Vous avez épuisé vos tentatives du jour. Revenez demain ✨</string>
+ <string name="ai_copied_toast">Citation copiée avec succès</string>
+ <string name="ai_quota_exceeded">Vous avez épuisé vos tentatives du jour. Revenez demain</string>
     <string name="ai_topic_wisdom">Sagesse &amp; Citations</string>
     <string name="ai_topic_motivation">Motivation &amp; Élan</string>
     <string name="ai_topic_love">Amour &amp; Sentiments</string>
@@ -452,11 +452,11 @@
     <string name="ai_style_wisdom">Prose sage</string>
     <string name="ai_style_short">Citation courte</string>
     <string name="ai_style_poem">Vers libre</string>
-    <string name="drawer_ai_writer">Écrivain IA ✨</string>
+ <string name="drawer_ai_writer">Écrivain IA</string>
 
     <!-- Écrivain IA & Cooldown / Erreurs Vidéo -->
-    <string name="ai_wait_seconds">Veuillez patienter %d secondes avant de régénérer ⏱️</string>
-    <string name="ai_generate_again_btn">✨ Générer une autre citation</string>
+ <string name="ai_wait_seconds">Veuillez patienter %d secondes avant de régénérer</string>
+ <string name="ai_generate_again_btn">Générer une autre citation</string>
 
     <!-- Studio Vidéo & Lecteur de Reels -->
     <string name="studio_title">Studio Vidéo</string>
@@ -487,9 +487,9 @@
     <string name="studio_text_invalid">Veuillez saisir un texte valide</string>
     <string name="studio_audio_silent">Muet</string>
     <string name="studio_audio_my_device">Appareil</string>
-    <string name="studio_audio_downloaded">Prêt ✓</string>
-    <string name="studio_audio_download">Télécharger 📥</string>
-    <string name="studio_audio_download_success">Audio téléchargé avec succès ✓</string>
+ <string name="studio_audio_downloaded">Prêt</string>
+ <string name="studio_audio_download">Télécharger</string>
+ <string name="studio_audio_download_success">Audio téléchargé avec succès</string>
     <string name="studio_audio_pick_success">Audio sélectionné avec succès</string>
     <string name="studio_audio_pick_failed">Impossible de charger l’audio</string>
     <string name="studio_image_read_error">Impossible de lire l’image</string>
@@ -519,41 +519,41 @@
     <string name="framing_apply">Appliquer</string>
 
     <!-- Lecteur de Reels -->
-    <string name="reel_player_title">🎬 Reel Manchorati</string>
+ <string name="reel_player_title">Reel Manchorati</string>
     <string name="reel_export_mp4">Exporter MP4</string>
     <string name="reel_whatsapp_status">Statut WhatsApp</string>
-    <string name="reel_saved_gallery_success">Vidéo enregistrée dans la galerie avec succès ! 🎉</string>
-    <string name="reel_exporting_progress">🎬 Préparation et exportation du Reel en MP4...</string>
+ <string name="reel_saved_gallery_success">Vidéo enregistrée dans la galerie avec succès !</string>
+ <string name="reel_exporting_progress">Préparation et exportation du Reel en MP4...</string>
     <string name="reel_export_failed">Échec de l’exportation de la vidéo : %s</string>
-    <string name="reel_video_badge">Reel / Vidéo 🎬</string>
+ <string name="reel_video_badge">Reel / Vidéo</string>
 
     <!-- Communauté & Sélecteur d'humeur -->
-    <string name="mood_selector_title">Comment vous sentez-vous aujourd’hui ? 💭</string>
+ <string name="mood_selector_title">Comment vous sentez-vous aujourd’hui ?</string>
     <string name="mood_selector_subtitle">Choisissez votre humeur pour personnaliser les citations</string>
-    <string name="mood_all">🌟 Tout</string>
-    <string name="mood_calm">☕ Calme &amp; Serein</string>
-    <string name="mood_motivation">💪 Besoin de motivation</string>
-    <string name="mood_sad">😔 Triste &amp; Mélancolique</string>
-    <string name="mood_happy">😊 Optimiste &amp; Heureux</string>
-    <string name="mood_love">❤️ Amour &amp; Gratitude</string>
-    <string name="mood_dua">🤲 Prières &amp; Sérénité</string>
-    <string name="mood_write_btn">Écrire ✍️</string>
+ <string name="mood_all">Tout</string>
+ <string name="mood_calm">Calme &amp; Serein</string>
+ <string name="mood_motivation">Besoin de motivation</string>
+ <string name="mood_sad">Triste &amp; Mélancolique</string>
+ <string name="mood_happy">Optimiste &amp; Heureux</string>
+ <string name="mood_love">Amour &amp; Gratitude</string>
+ <string name="mood_dua">Prières &amp; Sérénité</string>
+ <string name="mood_write_btn">Écrire</string>
     <string name="mood_active_display">Affichage actuel : %s</string>
-    <string name="following_feed_menu">Auteurs que je suis 👥</string>
+ <string name="following_feed_menu">Auteurs que je suis</string>
     <string name="following_feed_empty_title">Aucune publication des auteurs suivis</string>
-    <string name="following_feed_empty_subtitle">Suivez des auteurs et créateurs pour afficher leurs publications ici ✨</string>
+ <string name="following_feed_empty_subtitle">Suivez des auteurs et créateurs pour afficher leurs publications ici</string>
     <string name="mood_empty_title">Aucune publication pour cette humeur actuellement</string>
-    <string name="mood_empty_subtitle">Soyez le premier à partager une citation pour l’humeur : %s ✨</string>
+ <string name="mood_empty_subtitle">Soyez le premier à partager une citation pour l’humeur : %s</string>
 
     <!-- Dialog Série Quotidienne -->
     <string name="streak_days_consecutive">Jours consécutifs</string>
-    <string name="streak_longest">Meilleure série ⚡</string>
-    <string name="streak_total_active">Total des jours actifs 📅</string>
+ <string name="streak_longest">Meilleure série</string>
+ <string name="streak_total_active">Total des jours actifs</string>
     <string name="streak_day_format">%d jours</string>
     <string name="streak_medals_title">Badges de persévérance et d’inspiration</string>
-    <string name="streak_share_btn">Partager votre réussite quotidienne 🚀</string>
+ <string name="streak_share_btn">Partager votre réussite quotidienne</string>
     <string name="streak_continue_reading">Continuer la lecture</string>
-    <string name="streak_unlocked">✓ Débloqué</string>
+ <string name="streak_unlocked">Débloqué</string>
     <string name="streak_remaining_days">%d jours restants</string>
     <string name="day_sat">Sam</string>
     <string name="day_sun">Dim</string>
@@ -570,10 +570,10 @@
     <string name="user_default_handle">@utilisateur</string>
 
 
-    <string name="studio_profile_enabled">Profil : Activé ✓</string>
-    <string name="studio_profile_disabled">Profil : Désactivé ✕</string>
-    <string name="studio_tag_enabled">Tag : Activé ✓</string>
-    <string name="studio_tag_disabled">Tag : Désactivé ✕</string>
+ <string name="studio_profile_enabled">Profil : Activé</string>
+ <string name="studio_profile_disabled">Profil : Désactivé</string>
+ <string name="studio_tag_enabled">Tag : Activé</string>
+ <string name="studio_tag_disabled">Tag : Désactivé</string>
     <string name="studio_audio_muted">Audio coupé</string>
     <string name="studio_audio_unmuted">Audio activé</string>
 
@@ -615,7 +615,7 @@
     <!-- Découvrir les auteurs et classement hebdomadaire -->
     <string name="drawer_writers">Auteurs &amp; Classement hebdo</string>
     <string name="writers_title">Découvrir les auteurs &amp; Classement</string>
-    <string name="writer_of_the_week">Auteur de la semaine 👑</string>
+ <string name="writer_of_the_week">Auteur de la semaine</string>
     <string name="writer_of_the_week_desc">L\'auteur le plus inspirant et actif cette semaine</string>
     <string name="writer_weekly_likes">%d j\'aime cette semaine</string>
     <string name="writer_total_likes">%d j\'aime au total</string>
@@ -624,14 +624,14 @@
     <string name="challenge_ends_in_days">Le défi hebdo se termine dans %d jours</string>
     <string name="challenge_ends_tomorrow">Le défi hebdo se termine demain !</string>
     <string name="challenge_ends_today">Le défi hebdo se termine ce soir !</string>
-    <string name="tab_weekly_leaderboard">🏆 Étoiles de la semaine</string>
-    <string name="tab_top_followers">💎 Plus suivis</string>
-    <string name="tab_all_writers">🌟 Tous les auteurs</string>
+ <string name="tab_weekly_leaderboard">Étoiles de la semaine</string>
+ <string name="tab_top_followers">Plus suivis</string>
+ <string name="tab_all_writers">Tous les auteurs</string>
     <string name="search_writers_hint">Rechercher par @username ou nom...</string>
     <string name="no_writers_found">Aucun auteur ne correspond à votre recherche</string>
     <string name="view_profile_btn">Profil</string>
-    <string name="community_writers_badge">Top Auteurs 🏆</string>
-    <string name="weekly_champion_congrats">Bravo au leader ! Publiez vos citations pour devenir la star de la semaine 🔥</string>
+ <string name="community_writers_badge">Top Auteurs</string>
+ <string name="weekly_champion_congrats">Bravo au leader ! Publiez vos citations pour devenir la star de la semaine</string>
     <string name="no_weekly_posts_yet">Soyez le premier à publier cette semaine pour remporter le titre !</string>
     <string name="leaderboard_rank_format">#%d</string>
     <string name="leaderboard_section_title">Classement des auteurs</string>

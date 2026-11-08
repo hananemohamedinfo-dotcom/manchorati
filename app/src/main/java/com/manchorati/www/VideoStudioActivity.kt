@@ -1948,7 +1948,7 @@ class VideoStudioActivity : AppCompatActivity() {
                 title = if (customAudioTitle.isNotBlank()) customAudioTitle else getString(R.string.studio_audio_my_device),
                 iconRes = R.drawable.ic_capcut_audio,
                 isSelected = true,
-                subtitle = "تعديل القص ✂️",
+                subtitle = "تعديل القص",
                 onClick = {
                     showAudioTrimmerDialog(customAudioUri!!)
                 }
@@ -1989,7 +1989,7 @@ class VideoStudioActivity : AppCompatActivity() {
 
         for ((id, title, iconRes) in builtInLoops) {
             val isSelected = (selectedAudio == id) && (downloadedAudioPath == null)
-            val subtitle = if (isSelected) "تعديل القص ✂️" else null
+            val subtitle = if (isSelected) "تعديل القص" else null
             val card = createAudioCard(
                 title = title,
                 iconRes = iconRes,
@@ -2090,7 +2090,7 @@ class VideoStudioActivity : AppCompatActivity() {
 
                     tag = "status_${onlineAudio.id}"
 
-                    text = if (isDownloaded) "جاهز ✓" else "تحميل ⬇"
+                    text = if (isDownloaded) "جاهز" else "تحميل"
 
                     setTextColor(Color.parseColor(if (isDownloaded) "#10B981" else "#38BDF8"))
 
@@ -4064,7 +4064,7 @@ var trackTitle = "مقطع صوتي"
 
         val qualityList = listOf(
 
-            Triple("1080p", "1080p FHD ★", "دقة فائقة"),
+            Triple("1080p", "1080p FHD", "دقة فائقة"),
 
             Triple("720p", "720p HD", "متوازنة"),
 
@@ -4662,7 +4662,7 @@ var trackTitle = "مقطع صوتي"
         }
         tvVnTrackAudioTitle?.text = audioTitle
         tvVnTrackAudioTimeBadge?.text = if (customAudioUri != null) {
-            "قص: ${formatTime(audioStartOffsetMs)} ✂️"
+            "قص: ${formatTime(audioStartOffsetMs)}"
         } else {
             "00:00 / ${formatTime((selectedDuration * 1000L))}"
         }

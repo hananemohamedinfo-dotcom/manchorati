@@ -63,11 +63,11 @@
                             android:orientation="horizontal"
                             android:paddingHorizontal="8dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="🔥"
-                                android:textSize="13sp" />
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/ic_flame"
+                                app:tint="#F59E0B" />
 
                             <TextView
                                 android:id="@+id/tvStreakCount"

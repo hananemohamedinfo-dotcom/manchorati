@@ -105,7 +105,7 @@
                     android:textColor="#FBBF24"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    tools:text="⭐ كاتب متميز" />
+                    tools:text="كاتب متميز" />
             </LinearLayout>
 
             <!-- Progress to next tier -->
@@ -136,7 +136,7 @@
                 android:layout_marginTop="6dp"
                 android:textColor="#38BDF8"
                 android:textSize="11sp"
-                tools:text="متبقي 550 متابع للترقية 🚀" />
+                tools:text="متبقي 550 متابع للترقية" />
         </LinearLayout>
 
         <!-- Section: Ranks Hierarchy Guide -->

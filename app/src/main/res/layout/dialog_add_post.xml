@@ -219,7 +219,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="🎨 قوالب البطاقة"
+                    android:text="قوالب البطاقة"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -235,7 +235,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="🖼️ الخلفية"
+                    android:text="الخلفية"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -250,7 +250,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="🏷️ الوسم"
+                    android:text="الوسم"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -265,7 +265,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="🌈 لون النص"
+                    android:text="لون النص"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -280,7 +280,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="🔤 نوع الخط"
+                    android:text="نوع الخط"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
