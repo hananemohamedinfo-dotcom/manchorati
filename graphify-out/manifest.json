@@ -1,0 +1,533 @@
+{
+  ".agents/skills/constraint-driven-development/scripts/quality-gate.mjs": {
+    "mtime": 1794168925.098418,
+    "seen": 1794172649.8896992,
+    "ast_hash": "21010d4f04e0a98a30edfafeb79ef356",
+    "semantic_hash": "21010d4f04e0a98a30edfafeb79ef356"
+  },
+  ".agents/skills/idea-refine/scripts/idea-refine.sh": {
+    "mtime": 1794168925.134986,
+    "seen": 1794172649.8907244,
+    "ast_hash": "7d09d06b836527b5261a27027b1d8548",
+    "semantic_hash": "7d09d06b836527b5261a27027b1d8548"
+  },
+  "admin_dashboard/app.py": {
+    "mtime": 1793926228.0809743,
+    "seen": 1794172649.8917265,
+    "ast_hash": "607b5e73cec9b35e068d20f0edee702e",
+    "semantic_hash": "607b5e73cec9b35e068d20f0edee702e"
+  },
+  "app/build.gradle.kts": {
+    "mtime": 1793834699.6507921,
+    "seen": 1794172649.8917265,
+    "ast_hash": "503e0879284199f35384ee03c1e3c244",
+    "semantic_hash": "503e0879284199f35384ee03c1e3c244"
+  },
+  "app/google-services.json": {
+    "mtime": 1793705150.4884613,
+    "seen": 1794172649.8917265,
+    "ast_hash": "bc35acbbbe3a31fbca65afdd84f17553",
+    "semantic_hash": "bc35acbbbe3a31fbca65afdd84f17553",
+    "ast_empty": true
+  },
+  "app/src/androidTest/java/com/manchorati/www/ExampleInstrumentedTest.kt": {
+    "mtime": 1793705178.4166524,
+    "seen": 1794172649.8917265,
+    "ast_hash": "3501d08f84a7e4dc1bc58fa244c6683a",
+    "semantic_hash": "3501d08f84a7e4dc1bc58fa244c6683a"
+  },
+  "app/src/main/java/com/manchorati/www/AiWriterBottomSheetDialog.kt": {
+    "mtime": 1793926157.542657,
+    "seen": 1794172649.8927217,
+    "ast_hash": "d57f9af08cebec6352c878b2c52f462c",
+    "semantic_hash": "d57f9af08cebec6352c878b2c52f462c"
+  },
+  "app/src/main/java/com/manchorati/www/AiWriterManager.kt": {
+    "mtime": 1793926125.467534,
+    "seen": 1794172649.8932464,
+    "ast_hash": "192a4e288de026cb9fd900b4e551f248",
+    "semantic_hash": "192a4e288de026cb9fd900b4e551f248"
+  },
+  "app/src/main/java/com/manchorati/www/AppFirebaseMessagingService.kt": {
+    "mtime": 1793834766.1920953,
+    "seen": 1794172649.8932464,
+    "ast_hash": "843de67220600bf6d663be61fab80e00",
+    "semantic_hash": "843de67220600bf6d663be61fab80e00"
+  },
+  "app/src/main/java/com/manchorati/www/AppNotification.kt": {
+    "mtime": 1793705178.165069,
+    "seen": 1794172649.894257,
+    "ast_hash": "ec5cf8af64d63421f5b9c148ebdd5a3b",
+    "semantic_hash": "ec5cf8af64d63421f5b9c148ebdd5a3b"
+  },
+  "app/src/main/java/com/manchorati/www/AudioTimelineTrimmerView.kt": {
+    "mtime": 1794047646.2638347,
+    "seen": 1794172649.894257,
+    "ast_hash": "215a059c4e251c9e60370eaf10727678",
+    "semantic_hash": "215a059c4e251c9e60370eaf10727678"
+  },
+  "app/src/main/java/com/manchorati/www/AuthManager.kt": {
+    "mtime": 1793705177.9968455,
+    "seen": 1794172649.895257,
+    "ast_hash": "1b31ab76005dc4a2c7d0930f4c83235a",
+    "semantic_hash": "1b31ab76005dc4a2c7d0930f4c83235a"
+  },
+  "app/src/main/java/com/manchorati/www/AutoEngagementWorker.kt": {
+    "mtime": 1793705177.6809719,
+    "seen": 1794172649.895257,
+    "ast_hash": "458c7bf40f18f406e81032c79ecbeae9",
+    "semantic_hash": "458c7bf40f18f406e81032c79ecbeae9"
+  },
+  "app/src/main/java/com/manchorati/www/BadWordsFilter.kt": {
+    "mtime": 1793705178.21291,
+    "seen": 1794172649.8962498,
+    "ast_hash": "34a9be94b84dab77212adea929999b75",
+    "semantic_hash": "34a9be94b84dab77212adea929999b75"
+  },
+  "app/src/main/java/com/manchorati/www/BookmarkManager.kt": {
+    "mtime": 1793705178.313846,
+    "seen": 1794172649.8962498,
+    "ast_hash": "d276a32a54848ce9386750509795be28",
+    "semantic_hash": "d276a32a54848ce9386750509795be28"
+  },
+  "app/src/main/java/com/manchorati/www/CategoriesFragment.kt": {
+    "mtime": 1793705178.047297,
+    "seen": 1794172649.8972602,
+    "ast_hash": "fec63d7d744a71db7d31af56ce5c1154",
+    "semantic_hash": "fec63d7d744a71db7d31af56ce5c1154"
+  },
+  "app/src/main/java/com/manchorati/www/Category.kt": {
+    "mtime": 1793705178.260655,
+    "seen": 1794172649.8972602,
+    "ast_hash": "270740e5bc281534946755e180469edf",
+    "semantic_hash": "270740e5bc281534946755e180469edf"
+  },
+  "app/src/main/java/com/manchorati/www/CategoryAdapter.kt": {
+    "mtime": 1793806099.7496357,
+    "seen": 1794172649.8982575,
+    "ast_hash": "ba72cac93f587e23413c77d3345453c9",
+    "semantic_hash": "ba72cac93f587e23413c77d3345453c9"
+  },
+  "app/src/main/java/com/manchorati/www/CategoryPostsActivity.kt": {
+    "mtime": 1793705177.9516764,
+    "seen": 1794172649.8982575,
+    "ast_hash": "0f274afe3946102707b927c91b487da2",
+    "semantic_hash": "0f274afe3946102707b927c91b487da2"
+  },
+  "app/src/main/java/com/manchorati/www/CodecInputSurface.kt": {
+    "mtime": 1793705178.1807053,
+    "seen": 1794172649.8992589,
+    "ast_hash": "6fcec3de06fc6a747440932699ad62fa",
+    "semantic_hash": "6fcec3de06fc6a747440932699ad62fa"
+  },
+  "app/src/main/java/com/manchorati/www/Comment.kt": {
+    "mtime": 1793705178.2302015,
+    "seen": 1794172649.8992589,
+    "ast_hash": "f04f5644e52680f437fdb5fa499f1f6c",
+    "semantic_hash": "f04f5644e52680f437fdb5fa499f1f6c"
+  },
+  "app/src/main/java/com/manchorati/www/CommentsAdapter.kt": {
+    "mtime": 1793705178.2302015,
+    "seen": 1794172649.9012568,
+    "ast_hash": "c451e3f5173586591b7bde50017edcdf",
+    "semantic_hash": "c451e3f5173586591b7bde50017edcdf"
+  },
+  "app/src/main/java/com/manchorati/www/CommunityAdapter.kt": {
+    "mtime": 1794006672.1072755,
+    "seen": 1794172649.902278,
+    "ast_hash": "6fb25ebeae8921d833a7044b9aeb0a88",
+    "semantic_hash": "6fb25ebeae8921d833a7044b9aeb0a88"
+  },
+  "app/src/main/java/com/manchorati/www/CommunityFragment.kt": {
+    "mtime": 1793970396.6357021,
+    "seen": 1794172649.9032505,
+    "ast_hash": "fc328ae9fa65f39244f72f105cd0fb40",
+    "semantic_hash": "fc328ae9fa65f39244f72f105cd0fb40"
+  },
+  "app/src/main/java/com/manchorati/www/CommunityPost.kt": {
+    "mtime": 1793705177.9012635,
+    "seen": 1794172649.9032505,
+    "ast_hash": "ffeba9f54c19cdb143e4c6a48ffb6312",
+    "semantic_hash": "ffeba9f54c19cdb143e4c6a48ffb6312"
+  },
+  "app/src/main/java/com/manchorati/www/CommunityPostDialogHelper.kt": {
+    "mtime": 1793926198.1900437,
+    "seen": 1794172649.9046907,
+    "ast_hash": "94f49f7cde0da8b40eaf69c7a5c481fe",
+    "semantic_hash": "94f49f7cde0da8b40eaf69c7a5c481fe"
+  },
+  "app/src/main/java/com/manchorati/www/CommunityViewTracker.kt": {
+    "mtime": 1793970274.0704298,
+    "seen": 1794172649.9046907,
+    "ast_hash": "2d8a4aaa54365e0c7117f26586dc4597",
+    "semantic_hash": "2d8a4aaa54365e0c7117f26586dc4597"
+  },
+  "app/src/main/java/com/manchorati/www/ContactActivity.kt": {
+    "mtime": 1793705178.117844,
+    "seen": 1794172649.905691,
+    "ast_hash": "c495bc6252063a2b8914ffb3f9a276e0",
+    "semantic_hash": "c495bc6252063a2b8914ffb3f9a276e0"
+  },
+  "app/src/main/java/com/manchorati/www/CopyActivity.kt": {
+    "mtime": 1793705178.2913363,
+    "seen": 1794172649.905691,
+    "ast_hash": "541536a6e31b3557d97965c3b1a197dc",
+    "semantic_hash": "541536a6e31b3557d97965c3b1a197dc"
+  },
+  "app/src/main/java/com/manchorati/www/DailyNotificationHelper.kt": {
+    "mtime": 1793705177.9826357,
+    "seen": 1794172649.9066906,
+    "ast_hash": "043850737b4c945416768c3f2324f678",
+    "semantic_hash": "043850737b4c945416768c3f2324f678"
+  },
+  "app/src/main/java/com/manchorati/www/DailyNotificationWorker.kt": {
+    "mtime": 1793705178.0860405,
+    "seen": 1794172649.9076922,
+    "ast_hash": "3c5424618e29aca0d6148bd33dcdbfc0",
+    "semantic_hash": "3c5424618e29aca0d6148bd33dcdbfc0"
+  },
+  "app/src/main/java/com/manchorati/www/DatabaseHelper.kt": {
+    "mtime": 1793705177.5308692,
+    "seen": 1794172649.9076922,
+    "ast_hash": "bb6d733b0dd2d4f5542faf2ca8c87369",
+    "semantic_hash": "bb6d733b0dd2d4f5542faf2ca8c87369"
+  },
+  "app/src/main/java/com/manchorati/www/Extensions.kt": {
+    "mtime": 1793705178.275669,
+    "seen": 1794172649.908705,
+    "ast_hash": "657bca88fb4ee75ad83941f8cc6f6617",
+    "semantic_hash": "657bca88fb4ee75ad83941f8cc6f6617"
+  },
+  "app/src/main/java/com/manchorati/www/FavoritesFragment.kt": {
+    "mtime": 1793705178.196321,
+    "seen": 1794172649.908705,
+    "ast_hash": "f945839eb1e0ca9102ed74524dc7b3a5",
+    "semantic_hash": "f945839eb1e0ca9102ed74524dc7b3a5"
+  },
+  "app/src/main/java/com/manchorati/www/FirestoreManager.kt": {
+    "mtime": 1793705177.6049652,
+    "seen": 1794172649.9097064,
+    "ast_hash": "4203a718900f4aa9f41c7ac942040486",
+    "semantic_hash": "4203a718900f4aa9f41c7ac942040486"
+  },
+  "app/src/main/java/com/manchorati/www/FirestorePost.kt": {
+    "mtime": 1793705178.196321,
+    "seen": 1794172649.9107046,
+    "ast_hash": "d3cd93d2c3defec700cdae03ca6a88d6",
+    "semantic_hash": "d3cd93d2c3defec700cdae03ca6a88d6"
+  },
+  "app/src/main/java/com/manchorati/www/ImageUtils.kt": {
+    "mtime": 1794007328.4235854,
+    "seen": 1794172649.9112155,
+    "ast_hash": "2af5a5e8858c1bc1c68f11877a3f9d64",
+    "semantic_hash": "2af5a5e8858c1bc1c68f11877a3f9d64"
+  },
+  "app/src/main/java/com/manchorati/www/LocalLikesManager.kt": {
+    "mtime": 1793705178.0061977,
+    "seen": 1794172649.9112155,
+    "ast_hash": "fe887e36dd4ab81a3c3869c8bcb34e3d",
+    "semantic_hash": "fe887e36dd4ab81a3c3869c8bcb34e3d"
+  },
+  "app/src/main/java/com/manchorati/www/LocaleHelper.kt": {
+    "mtime": 1793705178.165069,
+    "seen": 1794172649.912232,
+    "ast_hash": "7c26f7c1f7eac8a13fe80eeb15725932",
+    "semantic_hash": "7c26f7c1f7eac8a13fe80eeb15725932"
+  },
+  "app/src/main/java/com/manchorati/www/MainActivity.kt": {
+    "mtime": 1793926213.3253767,
+    "seen": 1794172649.912232,
+    "ast_hash": "beea8f61950d2bd9133b4b34cdd01b79",
+    "semantic_hash": "beea8f61950d2bd9133b4b34cdd01b79"
+  },
+  "app/src/main/java/com/manchorati/www/MainPagerAdapter.kt": {
+    "mtime": 1793804034.79997,
+    "seen": 1794172649.912232,
+    "ast_hash": "9c4c6e1fcd21ffe6e6890c64dd44bc18",
+    "semantic_hash": "9c4c6e1fcd21ffe6e6890c64dd44bc18"
+  },
+  "app/src/main/java/com/manchorati/www/NotificationHelper.kt": {
+    "mtime": 1793834741.1038928,
+    "seen": 1794172649.9137428,
+    "ast_hash": "db06e1966f551b3b0d497bf01edeca69",
+    "semantic_hash": "db06e1966f551b3b0d497bf01edeca69"
+  },
+  "app/src/main/java/com/manchorati/www/NotificationReceiver.kt": {
+    "mtime": 1793705177.930727,
+    "seen": 1794172649.9147916,
+    "ast_hash": "8737ed29999b7c28ffffa7ebee9d0e53",
+    "semantic_hash": "8737ed29999b7c28ffffa7ebee9d0e53"
+  },
+  "app/src/main/java/com/manchorati/www/NotificationSettingsActivity.kt": {
+    "mtime": 1793705178.0860405,
+    "seen": 1794172649.9147916,
+    "ast_hash": "f1b3f096723e4d586c61796e2603040a",
+    "semantic_hash": "f1b3f096723e4d586c61796e2603040a"
+  },
+  "app/src/main/java/com/manchorati/www/NotificationSyncWorker.kt": {
+    "mtime": 1793834754.4729104,
+    "seen": 1794172649.9157026,
+    "ast_hash": "a77772c1a57c9eda4a76905a09a0924a",
+    "semantic_hash": "a77772c1a57c9eda4a76905a09a0924a"
+  },
+  "app/src/main/java/com/manchorati/www/NotificationsAdapter.kt": {
+    "mtime": 1793705178.2913363,
+    "seen": 1794172649.9172359,
+    "ast_hash": "40552ca49f38bb6febfc8e00f198ff37",
+    "semantic_hash": "40552ca49f38bb6febfc8e00f198ff37"
+  },
+  "app/src/main/java/com/manchorati/www/Post.kt": {
+    "mtime": 1793705178.2436843,
+    "seen": 1794172649.918227,
+    "ast_hash": "2e193c9fa775563183204bd8402f8eab",
+    "semantic_hash": "2e193c9fa775563183204bd8402f8eab"
+  },
+  "app/src/main/java/com/manchorati/www/PostAdapter.kt": {
+    "mtime": 1794007266.1906955,
+    "seen": 1794172649.918227,
+    "ast_hash": "065f86367507581cb52f32dda2449e03",
+    "semantic_hash": "065f86367507581cb52f32dda2449e03"
+  },
+  "app/src/main/java/com/manchorati/www/PrivacyPolicyHelper.kt": {
+    "mtime": 1793705178.1494246,
+    "seen": 1794172649.9196758,
+    "ast_hash": "1c87c1ee11f3c8568a339fe20828af6e",
+    "semantic_hash": "1c87c1ee11f3c8568a339fe20828af6e"
+  },
+  "app/src/main/java/com/manchorati/www/QuoteWidgetProvider.kt": {
+    "mtime": 1793705177.9143937,
+    "seen": 1794172649.9196758,
+    "ast_hash": "8c4a576166d5c8ef254ab4fe45545530",
+    "semantic_hash": "8c4a576166d5c8ef254ab4fe45545530"
+  },
+  "app/src/main/java/com/manchorati/www/ReelPlayerActivity.kt": {
+    "mtime": 1793745094.2452667,
+    "seen": 1794172649.9206977,
+    "ast_hash": "2659cd7a30c3c09d90d22141f20d7962",
+    "semantic_hash": "2659cd7a30c3c09d90d22141f20d7962"
+  },
+  "app/src/main/java/com/manchorati/www/ReelsAdapter.kt": {
+    "mtime": 1793745168.112717,
+    "seen": 1794172649.921694,
+    "ast_hash": "61aa0fe90a98bf19fda4cddd0ef82daf",
+    "semantic_hash": "61aa0fe90a98bf19fda4cddd0ef82daf"
+  },
+  "app/src/main/java/com/manchorati/www/ReelsFragment.kt": {
+    "mtime": 1793745467.1201434,
+    "seen": 1794172649.921694,
+    "ast_hash": "0d33768cac31756de0f3b2ab0da71224",
+    "semantic_hash": "0d33768cac31756de0f3b2ab0da71224"
+  },
+  "app/src/main/java/com/manchorati/www/SplashActivity.kt": {
+    "mtime": 1793705177.712593,
+    "seen": 1794172649.9226985,
+    "ast_hash": "0d09ed7887f867056e3de34e8821f48c",
+    "semantic_hash": "0d09ed7887f867056e3de34e8821f48c"
+  },
+  "app/src/main/java/com/manchorati/www/StoryShareHelper.kt": {
+    "mtime": 1793705178.117844,
+    "seen": 1794172649.9226985,
+    "ast_hash": "8df7d3a0f67eb6583b70c8fe339b5a2f",
+    "semantic_hash": "8df7d3a0f67eb6583b70c8fe339b5a2f"
+  },
+  "app/src/main/java/com/manchorati/www/StreakManager.kt": {
+    "mtime": 1793705177.669029,
+    "seen": 1794172649.9237032,
+    "ast_hash": "c8befe22ed3f3b20aa14bf1ac90d56b3",
+    "semantic_hash": "c8befe22ed3f3b20aa14bf1ac90d56b3"
+  },
+  "app/src/main/java/com/manchorati/www/StudioAssetManager.kt": {
+    "mtime": 1793705178.0703907,
+    "seen": 1794172649.9237032,
+    "ast_hash": "441b2b41a41eca3ae88911e2a3d47498",
+    "semantic_hash": "441b2b41a41eca3ae88911e2a3d47498"
+  },
+  "app/src/main/java/com/manchorati/www/SyncManager.kt": {
+    "mtime": 1793705178.0399835,
+    "seen": 1794172649.9247026,
+    "ast_hash": "c540c7bcf32a80d5577baf573ae29d86",
+    "semantic_hash": "c540c7bcf32a80d5577baf573ae29d86"
+  },
+  "app/src/main/java/com/manchorati/www/ThemeHelper.kt": {
+    "mtime": 1794048631.4155428,
+    "seen": 1794172649.9247026,
+    "ast_hash": "91b0189e58991ace710ed0a910673667",
+    "semantic_hash": "91b0189e58991ace710ed0a910673667"
+  },
+  "app/src/main/java/com/manchorati/www/TimelineFilmstripView.kt": {
+    "mtime": 1793705177.8688307,
+    "seen": 1794172649.9256978,
+    "ast_hash": "270be5d2e7b1105d2052c596d196cf0d",
+    "semantic_hash": "270be5d2e7b1105d2052c596d196cf0d"
+  },
+  "app/src/main/java/com/manchorati/www/UserBadge.kt": {
+    "mtime": 1793705177.8282888,
+    "seen": 1794172649.9256978,
+    "ast_hash": "bd076b6c3bbdc46bedd23d29d9652cd4",
+    "semantic_hash": "bd076b6c3bbdc46bedd23d29d9652cd4"
+  },
+  "app/src/main/java/com/manchorati/www/UserFollowAdapter.kt": {
+    "mtime": 1793705178.0549984,
+    "seen": 1794172649.9267046,
+    "ast_hash": "0a733e07b1c749d5cac1a31b19db2396",
+    "semantic_hash": "0a733e07b1c749d5cac1a31b19db2396"
+  },
+  "app/src/main/java/com/manchorati/www/UserProfileActivity.kt": {
+    "mtime": 1793867833.6467183,
+    "seen": 1794172649.9267046,
+    "ast_hash": "b76de2d888c7ce3eafe29eab9878399b",
+    "semantic_hash": "b76de2d888c7ce3eafe29eab9878399b"
+  },
+  "app/src/main/java/com/manchorati/www/VideoExporter.kt": {
+    "mtime": 1794048827.615596,
+    "seen": 1794172649.9277039,
+    "ast_hash": "20b76a330cf104b4652221cbb30806ff",
+    "semantic_hash": "20b76a330cf104b4652221cbb30806ff"
+  },
+  "app/src/main/java/com/manchorati/www/VideoMotionRenderer.kt": {
+    "mtime": 1794043664.295803,
+    "seen": 1794172649.9277039,
+    "ast_hash": "59d3beea318644fd2790e395c1337424",
+    "semantic_hash": "59d3beea318644fd2790e395c1337424"
+  },
+  "app/src/main/java/com/manchorati/www/VideoMotionView.kt": {
+    "mtime": 1793919009.5343878,
+    "seen": 1794172649.9286978,
+    "ast_hash": "4b21925f90d234ade1656f0e7848d40f",
+    "semantic_hash": "4b21925f90d234ade1656f0e7848d40f"
+  },
+  "app/src/main/java/com/manchorati/www/VideoStudioActivity.kt": {
+    "mtime": 1794048953.8633337,
+    "seen": 1794172649.9286978,
+    "ast_hash": "ab979303e65bcee0d861ded48efe1bbc",
+    "semantic_hash": "ab979303e65bcee0d861ded48efe1bbc"
+  },
+  "app/src/main/java/com/manchorati/www/VideoTheme.kt": {
+    "mtime": 1793806203.5054078,
+    "seen": 1794172649.9286978,
+    "ast_hash": "0cf3c251456c1c453dadfc52db2fe613",
+    "semantic_hash": "0cf3c251456c1c453dadfc52db2fe613"
+  },
+  "app/src/main/java/com/manchorati/www/VirtualCommunityManager.kt": {
+    "mtime": 1793867629.005717,
+    "seen": 1794172649.9296994,
+    "ast_hash": "a4fd07d0ca1092fed29ddc63b8521710",
+    "semantic_hash": "a4fd07d0ca1092fed29ddc63b8521710"
+  },
+  "app/src/main/java/com/manchorati/www/WriterItem.kt": {
+    "mtime": 1793705177.6980247,
+    "seen": 1794172649.9296994,
+    "ast_hash": "c8a5b849c2b873c54963970bc8752a36",
+    "semantic_hash": "c8a5b849c2b873c54963970bc8752a36"
+  },
+  "app/src/main/java/com/manchorati/www/WritersActivity.kt": {
+    "mtime": 1793705177.6477869,
+    "seen": 1794172649.9307177,
+    "ast_hash": "70679cf93598ea1b701456aa7ed3998f",
+    "semantic_hash": "70679cf93598ea1b701456aa7ed3998f"
+  },
+  "app/src/main/java/com/manchorati/www/WritersAdapter.kt": {
+    "mtime": 1793705177.5887656,
+    "seen": 1794172649.9307177,
+    "ast_hash": "15549ccb1bb699dd7855639af7b9ddbe",
+    "semantic_hash": "15549ccb1bb699dd7855639af7b9ddbe"
+  },
+  "app/src/test/java/com/manchorati/www/ExampleUnitTest.kt": {
+    "mtime": 1793705178.3541417,
+    "seen": 1794172649.9307177,
+    "ast_hash": "fc60c8172d69c61266c2c6e5255146de",
+    "semantic_hash": "fc60c8172d69c61266c2c6e5255146de"
+  },
+  "build.gradle.kts": {
+    "mtime": 1793705150.203506,
+    "seen": 1794172649.9317203,
+    "ast_hash": "72271beba87ee65d43295adb239cc2cf",
+    "semantic_hash": "72271beba87ee65d43295adb239cc2cf"
+  },
+  "build_pen_logo.py": {
+    "mtime": 1793874431.8564909,
+    "seen": 1794172649.9317203,
+    "ast_hash": "29a49e5ea9fc7bf707c2174072fbc6f2",
+    "semantic_hash": "29a49e5ea9fc7bf707c2174072fbc6f2"
+  },
+  "capture_all_screens.py": {
+    "mtime": 1793705150.425512,
+    "seen": 1794172649.9326997,
+    "ast_hash": "4cddcfeb223f3c26458e000e7fdfd359",
+    "semantic_hash": "4cddcfeb223f3c26458e000e7fdfd359"
+  },
+  "cleanfotn.py": {
+    "mtime": 1793705150.2508242,
+    "seen": 1794172649.9346993,
+    "ast_hash": "7841541a56fa3d111c9f6e3feadc7e8a",
+    "semantic_hash": "7841541a56fa3d111c9f6e3feadc7e8a"
+  },
+  "create_store_listings.py": {
+    "mtime": 1793705150.378715,
+    "seen": 1794172649.935701,
+    "ast_hash": "1a715d7e3431fe52670683eddd2b50cf",
+    "semantic_hash": "1a715d7e3431fe52670683eddd2b50cf"
+  },
+  "firebase.json": {
+    "mtime": 1793705150.4572086,
+    "seen": 1794172649.9366944,
+    "ast_hash": "467d3251781b8c58ede0389f37f02fdc",
+    "semantic_hash": "467d3251781b8c58ede0389f37f02fdc",
+    "ast_empty": true
+  },
+  "generate_feature_banner.py": {
+    "mtime": 1793705150.3942308,
+    "seen": 1794172649.9366944,
+    "ast_hash": "444462529b75e79126b4b40726a621da",
+    "semantic_hash": "444462529b75e79126b4b40726a621da"
+  },
+  "generate_showcase_screenshots.py": {
+    "mtime": 1793705150.425512,
+    "seen": 1794172649.9372294,
+    "ast_hash": "7513cb2a868bfbe1f84eac0ae31993da",
+    "semantic_hash": "7513cb2a868bfbe1f84eac0ae31993da"
+  },
+  "gradlew": {
+    "mtime": 1793705150.4411452,
+    "seen": 1794172649.9372294,
+    "ast_hash": "266606e78242737ef3da02a80ea0564d",
+    "semantic_hash": "266606e78242737ef3da02a80ea0564d"
+  },
+  "posts.json": {
+    "mtime": 1793705150.2301552,
+    "seen": 1794172649.9382432,
+    "ast_hash": "98a14ef6ee585f6fdf23ecf47f6d0093",
+    "semantic_hash": "98a14ef6ee585f6fdf23ecf47f6d0093",
+    "ast_empty": true
+  },
+  "settings.gradle.kts": {
+    "mtime": 1793705150.3526356,
+    "seen": 1794172649.9382432,
+    "ast_hash": "42f59fcab652e4a1e4983d2738ff3ba7",
+    "semantic_hash": "42f59fcab652e4a1e4983d2738ff3ba7"
+  },
+  "app/src/main/res/raw/ambient_nature.wav": {
+    "mtime": 1793705176.9815276,
+    "seen": 1794172649.9389918,
+    "ast_hash": "8885806c696151cfeb623b2449ce655f",
+    "semantic_hash": "8885806c696151cfeb623b2449ce655f"
+  },
+  "app/src/main/res/raw/ambient_oud.wav": {
+    "mtime": 1793705177.0842617,
+    "seen": 1794172649.9389918,
+    "ast_hash": "801aab0b560ec7174536d05c52ea5775",
+    "semantic_hash": "801aab0b560ec7174536d05c52ea5775"
+  },
+  "app/src/main/res/raw/ambient_piano.wav": {
+    "mtime": 1793705177.29572,
+    "seen": 1794172649.9400017,
+    "ast_hash": "9e91c53c306d5761b4d74e7051cf8ba3",
+    "semantic_hash": "9e91c53c306d5761b4d74e7051cf8ba3"
+  },
+  "app/src/main/res/raw/ambient_rain.wav": {
+    "mtime": 1793705176.8246374,
+    "seen": 1794172649.9400017,
+    "ast_hash": "575f97b2d6c59d0a5a7c8caca1bacbba",
+    "semantic_hash": "575f97b2d6c59d0a5a7c8caca1bacbba"
+  }
+}
