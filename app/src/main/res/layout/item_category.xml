@@ -1,68 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="116dp"
     android:layout_margin="6dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/bg_card"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="18dp"
     app:cardElevation="2dp">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="12dp">
 
-        <!-- Category Title (Centered, Pure Text) -->
+        <!-- Top Header: Icon Well and Badge -->
+        <LinearLayout
+            android:id="@+id/layoutCategoryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Category Icon Well -->
+            <FrameLayout
+                android:id="@+id/layoutEmojiContainer"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_category_well">
+
+                <TextView
+                    android:id="@+id/tvCategoryEmoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="17sp"
+                    tools:text="🕌" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- New Badge (Top End) -->
+            <TextView
+                android:id="@+id/tvBadgeNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/badge_new_bg"
+                android:paddingHorizontal="7dp"
+                android:paddingVertical="2dp"
+                android:text="@string/badge_new"
+                android:textColor="#DC2626"
+                android:textSize="9.5sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <!-- Category Title (Bold, High Contrast) -->
         <TextView
             android:id="@+id/tvCategoryTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/layoutCategoryHeader"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/text_primary"
-            android:textSize="16.5sp"
-            android:textStyle="bold" />
-
-        <!-- New Badge (Top End) -->
-        <TextView
-            android:id="@+id/tvBadgeNew"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:background="@drawable/badge_new_bg"
-            android:paddingHorizontal="7dp"
-            android:paddingVertical="2dp"
-            android:text="@string/badge_new"
-            android:textColor="#DC2626"
-            android:textSize="9.5sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            tools:text="إسلامية" />
 
-        <!-- Hidden elements for code safety -->
+        <!-- Category Post Count -->
         <TextView
             android:id="@+id/tvCategoryCount"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvCategoryTitle"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            tools:text="140 منشور" />
 
-        <FrameLayout
-            android:id="@+id/layoutEmojiContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tvCategoryEmoji"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone" />
-        </FrameLayout>
-
-    </FrameLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

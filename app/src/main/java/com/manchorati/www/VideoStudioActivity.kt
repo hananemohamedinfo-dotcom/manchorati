@@ -1997,24 +1997,20 @@ class VideoStudioActivity : AppCompatActivity() {
                 subtitle = subtitle,
                 onClick = {
                     val audioUri = getAudioUriForBuiltInPreset(id)
-                    if (isSelected) {
-                        // Already active: open trimmer directly to adjust start/end
-                        showAudioTrimmerDialog(audioUri)
-                    } else {
-                        // First click: select and play immediately
-                        selectedAudio = id
-                        customAudioTitle = title
-                        customAudioUri = audioUri
-                        audioStartOffsetMs = 0L
-                        downloadedAudioPath = null
-                        videoMotionView.audioStartOffsetMs = 0L
-                        videoMotionView.customAudioUri = audioUri
-                        videoMotionView.isMuted = false
-                        ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
-                        videoMotionView.playAudioPreset(id)
-                        updateConfig()
-                        populateAudioPresets()
-                    }
+                    selectedAudio = id
+                    customAudioTitle = title
+                    customAudioUri = audioUri
+                    audioStartOffsetMs = 0L
+                    downloadedAudioPath = null
+                    videoMotionView.audioStartOffsetMs = 0L
+                    videoMotionView.customAudioUri = audioUri
+                    videoMotionView.isMuted = false
+                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                    videoMotionView.playAudioPreset(id)
+                    updateConfig()
+                    populateAudioPresets()
+                    // Open CapCut trimmer directly for all built-in audio
+                    showAudioTrimmerDialog(audioUri)
                 }
             )
             layoutAudioPresets.addView(card)
@@ -2170,26 +2166,23 @@ class VideoStudioActivity : AppCompatActivity() {
 
                 if (StudioAssetManager.isAudioDownloaded(this, onlineAudio.id)) {
 
-                    val path = StudioAssetManager.getDownloadedAudioPath(this, onlineAudio.id)
+                    val path = StudioAssetManager.getDownloadedAudioPath(this, onlineAudio.id) ?: return@setOnClickListener
                     val fileUri = Uri.fromFile(File(path))
                     val isAlreadySelected = (selectedAudio == onlineAudio.id)
 
-                    if (isAlreadySelected) {
-                        // Already selected: open audio trimmer directly
-                        showAudioTrimmerDialog(fileUri)
-                    } else {
-                        downloadedAudioPath = path
-                        selectedAudio = onlineAudio.id
-                        customAudioUri = fileUri
-                        customAudioTitle = onlineAudio.title
-                        audioStartOffsetMs = 0L
-                        videoMotionView.audioStartOffsetMs = 0L
-                        videoMotionView.customAudioUri = fileUri
-                        videoMotionView.isMuted = false
-                        ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
-                        videoMotionView.playAudioPreset(onlineAudio.id, localPath = path)
-                        populateAudioPresets()
-                    }
+                    downloadedAudioPath = path
+                    selectedAudio = onlineAudio.id
+                    customAudioUri = fileUri
+                    customAudioTitle = onlineAudio.title
+                    audioStartOffsetMs = 0L
+                    videoMotionView.audioStartOffsetMs = 0L
+                    videoMotionView.customAudioUri = fileUri
+                    videoMotionView.isMuted = false
+                    ivMuteToggle.setImageResource(R.drawable.ic_volume_up)
+                    videoMotionView.playAudioPreset(onlineAudio.id, localPath = path)
+                    populateAudioPresets()
+                    // Open CapCut trimmer directly for online audio
+                    showAudioTrimmerDialog(fileUri)
 
                 } else {
 
@@ -2517,12 +2510,12 @@ class VideoStudioActivity : AppCompatActivity() {
         val fontList = listOf(
             "tajawal" to "خط تجوال",
             "cairo" to "خط كايرو",
-            "kufam" to "خط كوفي",
             "arefruqaa" to "خط الرقعة",
-            "notonastaliqurdu" to "خط نستعليق",
+            "amiri" to "خط أميري",
+            "kufam" to "خط كوفي",
+            "almarai" to "خط المراعي",
             "marhey" to "خط مرحي",
-            "blakahollow" to "خط بلاكا",
-            "oi" to "خط عريض Oi"
+            "notonastaliqurdu" to "خط نستعليق"
         )
 
         for ((id, name) in fontList) {

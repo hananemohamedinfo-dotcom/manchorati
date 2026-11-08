@@ -151,14 +151,12 @@
                                 android:visibility="gone" />
                         </FrameLayout>
 
-                        <!-- زر القائمة الجانبية -->
+                        <!-- زر القائمة الجانبية (مخفي لتوفير المساحة العلوية) -->
                         <ImageView
                             android:id="@+id/btnOptionsMenu"
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            android:layout_marginStart="2dp"
-                            android:padding="7dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="gone"
                             android:contentDescription="القائمة"
                             android:src="@drawable/ic_menu_hamburger"
                             app:tint="@color/text_secondary" />

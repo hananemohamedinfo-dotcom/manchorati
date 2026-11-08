@@ -199,12 +199,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:fillViewport="true"
+            android:clipToPadding="false"
             android:scrollbars="none">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:paddingEnd="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -218,7 +219,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_card_templates"
+                    android:text="🎨 قوالب البطاقة"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -234,7 +235,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_background"
+                    android:text="🖼️ الخلفية"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -249,7 +250,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_tag"
+                    android:text="🏷️ الوسم"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -264,7 +265,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_text_color"
+                    android:text="🌈 لون النص"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -279,7 +280,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
                     android:singleLine="true"
-                    android:text="@string/tab_font"
+                    android:text="🔤 نوع الخط"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>

@@ -1,533 +1,1928 @@
 {
   ".agents/skills/constraint-driven-development/scripts/quality-gate.mjs": {
-    "mtime": 1794168925.098418,
-    "seen": 1794172649.8896992,
-    "ast_hash": "21010d4f04e0a98a30edfafeb79ef356",
-    "semantic_hash": "21010d4f04e0a98a30edfafeb79ef356"
+    "mtime": 1794175275.1815107,
+    "seen": 1794177605.9204502,
+    "ast_hash": "d820f3b598aeb380065d945a5f70151f",
+    "semantic_hash": ""
   },
   ".agents/skills/idea-refine/scripts/idea-refine.sh": {
-    "mtime": 1794168925.134986,
-    "seen": 1794172649.8907244,
-    "ast_hash": "7d09d06b836527b5261a27027b1d8548",
-    "semantic_hash": "7d09d06b836527b5261a27027b1d8548"
+    "mtime": 1794175275.2065165,
+    "seen": 1794177605.9204502,
+    "ast_hash": "a31fba73833373afec792641d2a8121a",
+    "semantic_hash": ""
   },
   "admin_dashboard/app.py": {
-    "mtime": 1793926228.0809743,
-    "seen": 1794172649.8917265,
-    "ast_hash": "607b5e73cec9b35e068d20f0edee702e",
-    "semantic_hash": "607b5e73cec9b35e068d20f0edee702e"
+    "mtime": 1794175272.6552763,
+    "seen": 1794177605.9213521,
+    "ast_hash": "63aee8ba3aa502ae909e26e52a7ea76c",
+    "semantic_hash": ""
   },
   "app/build.gradle.kts": {
-    "mtime": 1793834699.6507921,
-    "seen": 1794172649.8917265,
+    "mtime": 1794175272.668299,
+    "seen": 1794177605.9213521,
     "ast_hash": "503e0879284199f35384ee03c1e3c244",
     "semantic_hash": "503e0879284199f35384ee03c1e3c244"
   },
   "app/google-services.json": {
-    "mtime": 1793705150.4884613,
-    "seen": 1794172649.8917265,
-    "ast_hash": "bc35acbbbe3a31fbca65afdd84f17553",
-    "semantic_hash": "bc35acbbbe3a31fbca65afdd84f17553",
-    "ast_empty": true
+    "mtime": 1794175272.670313,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fc15ae0fe75b1c29baa3355eff7a886a",
+    "semantic_hash": ""
   },
   "app/src/androidTest/java/com/manchorati/www/ExampleInstrumentedTest.kt": {
-    "mtime": 1793705178.4166524,
-    "seen": 1794172649.8917265,
-    "ast_hash": "3501d08f84a7e4dc1bc58fa244c6683a",
-    "semantic_hash": "3501d08f84a7e4dc1bc58fa244c6683a"
+    "mtime": 1794175272.6835442,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dbc850370374b973276a23f52c360f4a",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AiWriterBottomSheetDialog.kt": {
-    "mtime": 1793926157.542657,
-    "seen": 1794172649.8927217,
-    "ast_hash": "d57f9af08cebec6352c878b2c52f462c",
-    "semantic_hash": "d57f9af08cebec6352c878b2c52f462c"
+    "mtime": 1794175272.8157175,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fd828b86357781bab93cf4c542dfe42f",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AiWriterManager.kt": {
-    "mtime": 1793926125.467534,
-    "seen": 1794172649.8932464,
-    "ast_hash": "192a4e288de026cb9fd900b4e551f248",
-    "semantic_hash": "192a4e288de026cb9fd900b4e551f248"
+    "mtime": 1794175272.819696,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5f61a4776fd707ff967cc9e3845e2be4",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AppFirebaseMessagingService.kt": {
-    "mtime": 1793834766.1920953,
-    "seen": 1794172649.8932464,
-    "ast_hash": "843de67220600bf6d663be61fab80e00",
-    "semantic_hash": "843de67220600bf6d663be61fab80e00"
+    "mtime": 1794175272.8217177,
+    "seen": 1794177605.9213521,
+    "ast_hash": "0d272c3bb7b2008a208b98a05e1deb18",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AppNotification.kt": {
-    "mtime": 1793705178.165069,
-    "seen": 1794172649.894257,
-    "ast_hash": "ec5cf8af64d63421f5b9c148ebdd5a3b",
-    "semantic_hash": "ec5cf8af64d63421f5b9c148ebdd5a3b"
+    "mtime": 1794175272.8237107,
+    "seen": 1794177605.9213521,
+    "ast_hash": "65795cb9c70aed4e82314896bc4e2155",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AudioTimelineTrimmerView.kt": {
-    "mtime": 1794047646.2638347,
-    "seen": 1794172649.894257,
-    "ast_hash": "215a059c4e251c9e60370eaf10727678",
-    "semantic_hash": "215a059c4e251c9e60370eaf10727678"
+    "mtime": 1794175274.771699,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dd9c3f3c6dee353f1101c3410cdac2a4",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AuthManager.kt": {
-    "mtime": 1793705177.9968455,
-    "seen": 1794172649.895257,
+    "mtime": 1794175272.82768,
+    "seen": 1794177605.9213521,
     "ast_hash": "1b31ab76005dc4a2c7d0930f4c83235a",
     "semantic_hash": "1b31ab76005dc4a2c7d0930f4c83235a"
   },
   "app/src/main/java/com/manchorati/www/AutoEngagementWorker.kt": {
-    "mtime": 1793705177.6809719,
-    "seen": 1794172649.895257,
-    "ast_hash": "458c7bf40f18f406e81032c79ecbeae9",
-    "semantic_hash": "458c7bf40f18f406e81032c79ecbeae9"
+    "mtime": 1794175272.829695,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a90db6204e19630f073f85267a07f006",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/BadWordsFilter.kt": {
-    "mtime": 1793705178.21291,
-    "seen": 1794172649.8962498,
-    "ast_hash": "34a9be94b84dab77212adea929999b75",
-    "semantic_hash": "34a9be94b84dab77212adea929999b75"
+    "mtime": 1794175272.8316967,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a88ec28858ced2624c4845c4657057a6",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/BookmarkManager.kt": {
-    "mtime": 1793705178.313846,
-    "seen": 1794172649.8962498,
-    "ast_hash": "d276a32a54848ce9386750509795be28",
-    "semantic_hash": "d276a32a54848ce9386750509795be28"
+    "mtime": 1794175272.8336952,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e5a60f0ca2f27d04547e2e4894153b35",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CategoriesFragment.kt": {
-    "mtime": 1793705178.047297,
-    "seen": 1794172649.8972602,
-    "ast_hash": "fec63d7d744a71db7d31af56ce5c1154",
-    "semantic_hash": "fec63d7d744a71db7d31af56ce5c1154"
+    "mtime": 1794175272.8346934,
+    "seen": 1794177605.9213521,
+    "ast_hash": "097d6c1284800a12db4f19aa610dad6a",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/Category.kt": {
-    "mtime": 1793705178.260655,
-    "seen": 1794172649.8972602,
-    "ast_hash": "270740e5bc281534946755e180469edf",
-    "semantic_hash": "270740e5bc281534946755e180469edf"
+    "mtime": 1794175272.8362048,
+    "seen": 1794177605.9213521,
+    "ast_hash": "79c95d699676dde8d93b39516e65ec77",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CategoryAdapter.kt": {
-    "mtime": 1793806099.7496357,
-    "seen": 1794172649.8982575,
-    "ast_hash": "ba72cac93f587e23413c77d3345453c9",
-    "semantic_hash": "ba72cac93f587e23413c77d3345453c9"
+    "mtime": 1794176773.3995912,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3f47995b2dcf796fbfd538af660c4f6d",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CategoryPostsActivity.kt": {
-    "mtime": 1793705177.9516764,
-    "seen": 1794172649.8982575,
-    "ast_hash": "0f274afe3946102707b927c91b487da2",
-    "semantic_hash": "0f274afe3946102707b927c91b487da2"
+    "mtime": 1794175272.84123,
+    "seen": 1794177605.9213521,
+    "ast_hash": "42eb143ef5b41d3f3aed6846263766b1",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CodecInputSurface.kt": {
-    "mtime": 1793705178.1807053,
-    "seen": 1794172649.8992589,
-    "ast_hash": "6fcec3de06fc6a747440932699ad62fa",
-    "semantic_hash": "6fcec3de06fc6a747440932699ad62fa"
+    "mtime": 1794175272.843223,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f04d40a5620f0d157dde2dda3ad20716",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/Comment.kt": {
-    "mtime": 1793705178.2302015,
-    "seen": 1794172649.8992589,
-    "ast_hash": "f04f5644e52680f437fdb5fa499f1f6c",
-    "semantic_hash": "f04f5644e52680f437fdb5fa499f1f6c"
+    "mtime": 1794175272.8442216,
+    "seen": 1794177605.9213521,
+    "ast_hash": "71abc58c5f72864f7bdb5bf65fc0bde9",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommentsAdapter.kt": {
-    "mtime": 1793705178.2302015,
-    "seen": 1794172649.9012568,
-    "ast_hash": "c451e3f5173586591b7bde50017edcdf",
-    "semantic_hash": "c451e3f5173586591b7bde50017edcdf"
+    "mtime": 1794175272.8462331,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d3966e8d305a44e4791222e08c10b378",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityAdapter.kt": {
-    "mtime": 1794006672.1072755,
-    "seen": 1794172649.902278,
+    "mtime": 1794175272.8505106,
+    "seen": 1794177605.9213521,
     "ast_hash": "6fb25ebeae8921d833a7044b9aeb0a88",
     "semantic_hash": "6fb25ebeae8921d833a7044b9aeb0a88"
   },
   "app/src/main/java/com/manchorati/www/CommunityFragment.kt": {
-    "mtime": 1793970396.6357021,
-    "seen": 1794172649.9032505,
+    "mtime": 1794175272.8565755,
+    "seen": 1794177605.9213521,
     "ast_hash": "fc328ae9fa65f39244f72f105cd0fb40",
     "semantic_hash": "fc328ae9fa65f39244f72f105cd0fb40"
   },
   "app/src/main/java/com/manchorati/www/CommunityPost.kt": {
-    "mtime": 1793705177.9012635,
-    "seen": 1794172649.9032505,
-    "ast_hash": "ffeba9f54c19cdb143e4c6a48ffb6312",
-    "semantic_hash": "ffeba9f54c19cdb143e4c6a48ffb6312"
+    "mtime": 1794175272.8580978,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f061534009e67db29739e34e716dfee6",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityPostDialogHelper.kt": {
-    "mtime": 1793926198.1900437,
-    "seen": 1794172649.9046907,
-    "ast_hash": "94f49f7cde0da8b40eaf69c7a5c481fe",
-    "semantic_hash": "94f49f7cde0da8b40eaf69c7a5c481fe"
+    "mtime": 1794176677.0058105,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a144cfe62eba5f0cb3a11953f0a9ea34",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityViewTracker.kt": {
-    "mtime": 1793970274.0704298,
-    "seen": 1794172649.9046907,
-    "ast_hash": "2d8a4aaa54365e0c7117f26586dc4597",
-    "semantic_hash": "2d8a4aaa54365e0c7117f26586dc4597"
+    "mtime": 1794175272.8621933,
+    "seen": 1794177605.9213521,
+    "ast_hash": "20e452b6000655d1f46e17d04e72a01c",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ContactActivity.kt": {
-    "mtime": 1793705178.117844,
-    "seen": 1794172649.905691,
-    "ast_hash": "c495bc6252063a2b8914ffb3f9a276e0",
-    "semantic_hash": "c495bc6252063a2b8914ffb3f9a276e0"
+    "mtime": 1794175272.8651955,
+    "seen": 1794177605.9213521,
+    "ast_hash": "967d1010ff9bf14d781f00215caa5bc9",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CopyActivity.kt": {
-    "mtime": 1793705178.2913363,
-    "seen": 1794172649.905691,
-    "ast_hash": "541536a6e31b3557d97965c3b1a197dc",
-    "semantic_hash": "541536a6e31b3557d97965c3b1a197dc"
+    "mtime": 1794175272.8671596,
+    "seen": 1794177605.9213521,
+    "ast_hash": "24de522836ff226942767b8a88209d49",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/DailyNotificationHelper.kt": {
-    "mtime": 1793705177.9826357,
-    "seen": 1794172649.9066906,
+    "mtime": 1794175272.867673,
+    "seen": 1794177605.9213521,
     "ast_hash": "043850737b4c945416768c3f2324f678",
     "semantic_hash": "043850737b4c945416768c3f2324f678"
   },
   "app/src/main/java/com/manchorati/www/DailyNotificationWorker.kt": {
-    "mtime": 1793705178.0860405,
-    "seen": 1794172649.9076922,
-    "ast_hash": "3c5424618e29aca0d6148bd33dcdbfc0",
-    "semantic_hash": "3c5424618e29aca0d6148bd33dcdbfc0"
+    "mtime": 1794175272.8696883,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4b24ab59fa54e8c4dfe5aff829d690af",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/DatabaseHelper.kt": {
-    "mtime": 1793705177.5308692,
-    "seen": 1794172649.9076922,
-    "ast_hash": "bb6d733b0dd2d4f5542faf2ca8c87369",
-    "semantic_hash": "bb6d733b0dd2d4f5542faf2ca8c87369"
+    "mtime": 1794175272.8706884,
+    "seen": 1794177605.9213521,
+    "ast_hash": "08e551878f0f528ece932d33ed4a61bc",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/Extensions.kt": {
-    "mtime": 1793705178.275669,
-    "seen": 1794172649.908705,
-    "ast_hash": "657bca88fb4ee75ad83941f8cc6f6617",
-    "semantic_hash": "657bca88fb4ee75ad83941f8cc6f6617"
+    "mtime": 1794175272.8718805,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cb75994d0768d42a62d0e8a18c5f0cab",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/FavoritesFragment.kt": {
-    "mtime": 1793705178.196321,
-    "seen": 1794172649.908705,
-    "ast_hash": "f945839eb1e0ca9102ed74524dc7b3a5",
-    "semantic_hash": "f945839eb1e0ca9102ed74524dc7b3a5"
+    "mtime": 1794175272.873786,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d58bfb0523fd5e4eb2856f34b8021011",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/FirestoreManager.kt": {
-    "mtime": 1793705177.6049652,
-    "seen": 1794172649.9097064,
-    "ast_hash": "4203a718900f4aa9f41c7ac942040486",
-    "semantic_hash": "4203a718900f4aa9f41c7ac942040486"
+    "mtime": 1794175272.8754973,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3143c763577614ebf5007e6d7d9d60b7",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/FirestorePost.kt": {
-    "mtime": 1793705178.196321,
-    "seen": 1794172649.9107046,
-    "ast_hash": "d3cd93d2c3defec700cdae03ca6a88d6",
-    "semantic_hash": "d3cd93d2c3defec700cdae03ca6a88d6"
+    "mtime": 1794175272.8765519,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f65d132ee58138539702d38f9ec19639",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ImageUtils.kt": {
-    "mtime": 1794007328.4235854,
-    "seen": 1794172649.9112155,
-    "ast_hash": "2af5a5e8858c1bc1c68f11877a3f9d64",
-    "semantic_hash": "2af5a5e8858c1bc1c68f11877a3f9d64"
+    "mtime": 1794176664.4960206,
+    "seen": 1794177605.9213521,
+    "ast_hash": "12f0c7b6a015cfac394bd7c8d9a7020c",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/LocalLikesManager.kt": {
-    "mtime": 1793705178.0061977,
-    "seen": 1794172649.9112155,
-    "ast_hash": "fe887e36dd4ab81a3c3869c8bcb34e3d",
-    "semantic_hash": "fe887e36dd4ab81a3c3869c8bcb34e3d"
+    "mtime": 1794175272.8826504,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a13525de052893be8d8b9a9e84b2d5fc",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/LocaleHelper.kt": {
-    "mtime": 1793705178.165069,
-    "seen": 1794172649.912232,
-    "ast_hash": "7c26f7c1f7eac8a13fe80eeb15725932",
-    "semantic_hash": "7c26f7c1f7eac8a13fe80eeb15725932"
+    "mtime": 1794175272.8846421,
+    "seen": 1794177605.9213521,
+    "ast_hash": "568a482826cdbcdb9d9d713b65976282",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/MainActivity.kt": {
-    "mtime": 1793926213.3253767,
-    "seen": 1794172649.912232,
+    "mtime": 1794175272.8874583,
+    "seen": 1794177605.9213521,
     "ast_hash": "beea8f61950d2bd9133b4b34cdd01b79",
     "semantic_hash": "beea8f61950d2bd9133b4b34cdd01b79"
   },
   "app/src/main/java/com/manchorati/www/MainPagerAdapter.kt": {
-    "mtime": 1793804034.79997,
-    "seen": 1794172649.912232,
-    "ast_hash": "9c4c6e1fcd21ffe6e6890c64dd44bc18",
-    "semantic_hash": "9c4c6e1fcd21ffe6e6890c64dd44bc18"
+    "mtime": 1794175272.8900447,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2bfc2a6d2c2c107e9a7ee7779a8bb71f",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/NotificationHelper.kt": {
-    "mtime": 1793834741.1038928,
-    "seen": 1794172649.9137428,
-    "ast_hash": "db06e1966f551b3b0d497bf01edeca69",
-    "semantic_hash": "db06e1966f551b3b0d497bf01edeca69"
+    "mtime": 1794175272.8915226,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3ef31bdbc2cae4a905fa099d68ed1037",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/NotificationReceiver.kt": {
-    "mtime": 1793705177.930727,
-    "seen": 1794172649.9147916,
+    "mtime": 1794175272.8937266,
+    "seen": 1794177605.9213521,
     "ast_hash": "8737ed29999b7c28ffffa7ebee9d0e53",
     "semantic_hash": "8737ed29999b7c28ffffa7ebee9d0e53"
   },
   "app/src/main/java/com/manchorati/www/NotificationSettingsActivity.kt": {
-    "mtime": 1793705178.0860405,
-    "seen": 1794172649.9147916,
-    "ast_hash": "f1b3f096723e4d586c61796e2603040a",
-    "semantic_hash": "f1b3f096723e4d586c61796e2603040a"
+    "mtime": 1794175272.894741,
+    "seen": 1794177605.9213521,
+    "ast_hash": "890517ae2948dc1bb762c6d5bc82ae81",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/NotificationSyncWorker.kt": {
-    "mtime": 1793834754.4729104,
-    "seen": 1794172649.9157026,
-    "ast_hash": "a77772c1a57c9eda4a76905a09a0924a",
-    "semantic_hash": "a77772c1a57c9eda4a76905a09a0924a"
+    "mtime": 1794175272.8985283,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5aa1766a06cb9dd5f73c15dc6f13fe0b",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/NotificationsAdapter.kt": {
-    "mtime": 1793705178.2913363,
-    "seen": 1794172649.9172359,
-    "ast_hash": "40552ca49f38bb6febfc8e00f198ff37",
-    "semantic_hash": "40552ca49f38bb6febfc8e00f198ff37"
+    "mtime": 1794175272.9005322,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6ff21a4669d86bcc29a22dfbc5d03ed6",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/Post.kt": {
-    "mtime": 1793705178.2436843,
-    "seen": 1794172649.918227,
-    "ast_hash": "2e193c9fa775563183204bd8402f8eab",
-    "semantic_hash": "2e193c9fa775563183204bd8402f8eab"
+    "mtime": 1794175272.902529,
+    "seen": 1794177605.9213521,
+    "ast_hash": "810d7aade6b17563a094b51e880ddf11",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/PostAdapter.kt": {
-    "mtime": 1794007266.1906955,
-    "seen": 1794172649.918227,
+    "mtime": 1794175272.9045274,
+    "seen": 1794177605.9213521,
     "ast_hash": "065f86367507581cb52f32dda2449e03",
     "semantic_hash": "065f86367507581cb52f32dda2449e03"
   },
   "app/src/main/java/com/manchorati/www/PrivacyPolicyHelper.kt": {
-    "mtime": 1793705178.1494246,
-    "seen": 1794172649.9196758,
-    "ast_hash": "1c87c1ee11f3c8568a339fe20828af6e",
-    "semantic_hash": "1c87c1ee11f3c8568a339fe20828af6e"
+    "mtime": 1794175272.9065316,
+    "seen": 1794177605.9213521,
+    "ast_hash": "791a9a39eb6d08a29eb1b41981885a78",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/QuoteWidgetProvider.kt": {
-    "mtime": 1793705177.9143937,
-    "seen": 1794172649.9196758,
+    "mtime": 1794175272.9075336,
+    "seen": 1794177605.9213521,
     "ast_hash": "8c4a576166d5c8ef254ab4fe45545530",
     "semantic_hash": "8c4a576166d5c8ef254ab4fe45545530"
   },
   "app/src/main/java/com/manchorati/www/ReelPlayerActivity.kt": {
-    "mtime": 1793745094.2452667,
-    "seen": 1794172649.9206977,
-    "ast_hash": "2659cd7a30c3c09d90d22141f20d7962",
-    "semantic_hash": "2659cd7a30c3c09d90d22141f20d7962"
+    "mtime": 1794175272.945528,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fd4850b95e7cec70ea8d0a0f9f276671",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ReelsAdapter.kt": {
-    "mtime": 1793745168.112717,
-    "seen": 1794172649.921694,
-    "ast_hash": "61aa0fe90a98bf19fda4cddd0ef82daf",
-    "semantic_hash": "61aa0fe90a98bf19fda4cddd0ef82daf"
+    "mtime": 1794175272.9545393,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2e98395265822b16c69ebe33d62bf1ed",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ReelsFragment.kt": {
-    "mtime": 1793745467.1201434,
-    "seen": 1794172649.921694,
-    "ast_hash": "0d33768cac31756de0f3b2ab0da71224",
-    "semantic_hash": "0d33768cac31756de0f3b2ab0da71224"
+    "mtime": 1794175272.9610472,
+    "seen": 1794177605.9213521,
+    "ast_hash": "c841e494d6c0626232c9a04e2899cfb4",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/SplashActivity.kt": {
-    "mtime": 1793705177.712593,
-    "seen": 1794172649.9226985,
-    "ast_hash": "0d09ed7887f867056e3de34e8821f48c",
-    "semantic_hash": "0d09ed7887f867056e3de34e8821f48c"
+    "mtime": 1794175272.9630587,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33bb3eb313bb070fa1bdbf97ddca67e4",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/StoryShareHelper.kt": {
-    "mtime": 1793705178.117844,
-    "seen": 1794172649.9226985,
-    "ast_hash": "8df7d3a0f67eb6583b70c8fe339b5a2f",
-    "semantic_hash": "8df7d3a0f67eb6583b70c8fe339b5a2f"
+    "mtime": 1794175272.9660654,
+    "seen": 1794177605.9213521,
+    "ast_hash": "297ac6129436f2c96592efdccadfacc4",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/StreakManager.kt": {
-    "mtime": 1793705177.669029,
-    "seen": 1794172649.9237032,
+    "mtime": 1794175272.9680617,
+    "seen": 1794177605.9213521,
     "ast_hash": "c8befe22ed3f3b20aa14bf1ac90d56b3",
     "semantic_hash": "c8befe22ed3f3b20aa14bf1ac90d56b3"
   },
   "app/src/main/java/com/manchorati/www/StudioAssetManager.kt": {
-    "mtime": 1793705178.0703907,
-    "seen": 1794172649.9237032,
-    "ast_hash": "441b2b41a41eca3ae88911e2a3d47498",
-    "semantic_hash": "441b2b41a41eca3ae88911e2a3d47498"
+    "mtime": 1794175273.0016828,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fe47c272749b96f7763f9f35227ebd4e",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/SyncManager.kt": {
-    "mtime": 1793705178.0399835,
-    "seen": 1794172649.9247026,
-    "ast_hash": "c540c7bcf32a80d5577baf573ae29d86",
-    "semantic_hash": "c540c7bcf32a80d5577baf573ae29d86"
+    "mtime": 1794175273.005215,
+    "seen": 1794177605.9213521,
+    "ast_hash": "7c6f5015ab0e4f420e9273896b543199",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ThemeHelper.kt": {
-    "mtime": 1794048631.4155428,
-    "seen": 1794172649.9247026,
-    "ast_hash": "91b0189e58991ace710ed0a910673667",
-    "semantic_hash": "91b0189e58991ace710ed0a910673667"
+    "mtime": 1794176651.4736905,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fae722cdfc6a62fcfad6ab3cc49b076c",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/TimelineFilmstripView.kt": {
-    "mtime": 1793705177.8688307,
-    "seen": 1794172649.9256978,
-    "ast_hash": "270be5d2e7b1105d2052c596d196cf0d",
-    "semantic_hash": "270be5d2e7b1105d2052c596d196cf0d"
+    "mtime": 1794175273.007218,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d8c936a8a476cfbff459403803e6a885",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/UserBadge.kt": {
-    "mtime": 1793705177.8282888,
-    "seen": 1794172649.9256978,
+    "mtime": 1794175273.009499,
+    "seen": 1794177605.9213521,
     "ast_hash": "bd076b6c3bbdc46bedd23d29d9652cd4",
     "semantic_hash": "bd076b6c3bbdc46bedd23d29d9652cd4"
   },
   "app/src/main/java/com/manchorati/www/UserFollowAdapter.kt": {
-    "mtime": 1793705178.0549984,
-    "seen": 1794172649.9267046,
-    "ast_hash": "0a733e07b1c749d5cac1a31b19db2396",
-    "semantic_hash": "0a733e07b1c749d5cac1a31b19db2396"
+    "mtime": 1794175273.0116932,
+    "seen": 1794177605.9213521,
+    "ast_hash": "09f65502109d8ab8cbfa437127cc1791",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/UserProfileActivity.kt": {
-    "mtime": 1793867833.6467183,
-    "seen": 1794172649.9267046,
-    "ast_hash": "b76de2d888c7ce3eafe29eab9878399b",
-    "semantic_hash": "b76de2d888c7ce3eafe29eab9878399b"
+    "mtime": 1794175273.0176947,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4c3487df38867cc849989b64a5b8aaa3",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/VideoExporter.kt": {
-    "mtime": 1794048827.615596,
-    "seen": 1794172649.9277039,
-    "ast_hash": "20b76a330cf104b4652221cbb30806ff",
-    "semantic_hash": "20b76a330cf104b4652221cbb30806ff"
+    "mtime": 1794175274.9693139,
+    "seen": 1794177605.9213521,
+    "ast_hash": "c50e89956e9ceb12f0e64b9cc8582577",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/VideoMotionRenderer.kt": {
-    "mtime": 1794043664.295803,
-    "seen": 1794172649.9277039,
+    "mtime": 1794175274.3693626,
+    "seen": 1794177605.9213521,
     "ast_hash": "59d3beea318644fd2790e395c1337424",
     "semantic_hash": "59d3beea318644fd2790e395c1337424"
   },
   "app/src/main/java/com/manchorati/www/VideoMotionView.kt": {
-    "mtime": 1793919009.5343878,
-    "seen": 1794172649.9286978,
-    "ast_hash": "4b21925f90d234ade1656f0e7848d40f",
-    "semantic_hash": "4b21925f90d234ade1656f0e7848d40f"
+    "mtime": 1794175273.0317657,
+    "seen": 1794177605.9213521,
+    "ast_hash": "231f4c4bbd4f4683e1ad09eb07032c70",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/VideoStudioActivity.kt": {
-    "mtime": 1794048953.8633337,
-    "seen": 1794172649.9286978,
-    "ast_hash": "ab979303e65bcee0d861ded48efe1bbc",
-    "semantic_hash": "ab979303e65bcee0d861ded48efe1bbc"
+    "mtime": 1794177079.6895711,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d98c441287386489d2d936f737ef0703",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/VideoTheme.kt": {
-    "mtime": 1793806203.5054078,
-    "seen": 1794172649.9286978,
+    "mtime": 1794175273.0430944,
+    "seen": 1794177605.9213521,
     "ast_hash": "0cf3c251456c1c453dadfc52db2fe613",
     "semantic_hash": "0cf3c251456c1c453dadfc52db2fe613"
   },
   "app/src/main/java/com/manchorati/www/VirtualCommunityManager.kt": {
-    "mtime": 1793867629.005717,
-    "seen": 1794172649.9296994,
-    "ast_hash": "a4fd07d0ca1092fed29ddc63b8521710",
-    "semantic_hash": "a4fd07d0ca1092fed29ddc63b8521710"
+    "mtime": 1794175273.049603,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d6127e5514f569d0521995d65b03dc5f",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/WriterItem.kt": {
-    "mtime": 1793705177.6980247,
-    "seen": 1794172649.9296994,
-    "ast_hash": "c8a5b849c2b873c54963970bc8752a36",
-    "semantic_hash": "c8a5b849c2b873c54963970bc8752a36"
+    "mtime": 1794175273.0506027,
+    "seen": 1794177605.9213521,
+    "ast_hash": "78a69cc2effa3a585c84468ed79b7079",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/WritersActivity.kt": {
-    "mtime": 1793705177.6477869,
-    "seen": 1794172649.9307177,
-    "ast_hash": "70679cf93598ea1b701456aa7ed3998f",
-    "semantic_hash": "70679cf93598ea1b701456aa7ed3998f"
+    "mtime": 1794175273.0536008,
+    "seen": 1794177605.9213521,
+    "ast_hash": "37711b557a8903e53e8593f5d4d1dfb0",
+    "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/WritersAdapter.kt": {
-    "mtime": 1793705177.5887656,
-    "seen": 1794172649.9307177,
-    "ast_hash": "15549ccb1bb699dd7855639af7b9ddbe",
-    "semantic_hash": "15549ccb1bb699dd7855639af7b9ddbe"
+    "mtime": 1794175273.0546,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9af48dfc675f193eed96a8f4cff746cb",
+    "semantic_hash": ""
   },
   "app/src/test/java/com/manchorati/www/ExampleUnitTest.kt": {
-    "mtime": 1793705178.3541417,
-    "seen": 1794172649.9307177,
-    "ast_hash": "fc60c8172d69c61266c2c6e5255146de",
-    "semantic_hash": "fc60c8172d69c61266c2c6e5255146de"
+    "mtime": 1794175273.816197,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2c98cf3b1f3ea9ec3c684a4b6c4f22f1",
+    "semantic_hash": ""
   },
   "build.gradle.kts": {
-    "mtime": 1793705150.203506,
-    "seen": 1794172649.9317203,
-    "ast_hash": "72271beba87ee65d43295adb239cc2cf",
-    "semantic_hash": "72271beba87ee65d43295adb239cc2cf"
+    "mtime": 1794175273.8171966,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8af12cc1f549374ace0470c993b3ce2e",
+    "semantic_hash": ""
   },
   "build_pen_logo.py": {
-    "mtime": 1793874431.8564909,
-    "seen": 1794172649.9317203,
-    "ast_hash": "29a49e5ea9fc7bf707c2174072fbc6f2",
-    "semantic_hash": "29a49e5ea9fc7bf707c2174072fbc6f2"
+    "mtime": 1794175273.8192122,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a0f77567c4a98df9761b7afc5458841e",
+    "semantic_hash": ""
   },
   "capture_all_screens.py": {
-    "mtime": 1793705150.425512,
-    "seen": 1794172649.9326997,
-    "ast_hash": "4cddcfeb223f3c26458e000e7fdfd359",
-    "semantic_hash": "4cddcfeb223f3c26458e000e7fdfd359"
+    "mtime": 1794175273.8192122,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8a191bfd1a4e20e37ead7b965bffc8b3",
+    "semantic_hash": ""
   },
   "cleanfotn.py": {
-    "mtime": 1793705150.2508242,
-    "seen": 1794172649.9346993,
-    "ast_hash": "7841541a56fa3d111c9f6e3feadc7e8a",
-    "semantic_hash": "7841541a56fa3d111c9f6e3feadc7e8a"
+    "mtime": 1794175273.820197,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ce7dd0bdf3e9a3c5c5388348272ba319",
+    "semantic_hash": ""
   },
   "create_store_listings.py": {
-    "mtime": 1793705150.378715,
-    "seen": 1794172649.935701,
-    "ast_hash": "1a715d7e3431fe52670683eddd2b50cf",
-    "semantic_hash": "1a715d7e3431fe52670683eddd2b50cf"
+    "mtime": 1794175273.8215747,
+    "seen": 1794177605.9213521,
+    "ast_hash": "eb66111aa9265ec061a58188838b3f80",
+    "semantic_hash": ""
   },
   "firebase.json": {
-    "mtime": 1793705150.4572086,
-    "seen": 1794172649.9366944,
-    "ast_hash": "467d3251781b8c58ede0389f37f02fdc",
-    "semantic_hash": "467d3251781b8c58ede0389f37f02fdc",
-    "ast_empty": true
+    "mtime": 1794175273.8239677,
+    "seen": 1794177605.9213521,
+    "ast_hash": "996267e8edb8a5f7c16bbc1d7628b7e4",
+    "semantic_hash": ""
   },
   "generate_feature_banner.py": {
-    "mtime": 1793705150.3942308,
-    "seen": 1794172649.9366944,
-    "ast_hash": "444462529b75e79126b4b40726a621da",
-    "semantic_hash": "444462529b75e79126b4b40726a621da"
+    "mtime": 1794175273.827245,
+    "seen": 1794177605.9213521,
+    "ast_hash": "37ecb7eaa1b11361a354eebf9dbcf36d",
+    "semantic_hash": ""
   },
   "generate_showcase_screenshots.py": {
-    "mtime": 1793705150.425512,
-    "seen": 1794172649.9372294,
-    "ast_hash": "7513cb2a868bfbe1f84eac0ae31993da",
-    "semantic_hash": "7513cb2a868bfbe1f84eac0ae31993da"
+    "mtime": 1794175273.828257,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3fe70aaab27d347ea163d535e913bf6f",
+    "semantic_hash": ""
   },
   "gradlew": {
-    "mtime": 1793705150.4411452,
-    "seen": 1794172649.9372294,
-    "ast_hash": "266606e78242737ef3da02a80ea0564d",
-    "semantic_hash": "266606e78242737ef3da02a80ea0564d"
+    "mtime": 1794175273.8387792,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4f7a8a3a765f6f751d47568dc3bb913f",
+    "semantic_hash": ""
   },
   "posts.json": {
-    "mtime": 1793705150.2301552,
-    "seen": 1794172649.9382432,
-    "ast_hash": "98a14ef6ee585f6fdf23ecf47f6d0093",
-    "semantic_hash": "98a14ef6ee585f6fdf23ecf47f6d0093",
-    "ast_empty": true
+    "mtime": 1794175273.843777,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e4d2320867b3c38a67355ad1e7afc993",
+    "semantic_hash": ""
   },
   "settings.gradle.kts": {
-    "mtime": 1793705150.3526356,
-    "seen": 1794172649.9382432,
-    "ast_hash": "42f59fcab652e4a1e4983d2738ff3ba7",
-    "semantic_hash": "42f59fcab652e4a1e4983d2738ff3ba7"
+    "mtime": 1794175273.8507905,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a5d837669edd38ed982a9ed7074f9c8a",
+    "semantic_hash": ""
   },
   "app/src/main/res/raw/ambient_nature.wav": {
-    "mtime": 1793705176.9815276,
-    "seen": 1794172649.9389918,
+    "mtime": 1794175273.6595902,
+    "seen": 1794177605.9213521,
     "ast_hash": "8885806c696151cfeb623b2449ce655f",
     "semantic_hash": "8885806c696151cfeb623b2449ce655f"
   },
   "app/src/main/res/raw/ambient_oud.wav": {
-    "mtime": 1793705177.0842617,
-    "seen": 1794172649.9389918,
+    "mtime": 1794175273.7018054,
+    "seen": 1794177605.9213521,
     "ast_hash": "801aab0b560ec7174536d05c52ea5775",
     "semantic_hash": "801aab0b560ec7174536d05c52ea5775"
   },
   "app/src/main/res/raw/ambient_piano.wav": {
-    "mtime": 1793705177.29572,
-    "seen": 1794172649.9400017,
+    "mtime": 1794175273.7388358,
+    "seen": 1794177605.9213521,
     "ast_hash": "9e91c53c306d5761b4d74e7051cf8ba3",
     "semantic_hash": "9e91c53c306d5761b4d74e7051cf8ba3"
   },
   "app/src/main/res/raw/ambient_rain.wav": {
-    "mtime": 1793705176.8246374,
-    "seen": 1794172649.9400017,
+    "mtime": 1794175273.7832978,
+    "seen": 1794177605.9213521,
     "ast_hash": "575f97b2d6c59d0a5a7c8caca1bacbba",
     "semantic_hash": "575f97b2d6c59d0a5a7c8caca1bacbba"
+  },
+  "Desktop/apps py me/Modernappmusic-main/.github/workflows/build_apk.yml": {
+    "mtime": 1794175271.542482,
+    "seen": 1794177605.9204502,
+    "ast_hash": "46825c3ef48c4bdbf5a74dab83e792b0",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/metadata.json": {
+    "mtime": 1794175271.5468516,
+    "seen": 1794177605.9204502,
+    "ast_hash": "df4c54b2a230cf805a5b08d1ce9975f2",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/package.json": {
+    "mtime": 1794175271.5488615,
+    "seen": 1794177605.9204502,
+    "ast_hash": "c749c75ec4a6827bacdfebe3013f2dee",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/App.tsx": {
+    "mtime": 1794175271.5518568,
+    "seen": 1794177605.9204502,
+    "ast_hash": "c3a5d4a96ee1dc3b4c9acb8afca53d68",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/ABLoopControls.tsx": {
+    "mtime": 1794175271.5548544,
+    "seen": 1794177605.9204502,
+    "ast_hash": "1471bd244ea0c9fe1b83e8360bf2dfbf",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/LibraryManager.tsx": {
+    "mtime": 1794175271.557123,
+    "seen": 1794177605.9204502,
+    "ast_hash": "2724c8c5aba6e0f9291f0292e0757c0c",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/LockScreenModal.tsx": {
+    "mtime": 1794175271.5586545,
+    "seen": 1794177605.9204502,
+    "ast_hash": "50b7c1ddde4d7c5fc37451691a94b87f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/PlaybackEngineControls.tsx": {
+    "mtime": 1794175271.5606437,
+    "seen": 1794177605.9204502,
+    "ast_hash": "0edcc9f897fcc75607a7622469493dd7",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/SleepTimerModal.tsx": {
+    "mtime": 1794175271.562301,
+    "seen": 1794177605.9204502,
+    "ast_hash": "3e37aa86447d2fb629c283e8eea064bb",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/components/WaveformVisualizer.tsx": {
+    "mtime": 1794175271.5637503,
+    "seen": 1794177605.9204502,
+    "ast_hash": "3bb5bfb0f71dec6f8ad6f415649578c8",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/context/AudioContext.tsx": {
+    "mtime": 1794175271.5686402,
+    "seen": 1794177605.9204502,
+    "ast_hash": "426fe2feb2cf73bfd82e4145d890ea99",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/main.tsx": {
+    "mtime": 1794175271.5710025,
+    "seen": 1794177605.9204502,
+    "ast_hash": "a0bcc3ffa5e95e1965f94969ab488283",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/types.ts": {
+    "mtime": 1794175271.572778,
+    "seen": 1794177605.9204502,
+    "ast_hash": "bd69e2524e1143ce9bc96bb018427852",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/utils/audioDecoder.ts": {
+    "mtime": 1794175271.5754504,
+    "seen": 1794177605.9204502,
+    "ast_hash": "9d7e2085c40333faa9bf8dd13cf846d2",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/utils/audioGenerator.ts": {
+    "mtime": 1794175271.5779212,
+    "seen": 1794177605.9204502,
+    "ast_hash": "b97025f200d579974a1d4847955b9d03",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/src/utils/formatters.ts": {
+    "mtime": 1794175271.579625,
+    "seen": 1794177605.9204502,
+    "ast_hash": "16af1e1e6797e24bc0e4f4926bf8b422",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/tsconfig.json": {
+    "mtime": 1794175271.5807166,
+    "seen": 1794177605.9204502,
+    "ast_hash": "aca6cdac13db39d03d9b95866834d84f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/vite.config.ts": {
+    "mtime": 1794175271.5822968,
+    "seen": 1794177605.9204502,
+    "ast_hash": "cfc596836379397756c305b60b69ba06",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/build.gradle.kts": {
+    "mtime": 1794175271.6182778,
+    "seen": 1794177605.9204502,
+    "ast_hash": "6324e5e2333467860d9f07b4ead06111",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/google-services.json": {
+    "mtime": 1794175271.619986,
+    "seen": 1794177605.9204502,
+    "ast_hash": "fc15ae0fe75b1c29baa3355eff7a886a",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/androidTest/java/com/manchorati/www/ExampleInstrumentedTest.kt": {
+    "mtime": 1794175271.629284,
+    "seen": 1794177605.9204502,
+    "ast_hash": "dbc850370374b973276a23f52c360f4a",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/AiWriterBottomSheetDialog.kt": {
+    "mtime": 1794175271.7107368,
+    "seen": 1794177605.9204502,
+    "ast_hash": "b74fc15e9c7ebc48775bccc7f31d9ff9",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/AiWriterManager.kt": {
+    "mtime": 1794175271.7127366,
+    "seen": 1794177605.9204502,
+    "ast_hash": "5f222756a41c48ecc410ea9dd21e2142",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/AppNotification.kt": {
+    "mtime": 1794175271.7140255,
+    "seen": 1794177605.9204502,
+    "ast_hash": "65795cb9c70aed4e82314896bc4e2155",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/AuthManager.kt": {
+    "mtime": 1794175271.7175558,
+    "seen": 1794177605.9204502,
+    "ast_hash": "1b31ab76005dc4a2c7d0930f4c83235a",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/AutoEngagementWorker.kt": {
+    "mtime": 1794175271.7198584,
+    "seen": 1794177605.9204502,
+    "ast_hash": "a90db6204e19630f073f85267a07f006",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/BadWordsFilter.kt": {
+    "mtime": 1794175271.7210274,
+    "seen": 1794177605.9204502,
+    "ast_hash": "a88ec28858ced2624c4845c4657057a6",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/BookmarkManager.kt": {
+    "mtime": 1794175271.7216494,
+    "seen": 1794177605.9204502,
+    "ast_hash": "e5a60f0ca2f27d04547e2e4894153b35",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CategoriesFragment.kt": {
+    "mtime": 1794175271.7227545,
+    "seen": 1794177605.9204502,
+    "ast_hash": "097d6c1284800a12db4f19aa610dad6a",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/Category.kt": {
+    "mtime": 1794175271.7238827,
+    "seen": 1794177605.9204502,
+    "ast_hash": "79c95d699676dde8d93b39516e65ec77",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CategoryAdapter.kt": {
+    "mtime": 1794175271.7250977,
+    "seen": 1794177605.9204502,
+    "ast_hash": "bc720be8b0b5da230755d87f8315dc24",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CategoryPostsActivity.kt": {
+    "mtime": 1794175271.7256396,
+    "seen": 1794177605.9204502,
+    "ast_hash": "42eb143ef5b41d3f3aed6846263766b1",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CodecInputSurface.kt": {
+    "mtime": 1794175271.7267554,
+    "seen": 1794177605.9204502,
+    "ast_hash": "f04d40a5620f0d157dde2dda3ad20716",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/Comment.kt": {
+    "mtime": 1794175271.7278666,
+    "seen": 1794177605.9204502,
+    "ast_hash": "71abc58c5f72864f7bdb5bf65fc0bde9",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CommentsAdapter.kt": {
+    "mtime": 1794175271.7295923,
+    "seen": 1794177605.9204502,
+    "ast_hash": "d3966e8d305a44e4791222e08c10b378",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CommunityAdapter.kt": {
+    "mtime": 1794175271.730761,
+    "seen": 1794177605.9204502,
+    "ast_hash": "8936124a2f1e52c4b5bfe20c81ad070e",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CommunityFragment.kt": {
+    "mtime": 1794175271.7361712,
+    "seen": 1794177605.9204502,
+    "ast_hash": "d627894ccbd65854b6b82abde4be2a22",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CommunityPost.kt": {
+    "mtime": 1794175271.7378304,
+    "seen": 1794177605.9204502,
+    "ast_hash": "f061534009e67db29739e34e716dfee6",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CommunityPostDialogHelper.kt": {
+    "mtime": 1794175271.7395134,
+    "seen": 1794177605.9204502,
+    "ast_hash": "7615d0aadddfb0c4775e93b1db2f8cb0",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/ContactActivity.kt": {
+    "mtime": 1794175271.7406068,
+    "seen": 1794177605.9204502,
+    "ast_hash": "967d1010ff9bf14d781f00215caa5bc9",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/CopyActivity.kt": {
+    "mtime": 1794175271.7416172,
+    "seen": 1794177605.9213521,
+    "ast_hash": "24de522836ff226942767b8a88209d49",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/DailyNotificationHelper.kt": {
+    "mtime": 1794175271.7436175,
+    "seen": 1794177605.9213521,
+    "ast_hash": "043850737b4c945416768c3f2324f678",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/DailyNotificationWorker.kt": {
+    "mtime": 1794175271.7446172,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4b24ab59fa54e8c4dfe5aff829d690af",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/DatabaseHelper.kt": {
+    "mtime": 1794175271.7466555,
+    "seen": 1794177605.9213521,
+    "ast_hash": "08e551878f0f528ece932d33ed4a61bc",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/Extensions.kt": {
+    "mtime": 1794175271.7476628,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cb75994d0768d42a62d0e8a18c5f0cab",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/FavoritesFragment.kt": {
+    "mtime": 1794175271.7517002,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d58bfb0523fd5e4eb2856f34b8021011",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/FirestoreManager.kt": {
+    "mtime": 1794175271.7537003,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3143c763577614ebf5007e6d7d9d60b7",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/FirestorePost.kt": {
+    "mtime": 1794175271.754701,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f65d132ee58138539702d38f9ec19639",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/ImageUtils.kt": {
+    "mtime": 1794175271.7577093,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3ff6f8eb14dd27ed5a03873f0182b2ed",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/LocalLikesManager.kt": {
+    "mtime": 1794175271.7596993,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a13525de052893be8d8b9a9e84b2d5fc",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/LocaleHelper.kt": {
+    "mtime": 1794175271.7607033,
+    "seen": 1794177605.9213521,
+    "ast_hash": "568a482826cdbcdb9d9d713b65976282",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/MainActivity.kt": {
+    "mtime": 1794175271.7624483,
+    "seen": 1794177605.9213521,
+    "ast_hash": "186853fc6860efedd418f0fc7c037764",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/MainPagerAdapter.kt": {
+    "mtime": 1794175271.763474,
+    "seen": 1794177605.9213521,
+    "ast_hash": "67071c537d67e71658611c8b5c111018",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/NotificationReceiver.kt": {
+    "mtime": 1794175271.765467,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8737ed29999b7c28ffffa7ebee9d0e53",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/NotificationSettingsActivity.kt": {
+    "mtime": 1794175271.7674637,
+    "seen": 1794177605.9213521,
+    "ast_hash": "890517ae2948dc1bb762c6d5bc82ae81",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/NotificationsAdapter.kt": {
+    "mtime": 1794175271.769464,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6ff21a4669d86bcc29a22dfbc5d03ed6",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/Post.kt": {
+    "mtime": 1794175271.7706206,
+    "seen": 1794177605.9213521,
+    "ast_hash": "810d7aade6b17563a094b51e880ddf11",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/PostAdapter.kt": {
+    "mtime": 1794175271.771821,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2dccbcf6f865bf49fe60996e519f557d",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/PrivacyPolicyHelper.kt": {
+    "mtime": 1794175271.7741108,
+    "seen": 1794177605.9213521,
+    "ast_hash": "791a9a39eb6d08a29eb1b41981885a78",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/QuoteWidgetProvider.kt": {
+    "mtime": 1794175271.7751093,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8c4a576166d5c8ef254ab4fe45545530",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/ReelPlayerActivity.kt": {
+    "mtime": 1794175271.7761102,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bdf4c0d7f2932f613758b371c7fbe6cc",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/SplashActivity.kt": {
+    "mtime": 1794175271.7771113,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33bb3eb313bb070fa1bdbf97ddca67e4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/StoryShareHelper.kt": {
+    "mtime": 1794175271.7781098,
+    "seen": 1794177605.9213521,
+    "ast_hash": "297ac6129436f2c96592efdccadfacc4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/StreakManager.kt": {
+    "mtime": 1794175271.7791133,
+    "seen": 1794177605.9213521,
+    "ast_hash": "c8befe22ed3f3b20aa14bf1ac90d56b3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/StudioAssetManager.kt": {
+    "mtime": 1794175271.7801108,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fe47c272749b96f7763f9f35227ebd4e",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/SyncManager.kt": {
+    "mtime": 1794175271.7831151,
+    "seen": 1794177605.9213521,
+    "ast_hash": "7c6f5015ab0e4f420e9273896b543199",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/ThemeHelper.kt": {
+    "mtime": 1794175271.7851086,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f8cf218c6577434f5818a060613bcc2f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/TimelineFilmstripView.kt": {
+    "mtime": 1794175271.786111,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d8c936a8a476cfbff459403803e6a885",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/UserBadge.kt": {
+    "mtime": 1794175271.7871082,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bd076b6c3bbdc46bedd23d29d9652cd4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/UserFollowAdapter.kt": {
+    "mtime": 1794175271.7881074,
+    "seen": 1794177605.9213521,
+    "ast_hash": "09f65502109d8ab8cbfa437127cc1791",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/UserProfileActivity.kt": {
+    "mtime": 1794175271.789107,
+    "seen": 1794177605.9213521,
+    "ast_hash": "966c4488ebe9f837d69d706099162b73",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/VideoExporter.kt": {
+    "mtime": 1794175271.790106,
+    "seen": 1794177605.9213521,
+    "ast_hash": "b0809d0cc1520185a025d204f151adf5",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/VideoMotionRenderer.kt": {
+    "mtime": 1794175271.791106,
+    "seen": 1794177605.9213521,
+    "ast_hash": "c3da0625fd8d623e78a2cabda07c6e21",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/VideoMotionView.kt": {
+    "mtime": 1794175271.7921052,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8d64b90993ce3cde612f936e6344d0b9",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/VideoStudioActivity.kt": {
+    "mtime": 1794175271.7941058,
+    "seen": 1794177605.9213521,
+    "ast_hash": "64e70f55c37fbb810c2360a5e1ebe60b",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/VirtualCommunityManager.kt": {
+    "mtime": 1794175271.795107,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e2557d56ab184e0c747bb9d305cf89f6",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/WriterItem.kt": {
+    "mtime": 1794175271.796105,
+    "seen": 1794177605.9213521,
+    "ast_hash": "78a69cc2effa3a585c84468ed79b7079",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/WritersActivity.kt": {
+    "mtime": 1794175271.798112,
+    "seen": 1794177605.9213521,
+    "ast_hash": "37711b557a8903e53e8593f5d4d1dfb0",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/java/com/manchorati/www/WritersAdapter.kt": {
+    "mtime": 1794175271.8001108,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9af48dfc675f193eed96a8f4cff746cb",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/test/java/com/manchorati/www/ExampleUnitTest.kt": {
+    "mtime": 1794175272.4602125,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2c98cf3b1f3ea9ec3c684a4b6c4f22f1",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/build.gradle.kts": {
+    "mtime": 1794175272.4611955,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8af12cc1f549374ace0470c993b3ce2e",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/capture_all_screens.py": {
+    "mtime": 1794175272.462702,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8a191bfd1a4e20e37ead7b965bffc8b3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/cleanfotn.py": {
+    "mtime": 1794175272.4637196,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ce7dd0bdf3e9a3c5c5388348272ba319",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/create_store_listings.py": {
+    "mtime": 1794175272.4667203,
+    "seen": 1794177605.9213521,
+    "ast_hash": "eb66111aa9265ec061a58188838b3f80",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/firebase.json": {
+    "mtime": 1794175272.4767563,
+    "seen": 1794177605.9213521,
+    "ast_hash": "996267e8edb8a5f7c16bbc1d7628b7e4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/generate_feature_banner.py": {
+    "mtime": 1794175272.4841592,
+    "seen": 1794177605.9213521,
+    "ast_hash": "37ecb7eaa1b11361a354eebf9dbcf36d",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/generate_showcase_screenshots.py": {
+    "mtime": 1794175272.4861524,
+    "seen": 1794177605.9213521,
+    "ast_hash": "3fe70aaab27d347ea163d535e913bf6f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/gradlew": {
+    "mtime": 1794175272.4960768,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4f7a8a3a765f6f751d47568dc3bb913f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/posts.json": {
+    "mtime": 1794175272.5070908,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e4d2320867b3c38a67355ad1e7afc993",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/settings.gradle.kts": {
+    "mtime": 1794175272.515862,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a5d837669edd38ed982a9ed7074f9c8a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/api-and-interface-design/SKILL.md": {
+    "mtime": 1794175275.1578221,
+    "seen": 1794177605.9213521,
+    "ast_hash": "1a3d83211bbcfceec61dbe112131f5cc",
+    "semantic_hash": ""
+  },
+  ".agents/skills/browser-testing-with-devtools/SKILL.md": {
+    "mtime": 1794175275.1601777,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6455e74dfac3623b77d8b2a416f73bf2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ci-cd-and-automation/SKILL.md": {
+    "mtime": 1794175275.1651275,
+    "seen": 1794177605.9213521,
+    "ast_hash": "caf14c93ceb0bfbd48e05687edc384e5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/code-review-and-quality/SKILL.md": {
+    "mtime": 1794175275.167951,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e26a4ef187ab839df5147e04094c1402",
+    "semantic_hash": ""
+  },
+  ".agents/skills/code-simplification/SKILL.md": {
+    "mtime": 1794175275.1705024,
+    "seen": 1794177605.9213521,
+    "ast_hash": "0925a85949b584c2c4e07b1eec7a22b9",
+    "semantic_hash": ""
+  },
+  ".agents/skills/constraint-driven-development/SKILL.md": {
+    "mtime": 1794175275.1735003,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a33a2dbca1fb7ed90c1d0f534954e209",
+    "semantic_hash": ""
+  },
+  ".agents/skills/constraint-driven-development/references/floor-guard.md": {
+    "mtime": 1794175275.1755002,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bc80aadb0b87187c300540292f6dcb19",
+    "semantic_hash": ""
+  },
+  ".agents/skills/context-engineering/SKILL.md": {
+    "mtime": 1794175275.1852582,
+    "seen": 1794177605.9213521,
+    "ast_hash": "1aacca05e905e823d62556e6a455a6de",
+    "semantic_hash": ""
+  },
+  ".agents/skills/debugging-and-error-recovery/SKILL.md": {
+    "mtime": 1794175275.1870034,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5556078716f262ba0dd3feb74c83fc72",
+    "semantic_hash": ""
+  },
+  ".agents/skills/deprecation-and-migration/SKILL.md": {
+    "mtime": 1794175275.1886532,
+    "seen": 1794177605.9213521,
+    "ast_hash": "b7c02b72586eaa94bd7310a7eea3e4e1",
+    "semantic_hash": ""
+  },
+  ".agents/skills/documentation-and-adrs/SKILL.md": {
+    "mtime": 1794175275.1914873,
+    "seen": 1794177605.9213521,
+    "ast_hash": "1735bbd461fd6066cd4ae30647289bea",
+    "semantic_hash": ""
+  },
+  ".agents/skills/doubt-driven-development/SKILL.md": {
+    "mtime": 1794175275.1931665,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a58b40d5a5b5ab2236e8f6eee1e5d494",
+    "semantic_hash": ""
+  },
+  ".agents/skills/frontend-ui-engineering/SKILL.md": {
+    "mtime": 1794175275.195984,
+    "seen": 1794177605.9213521,
+    "ast_hash": "15334b1a511d5bceac6e5b6f97d7bc3d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/git-workflow-and-versioning/SKILL.md": {
+    "mtime": 1794175275.1995208,
+    "seen": 1794177605.9213521,
+    "ast_hash": "da8364740032e96219ad22896eb38301",
+    "semantic_hash": ""
+  },
+  ".agents/skills/idea-refine/SKILL.md": {
+    "mtime": 1794175275.201517,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f8ef6ccff5ec25cd003b2d42b60be5b7",
+    "semantic_hash": ""
+  },
+  ".agents/skills/idea-refine/examples.md": {
+    "mtime": 1794175275.2035177,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4f758aeb9c9609cd0399f98ab90d1956",
+    "semantic_hash": ""
+  },
+  ".agents/skills/idea-refine/frameworks.md": {
+    "mtime": 1794175275.2045162,
+    "seen": 1794177605.9213521,
+    "ast_hash": "97a4815d97789ac2370dd41ff28c9dde",
+    "semantic_hash": ""
+  },
+  ".agents/skills/idea-refine/refinement-criteria.md": {
+    "mtime": 1794175275.2055142,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f1f3cc877190e5cbd73a67bdd3c86541",
+    "semantic_hash": ""
+  },
+  ".agents/skills/incremental-implementation/SKILL.md": {
+    "mtime": 1794175275.2080247,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a7a568750b6680ae2207589d282bedb3",
+    "semantic_hash": ""
+  },
+  ".agents/skills/interview-me/SKILL.md": {
+    "mtime": 1794175275.209033,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e6282c4808902e3ea5c219ece7071010",
+    "semantic_hash": ""
+  },
+  ".agents/skills/observability-and-instrumentation/SKILL.md": {
+    "mtime": 1794175275.2121227,
+    "seen": 1794177605.9213521,
+    "ast_hash": "0e0f1e7fdf82dc0aedb2e94fd95a0888",
+    "semantic_hash": ""
+  },
+  ".agents/skills/performance-optimization/SKILL.md": {
+    "mtime": 1794175275.2174387,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6d5d46286827042b47316f6662b735b5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/performance-optimization/references/optimization-patterns.md": {
+    "mtime": 1794175275.2204278,
+    "seen": 1794177605.9213521,
+    "ast_hash": "0293b7d2c5b3611431529da9e78ebb57",
+    "semantic_hash": ""
+  },
+  ".agents/skills/planning-and-task-breakdown/SKILL.md": {
+    "mtime": 1794175275.2224293,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dcb503f5b939d547f8764d77b2c76ade",
+    "semantic_hash": ""
+  },
+  ".agents/skills/security-and-hardening/SKILL.md": {
+    "mtime": 1794175275.2238965,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dd5f3fea084cb965955b0518801c18b8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/security-and-hardening/references/hardening-patterns.md": {
+    "mtime": 1794175275.2259061,
+    "seen": 1794177605.9213521,
+    "ast_hash": "57bfd47a4a976e4932bd3fd236e6fa16",
+    "semantic_hash": ""
+  },
+  ".agents/skills/shipping-and-launch/SKILL.md": {
+    "mtime": 1794175275.2277725,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2b5e6261e1cdbe7bcd1afe4239521145",
+    "semantic_hash": ""
+  },
+  ".agents/skills/source-driven-development/SKILL.md": {
+    "mtime": 1794175275.2308831,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dfec1efe1fe3410e0c498a67533c7180",
+    "semantic_hash": ""
+  },
+  ".agents/skills/spec-driven-development/SKILL.md": {
+    "mtime": 1794175275.2338538,
+    "seen": 1794177605.9213521,
+    "ast_hash": "99efc97ac3e35917fb75c4019ef4bc71",
+    "semantic_hash": ""
+  },
+  ".agents/skills/test-driven-development/SKILL.md": {
+    "mtime": 1794175275.2358565,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e0f70eb6e3c49b3d23991bfe0c1643bc",
+    "semantic_hash": ""
+  },
+  ".agents/skills/using-agent-skills/SKILL.md": {
+    "mtime": 1794175275.2378552,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bd4a9142875e431644cce06af8f1aa9f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps py me/Modernappmusic-main/index.html": {
+    "mtime": 1794175271.545852,
+    "seen": 1794177605.9213521,
+    "ast_hash": "553af51430a6ff06488cf612cd05e637",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/GOOGLE_PLAY_STORE_METADATA.txt": {
+    "mtime": 1794175271.612187,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ffa323384a1fc8b2b613ac8372ff6e18",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/KEYSTORE_INFO.txt": {
+    "mtime": 1794175271.613348,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2d1f594c968e3f4582443315064132cd",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/assets/privacy_policy.html": {
+    "mtime": 1794175271.7072308,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/delete_account.html": {
+    "mtime": 1794175272.468762,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4a5d248d6c482052f6804a0bb8095ef3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/docs/delete_account.html": {
+    "mtime": 1794175272.471754,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4a5d248d6c482052f6804a0bb8095ef3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/docs/index.html": {
+    "mtime": 1794175272.4737544,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/docs/privacy_policy.html": {
+    "mtime": 1794175272.4757526,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/gemini-code-1788697991485.md": {
+    "mtime": 1794175272.4797628,
+    "seen": 1794177605.9213521,
+    "ast_hash": "66689aac8e3cd74f5818dd8494bfae92",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/manchorati_lite_blueprint.md": {
+    "mtime": 1794175272.506091,
+    "seen": 1794177605.9213521,
+    "ast_hash": "52b077f2dc4d51d1351256b65f7fb8ff",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/privacy_policy.html": {
+    "mtime": 1794175272.5090902,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/public/index.html": {
+    "mtime": 1794175272.51168,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a88f627e21a7e04f7a17b6a87d5e03a3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/readme.md": {
+    "mtime": 1794175272.512663,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bfc1d3b8785b17347b450d054c89c1ae",
+    "semantic_hash": ""
+  },
+  "GOOGLE_PLAY_STORE_METADATA.txt": {
+    "mtime": 1794175272.6506839,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ffa323384a1fc8b2b613ac8372ff6e18",
+    "semantic_hash": ""
+  },
+  "KEYSTORE_INFO.txt": {
+    "mtime": 1794175272.6516862,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2d1f594c968e3f4582443315064132cd",
+    "semantic_hash": ""
+  },
+  "admin_dashboard/templates/index.html": {
+    "mtime": 1794175272.6617968,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4e6b839be6fd054df2d0e73587ac639d",
+    "semantic_hash": ""
+  },
+  "app/src/main/assets/privacy_policy.html": {
+    "mtime": 1794175272.8075905,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "delete_account.html": {
+    "mtime": 1793705150.3942308,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ab35005c878259b156638713f75090f1",
+    "semantic_hash": ""
+  },
+  "docs/delete_account.html": {
+    "mtime": 1793705178.655775,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ab35005c878259b156638713f75090f1",
+    "semantic_hash": ""
+  },
+  "docs/index.html": {
+    "mtime": 1793705178.655775,
+    "seen": 1794177605.9213521,
+    "ast_hash": "01377b6c67424995a119f3878fa42ee8",
+    "semantic_hash": ""
+  },
+  "docs/privacy_policy.html": {
+    "mtime": 1793705178.6427474,
+    "seen": 1794177605.9213521,
+    "ast_hash": "01377b6c67424995a119f3878fa42ee8",
+    "semantic_hash": ""
+  },
+  "gemini-code-1788697991485.md": {
+    "mtime": 1794175273.825989,
+    "seen": 1794177605.9213521,
+    "ast_hash": "66689aac8e3cd74f5818dd8494bfae92",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1794175272.5182364,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33ee766022ad14c63bceb67ca1fe0b29",
+    "semantic_hash": ""
+  },
+  "manchorati_lite_blueprint.md": {
+    "mtime": 1794175273.843777,
+    "seen": 1794177605.9213521,
+    "ast_hash": "52b077f2dc4d51d1351256b65f7fb8ff",
+    "semantic_hash": ""
+  },
+  "privacy_policy.html": {
+    "mtime": 1793705150.1416936,
+    "seen": 1794177605.9213521,
+    "ast_hash": "01377b6c67424995a119f3878fa42ee8",
+    "semantic_hash": ""
+  },
+  "public/index.html": {
+    "mtime": 1794175273.8457868,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a88f627e21a7e04f7a17b6a87d5e03a3",
+    "semantic_hash": ""
+  },
+  "readme.md": {
+    "mtime": 1794175273.847788,
+    "seen": 1794177605.9213521,
+    "ast_hash": "bfc1d3b8785b17347b450d054c89c1ae",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_1.png": {
+    "mtime": 1794175271.806107,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9c3348b1b9024fd21414cb43683d1257",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_10.png": {
+    "mtime": 1794175271.8081036,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f927af0fd11537574e3ebac2a8e2efc0",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_11.png": {
+    "mtime": 1794175271.810105,
+    "seen": 1794177605.9213521,
+    "ast_hash": "683f67f771a7e5ae94612b2464301579",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_12.png": {
+    "mtime": 1794175271.812104,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33a54b60811ef862904a871612b2ba89",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_13.png": {
+    "mtime": 1794175271.8141053,
+    "seen": 1794177605.9213521,
+    "ast_hash": "97ace4d939a6dcaa24338f939d1c6526",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_14.png": {
+    "mtime": 1794175271.818107,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fe2cd63887e8f90bace11894a16dd6ab",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_2.png": {
+    "mtime": 1794175271.8201072,
+    "seen": 1794177605.9213521,
+    "ast_hash": "180f11985d2b6d0764e0042f98ad76bb",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_3.png": {
+    "mtime": 1794175271.822124,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a2d8af5313715eed4b630a33a127cf97",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_4.png": {
+    "mtime": 1794175271.8248024,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ab5b545566be1d1d54eb6e04887622e1",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_5.png": {
+    "mtime": 1794175271.8269918,
+    "seen": 1794177605.9213521,
+    "ast_hash": "da391edc3ac7e3ae9ef89a6b2452d699",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_6.png": {
+    "mtime": 1794175271.8292265,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e8e3e39bfdc6e36e952a9abb6ca8a2e5",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_7.png": {
+    "mtime": 1794175271.833272,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5e0dbc17cae2c9e03456e8bb59e552e4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_8.png": {
+    "mtime": 1794175271.8360777,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9b903c5c21cbafa7e7d569c280e3fd32",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/avatar_9.png": {
+    "mtime": 1794175271.8384743,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cafc8d138cbd1f21a92c0005a7bc3148",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/ic_color_picker.png": {
+    "mtime": 1794175271.9428284,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8052631280810d9d9a92decaa49ae3fb",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/ic_quotes.png": {
+    "mtime": 1794175271.9878144,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2b0d78ad83cf5ca718870924bf663454",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/drawable/icon.png": {
+    "mtime": 1794175272.0297642,
+    "seen": 1794177605.9213521,
+    "ast_hash": "039fa4c2180a5bdfcf651278e47ea659",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1794175272.1587665,
+    "seen": 1794177605.9213521,
+    "ast_hash": "21f15595f363d181d7ad25da45ec5850",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175272.159766,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9245d77c4284e1e7d2f5a7ff615e174e",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-hdpi/ic_launcher_round.png": {
+    "mtime": 1794175272.1607656,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fe69a6ab21e42c294b3c4643676d1526",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1794175272.1627731,
+    "seen": 1794177605.9213521,
+    "ast_hash": "97784c344a63cb6de237c02cd4aaf881",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175272.166206,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5ef03a292ae6b230986402a9ca36aac3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-mdpi/ic_launcher_round.png": {
+    "mtime": 1794175272.168195,
+    "seen": 1794177605.9213521,
+    "ast_hash": "03110797dd030bf8fabe0eabb493630d",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+    "mtime": 1794175272.1711917,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d1817ea0beb6bff92aa462fa48c13e58",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175272.1731923,
+    "seen": 1794177605.9213521,
+    "ast_hash": "db8c06aeb4d7eeebef45ea09ce62e212",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png": {
+    "mtime": 1794175272.1751919,
+    "seen": 1794177605.9213521,
+    "ast_hash": "c55d4eedee75583d8bee41f58be3da3d",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+    "mtime": 1794175272.1761916,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4abdf17489ba178c15711a4e661391f4",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175272.1781914,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5d05dd8fe6085f72f25b3bba318f6a9f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png": {
+    "mtime": 1794175272.1791906,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e8964ab12a58c5c438fe6c221c158d57",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+    "mtime": 1794175272.182194,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4c53e82fb1eefeee9267f5f1da1253ab",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175272.1862035,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d05920de300cc6730a32698f830b597b",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png": {
+    "mtime": 1794175272.1892004,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2ddca4a34c0378a8eb9a7314416e540b",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/icon.png": {
+    "mtime": 1794175272.502091,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cf9fa7d26138dcd5a0e4c89a0ebfb81a",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/app_logo.png": {
+    "mtime": 1794175273.078392,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e42602ba92996759f330033bbccaf045",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_1.png": {
+    "mtime": 1794175273.082515,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9c3348b1b9024fd21414cb43683d1257",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_10.png": {
+    "mtime": 1794175273.0855172,
+    "seen": 1794177605.9213521,
+    "ast_hash": "f927af0fd11537574e3ebac2a8e2efc0",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_11.png": {
+    "mtime": 1794175273.0887673,
+    "seen": 1794177605.9213521,
+    "ast_hash": "683f67f771a7e5ae94612b2464301579",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_12.png": {
+    "mtime": 1794175273.0922174,
+    "seen": 1794177605.9213521,
+    "ast_hash": "33a54b60811ef862904a871612b2ba89",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_13.png": {
+    "mtime": 1794175273.0952363,
+    "seen": 1794177605.9213521,
+    "ast_hash": "97ace4d939a6dcaa24338f939d1c6526",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_14.png": {
+    "mtime": 1794175273.100482,
+    "seen": 1794177605.9213521,
+    "ast_hash": "fe2cd63887e8f90bace11894a16dd6ab",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_15.png": {
+    "mtime": 1794175273.107131,
+    "seen": 1794177605.9213521,
+    "ast_hash": "b9d1d21198a5791cf86a3c1fb1268f25",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_16.png": {
+    "mtime": 1794175273.111918,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ffdff5f4d1b84fd290d6680b001ea112",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_17.png": {
+    "mtime": 1794175273.1206324,
+    "seen": 1794177605.9213521,
+    "ast_hash": "1576e0e1d14cda588668bc890d60cdc1",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_18.png": {
+    "mtime": 1794175273.1256325,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dda9af2c1e645ca83af7c14102f869fb",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_19.png": {
+    "mtime": 1794175273.1335697,
+    "seen": 1794177605.9213521,
+    "ast_hash": "d60664d2aa92022e72f9d5ece4d664d3",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_2.png": {
+    "mtime": 1794175273.1360984,
+    "seen": 1794177605.9213521,
+    "ast_hash": "180f11985d2b6d0764e0042f98ad76bb",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_20.png": {
+    "mtime": 1794175273.1411068,
+    "seen": 1794177605.9213521,
+    "ast_hash": "b72b1a03d9a809b67251ed9d4ef3b42b",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_3.png": {
+    "mtime": 1794175273.143099,
+    "seen": 1794177605.9213521,
+    "ast_hash": "a2d8af5313715eed4b630a33a127cf97",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_4.png": {
+    "mtime": 1794175273.1451094,
+    "seen": 1794177605.9213521,
+    "ast_hash": "ab5b545566be1d1d54eb6e04887622e1",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_5.png": {
+    "mtime": 1794175273.1461046,
+    "seen": 1794177605.9213521,
+    "ast_hash": "da391edc3ac7e3ae9ef89a6b2452d699",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_6.png": {
+    "mtime": 1794175273.1513486,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e8e3e39bfdc6e36e952a9abb6ca8a2e5",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_7.png": {
+    "mtime": 1794175273.1533616,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5e0dbc17cae2c9e03456e8bb59e552e4",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_8.png": {
+    "mtime": 1794175273.1553607,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9b903c5c21cbafa7e7d569c280e3fd32",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/avatar_9.png": {
+    "mtime": 1794175273.1573625,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cafc8d138cbd1f21a92c0005a7bc3148",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/ic_color_picker.png": {
+    "mtime": 1794175273.291138,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8052631280810d9d9a92decaa49ae3fb",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/ic_quotes.png": {
+    "mtime": 1794175273.3421493,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2b0d78ad83cf5ca718870924bf663454",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable/icon.png": {
+    "mtime": 1794175273.4148054,
+    "seen": 1794177605.9213521,
+    "ast_hash": "e42602ba92996759f330033bbccaf045",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1794175273.5710604,
+    "seen": 1794177605.9213521,
+    "ast_hash": "555eed28dc69222894b5a71331e2e5f8",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175273.5730665,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5c4246061b81978a23d13bae1fca42eb",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-hdpi/ic_launcher_round.png": {
+    "mtime": 1794175273.5750625,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6613324672c995e382be8863bbcc1189",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1794175273.5770593,
+    "seen": 1794177605.9213521,
+    "ast_hash": "5adcd84b7de7282ad480cfdc9babc1c6",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175273.5800762,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cc7b3a63d4bd632f72c5b819e8e3d98d",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-mdpi/ic_launcher_round.png": {
+    "mtime": 1794175273.584064,
+    "seen": 1794177605.9213521,
+    "ast_hash": "1663052116a914061f86c702870e49cf",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+    "mtime": 1794175273.5880568,
+    "seen": 1794177605.9213521,
+    "ast_hash": "7092c9bb284787fd51e913875120e121",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175273.590066,
+    "seen": 1794177605.9213521,
+    "ast_hash": "6af614cea087698a1bb8549e75c7ef49",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xhdpi/ic_launcher_round.png": {
+    "mtime": 1794175273.5923104,
+    "seen": 1794177605.9213521,
+    "ast_hash": "7c0fbd54f9937d881194a83801fdb509",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+    "mtime": 1794175273.59431,
+    "seen": 1794177605.9213521,
+    "ast_hash": "2cc8c790fd29b67b7acb2a52f3d8e4db",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175273.599331,
+    "seen": 1794177605.9213521,
+    "ast_hash": "66782bfad3acb49b29750403d8fa6b5c",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png": {
+    "mtime": 1794175273.6013186,
+    "seen": 1794177605.9213521,
+    "ast_hash": "57ae149020b31b585e89d02bfaadec37",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+    "mtime": 1794175273.605319,
+    "seen": 1794177605.9213521,
+    "ast_hash": "082e9dec1534868c62e4770acd9977ff",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1794175273.6092525,
+    "seen": 1794177605.9213521,
+    "ast_hash": "0734082dd36a7475cb35cff1080a4ade",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png": {
+    "mtime": 1794175273.6120572,
+    "seen": 1794177605.9213521,
+    "ast_hash": "dc729fed35ccdfe7b9fa7c4aca010947",
+    "semantic_hash": ""
+  },
+  "icon.png": {
+    "mtime": 1794175273.8417761,
+    "seen": 1794177605.9213521,
+    "ast_hash": "cf9fa7d26138dcd5a0e4c89a0ebfb81a",
+    "semantic_hash": ""
+  },
+  "test_avataaars.png": {
+    "mtime": 1794175273.852786,
+    "seen": 1794177605.9213521,
+    "ast_hash": "decd2afc0a7ede992d26ba64adef78b3",
+    "semantic_hash": ""
+  },
+  "test_female1.png": {
+    "mtime": 1794175273.8547888,
+    "seen": 1794177605.9213521,
+    "ast_hash": "65c15685498cb728af0824de8dd20eea",
+    "semantic_hash": ""
+  },
+  "test_female2.png": {
+    "mtime": 1794175273.8567853,
+    "seen": 1794177605.9213521,
+    "ast_hash": "25d11edfe717e8a31228d47094d8ea04",
+    "semantic_hash": ""
+  },
+  "test_lorelei.png": {
+    "mtime": 1794175273.857786,
+    "seen": 1794177605.9213521,
+    "ast_hash": "7ede724350324524c7684556e61211e0",
+    "semantic_hash": ""
+  },
+  "test_male1.png": {
+    "mtime": 1794175273.8603125,
+    "seen": 1794177605.9213521,
+    "ast_hash": "120e4e741b89462606c143c40f0d5032",
+    "semantic_hash": ""
+  },
+  "test_male2.png": {
+    "mtime": 1794175273.8613222,
+    "seen": 1794177605.9213521,
+    "ast_hash": "430b6254faae95fe04bbee35fdf6ad42",
+    "semantic_hash": ""
+  },
+  "test_micah.png": {
+    "mtime": 1794175273.8653316,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9dbeebf296fe4cdcae045e710ec78fcb",
+    "semantic_hash": ""
+  },
+  "test_open-peeps.png": {
+    "mtime": 1794175273.8679938,
+    "seen": 1794177605.9213521,
+    "ast_hash": "4d9533554ff7c96d520a9a0bc1fff644",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/raw/ambient_nature.wav": {
+    "mtime": 1794175272.2425401,
+    "seen": 1794177605.9213521,
+    "ast_hash": "8885806c696151cfeb623b2449ce655f",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/raw/ambient_oud.wav": {
+    "mtime": 1794175272.2906606,
+    "seen": 1794177605.9213521,
+    "ast_hash": "801aab0b560ec7174536d05c52ea5775",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/raw/ambient_piano.wav": {
+    "mtime": 1794175272.333037,
+    "seen": 1794177605.9213521,
+    "ast_hash": "9e91c53c306d5761b4d74e7051cf8ba3",
+    "semantic_hash": ""
+  },
+  "Desktop/apps/manchorati-main/app/src/main/res/raw/ambient_rain.wav": {
+    "mtime": 1794175272.4223971,
+    "seen": 1794177605.9213521,
+    "ast_hash": "575f97b2d6c59d0a5a7c8caca1bacbba",
+    "semantic_hash": ""
   }
 }

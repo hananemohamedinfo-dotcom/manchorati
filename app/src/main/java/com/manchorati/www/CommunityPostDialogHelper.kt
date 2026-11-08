@@ -653,13 +653,13 @@ object CommunityPostDialogHelper {
         // 5. Fonts Section
         val fontsList = listOf(
             Pair("tajawal", context.getString(R.string.font_tajawal)),
-            Pair("cairoplay", context.getString(R.string.font_cairo)),
+            Pair("cairo", context.getString(R.string.font_cairo)),
             Pair("arefruqaa", context.getString(R.string.font_ruqaa)),
+            Pair("amiri", context.getString(R.string.font_amiri)),
             Pair("kufam", context.getString(R.string.font_kufam)),
+            Pair("almarai", context.getString(R.string.font_almarai)),
             Pair("marhey", context.getString(R.string.font_marhey)),
-            Pair("notonastaliqurdu", context.getString(R.string.font_nastaliq)),
-            Pair("blakahollow", context.getString(R.string.font_blaka)),
-            Pair("oi", context.getString(R.string.font_bold))
+            Pair("notonastaliqurdu", context.getString(R.string.font_nastaliq))
         )
 
         fun renderFonts() {

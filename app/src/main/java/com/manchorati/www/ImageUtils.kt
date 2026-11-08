@@ -1143,23 +1143,14 @@ fun applyEditorTheme(isDark: Boolean) {
         val layoutFontsContainer = view.findViewById<LinearLayout>(R.id.layoutFontsContainer)
 
         val fontList = listOf(
-
             FontItem(context.getString(R.string.font_tajawal), R.font.tajawal),
-
-            FontItem(context.getString(R.string.font_cairo), R.font.cairoplay),
-
+            FontItem(context.getString(R.string.font_cairo), R.font.cairo),
             FontItem(context.getString(R.string.font_ruqaa), R.font.arefruqaa),
-
+            FontItem(context.getString(R.string.font_amiri), R.font.amiri),
             FontItem(context.getString(R.string.font_kufam), R.font.kufam),
-
+            FontItem(context.getString(R.string.font_almarai), R.font.almarai),
             FontItem(context.getString(R.string.font_marhey), R.font.marhey),
-
-            FontItem(context.getString(R.string.font_nastaliq), R.font.notonastaliqurdu),
-
-            FontItem(context.getString(R.string.font_blaka), R.font.blakahollow),
-
-            FontItem(context.getString(R.string.font_bold), R.font.oi)
-
+            FontItem(context.getString(R.string.font_nastaliq), R.font.notonastaliqurdu)
         )
 
         var currentSelectedTypeface: Typeface? = null

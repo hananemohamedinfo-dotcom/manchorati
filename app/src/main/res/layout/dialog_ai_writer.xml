@@ -29,7 +29,7 @@
         <FrameLayout
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="@drawable/bg_tool_chip_idle"
+            android:background="@drawable/bg_category_well"
             android:padding="8dp">
 
             <ImageView
@@ -100,22 +100,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingHorizontal="2dp"
         android:layout_marginBottom="12dp">
 
         <LinearLayout
             android:id="@+id/layoutTopicChips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/chipTopicWisdom"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_active"
-                android:text="@string/ai_topic_wisdom"
+                android:text="💡 حكم وأمثال"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -125,12 +128,12 @@
             <TextView
                 android:id="@+id/chipTopicMotivation"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_idle"
-                android:text="@string/ai_topic_motivation"
+                android:text="🚀 تحفيز ونجاح"
                 android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:clickable="true"
@@ -139,12 +142,12 @@
             <TextView
                 android:id="@+id/chipTopicLove"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_idle"
-                android:text="@string/ai_topic_love"
+                android:text="❤️ حب وغرام"
                 android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:clickable="true"
@@ -153,12 +156,12 @@
             <TextView
                 android:id="@+id/chipTopicDua"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_idle"
-                android:text="@string/ai_topic_dua"
+                android:text="🤲 أدعية وأمل"
                 android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:clickable="true"
@@ -167,12 +170,12 @@
             <TextView
                 android:id="@+id/chipTopicCalm"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_idle"
-                android:text="@string/ai_topic_calm"
+                android:text="🌿 خواطر هادئة"
                 android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:clickable="true"
@@ -181,12 +184,12 @@
             <TextView
                 android:id="@+id/chipTopicFarewell"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:background="@drawable/bg_tool_chip_idle"
-                android:text="@string/ai_topic_farewell"
+                android:text="🥀 وداع وفراق"
                 android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:clickable="true"
@@ -195,81 +198,90 @@
     </HorizontalScrollView>
 
     <!-- اختيار الأسلوب -->
-    <LinearLayout
-        android:id="@+id/layoutStyleChips"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingHorizontal="2dp"
+        android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/chipStyleWisdom"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/bg_tool_chip_active"
-            android:text="@string/ai_style_wisdom"
-            android:textColor="#FFFFFF"
-            android:textSize="11.5sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true" />
+        <LinearLayout
+            android:id="@+id/layoutStyleChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/chipStyleShort"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:layout_marginStart="6dp"
-            android:gravity="center"
-            android:background="@drawable/bg_tool_chip_idle"
-            android:text="@string/ai_style_short"
-            android:textColor="@color/text_primary"
-            android:textSize="11.5sp"
-            android:clickable="true"
-            android:focusable="true" />
+            <TextView
+                android:id="@+id/chipStyleWisdom"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:background="@drawable/bg_tool_chip_active"
+                android:text="📜 حكمة بليغة"
+                android:textColor="#FFFFFF"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
-        <TextView
-            android:id="@+id/chipStylePoem"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:layout_marginStart="6dp"
-            android:gravity="center"
-            android:background="@drawable/bg_tool_chip_idle"
-            android:text="@string/ai_style_poem"
-            android:textColor="@color/text_primary"
-            android:textSize="11.5sp"
-            android:clickable="true"
-            android:focusable="true" />
+            <TextView
+                android:id="@+id/chipStyleShort"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:text="⚡ خاطرة قصيرة"
+                android:textColor="@color/text_primary"
+                android:textSize="11.5sp"
+                android:clickable="true"
+                android:focusable="true" />
 
-        <TextView
-            android:id="@+id/chipStylePolish"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1.2"
-            android:layout_marginStart="6dp"
-            android:gravity="center"
-            android:background="@drawable/bg_tool_chip_idle"
-            android:text="@string/ai_style_polish"
-            android:textColor="@color/text_primary"
-            android:textSize="11.5sp"
-            android:clickable="true"
-            android:focusable="true" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/chipStylePoem"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:text="✍️ شعر فخم"
+                android:textColor="@color/text_primary"
+                android:textSize="11.5sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/chipStylePolish"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:background="@drawable/bg_tool_chip_idle"
+                android:text="✨ تحسين وبلاغة"
+                android:textColor="@color/text_primary"
+                android:textSize="11.5sp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- إدخال فكرة مخصصة (اختياري) -->
     <EditText
         android:id="@+id/etCustomPrompt"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="42dp"
         android:background="@drawable/bg_search_bar"
         android:hint="@string/ai_custom_prompt_hint"
         android:paddingHorizontal="14dp"
         android:textColor="@color/text_primary"
         android:textColorHint="@color/text_secondary"
-        android:textSize="12.5sp"
+        android:textSize="13sp"
         android:layout_marginBottom="14dp"
         android:singleLine="true" />
 
@@ -284,6 +296,10 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:cornerRadius="14dp"
+        app:icon="@drawable/ic_sparkle_ai"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="#FFFFFF"
         android:layout_marginBottom="16dp" />
 
     <!-- صندوق النتيجة -->
@@ -291,8 +307,8 @@
         android:id="@+id/cardAiResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="3dp"
         app:cardBackgroundColor="@color/bg_card"
         android:visibility="gone"
         tools:visibility="visible">
@@ -320,7 +336,7 @@
                 android:layout_marginVertical="14dp"
                 android:background="@color/divider_color" />
 
-            <!-- أزرار الإجراءات السريعة -->
+            <!-- أزرار الإجراءات السريعة في صف متناسق -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -330,58 +346,89 @@
                 <!-- نسخ -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAiActionCopy"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="4dp"
                     android:text="@string/ai_copy_btn"
                     android:textColor="#38BDF8"
-                    android:textSize="11.5sp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#3338BDF8"
+                    app:strokeWidth="1dp"
                     app:icon="@drawable/ic_copy"
                     app:iconTint="#38BDF8"
-                    app:iconSize="14dp" />
+                    app:iconSize="13dp" />
 
                 <!-- تصميم صورة -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAiActionImage"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:layout_weight="1.2"
+                    android:layout_marginEnd="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="4dp"
                     android:text="@string/ai_image_btn"
                     android:textColor="#34D399"
-                    android:textSize="11.5sp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#3334D399"
+                    app:strokeWidth="1dp"
                     app:icon="@drawable/ic_share_image"
                     app:iconTint="#34D399"
-                    app:iconSize="14dp" />
+                    app:iconSize="13dp" />
 
                 <!-- تصميم فيديو -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAiActionVideo"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:layout_weight="1.2"
+                    android:layout_marginEnd="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="4dp"
                     android:text="@string/ai_video_btn"
                     android:textColor="#F472B6"
-                    android:textSize="11.5sp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#33F472B6"
+                    app:strokeWidth="1dp"
                     app:icon="@drawable/ic_video_reel"
                     app:iconTint="#F472B6"
-                    app:iconSize="14dp" />
+                    app:iconSize="13dp" />
 
                 <!-- استخدام/نشر -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAiActionPublish"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="4dp"
                     android:text="@string/ai_publish_btn"
                     android:textColor="#FBBF24"
-                    android:textSize="11.5sp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#33FBBF24"
+                    app:strokeWidth="1dp"
                     app:icon="@drawable/ic_plus"
                     app:iconTint="#FBBF24"
-                    app:iconSize="14dp" />
+                    app:iconSize="13dp" />
             </LinearLayout>
 
         </LinearLayout>
