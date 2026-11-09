@@ -3,97 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
-    android:layout_margin="6dp"
+    android:layout_height="64dp"
+    android:layout_margin="5dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/bg_card"
-    app:cardCornerRadius="18dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="2dp">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="12dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
 
-        <!-- Top Header: Icon Well and Badge -->
-        <LinearLayout
-            android:id="@+id/layoutCategoryHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <!-- Category Vector Icon Well -->
-            <FrameLayout
-                android:id="@+id/layoutEmojiContainer"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/bg_category_well">
-
-                <ImageView
-                    android:id="@+id/ivCategoryIcon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_nav_categories"
-                    app:tint="#38BDF8" />
-
-                <!-- Hidden for backwards compatibility -->
-                <TextView
-                    android:id="@+id/tvCategoryEmoji"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:visibility="gone" />
-            </FrameLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <!-- New Badge (Top End) -->
-            <TextView
-                android:id="@+id/tvBadgeNew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/badge_new_bg"
-                android:paddingHorizontal="7dp"
-                android:paddingVertical="2dp"
-                android:text="@string/badge_new"
-                android:textColor="#DC2626"
-                android:textSize="9.5sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
-
-        <!-- Category Title (Bold, High Contrast) -->
         <TextView
             android:id="@+id/tvCategoryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layoutCategoryHeader"
-            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/text_primary"
-            android:textSize="14.5sp"
+            android:textSize="15sp"
             android:textStyle="bold"
-            tools:text="إسلامية" />
+            tools:text="صباحية" />
 
-        <!-- Category Post Count -->
-        <TextView
-            android:id="@+id/tvCategoryCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvCategoryTitle"
-            android:layout_marginTop="3dp"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp"
-            tools:text="140 منشور" />
-
-    </RelativeLayout>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>
