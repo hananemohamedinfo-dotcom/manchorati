@@ -34,21 +34,31 @@
 
     <!-- صورة الكاتب Avatar -->
     <FrameLayout
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="12dp">
 
         <ImageView
             android:id="@+id/ivWriterAvatar"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile" />
 
+        <!-- إكليل الغار الذهبي لمتصدر الأسبوع -->
+        <ImageView
+            android:id="@+id/ivWriterLaurelWreath"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_laurel_wreath_frame"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/ivWriterCrownSmall"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:layout_gravity="top|end"
             android:src="@drawable/ic_crown"
             android:visibility="gone" />

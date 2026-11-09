@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Royal Imperial Crown with Jewels -->
+    <!-- Middle jewel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2.5a1.5,1.5 0,1 0,0.01 0z" />
+    <!-- Left jewel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M3.5,6.5a1.5,1.5 0,1 0,0.01 0z" />
+    <!-- Right jewel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M20.5,6.5a1.5,1.5 0,1 0,0.01 0z" />
+    <!-- Main Crown Body -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4.5,8.5L7,15h10l2.5,-6.5 -4.5,4L12,5l-3,7.5zM4,17h16v1.5c0,0.55 -0.45,1 -1,1H5c-0.55,0 -1,-0.45 -1,-1V17z" />
+    <!-- Base jewel dots -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M7,18a0.8,0.8 0,1 0,0.01 0zM12,18a0.8,0.8 0,1 0,0.01 0zM17,18a0.8,0.8 0,1 0,0.01 0z" />
+</vector>

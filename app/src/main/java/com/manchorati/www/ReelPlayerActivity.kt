@@ -122,7 +122,7 @@ class ReelPlayerActivity : AppCompatActivity() {
             tvReelAuthorBadge.visibility = View.GONE
         } else {
             val badge = BadgeHelper.getBadgeForProfile(explicitBadge = postAuthorBadge, email = null)
-            if (badge.iconResId != 0 && badge.id != BadgeHelper.BADGE_BEGINNER.id && badge.id != "official") {
+            if (badge.iconResId != 0 && badge.id != "official") {
                 val badgeDrawable = ContextCompat.getDrawable(this, badge.iconResId)?.mutate()
                 if (badgeDrawable != null) {
                     badgeDrawable.setTint(Color.parseColor(badge.textColorHex))

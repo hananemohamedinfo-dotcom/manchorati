@@ -174,6 +174,7 @@ class CommunityAdapter(
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val layoutAuthorProfile: LinearLayout = itemView.findViewById(R.id.layoutAuthorProfile)
         private val ivAuthorAvatar: ImageView = itemView.findViewById(R.id.ivAuthorAvatar)
+        private val ivAuthorLaurelWreath: ImageView? = itemView.findViewById(R.id.ivAuthorLaurelWreath)
         private val tvAuthor: TextView = itemView.findViewById(R.id.tvAuthor)
         private val tvAuthorBadge: TextView = itemView.findViewById(R.id.tvAuthorBadge)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvPostUsername)
@@ -271,6 +272,19 @@ class CommunityAdapter(
             }
 
             // تحميل الصورة الشخصية أو الأفاتار
+            // فحص ما إذا كان صاحب المنشور هو كاتب الأسبوع (المتوج بإكليل الغار)
+            val isWriterOfWeek = WriterOfTheWeekHelper.isWriterOfTheWeek(itemView.context, post.authorId)
+            if (isWriterOfWeek) {
+                ivAuthorLaurelWreath?.visibility = View.VISIBLE
+                ivAuthorLaurelWreath?.setOnClickListener {
+                    ivAuthorLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    WriterOfTheWeekHelper.showWriterOfWeekDialog(itemView.context, post.authorName)
+                }
+            } else {
+                ivAuthorLaurelWreath?.visibility = View.GONE
+                ivAuthorLaurelWreath?.setOnClickListener(null)
+            }
+
             ivAuthorAvatar.loadUserAvatar(post.authorPhotoUrl)
 
             // شارة التصنيف / الوسم
@@ -535,8 +549,7 @@ class CommunityAdapter(
                 post.authorName == "منشوراتي" ||
                 post.authorUsername.equals("manchorati", ignoreCase = true) ||
                 badge.id == "official" ||
-                badge.iconResId == 0 ||
-                badge.id == BadgeHelper.BADGE_BEGINNER.id) {
+                badge.iconResId == 0) {
                 tvAuthorBadge.visibility = View.GONE
                 return
             }

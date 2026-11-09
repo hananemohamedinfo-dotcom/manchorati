@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/bg_card"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="8dp"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Golden Laurel Wreath Emblem with Crown in Center -->
+        <FrameLayout
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="14dp">
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_laurel_wreath_frame" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_crown_royal"
+                app:tint="#F59E0B" />
+        </FrameLayout>
+
+        <!-- Badge Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/writer_of_the_week"
+            android:textColor="#F59E0B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Champion Name -->
+        <TextView
+            android:id="@+id/tvChampionName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_primary"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="أمينة القادري" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/tvChampionDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            tools:text="تُوّج هذا الكاتب بلقب كاتب الأسبوع بفضل تفاعل القراء وجمال الكلمات، وحصل على إكليل الغار الذهبي طيلة هذا الأسبوع!" />
+
+        <!-- Dismiss Button -->
+        <TextView
+            android:id="@+id/btnCloseCelebration"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_gold_crown_badge"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/great_congrats"
+            android:textColor="#FFFFFF"
+            android:textSize="14.5sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

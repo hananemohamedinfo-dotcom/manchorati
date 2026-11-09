@@ -51,6 +51,7 @@ class WritersAdapter(
         private val tvWriterRank: TextView = itemView.findViewById(R.id.tvWriterRank)
         private val ivAvatar: ImageView = itemView.findViewById(R.id.ivWriterAvatar)
         private val ivCrownSmall: ImageView = itemView.findViewById(R.id.ivWriterCrownSmall)
+        private val ivWriterLaurelWreath: ImageView? = itemView.findViewById(R.id.ivWriterLaurelWreath)
         private val tvName: TextView = itemView.findViewById(R.id.tvWriterName)
         private val tvBadge: TextView = itemView.findViewById(R.id.tvWriterBadge)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvWriterUsername)
@@ -92,6 +93,19 @@ class WritersAdapter(
             // تحميل الصورة
             ivAvatar.loadUserAvatar(writer.photoUrl)
 
+            // إكليل الغار الذهبي لمتصدر الأسبوع
+            val isChamp = (tabMode == WritersTabMode.WEEKLY && rankNumber == 1) || WriterOfTheWeekHelper.isWriterOfTheWeek(context, writer.userId)
+            if (isChamp) {
+                ivWriterLaurelWreath?.visibility = View.VISIBLE
+                ivWriterLaurelWreath?.setOnClickListener {
+                    ivWriterLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    WriterOfTheWeekHelper.showWriterOfWeekDialog(context, writer.displayName)
+                }
+            } else {
+                ivWriterLaurelWreath?.visibility = View.GONE
+                ivWriterLaurelWreath?.setOnClickListener(null)
+            }
+
             // الاسم واسم المستخدم
             tvName.text = if (writer.displayName.isNotEmpty()) writer.displayName else context.getString(R.string.anonymous_author)
             val cleanHandle = writer.username.removePrefix("@").trim()
@@ -107,7 +121,7 @@ class WritersAdapter(
 
             if (writer.userId != "manchorati_curated" &&
                 resolvedBadge.id != "official" &&
-                resolvedBadge.id != BadgeHelper.BADGE_BEGINNER.id) {
+                resolvedBadge.iconResId != 0) {
                 tvBadge.visibility = View.VISIBLE
                 val title = resolvedBadge.getLocalizedTitle(context)
                 tvBadge.text = title
@@ -118,6 +132,14 @@ class WritersAdapter(
                 }
                 if (resolvedBadge.bgResId != 0) {
                     tvBadge.setBackgroundResource(resolvedBadge.bgResId)
+                }
+                val d = ContextCompat.getDrawable(context, resolvedBadge.iconResId)?.mutate()
+                if (d != null) {
+                    d.setTint(Color.parseColor(resolvedBadge.textColorHex))
+                    val sz = (12 * context.resources.displayMetrics.density).toInt()
+                    d.setBounds(0, 0, sz, sz)
+                    tvBadge.setCompoundDrawables(d, null, null, null)
+                    tvBadge.compoundDrawablePadding = (4 * context.resources.displayMetrics.density).toInt()
                 }
             } else {
                 tvBadge.visibility = View.GONE

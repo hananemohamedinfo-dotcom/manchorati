@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Quill Feather & Nib -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M20.71,2.04c-0.39,-0.39 -1.02,-0.39 -1.41,0l-2.34,2.34c-1.89,-0.87 -4.13,-0.6 -5.79,0.78 -0.32,0.27 -0.58,0.59 -0.8,0.94l6.28,6.28c0.35,-0.22 0.67,-0.48 0.94,-0.8 1.38,-1.66 1.65,-3.9 0.78,-5.79l2.34,-2.34c0.39,-0.39 0.39,-1.02 0,-1.41zM3,21l4.24,-1.06 -3.18,-3.18L3,21zM9.54,17.46l-2.12,-2.12L15.3,7.46l2.12,2.12L9.54,17.46z"/>
+</vector>

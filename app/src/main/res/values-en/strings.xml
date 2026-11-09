@@ -635,4 +635,6 @@
     <string name="no_weekly_posts_yet">Be the first to post this week and claim Writer of the Week!</string>
     <string name="leaderboard_rank_format">#%d</string>
     <string name="leaderboard_section_title">Leaderboard Rankings</string>
+    <string name="writer_of_the_week_celebration_desc">Writer %s has been crowned Writer of the Week thanks to reader engagement and wears the golden laurel wreath all this week!</string>
+    <string name="great_congrats">Awesome, congratulations!</string>
 </resources>

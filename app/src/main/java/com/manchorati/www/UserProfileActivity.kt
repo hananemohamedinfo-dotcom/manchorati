@@ -50,6 +50,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var btnBack: ImageView
     private lateinit var btnProfileAction: TextView
     private lateinit var ivProfileAvatar: ImageView
+    private var ivProfileLaurelWreath: ImageView? = null
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var layoutEmpty: View
 
@@ -196,6 +197,7 @@ class UserProfileActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         rvPosts = findViewById(R.id.rvUserPosts)
         ivProfileAvatar = findViewById(R.id.ivProfileAvatar)
+        ivProfileLaurelWreath = findViewById(R.id.ivProfileLaurelWreath)
         fabAddPostProfile = findViewById(R.id.fabAddPostProfile)
         swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshUserPosts)
         layoutEmpty = findViewById<View>(R.id.layoutEmptyUserPosts)
@@ -330,10 +332,8 @@ class UserProfileActivity : AppCompatActivity() {
                     val totalLikes = (data["totalLikes"] as? Number)?.toLong() ?: 0L
                     currentBadge = BadgeHelper.getBadgeForProfile(explicitBadge, email, totalLikes, currentFollowersCount)
                     BadgeHelper.setCachedBadge(targetUserId, currentBadge)
-                    tvProfileBadge.visibility = View.VISIBLE
-                    tvProfileBadge.text = currentBadge.getLocalizedTitle(this@UserProfileActivity)
-                    tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
-                    tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
+                    updateBadgeUI(currentBadge)
+                    updateLaurelWreathUI()
 
                     if (targetUserId != activeUserId) {
                         isFollowing = followersList.contains(activeUserId)
@@ -352,10 +352,8 @@ class UserProfileActivity : AppCompatActivity() {
                         }
                         currentBadge = BadgeHelper.getBadgeForProfile(null, currentUser.email, 0L, currentFollowersCount)
                         BadgeHelper.setCachedBadge(targetUserId, currentBadge)
-                        tvProfileBadge.visibility = View.VISIBLE
-                        tvProfileBadge.text = currentBadge.getLocalizedTitle(this@UserProfileActivity)
-                        tvProfileBadge.setBackgroundResource(currentBadge.bgResId)
-                        tvProfileBadge.setTextColor(Color.parseColor(currentBadge.textColorHex))
+                        updateBadgeUI(currentBadge)
+                        updateLaurelWreathUI()
                     } else if (targetUserId.startsWith("persona_")) {
                         val persona = VirtualCommunityManager.getPersonaById(targetUserId)
                         tvName.text = persona.name
@@ -367,10 +365,9 @@ class UserProfileActivity : AppCompatActivity() {
                         val following = (6 + (Math.abs(persona.id.hashCode() / 2) % 25)).toLong()
                         tvFollowersCount.text = followers.formatCount()
                         tvFollowingCount.text = following.formatCount()
-                        if (persona.badge.isNotEmpty()) {
-                            tvProfileBadge.visibility = View.VISIBLE
-                            tvProfileBadge.text = if (persona.badge == "verified") "موثّق" else "كاتب مميز"
-                        }
+                        currentBadge = BadgeHelper.getBadgeForProfile(persona.badge, null, 0L, followers)
+                        updateBadgeUI(currentBadge)
+                        updateLaurelWreathUI()
                     } else {
                         tvName.text = targetUserName
                         if (tvBio.text.isNullOrEmpty()) {
@@ -382,6 +379,43 @@ class UserProfileActivity : AppCompatActivity() {
                     swipeRefresh.isRefreshing = false
                 }
             }
+        }
+    }
+
+    private fun updateBadgeUI(badge: UserBadge) {
+        tvProfileBadge.visibility = View.VISIBLE
+        tvProfileBadge.text = badge.getLocalizedTitle(this@UserProfileActivity)
+        tvProfileBadge.setBackgroundResource(badge.bgResId)
+        try {
+            tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
+        } catch (_: Exception) {}
+        if (badge.iconResId != 0) {
+            val d = ContextCompat.getDrawable(this@UserProfileActivity, badge.iconResId)?.mutate()
+            if (d != null) {
+                try {
+                    d.setTint(Color.parseColor(badge.textColorHex))
+                } catch (_: Exception) {}
+                val sz = (14 * resources.displayMetrics.density).toInt()
+                d.setBounds(0, 0, sz, sz)
+                tvProfileBadge.setCompoundDrawables(d, null, null, null)
+                tvProfileBadge.compoundDrawablePadding = (5 * resources.displayMetrics.density).toInt()
+            }
+        } else {
+            tvProfileBadge.setCompoundDrawables(null, null, null, null)
+        }
+    }
+
+    private fun updateLaurelWreathUI() {
+        val isChamp = WriterOfTheWeekHelper.isWriterOfTheWeek(this, targetUserId)
+        if (isChamp) {
+            ivProfileLaurelWreath?.visibility = View.VISIBLE
+            ivProfileLaurelWreath?.setOnClickListener {
+                ivProfileLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                WriterOfTheWeekHelper.showWriterOfWeekDialog(this, tvName.text.toString())
+            }
+        } else {
+            ivProfileLaurelWreath?.visibility = View.GONE
+            ivProfileLaurelWreath?.setOnClickListener(null)
         }
     }
 

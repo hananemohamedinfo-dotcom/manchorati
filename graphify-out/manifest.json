@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CategoryAdapter.kt": {
-    "mtime": 1794178369.5631022,
-    "seen": 1794179383.65056,
-    "ast_hash": "4fdf4fa28be7fc4b940a9426943f792a",
+    "mtime": 1794215525.2318227,
+    "seen": 1794215889.6488962,
+    "ast_hash": "5afd1f84e075bcc980553dee26de5efb",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CategoryPostsActivity.kt": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityAdapter.kt": {
-    "mtime": 1794178968.6924672,
-    "seen": 1794179383.65056,
-    "ast_hash": "c5cfca96c662ea09f8ccf87c2ce30358",
+    "mtime": 1794216752.2516184,
+    "seen": 1794217425.9732714,
+    "ast_hash": "ee346246b045fd9132ec40f79661815f",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityFragment.kt": {
@@ -300,14 +300,14 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ReelPlayerActivity.kt": {
-    "mtime": 1794178968.693467,
-    "seen": 1794179383.65056,
-    "ast_hash": "338741090e59b64fbeb8080934a093aa",
+    "mtime": 1794216900.9137845,
+    "seen": 1794217425.9732714,
+    "ast_hash": "d8b525be2fee7e4ebd3851e75ac03ac6",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/ReelsAdapter.kt": {
-    "mtime": 1794178978.898525,
-    "seen": 1794179383.65056,
+    "mtime": 1794216900.916193,
+    "seen": 1794217425.9732714,
     "ast_hash": "fd5d9364b896c8b537b09a72fe943467",
     "semantic_hash": ""
   },
@@ -360,9 +360,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/UserBadge.kt": {
-    "mtime": 1794178862.196373,
-    "seen": 1794179383.65056,
-    "ast_hash": "e52c6bb081e1eed888f35c83acc45eef",
+    "mtime": 1794216440.4200013,
+    "seen": 1794217425.9732714,
+    "ast_hash": "12e4ae8f34c48596c1c3cd2a60118729",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/UserFollowAdapter.kt": {
@@ -372,9 +372,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/UserProfileActivity.kt": {
-    "mtime": 1794178862.2073822,
-    "seen": 1794179383.65056,
-    "ast_hash": "0cde8890dc9caffeaa323fb96133e71f",
+    "mtime": 1794216887.0561652,
+    "seen": 1794217425.9732714,
+    "ast_hash": "75dc51f1bf3ff8c6045e913e7c559dbd",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/VideoExporter.kt": {
@@ -420,15 +420,15 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/WritersActivity.kt": {
-    "mtime": 1794178862.2053812,
-    "seen": 1794179383.65056,
-    "ast_hash": "c0251efbc2c4e629e0706511776d832c",
+    "mtime": 1794216783.3469036,
+    "seen": 1794217425.9732714,
+    "ast_hash": "23d20f127b1e08e61291e622715f26ff",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/WritersAdapter.kt": {
-    "mtime": 1794178862.2063935,
-    "seen": 1794179383.65056,
-    "ast_hash": "c6676694889652c6c2fbc04add170f56",
+    "mtime": 1794216853.6074376,
+    "seen": 1794217425.9732714,
+    "ast_hash": "7829f95a581bfb56b32baabf971851d0",
     "semantic_hash": ""
   },
   "app/src/test/java/com/manchorati/www/ExampleUnitTest.kt": {
@@ -1923,6 +1923,12 @@
     "mtime": 1794175272.4223971,
     "seen": 1794177605.9213521,
     "ast_hash": "575f97b2d6c59d0a5a7c8caca1bacbba",
+    "semantic_hash": ""
+  },
+  "app/src/main/java/com/manchorati/www/WriterOfTheWeekHelper.kt": {
+    "mtime": 1794216453.326251,
+    "seen": 1794217425.9732714,
+    "ast_hash": "0ce4dba6d05d52a7d88ed4d3dde088f7",
     "semantic_hash": ""
   }
 }

@@ -41,6 +41,7 @@ class WritersActivity : AppCompatActivity() {
     private lateinit var cardWriterOfTheWeek: CardView
     private lateinit var tvChallengeCountdown: TextView
     private lateinit var ivWriterOfWeekAvatar: ImageView
+    private lateinit var ivWriterOfWeekLaurelWreath: ImageView
     private lateinit var tvWriterOfWeekName: TextView
     private lateinit var tvWriterOfWeekBadge: TextView
     private lateinit var tvWriterOfWeekUsername: TextView
@@ -118,6 +119,12 @@ class WritersActivity : AppCompatActivity() {
         cardWriterOfTheWeek = findViewById(R.id.cardWriterOfTheWeek)
         tvChallengeCountdown = findViewById(R.id.tvChallengeCountdown)
         ivWriterOfWeekAvatar = findViewById(R.id.ivWriterOfWeekAvatar)
+        ivWriterOfWeekLaurelWreath = findViewById(R.id.ivWriterOfWeekLaurelWreath)
+        ivWriterOfWeekLaurelWreath.setOnClickListener {
+            writerOfTheWeek?.let { champion ->
+                WriterOfTheWeekHelper.showWriterOfWeekDialog(this, champion.displayName)
+            }
+        }
         tvWriterOfWeekName = findViewById(R.id.tvWriterOfWeekName)
         tvWriterOfWeekBadge = findViewById(R.id.tvWriterOfWeekBadge)
         tvWriterOfWeekUsername = findViewById(R.id.tvWriterOfWeekUsername)
@@ -404,6 +411,9 @@ class WritersActivity : AppCompatActivity() {
                     .thenBy { it.followersCount }
             )
         writerOfTheWeek = weeklyChampion
+        if (weeklyChampion != null) {
+            WriterOfTheWeekHelper.setChampion(this, weeklyChampion.userId, weeklyChampion.displayName)
+        }
         updateWriterOfTheWeekCard()
 
         // 2. إسناد الرتب للمستخدمين (1, 2, 3...)
@@ -470,9 +480,17 @@ class WritersActivity : AppCompatActivity() {
             )
             if (champion.userId != "manchorati_curated" &&
                 badge.id != "official" &&
-                badge.id != BadgeHelper.BADGE_BEGINNER.id) {
+                badge.iconResId != 0) {
                 tvWriterOfWeekBadge.visibility = View.VISIBLE
                 tvWriterOfWeekBadge.text = badge.getLocalizedTitle(this)
+                val d = ContextCompat.getDrawable(this, badge.iconResId)?.mutate()
+                if (d != null) {
+                    d.setTint(Color.parseColor(badge.textColorHex))
+                    val sz = (13 * resources.displayMetrics.density).toInt()
+                    d.setBounds(0, 0, sz, sz)
+                    tvWriterOfWeekBadge.setCompoundDrawables(d, null, null, null)
+                    tvWriterOfWeekBadge.compoundDrawablePadding = (4 * resources.displayMetrics.density).toInt()
+                }
             } else {
                 tvWriterOfWeekBadge.visibility = View.GONE
             }

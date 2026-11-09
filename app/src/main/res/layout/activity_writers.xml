@@ -248,22 +248,26 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <!-- صورة الكاتب مع حلقة ذهبية -->
+                            <!-- صورة كاتب الأسبوع مع إكليل الغار الذهبي والتاج -->
                             <FrameLayout
-                                android:layout_width="60dp"
-                                android:layout_height="60dp">
+                                android:layout_width="72dp"
+                                android:layout_height="72dp">
 
                                 <ImageView
                                     android:id="@+id/ivWriterOfWeekAvatar"
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="54dp"
+                                    android:layout_height="54dp"
+                                    android:layout_gravity="center"
                                     android:scaleType="centerCrop"
                                     android:src="@drawable/ic_profile" />
 
-                                <View
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:background="@drawable/bg_gold_avatar_ring" />
+                                <!-- إكليل الغار الملكي لكاتب الأسبوع -->
+                                <ImageView
+                                    android:id="@+id/ivWriterOfWeekLaurelWreath"
+                                    android:layout_width="72dp"
+                                    android:layout_height="72dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_laurel_wreath_frame" />
                             </FrameLayout>
 
                             <!-- الاسم والمعرف والإحصائيات -->

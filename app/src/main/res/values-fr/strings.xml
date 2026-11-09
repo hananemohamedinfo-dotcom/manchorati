@@ -616,7 +616,7 @@
     <string name="drawer_writers">Auteurs &amp; Classement hebdo</string>
     <string name="writers_title">Découvrir les auteurs &amp; Classement</string>
  <string name="writer_of_the_week">Auteur de la semaine</string>
-    <string name="writer_of_the_week_desc">L\'auteur le plus inspirant et actif cette semaine</string>
+    <string name="writer_of_the_week_desc">L’auteur le plus inspirant et actif cette semaine</string>
     <string name="writer_weekly_likes">%d j\'aime cette semaine</string>
     <string name="writer_total_likes">%d j\'aime au total</string>
     <string name="writer_followers_count">%s abonnés</string>
@@ -635,4 +635,6 @@
     <string name="no_weekly_posts_yet">Soyez le premier à publier cette semaine pour remporter le titre !</string>
     <string name="leaderboard_rank_format">#%d</string>
     <string name="leaderboard_section_title">Classement des auteurs</string>
+    <string name="writer_of_the_week_celebration_desc">"L'auteur %s a été couronné Auteur de la semaine grâce à l'interaction des lecteurs et porte la couronne de laurier dorée toute cette semaine !"</string>
+    <string name="great_congrats">Bravo et félicitations !</string>
 </resources>
