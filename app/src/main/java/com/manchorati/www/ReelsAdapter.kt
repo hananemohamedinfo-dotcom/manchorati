@@ -95,9 +95,18 @@ class ReelsAdapter(
                 tvReelAuthorBadge.visibility = View.GONE
             } else {
                 val badge = BadgeHelper.getBadgeForProfile(explicitBadge = post.authorBadge, email = null)
-                if (badge.iconEmoji.isNotEmpty() && badge.id != BadgeHelper.BADGE_BEGINNER.id && badge.id != "official") {
-                    tvReelAuthorBadge.visibility = View.VISIBLE
-                    tvReelAuthorBadge.text = badge.iconEmoji
+                if (badge.iconResId != 0 && badge.id != "official" && badge.id != BadgeHelper.BADGE_BEGINNER.id && badge.tierLevel >= 2) {
+                    val badgeDrawable = androidx.core.content.ContextCompat.getDrawable(context, badge.iconResId)?.mutate()
+                    if (badgeDrawable != null) {
+                        badgeDrawable.setTint(android.graphics.Color.parseColor(badge.textColorHex))
+                        val sizePx = (14 * context.resources.displayMetrics.density).toInt()
+                        badgeDrawable.setBounds(0, 0, sizePx, sizePx)
+                        tvReelAuthorBadge.setCompoundDrawables(badgeDrawable, null, null, null)
+                        tvReelAuthorBadge.text = ""
+                        tvReelAuthorBadge.visibility = View.VISIBLE
+                    } else {
+                        tvReelAuthorBadge.visibility = View.GONE
+                    }
                 } else {
                     tvReelAuthorBadge.visibility = View.GONE
                 }

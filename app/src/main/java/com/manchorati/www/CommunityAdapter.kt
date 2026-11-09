@@ -549,6 +549,8 @@ class CommunityAdapter(
                 post.authorName == "منشوراتي" ||
                 post.authorUsername.equals("manchorati", ignoreCase = true) ||
                 badge.id == "official" ||
+                badge.id == BadgeHelper.BADGE_BEGINNER.id ||
+                badge.tierLevel < 2 ||
                 badge.iconResId == 0) {
                 tvAuthorBadge.visibility = View.GONE
                 return

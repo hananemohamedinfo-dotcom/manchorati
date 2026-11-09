@@ -1,18 +1,18 @@
 # Graph Report - manchorati-main  (2026-11-09)
 
 ## Corpus Check
-- 175 files · ~229,256 words
+- 175 files · ~229,310 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 460 file(s) not represented in the graph (top: .xml 411, .ttf 19, (none) 7)
 - WARNING: 460 of 782 files seen (59%) have no supported extractor and are missing from this graph entirely. It may look complete while representing only part of the codebase.
 
 ## Summary
-- 2458 nodes · 4984 edges · 187 communities (38 shown, 149 thin omitted)
+- 2460 nodes · 4984 edges · 190 communities (38 shown, 152 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 50 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2a8b75fc`
+- Built from commit: `1bea08c4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -102,7 +102,7 @@
 - manchorati-main/app/src/main/java/com/manchorati/www/AiWriterBottomSheetDialog.kt
 - .getPrefs
 - manchorati-main/app/src/main/java/com/manchorati/www/SplashActivity.kt
-- FirebaseFirestore
+- .show
 - .setupSearch
 - .showDeleteAccountDialog
 - scripts
@@ -147,7 +147,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (187 total, 149 thin omitted)
+## Communities (190 total, 152 thin omitted)
 
 ### Community 0 - "VideoStudioActivity"
 Cohesion: 0.06
@@ -173,13 +173,17 @@ Nodes (4): ContactActivity, NotificationSettingsActivity, ContactActivity, Notif
 Cohesion: 0.07
 Nodes (42): add_quote(), delete_community_post(), get_categories(), get_community_posts(), get_sqlite_conn(), get_stats(), get_users(), index() (+34 more)
 
+### Community 6 - "app/src/main/java/com/manchorati/www/SyncManager.kt"
+Cohesion: 0.14
+Nodes (3): NotificationSyncWorker, SyncManager, SyncManager
+
 ### Community 7 - "build"
 Cohesion: 0.05
 Nodes (9): AppFirebaseMessagingService, DailyNotificationHelper, DailyNotificationWorker, NotificationHelper, NotificationReceiver, AiWriterManager, DailyNotificationHelper, DailyNotificationWorker (+1 more)
 
 ### Community 8 - "PostAdapter"
-Cohesion: 0.11
-Nodes (3): FavoritesFragment, PostAdapter, PostViewHolder
+Cohesion: 0.05
+Nodes (5): CategoryPostsActivity, FavoritesFragment, PostAdapter, PostViewHolder, CategoryPostsActivity
 
 ### Community 9 - "DatabaseHelper"
 Cohesion: 0.07
@@ -190,8 +194,8 @@ Cohesion: 0.09
 Nodes (4): NotificationsAdapter, NotificationViewHolder, NotificationsAdapter, NotificationViewHolder
 
 ### Community 12 - "PostAdapter"
-Cohesion: 0.05
-Nodes (5): CategoryPostsActivity, CategoryPostsActivity, FavoritesFragment, PostAdapter, PostViewHolder
+Cohesion: 0.11
+Nodes (3): FavoritesFragment, PostAdapter, PostViewHolder
 
 ### Community 14 - "locale"
 Cohesion: 0.07
@@ -204,10 +208,6 @@ Nodes (13): CommunityFragment, OnScrollListener, TextWatcher, MoodType, ALL, CHI
 ### Community 19 - "ImageUtils"
 Cohesion: 0.15
 Nodes (4): FontItem, ImageUtils, OnAmbilWarnaListener, OnAmbilWarnaListener
-
-### Community 20 - "app/src/main/java/com/manchorati/www/CommunityPostDialogHelper.kt"
-Cohesion: 0.09
-Nodes (4): CommunityPostDialogHelper, TextWatcher, CommunityPostDialogHelper, TextWatcher
 
 ### Community 21 - "MainActivity"
 Cohesion: 0.05
@@ -222,7 +222,7 @@ Cohesion: 0.07
 Nodes (11): CommunityFragment, TextWatcher, MoodType, ALL, CHILL, HAPPY, LOVE, MOTIVATED (+3 more)
 
 ### Community 27 - "FirestoreManager"
-Cohesion: 0.06
+Cohesion: 0.07
 Nodes (4): AppNotification, Comment, FirestoreManager, QuoteWidgetProvider
 
 ### Community 33 - "VideoStudioActivity"
@@ -230,7 +230,7 @@ Cohesion: 0.07
 Nodes (4): VideoStudioActivity, OnSeekBarChangeListener, OnSeekBarChangeListener, TextWatcher
 
 ### Community 39 - "FirestoreManager"
-Cohesion: 0.07
+Cohesion: 0.06
 Nodes (4): AppNotification, Comment, FirestoreManager, QuoteWidgetProvider
 
 ### Community 41 - "DatabaseHelper"
@@ -242,7 +242,7 @@ Cohesion: 0.07
 Nodes (39): dependencies, dotenv@^17.2.3, express@^4.21.2, @google/genai@^2.4.0, lucide-react@^0.546.0, motion@^12.23.24, react@^19.0.1, react-dom@^19.0.1 (+31 more)
 
 ### Community 48 - "UserBadge"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (3): BadgeHelper, MilestoneBadge, UserBadge
 
 ### Community 58 - "App.tsx"
@@ -302,24 +302,24 @@ Cohesion: 0.33
 Nodes (6): scripts, build, clean, dev, lint, preview
 
 ## Knowledge Gaps
-- **20 isolated node(s):** `WEEKLY`, `FOLLOWERS`, `ALL`, `ALL`, `CHILL` (+15 more)
-  These have ≤1 connection - possible missing edges. (Counts symbols only; 462 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **149 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 isolated node(s):** `ALL`, `CHILL`, `HAPPY`, `LOVE`, `MOTIVATED` (+15 more)
+  These have ≤1 connection - possible missing edges. (Counts symbols only; 467 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **152 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `UserProfileActivity` connect `UserProfileActivity` to `CommunityAdapter`, `WritersActivity`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
-- **What connects `WEEKLY`, `FOLLOWERS`, `ALL` to the rest of the system?**
+- **Why does `DatabaseHelper` connect `DatabaseHelper` to `NotificationSettingsActivity`, `build`, `FirestoreManager`, `.onCreate`, `PostAdapter`, `app/src/main/java/com/manchorati/www/VideoExporter.kt`, `CommunityFragment`?**
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+- **What connects `ALL`, `CHILL`, `HAPPY` to the rest of the system?**
   _20 weakly-connected nodes found - possible missing edges._
 - **Should `VideoStudioActivity` be split into smaller, more focused modules?**
   _Cohesion score 0.05727605727605728 - nodes in this community are weakly interconnected._
 - **Why does `VideoStudioActivity` connect `VideoStudioActivity` to `app/src/main/java/com/manchorati/www/CommunityPostDialogHelper.kt`, `app/src/main/java/com/manchorati/www/VideoStudioActivity.kt`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Should `UserProfileActivity` be split into smaller, more focused modules?**
-  _Cohesion score 0.05271629778672032 - nodes in this community are weakly interconnected._
-- **Why does `VideoStudioActivity` connect `VideoStudioActivity` to `app/src/main/java/com/manchorati/www/VideoStudioActivity.kt`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+  _Cohesion score 0.05242566510172144 - nodes in this community are weakly interconnected._
+- **Why does `UserProfileActivity` connect `UserProfileActivity` to `CommunityAdapter`, `WritersActivity`?**
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **Should `CommunityAdapter` be split into smaller, more focused modules?**
-  _Cohesion score 0.08771929824561403 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09103840682788052 - nodes in this community are weakly interconnected._

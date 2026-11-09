@@ -102,7 +102,7 @@
   "100": "manchorati-main/app/src/main/java/com/manchorati/www/AiWriterBottomSheetDialog.kt",
   "101": ".getPrefs",
   "102": "manchorati-main/app/src/main/java/com/manchorati/www/SplashActivity.kt",
-  "103": "FirebaseFirestore",
+  "103": ".show",
   "104": ".onCreate",
   "105": "com",
   "106": "locale",
@@ -178,12 +178,15 @@
   "176": "app/src/main/java/com/manchorati/www/CopyActivity.kt",
   "177": "manchorati-main/app/src/main/java/com/manchorati/www/AutoEngagementWorker.kt",
   "178": "manchorati-main/app/src/main/java/com/manchorati/www/CopyActivity.kt",
-  "179": "MotionEvent",
-  "180": "SimpleOnGestureListener",
-  "181": "VideoMotionView",
+  "179": "FrameLayout",
+  "180": "LinearLayout",
+  "181": "AppCompatActivity",
   "182": "ListenerRegistration",
   "183": "Editable",
   "184": "EditText",
   "185": "CommunityAdapter",
-  "186": "SimpleOnGestureListener"
+  "186": "SimpleOnGestureListener",
+  "187": "Bundle",
+  "188": "MotionEvent",
+  "189": "VideoMotionView"
 }

@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:layout_margin="5dp"
+    android:layout_height="76dp"
+    android:layout_margin="6dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/bg_card"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="18dp"
     app:cardElevation="2dp">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp">
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="14dp">
 
         <TextView
             android:id="@+id/tvCategoryTitle"
@@ -27,7 +27,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/text_primary"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             tools:text="صباحية" />
 
