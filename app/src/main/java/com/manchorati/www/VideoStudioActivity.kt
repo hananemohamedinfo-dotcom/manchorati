@@ -1,5 +1,8 @@
 package com.manchorati.www
 
+import android.content.res.ColorStateList
+import android.view.HapticFeedbackConstants
+
 
 
 import android.text.TextUtils
@@ -160,6 +163,16 @@ class VideoStudioActivity : AppCompatActivity() {
     // Panel 3: Typography & Colors
 
     private lateinit var panelFontContainer: LinearLayout
+
+    // Text Size Controls
+    private var selectedTextSizeScale: Float = 1.0f
+    private lateinit var btnTextSizeMinus: TextView
+    private lateinit var tvTextSizeBadge: TextView
+    private lateinit var btnTextSizePlus: TextView
+    private lateinit var btnSizeSmall: TextView
+    private lateinit var btnSizeNormal: TextView
+    private lateinit var btnSizeLarge: TextView
+    private lateinit var btnSizeXLarge: TextView
 
     private lateinit var layoutColorChips: LinearLayout
 
@@ -443,6 +456,7 @@ class VideoStudioActivity : AppCompatActivity() {
         setupListeners()
 
         setupSpeedControls()
+        setupTextSizeControls()
 
         setupCustomDurationControls()
 
@@ -633,6 +647,14 @@ class VideoStudioActivity : AppCompatActivity() {
         layoutColorChips = findViewById(R.id.layoutColorChips)
 
         scrollFont = findViewById(R.id.scrollFont)
+
+        btnTextSizeMinus = findViewById(R.id.btnTextSizeMinus)
+        tvTextSizeBadge = findViewById(R.id.tvTextSizeBadge)
+        btnTextSizePlus = findViewById(R.id.btnTextSizePlus)
+        btnSizeSmall = findViewById(R.id.btnSizeSmall)
+        btnSizeNormal = findViewById(R.id.btnSizeNormal)
+        btnSizeLarge = findViewById(R.id.btnSizeLarge)
+        btnSizeXLarge = findViewById(R.id.btnSizeXLarge)
 
         layoutFontPresets = findViewById(R.id.layoutFontPresets)
 
@@ -1136,6 +1158,68 @@ class VideoStudioActivity : AppCompatActivity() {
     }
 
 
+
+    private fun setupTextSizeControls() {
+        fun updateTextSizeUI() {
+            tvTextSizeBadge.text = "${(selectedTextSizeScale * 100).toInt()}%"
+            val presets = listOf(
+                btnSizeSmall to 0.8f,
+                btnSizeNormal to 1.0f,
+                btnSizeLarge to 1.3f,
+                btnSizeXLarge to 1.6f
+            )
+            for ((btn, scale) in presets) {
+                if (kotlin.math.abs(selectedTextSizeScale - scale) < 0.05f) {
+                    btn.setBackgroundResource(R.drawable.bg_segment_btn_active)
+                    btn.backgroundTintList = null
+                    btn.setTextColor(Color.WHITE)
+                    btn.setTypeface(null, Typeface.BOLD)
+                } else {
+                    btn.setBackgroundResource(R.drawable.bg_segment_container)
+                    btn.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26FFFFFF"))
+                    btn.setTextColor(Color.parseColor("#94A3B8"))
+                    btn.setTypeface(null, Typeface.NORMAL)
+                }
+            }
+            updateConfig()
+        }
+
+        btnTextSizeMinus.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = (selectedTextSizeScale - 0.10f).coerceIn(0.60f, 2.20f)
+            updateTextSizeUI()
+        }
+
+        btnTextSizePlus.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = (selectedTextSizeScale + 0.10f).coerceIn(0.60f, 2.20f)
+            updateTextSizeUI()
+        }
+
+        btnSizeSmall.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = 0.8f
+            updateTextSizeUI()
+        }
+
+        btnSizeNormal.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = 1.0f
+            updateTextSizeUI()
+        }
+
+        btnSizeLarge.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = 1.3f
+            updateTextSizeUI()
+        }
+
+        btnSizeXLarge.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            selectedTextSizeScale = 1.6f
+            updateTextSizeUI()
+        }
+    }
 
     private fun setupSpeedControls() {
 
@@ -3310,7 +3394,9 @@ class VideoStudioActivity : AppCompatActivity() {
 
             audioStartOffsetMs = audioStartOffsetMs
 ,
-            colorFilter = selectedColorFilter        )
+            colorFilter = selectedColorFilter,
+            textSizeScale = selectedTextSizeScale
+        )
 
         videoMotionView.audioStartOffsetMs = audioStartOffsetMs
 

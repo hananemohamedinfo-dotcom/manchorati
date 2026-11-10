@@ -171,14 +171,14 @@
                     android:insetBottom="0dp"
                     android:paddingHorizontal="4dp"
                     android:text="نشر"
-                    android:textColor="#FBBF24"
+                    android:textColor="#38BDF8"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     app:cornerRadius="10dp"
-                    app:strokeColor="#33FBBF24"
+                    app:strokeColor="#3338BDF8"
                     app:strokeWidth="1dp"
                     app:icon="@drawable/ic_plus"
-                    app:iconTint="#FBBF24"
+                    app:iconTint="#38BDF8"
                     app:iconSize="13dp" />
             </LinearLayout>
 

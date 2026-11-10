@@ -109,7 +109,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_key"
-                app:tint="#F59E0B" />
+                app:tint="#38BDF8" />
 
             <View
                 android:id="@+id/dotKeyBadge"
@@ -143,6 +143,8 @@
         <!-- 1. شاشة البداية النظيفة (Minimalist Hero) تظهر عندما تكون المحادثة فارغة -->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/layoutHeroEmpty"
+            android:isScrollContainer="true"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
@@ -229,7 +231,7 @@
                                     android:layout_height="22dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_sparkle_ai"
-                                    app:tint="#F59E0B" />
+                                    app:tint="#38BDF8" />
                             </FrameLayout>
 
                             <LinearLayout
@@ -409,7 +411,7 @@
                                     android:layout_height="22dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_quill_pen"
-                                    app:tint="#34D399" />
+                                    app:tint="#38BDF8" />
                             </FrameLayout>
 
                             <LinearLayout
@@ -445,6 +447,7 @@
         <!-- 2. قائمة رسائل المحادثة (RecyclerView) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAiChatMessages"
+            android:isScrollContainer="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"

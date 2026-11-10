@@ -640,4 +640,9 @@
     <string name="leaderboard_section_title">قائمة المتصدرين</string>
     <string name="writer_of_the_week_celebration_desc">تُوّج الكاتب %s بلقب كاتب الأسبوع بفضل تفاعل القراء وجمال الكلمات، وحصل على إكليل الغار الذهبي طيلة هذا الأسبوع!</string>
     <string name="great_congrats">رائع، مبارك له!</string>
+    <string name="studio_text_size">حجم النص</string>
+    <string name="studio_size_small">صغير</string>
+    <string name="studio_size_normal">عادي</string>
+    <string name="studio_size_large">كبير</string>
+    <string name="studio_size_xlarge">ضخم</string>
 </resources>

@@ -51,6 +51,7 @@ class AiChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_ai_chat)
 
         isForPostResult = intent.getBooleanExtra("EXTRA_FOR_POST", false)
@@ -77,20 +78,44 @@ class AiChatActivity : AppCompatActivity() {
     }
 
     private fun setupWindowInsets() {
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootAiChat)) { _, insets ->
+        val root = findViewById<View>(R.id.rootAiChat)
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
             val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime())
+            val density = resources.displayMetrics.density
+
             findViewById<View>(R.id.toolbarAiChat).setPadding(
-                (14 * resources.displayMetrics.density).toInt(),
-                systemBars.top + (8 * resources.displayMetrics.density).toInt(),
-                (14 * resources.displayMetrics.density).toInt(),
-                (8 * resources.displayMetrics.density).toInt()
+                (14 * density).toInt(),
+                systemBars.top + (8 * density).toInt(),
+                (14 * density).toInt(),
+                (8 * density).toInt()
             )
+
+            val bottomPadding = if (ime.bottom > 0) {
+                ime.bottom + (8 * density).toInt()
+            } else {
+                systemBars.bottom + (10 * density).toInt()
+            }
+
             findViewById<View>(R.id.layoutBottomBar).setPadding(
-                (14 * resources.displayMetrics.density).toInt(),
-                (10 * resources.displayMetrics.density).toInt(),
-                (14 * resources.displayMetrics.density).toInt(),
-                systemBars.bottom + (10 * resources.displayMetrics.density).toInt()
+                (14 * density).toInt(),
+                (8 * density).toInt(),
+                (14 * density).toInt(),
+                bottomPadding
             )
+
+            if (ime.bottom > 0) {
+                if (messages.isNotEmpty()) {
+                    rvAiChatMessages.post {
+                        rvAiChatMessages.smoothScrollToPosition(messages.size - 1)
+                    }
+                } else {
+                    layoutHeroEmpty.post {
+                        (layoutHeroEmpty as? androidx.core.widget.NestedScrollView)?.fullScroll(View.FOCUS_DOWN)
+                    }
+                }
+            }
+
             insets
         }
     }
@@ -132,6 +157,20 @@ class AiChatActivity : AppCompatActivity() {
             val text = etChatInput.text.toString().trim()
             if (text.isNotEmpty()) {
                 sendMessage(text)
+            }
+        }
+
+        etChatInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                if (messages.isNotEmpty()) {
+                    rvAiChatMessages.postDelayed({
+                        rvAiChatMessages.smoothScrollToPosition(messages.size - 1)
+                    }, 250)
+                } else {
+                    layoutHeroEmpty.postDelayed({
+                        (layoutHeroEmpty as? androidx.core.widget.NestedScrollView)?.fullScroll(View.FOCUS_DOWN)
+                    }, 250)
+                }
             }
         }
 

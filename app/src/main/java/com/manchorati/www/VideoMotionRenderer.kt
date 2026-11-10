@@ -35,7 +35,8 @@ object VideoMotionRenderer {
         val imagePanY: Float = 0f, // Relative vertical pan (-1f to 1f)
         val imageZoomScale: Float = 1.0f, // Touch pinch zoom multiplier (0.5f to 5.0f)
         val audioStartOffsetMs: Long = 0L, // Trimming start offset for custom music
-        val colorFilter: String = "none" // VN Cinematic LUTs: none, teal_orange, moody, vintage_90s, noir_bw, cyberpunk, sunset_gold
+        val colorFilter: String = "none", // VN Cinematic LUTs: none, teal_orange, moody, vintage_90s, noir_bw, cyberpunk, sunset_gold
+        val textSizeScale: Float = 1.0f // Text size multiplier (default 1.0f)
     )
 
     // Pre-allocated deterministic particles
@@ -334,11 +335,12 @@ object VideoMotionRenderer {
             } catch (_: Exception) {
                 Color.WHITE
             }
-            textSize = when {
+            val baseSize = when {
                 config.content.length > 250 -> (if (isStory) 24f else 22f) * S
                 config.content.length > 120 -> (if (isStory) 30f else 26f) * S
                 else -> (if (isStory) 38f else 32f) * S
             }
+            textSize = baseSize * config.textSizeScale
             typeface = ThemeHelper.getFontTypeface(context, config.fontId)
         }
 

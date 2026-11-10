@@ -637,4 +637,9 @@
     <string name="leaderboard_section_title">Leaderboard Rankings</string>
     <string name="writer_of_the_week_celebration_desc">Writer %s has been crowned Writer of the Week thanks to reader engagement and wears the golden laurel wreath all this week!</string>
     <string name="great_congrats">Awesome, congratulations!</string>
+    <string name="studio_text_size">Text Size</string>
+    <string name="studio_size_small">Small</string>
+    <string name="studio_size_normal">Normal</string>
+    <string name="studio_size_large">Large</string>
+    <string name="studio_size_xlarge">X-Large</string>
 </resources>

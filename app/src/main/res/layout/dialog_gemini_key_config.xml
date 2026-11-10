@@ -27,7 +27,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_key"
-                app:tint="#F59E0B" />
+                app:tint="#38BDF8" />
         </FrameLayout>
 
         <LinearLayout
