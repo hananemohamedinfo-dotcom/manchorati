@@ -15,8 +15,8 @@ android {
         applicationId = "com.manchorati.www"
         minSdk = 24
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.1.1"
+        versionCode = 7
+        versionName = "1.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,6 +33,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -68,7 +69,8 @@ dependencies {
     // استخدم إصدار BoM مستقر ومتوافق مع Kotlin 2.0
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-auth")
+
     implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("io.coil-kt:coil:2.6.0")

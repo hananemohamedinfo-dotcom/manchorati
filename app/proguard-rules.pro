@@ -1,30 +1,81 @@
+# ─────────────────────────────────────────────────────────────
 # Proguard & R8 Optimization Rules for Manchorati
--keep class com.manchorati.www.** { *; }
--keepclassmembers class com.manchorati.www.** { *; }
--keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,SourceFile,LineNumberTable
+# Maximum Shrinking, Obfuscation, and Class Repackaging
+# ─────────────────────────────────────────────────────────────
 
-# Firebase Firestore & Auth models
--keep class com.google.firebase.** { *; }
--dontwarn com.google.firebase.**
--keepattributes *Annotation*
+# Enable class repackaging to optimize DEX layout and obfuscation
+-repackageclasses 'com.manchorati.www.r'
+-allowaccessmodification
 
-# Google Play Services & Google Sign In
--keep class com.google.android.gms.** { *; }
--dontwarn com.google.android.gms.**
+# Keep line numbers and file info for clean stack traces
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# Coroutines
--keepnames class kotlinx.coroutines.** { *; }
--dontwarn kotlinx.coroutines.**
+# ─────────────────────────────────────────────────────────────
+# 1. Annotated Models & Reflection
+# ─────────────────────────────────────────────────────────────
+-keep @androidx.annotation.Keep class * { *; }
+-keepclassmembers class * {
+    @androidx.annotation.Keep *;
+}
 
-# Coil & Glide Image Loading
--keep class io.coilkt.** { *; }
--keep class com.bumptech.glide.** { *; }
+# Firebase Firestore Serialization
+-keep @com.google.firebase.firestore.IgnoreExtraProperties class * { *; }
+-keepclassmembers class * {
+    @com.google.firebase.firestore.PropertyName *;
+}
+-keepclassmembers class * {
+    @com.google.firebase.firestore.Exclude *;
+}
+-keepclassmembers class * {
+    @com.google.firebase.firestore.ServerTimestamp *;
+}
 
-# OkHttp
--keepattributes Signature
--keepattributes *Annotation*
--keep class okhttp3.** { *; }
--dontwarn okhttp3.**
+# Explicitly keep all Firestore Data Models with properties and constructors
+-keep class com.manchorati.www.CommunityPost { *; }
+-keep class com.manchorati.www.Post { *; }
+-keep class com.manchorati.www.FirestorePost { *; }
+-keep class com.manchorati.www.Comment { *; }
+-keep class com.manchorati.www.AppNotification { *; }
+-keep class com.manchorati.www.Category { *; }
+-keep class com.manchorati.www.WriterItem { *; }
+-keep class com.manchorati.www.UserBadge { *; }
+-keep class com.manchorati.www.VideoTheme { *; }
+-keep class com.manchorati.www.AiChatMessage { *; }
+-keep class com.manchorati.www.AiChatMessage$* { *; }
 
+# ─────────────────────────────────────────────────────────────
+# 2. Custom Views instantiated from XML
+# ─────────────────────────────────────────────────────────────
+-keep public class com.manchorati.www.VideoMotionView {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+-keep public class com.manchorati.www.AudioTimelineTrimmerView {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+-keep public class com.manchorati.www.TimelineFilmstripView {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+# ─────────────────────────────────────────────────────────────
+# 3. AndroidX WorkManager Workers
+# ─────────────────────────────────────────────────────────────
+-keep class * extends androidx.work.ListenableWorker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+
+# ─────────────────────────────────────────────────────────────
+# 4. Third-Party Libraries
+# ─────────────────────────────────────────────────────────────
 # AmbilWarna Color Picker
 -keep class yuku.ambilwarna.** { *; }
+
+# Coroutines
+-dontwarn kotlinx.coroutines.**
