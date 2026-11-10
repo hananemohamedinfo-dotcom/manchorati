@@ -1932,9 +1932,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AiChatActivity.kt": {
-    "mtime": 1794302687.9050653,
-    "seen": 1794303056.5118454,
-    "ast_hash": "e39b2cf32a664567dd8f42ebbef857bf",
+    "mtime": 1794303425.2613752,
+    "seen": 1794303557.1125264,
+    "ast_hash": "98332dd73e3f16c2b168b3919f9657e0",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AiChatAdapter.kt": {

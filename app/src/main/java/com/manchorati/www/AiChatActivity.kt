@@ -27,8 +27,8 @@ class AiChatActivity : AppCompatActivity() {
     private lateinit var btnAiBack: ImageView
     private lateinit var dotAiStatus: View
     private lateinit var tvAiStatusSubtitle: TextView
-    private lateinit var btnAiKeyTop: LinearLayout
-    private lateinit var tvKeyTopLabel: TextView
+    private lateinit var btnAiKeyTop: FrameLayout
+    private lateinit var dotKeyBadge: View
     private lateinit var btnClearChat: ImageView
 
     private lateinit var layoutHeroEmpty: View
@@ -62,6 +62,7 @@ class AiChatActivity : AppCompatActivity() {
         }
 
         initViews()
+        setupWindowInsets()
         setupStyles()
         setupHeroCards()
         setupChatRecyclerView()
@@ -75,12 +76,31 @@ class AiChatActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupWindowInsets() {
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootAiChat)) { _, insets ->
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            findViewById<View>(R.id.toolbarAiChat).setPadding(
+                (14 * resources.displayMetrics.density).toInt(),
+                systemBars.top + (8 * resources.displayMetrics.density).toInt(),
+                (14 * resources.displayMetrics.density).toInt(),
+                (8 * resources.displayMetrics.density).toInt()
+            )
+            findViewById<View>(R.id.layoutBottomBar).setPadding(
+                (14 * resources.displayMetrics.density).toInt(),
+                (10 * resources.displayMetrics.density).toInt(),
+                (14 * resources.displayMetrics.density).toInt(),
+                systemBars.bottom + (10 * resources.displayMetrics.density).toInt()
+            )
+            insets
+        }
+    }
+
     private fun initViews() {
         btnAiBack = findViewById(R.id.btnAiBack)
         dotAiStatus = findViewById(R.id.dotAiStatus)
         tvAiStatusSubtitle = findViewById(R.id.tvAiStatusSubtitle)
         btnAiKeyTop = findViewById(R.id.btnAiKeyTop)
-        tvKeyTopLabel = findViewById(R.id.tvKeyTopLabel)
+        dotKeyBadge = findViewById(R.id.dotKeyBadge)
         btnClearChat = findViewById(R.id.btnClearChat)
 
         layoutHeroEmpty = findViewById(R.id.layoutHeroEmpty)
@@ -216,15 +236,15 @@ class AiChatActivity : AppCompatActivity() {
     private fun updateHeaderKeyStatus() {
         if (AiWriterManager.hasUserApiKey(this)) {
             dotAiStatus.setBackgroundResource(R.drawable.bg_status_dot_green)
+            dotKeyBadge.setBackgroundResource(R.drawable.bg_status_dot_green)
             tvAiStatusSubtitle.text = "مفتاحك الشخصي مفعّل (غير محدود)"
             tvAiStatusSubtitle.setTextColor(Color.parseColor("#10B981"))
-            tvKeyTopLabel.text = "مفتاحك مفعّل"
         } else {
             val remaining = AiWriterManager.getRemainingQuota(this)
             dotAiStatus.setBackgroundResource(R.drawable.bg_status_dot_amber)
+            dotKeyBadge.setBackgroundResource(R.drawable.bg_status_dot_amber)
             tvAiStatusSubtitle.text = "المفتاح التجريبي ($remaining / ${AiWriterManager.MAX_DAILY_QUOTA} محاولات)"
             tvAiStatusSubtitle.setTextColor(Color.parseColor("#38BDF8"))
-            tvKeyTopLabel.text = "تخصيص المفتاح"
         }
     }
 
