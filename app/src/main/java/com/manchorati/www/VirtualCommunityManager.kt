@@ -34,27 +34,35 @@ object VirtualCommunityManager {
     private const val KEY_LAST_AUTO_POST_TIME = "last_auto_post_time"
 
     val PERSONAS = listOf(
- VirtualPersona("persona_sara_b", "سارة بناني", "sara_bennani", "avatar_2", "verified", "شغوفة بالأدب والفكر والكلمة الطيبة "),
- VirtualPersona("persona_yassine_a", "ياسين العلمي", "yassine_al", "avatar_9", "writer", "كاتب ومهتم بتطوير الذات وبناء العادات "),
- VirtualPersona("persona_hamza_s", "حمزة الصالحي", "hamza_s", "avatar_11", "", "باحث عن الحكمة والهدوء في تفاصيل الحياة "),
- VirtualPersona("persona_ilham_m", "إلهام المنصوري", "ilham_m", "avatar_4", "writer", "أكتب لأجد نفسي بين السطور والخواطر "),
- VirtualPersona("persona_amine_f", "أمين الفاسي", "amine_elfassi", "avatar_5", "", "مهتم بالقراءة ونشر الطاقة الإيجابية "),
- VirtualPersona("persona_maryam_i", "مريم الإدريسي", "maryam_idrissi", "avatar_10", "verified", "محبة للأدب الراقي ولحظات التأمل "),
- VirtualPersona("persona_omar_t", "عمر التازي", "omar_tazi", "avatar_7", "", "عاشق للهدوء والكتب وفنجان قهوة الصباح "),
- VirtualPersona("persona_kaoutar_m", "كوثر المرابط", "kaoutar_m", "avatar_13", "writer", "الكلمات أثر لا يزول.. أشارككم ما راق لي "),
- VirtualPersona("persona_nabil_c", "نبيل الشريف", "nabil_cherif", "avatar_12", "", "طالب معرفة ومحب للحكم والأمثال القديمة "),
- VirtualPersona("persona_fz_zahra", "فاطمة الزهراء", "fz_zahra", "avatar_15", "", "ابتسم فالحياة أجمل بحسن الظن بالله "),
- VirtualPersona("persona_karim_n", "كريم الناصري", "karim_n", "avatar_14", "writer", "كلمات تصنع الفارق وأفكار تبني العزيمة "),
- VirtualPersona("persona_houda_a", "هدى العمراني", "houda_amrani", "avatar_16", "", "خواطر وكلمات دافئة من القلب إلى القلب "),
- VirtualPersona("persona_tariq_b", "طارق بنسودة", "tariq_b", "avatar_19", "", "النجاح يبدأ بخطوة واستمرار لا يتوقف "),
- VirtualPersona("persona_sanaa_b", "سناء بوزيد", "sanaa_b", "avatar_17", "verified", "مؤسسة نادي قراء ومحبة لنشر الإيجابية "),
- VirtualPersona("persona_youssef_r", "يوسف الرحماني", "youssef_r", "avatar_20", "", "في رحلة مستمرة للتعلم واكتساب الحكمة "),
- VirtualPersona("persona_zineb_y", "زينب اليعقوبي", "zineb_y", "avatar_18", "", "أحب التفاصيل الصغيرة واللحظات الصادقة "),
- VirtualPersona("persona_adel_m", "عادل المتوكل", "adel_m", "avatar_6", "writer", "حروف تنبض بالحياة ورسائل أمل دائمة "),
- VirtualPersona("persona_wafaa_s", "وفاء الصنهاجي", "wafaa_s", "avatar_1", "", "اللهم سعة وسلاماً يغمر القلب "),
- VirtualPersona("persona_mostafa_w", "مصطفى الوديع", "mostafa_w", "avatar_8", "", "الهدوء نعمة، والكلمة الطيبة صدقة "),
- VirtualPersona("persona_nadia_b", "نادية برادة", "nadia_barrada", "avatar_3", "", "نور وأمل يزهر في كل مكان ")
+        VirtualPersona("persona_sara_b", "سارة بناني", "sara_bennani", "avatar_2", "verified", "شغوفة بالأدب والفكر والكلمة الطيبة "),
+        VirtualPersona("persona_yassine_a", "ياسين العلمي", "yassine_al", "avatar_9", "writer", "كاتب ومهتم بتطوير الذات وبناء العادات "),
+        VirtualPersona("persona_hamza_s", "حمزة الصالحي", "hamza_s", "avatar_11", "", "باحث عن الحكمة والهدوء في تفاصيل الحياة "),
+        VirtualPersona("persona_ilham_m", "إلهام المنصوري", "ilham_m", "avatar_4", "writer", "أكتب لأجد نفسي بين السطور والخواطر "),
+        VirtualPersona("persona_amine_f", "أمين الفاسي", "amine_elfassi", "avatar_5", "", "مهتم بالقراءة ونشر الطاقة الإيجابية "),
+        VirtualPersona("persona_maryam_i", "مريم الإدريسي", "maryam_idrissi", "avatar_10", "verified", "محبة للأدب الراقي ولحظات التأمل "),
+        VirtualPersona("persona_omar_t", "عمر التازي", "omar_tazi", "avatar_7", "", "عاشق للهدوء والكتب وفنجان قهوة الصباح "),
+        VirtualPersona("persona_kaoutar_m", "كوثر المرابط", "kaoutar_m", "avatar_13", "writer", "الكلمات أثر لا يزول.. أشارككم ما راق لي "),
+        VirtualPersona("persona_nabil_c", "نبيل الشريف", "nabil_cherif", "avatar_12", "", "طالب معرفة ومحب للحكم والأمثال القديمة "),
+        VirtualPersona("persona_fz_zahra", "فاطمة الزهراء", "fz_zahra", "avatar_15", "", "ابتسم فالحياة أجمل بحسن الظن بالله "),
+        VirtualPersona("persona_karim_n", "كريم الناصري", "karim_n", "avatar_14", "writer", "كلمات تصنع الفارق وأفكار تبني العزيمة "),
+        VirtualPersona("persona_houda_a", "هدى العمراني", "houda_amrani", "avatar_16", "", "خواطر وكلمات دافئة من القلب إلى القلب "),
+        VirtualPersona("persona_tariq_b", "طارق بنسودة", "tariq_b", "avatar_19", "", "النجاح يبدأ بخطوة واستمرار لا يتوقف "),
+        VirtualPersona("persona_sanaa_b", "سناء بوزيد", "sanaa_b", "avatar_17", "verified", "مؤسسة نادي قراء ومحبة لنشر الإيجابية "),
+        VirtualPersona("persona_youssef_r", "يوسف الرحماني", "youssef_r", "avatar_20", "", "في رحلة مستمرة للتعلم واكتساب الحكمة "),
+        VirtualPersona("persona_zineb_y", "زينب اليعقوبي", "zineb_y", "avatar_18", "", "أحب التفاصيل الصغيرة واللحظات الصادقة "),
+        VirtualPersona("persona_adel_m", "عادل المتوكل", "adel_m", "avatar_6", "writer", "حروف تنبض بالحياة ورسائل أمل دائمة "),
+        VirtualPersona("persona_wafaa_s", "وفاء الصنهاجي", "wafaa_s", "avatar_1", "", "اللهم سعة وسلاماً يغمر القلب "),
+        VirtualPersona("persona_mostafa_w", "مصطفى الوديع", "mostafa_w", "avatar_8", "", "الهدوء نعمة، والكلمة الطيبة صدقة "),
+        VirtualPersona("persona_nadia_b", "نادية برادة", "nadia_barrada", "avatar_3", "", "نور وأمل يزهر في كل مكان ")
     )
+
+    fun isVirtualUser(userId: String?): Boolean {
+        if (userId.isNullOrEmpty()) return true
+        return userId.startsWith("persona_") ||
+                userId == "manchorati_curated" ||
+                userId == "local_guest" ||
+                PERSONAS.any { it.id == userId }
+    }
 
     private val BG_PRESETS = listOf(
         "card_luxury",
@@ -125,6 +133,8 @@ object VirtualCommunityManager {
             reportCount = 0L,
             likedBy = likedByList,
             authorBadge = persona.badge,
+            authorStreak = 5 + (Math.abs(persona.id.hashCode()) % 38),
+            lastLikedAt = System.currentTimeMillis(),
             timestamp = postTimestamp
         )
     }
@@ -368,6 +378,8 @@ object VirtualCommunityManager {
                 "textColor" to "",
                 "tag" to (quote.categoryName.takeIf { it.isNotEmpty() } ?: "خواطر"),
                 "authorBadge" to persona.badge,
+                "authorStreak" to (5 + (Math.abs(persona.id.hashCode()) % 38)),
+                "lastLikedAt" to System.currentTimeMillis(),
                 "likesCount" to initialLikes.toLong(),
                 "commentsCount" to 1L,
                 "likedBy" to sampleLikedBy,

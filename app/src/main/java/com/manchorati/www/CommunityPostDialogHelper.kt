@@ -117,7 +117,42 @@ object CommunityPostDialogHelper {
         ivPreviewAvatar.loadUserAvatar(authorPhoto)
         tvPreviewAuthorName.text = if (authorName.isNotEmpty()) authorName else context.getString(R.string.you_author)
 
-        btnCloseDialog.setOnClickListener { dialog.dismiss() }
+        dialog.setCanceledOnTouchOutside(false)
+
+        val handleDismissAttempt = {
+            val hasContent = etContent.text.toString().trim().isNotEmpty()
+            val isModified = if (editingPost != null) {
+                etContent.text.toString().trim() != editingPost.content.trim()
+            } else {
+                hasContent || selectedBg.startsWith("content://") || selectedBg.startsWith("file://")
+            }
+
+            if (isModified) {
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                    .setTitle("تجاهل المنشور؟")
+                    .setMessage("لديك نص أو تعديلات غير منشورة. هل تريد التراجع وفقدان ما كتبته؟")
+                    .setPositiveButton("متابعة الكتابة") { d, _ ->
+                        d.dismiss()
+                    }
+                    .setNegativeButton("تجاهل وخروج") { _, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            } else {
+                dialog.dismiss()
+            }
+        }
+
+        btnCloseDialog.setOnClickListener { handleDismissAttempt() }
+
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.action == android.view.KeyEvent.ACTION_UP) {
+                handleDismissAttempt()
+                true
+            } else {
+                false
+            }
+        }
 
         if (editingPost != null) {
             tvDialogTitle.text = context.getString(R.string.edit_post_title)

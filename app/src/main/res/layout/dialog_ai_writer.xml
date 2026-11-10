@@ -561,12 +561,15 @@
                             android:id="@+id/btnAiActionCopy"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
+                            android:layout_height="36dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="4dp"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:paddingHorizontal="4dp"
+                            android:paddingVertical="0dp"
+                            android:singleLine="true"
+                            android:ellipsize="none"
                             android:text="نسخ"
                             android:textColor="#38BDF8"
                             android:textSize="11sp"
@@ -576,20 +579,25 @@
                             app:strokeWidth="1dp"
                             app:icon="@drawable/ic_copy"
                             app:iconTint="#38BDF8"
-                            app:iconSize="13dp" />
+                            app:iconSize="14dp"
+                            app:iconPadding="3dp"
+                            app:iconGravity="textStart" />
 
                         <!-- صورة -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAiActionImage"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1.2"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
                             android:layout_marginEnd="4dp"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:paddingHorizontal="4dp"
-                            android:text="تصميم صورة"
+                            android:paddingVertical="0dp"
+                            android:singleLine="true"
+                            android:ellipsize="none"
+                            android:text="صورة"
                             android:textColor="#34D399"
                             android:textSize="11sp"
                             android:textStyle="bold"
@@ -598,20 +606,25 @@
                             app:strokeWidth="1dp"
                             app:icon="@drawable/ic_share_image"
                             app:iconTint="#34D399"
-                            app:iconSize="13dp" />
+                            app:iconSize="14dp"
+                            app:iconPadding="3dp"
+                            app:iconGravity="textStart" />
 
                         <!-- فيديو -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAiActionVideo"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1.1"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
                             android:layout_marginEnd="4dp"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:paddingHorizontal="4dp"
-                            android:text="فيديو AI"
+                            android:paddingVertical="0dp"
+                            android:singleLine="true"
+                            android:ellipsize="none"
+                            android:text="فيديو"
                             android:textColor="#F472B6"
                             android:textSize="11sp"
                             android:textStyle="bold"
@@ -620,18 +633,23 @@
                             app:strokeWidth="1dp"
                             app:icon="@drawable/ic_video_reel"
                             app:iconTint="#F472B6"
-                            app:iconSize="13dp" />
+                            app:iconSize="14dp"
+                            app:iconPadding="3dp"
+                            app:iconGravity="textStart" />
 
                         <!-- نشر / إدراج -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAiActionPublish"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
+                            android:layout_height="36dp"
                             android:layout_weight="1"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:paddingHorizontal="4dp"
+                            android:paddingVertical="0dp"
+                            android:singleLine="true"
+                            android:ellipsize="none"
                             android:text="إدراج"
                             android:textColor="#FBBF24"
                             android:textSize="11sp"
@@ -641,7 +659,9 @@
                             app:strokeWidth="1dp"
                             app:icon="@drawable/ic_plus"
                             app:iconTint="#FBBF24"
-                            app:iconSize="13dp" />
+                            app:iconSize="14dp"
+                            app:iconPadding="3dp"
+                            app:iconGravity="textStart" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -688,7 +708,6 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_send"
-                android:rotation="180"
                 app:tint="#FFFFFF" />
         </FrameLayout>
     </LinearLayout>

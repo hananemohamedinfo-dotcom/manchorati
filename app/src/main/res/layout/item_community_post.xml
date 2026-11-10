@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="12dp"
@@ -81,7 +82,7 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <!-- رمز شارة تصنيف ورتبة الكاتب (رمز فقط بدون خلفية أو نص) -->
+                        <!-- رمز شارة تصنيف ورتبة الكاتب (إيموجي الرتبة) -->
                         <TextView
                             android:id="@+id/tvAuthorBadge"
                             android:layout_width="wrap_content"
@@ -94,8 +95,26 @@
                             android:includeFontPadding="false"
                             android:singleLine="true"
                             android:text=""
-                            android:textSize="13.5sp"
+                            android:textSize="14sp"
                             android:visibility="gone" />
+
+                        <!-- شارة سلسلة أيام التفاعل والإلهام (مثال: 🔥 7) -->
+                        <TextView
+                            android:id="@+id/tvAuthorStreak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/bg_streak_pill_mini"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:singleLine="true"
+                            android:textColor="#FB923C"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:text="🔥 7" />
                     </LinearLayout>
 
                     <TextView

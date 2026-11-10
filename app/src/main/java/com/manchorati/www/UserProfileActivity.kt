@@ -327,6 +327,8 @@ class UserProfileActivity : AppCompatActivity() {
                     swipeRefresh.isRefreshing = false
 
                     // شارة ورتبة المستخدم والتحديات
+                    val showBadge = data["showBadge"] as? Boolean ?: true
+                    BadgeHelper.setUserBadgeVisibility(targetUserId, showBadge)
                     val explicitBadge = data["badge"] as? String
                     val email = data["email"] as? String ?: (if (targetUserId == AuthManager.currentUser?.uid) AuthManager.currentUser?.email else null)
                     val totalLikes = (data["totalLikes"] as? Number)?.toLong() ?: 0L
@@ -342,6 +344,8 @@ class UserProfileActivity : AppCompatActivity() {
                 } else {
                     val currentUser = AuthManager.currentUser
                     if (currentUser != null && targetUserId == currentUser.uid) {
+                        val showBadge = getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getBoolean("show_badge", true)
+                        BadgeHelper.setUserBadgeVisibility(targetUserId, showBadge)
                         if (currentUsername.isEmpty()) {
                             currentUsername = AuthManager.generateBaseUsername(currentUser.displayName, currentUser.email)
                         }
@@ -383,26 +387,19 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun updateBadgeUI(badge: UserBadge) {
+        val isVisible = BadgeHelper.isBadgeVisibleForUser(targetUserId)
+        if (!isVisible) {
+            tvProfileBadge.visibility = View.GONE
+            return
+        }
         tvProfileBadge.visibility = View.VISIBLE
-        tvProfileBadge.text = badge.getLocalizedTitle(this@UserProfileActivity)
+        val title = badge.getLocalizedTitle(this@UserProfileActivity)
+        tvProfileBadge.text = "${badge.iconEmoji} $title".trim()
         tvProfileBadge.setBackgroundResource(badge.bgResId)
         try {
             tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
         } catch (_: Exception) {}
-        if (badge.iconResId != 0) {
-            val d = ContextCompat.getDrawable(this@UserProfileActivity, badge.iconResId)?.mutate()
-            if (d != null) {
-                try {
-                    d.setTint(Color.parseColor(badge.textColorHex))
-                } catch (_: Exception) {}
-                val sz = (14 * resources.displayMetrics.density).toInt()
-                d.setBounds(0, 0, sz, sz)
-                tvProfileBadge.setCompoundDrawables(d, null, null, null)
-                tvProfileBadge.compoundDrawablePadding = (5 * resources.displayMetrics.density).toInt()
-            }
-        } else {
-            tvProfileBadge.setCompoundDrawables(null, null, null, null)
-        }
+        tvProfileBadge.setCompoundDrawables(null, null, null, null)
     }
 
     private fun updateLaurelWreathUI() {
@@ -946,13 +943,16 @@ class UserProfileActivity : AppCompatActivity() {
         val tvUsernameStatus = dialogView.findViewById<TextView>(R.id.tvUsernameStatus)
         val etBio = dialogView.findViewById<EditText>(R.id.etEditBio)
         val tvBioCounter = dialogView.findViewById<TextView>(R.id.tvBioCounter)
+        val switchShowBadge = dialogView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.switchShowBadge)
         val btnSave = dialogView.findViewById<TextView>(R.id.btnSaveProfile)
         val pbSave = dialogView.findViewById<ProgressBar>(R.id.pbSaveProfile)
 
         btnClose.setOnClickListener { dialog.dismiss() }
 
-        // تحميل صورة المستخدم الحالية
+        // تحميل صورة المستخدم الحالية وإعدادات الخصوصية
         val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val currentShowBadge = prefs.getBoolean("show_badge", true)
+        switchShowBadge?.isChecked = currentShowBadge
         var selectedPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
             ?: (AuthManager.currentUser?.photoUrl?.toString() ?: "")
         ivEditAvatarPreview.loadUserAvatar(selectedPhotoUrl)
@@ -1089,12 +1089,18 @@ class UserProfileActivity : AppCompatActivity() {
             pbSave.visibility = View.VISIBLE
             btnSave.isClickable = false
 
+            val shouldShowBadge = switchShowBadge?.isChecked ?: true
             val completeProfileSave = {
-                FirestoreManager.updateUserProfile(activeUserId, newName, newBio) { success ->
+                FirestoreManager.updateUserProfile(activeUserId, newName, newBio, shouldShowBadge) { success ->
                     if (success) {
                         tvName.text = newName
                         tvBio.text = newBio.ifEmpty { getString(R.string.bio_default) }
-                        prefs.edit().putString("user_name", newName).apply()
+                        prefs.edit()
+                            .putString("user_name", newName)
+                            .putBoolean("show_badge", shouldShowBadge)
+                            .apply()
+                        BadgeHelper.setUserBadgeVisibility(activeUserId, shouldShowBadge)
+                        updateBadgeUI(currentBadge)
                         updateNameInCommunityPosts(newName)
 
                         // تحديث الصورة الشخصية إذا تم اختيار صورة جديدة

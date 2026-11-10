@@ -177,6 +177,7 @@ class CommunityAdapter(
         private val ivAuthorLaurelWreath: ImageView? = itemView.findViewById(R.id.ivAuthorLaurelWreath)
         private val tvAuthor: TextView = itemView.findViewById(R.id.tvAuthor)
         private val tvAuthorBadge: TextView = itemView.findViewById(R.id.tvAuthorBadge)
+        private val tvAuthorStreak: TextView? = itemView.findViewById(R.id.tvAuthorStreak)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvPostUsername)
         private val tvPostTag: TextView = itemView.findViewById(R.id.tvPostTag)
         private val btnPostMenu: ImageView = itemView.findViewById(R.id.btnPostMenu)
@@ -263,6 +264,9 @@ class CommunityAdapter(
             // 1. شارة تصنيف ورتبة الكاتب (تظهر دائماً بجانب اسمه)
             val initialBadge = BadgeHelper.getBadgeForPost(post)
             bindAuthorBadge(initialBadge, post)
+
+            // 2. شارة سلسلة الأيام والتفاعل
+            bindAuthorStreak(post)
 
             // جلب وتحديث رتبة الكاتب الحية من قاعدة البيانات في الخلفية
             BadgeHelper.fetchAndCacheAuthorBadge(post.authorId) { liveBadge ->
@@ -543,37 +547,65 @@ class CommunityAdapter(
         }
 
         private fun bindAuthorBadge(badge: UserBadge, post: CommunityPost) {
-            // إخفاء أي شارة أو علامة لمنشورات تطبيق "منشوراتي" الرسمية أو المبتدئين
-            if (post.authorId == "manchorati_curated" ||
-                post.authorBadge == "official" ||
-                post.authorName == "منشوراتي" ||
-                post.authorUsername.equals("manchorati", ignoreCase = true) ||
-                badge.id == "official" ||
-                badge.id == BadgeHelper.BADGE_BEGINNER.id ||
-                badge.tierLevel < 2 ||
-                badge.iconResId == 0) {
+            // فحص خصوصية المستخدم: هل اختار إظهار رتبته الأدبية؟
+            if (!BadgeHelper.isBadgeVisibleForUser(post.authorId)) {
                 tvAuthorBadge.visibility = View.GONE
                 return
             }
 
-            val badgeDrawable = ContextCompat.getDrawable(itemView.context, badge.iconResId)?.mutate()
-            if (badgeDrawable != null) {
-                badgeDrawable.setTint(Color.parseColor(badge.textColorHex))
-                val sizePx = (14 * itemView.context.resources.displayMetrics.density).toInt()
-                badgeDrawable.setBounds(0, 0, sizePx, sizePx)
-                tvAuthorBadge.setCompoundDrawables(badgeDrawable, null, null, null)
-                tvAuthorBadge.text = ""
+            // إخفاء أي شارة لمنشورات تطبيق منشوراتي الرسمية
+            if (post.authorId == "manchorati_curated" ||
+                post.authorBadge == "official" ||
+                post.authorName == "منشوراتي" ||
+                post.authorUsername.equals("manchorati", ignoreCase = true) ||
+                badge.id == "official") {
+                tvAuthorBadge.visibility = View.GONE
+                return
+            }
+
+            val emoji = badge.iconEmoji
+            if (emoji.isNotEmpty()) {
+                tvAuthorBadge.setCompoundDrawables(null, null, null, null)
+                tvAuthorBadge.text = emoji
                 tvAuthorBadge.visibility = View.VISIBLE
             } else {
                 tvAuthorBadge.visibility = View.GONE
             }
+
             tvAuthorBadge.setOnClickListener {
+                tvAuthorBadge.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
                 Toast.makeText(
                     itemView.context,
-                    "${badge.getLocalizedTitle(itemView.context)}\n${badge.getLocalizedDescription(itemView.context)}",
+                    "${badge.iconEmoji} ${badge.getLocalizedTitle(itemView.context)}\n${badge.getLocalizedDescription(itemView.context)}",
                     Toast.LENGTH_SHORT
                 ).show()
                 onAuthorClicked(post.authorId, post.authorName)
+            }
+        }
+
+        private fun bindAuthorStreak(post: CommunityPost) {
+            val streak = post.authorStreak
+            if (streak > 0 && tvAuthorStreak != null) {
+                val emoji = when {
+                    streak >= 30 -> "🏆"
+                    streak >= 15 -> "🌟"
+                    streak >= 7 -> "🔥"
+                    streak >= 3 -> "⚡"
+                    else -> "✨"
+                }
+                tvAuthorStreak.text = "$emoji $streak"
+                tvAuthorStreak.visibility = View.VISIBLE
+                tvAuthorStreak.setOnClickListener {
+                    tvAuthorStreak.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    Toast.makeText(
+                        itemView.context,
+                        "سلسلة التفاعل والإلهام: $streak يوم متواصل! $emoji",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                tvAuthorStreak?.visibility = View.GONE
+                tvAuthorStreak?.setOnClickListener(null)
             }
         }
 

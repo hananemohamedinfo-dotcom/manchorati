@@ -72,6 +72,8 @@ fun listenToUserPosts(
             BadgeHelper.getCachedBadge(authorId)?.id ?: ""
         }
 
+        val streakCount = if (context != null) StreakManager.getStreakInfo(context).currentStreak else 1
+
         val postMap = hashMapOf(
             "authorId" to authorId,
             "authorName" to authorName,
@@ -83,10 +85,12 @@ fun listenToUserPosts(
             "textColor" to textColor,
             "tag" to tag,
             "authorBadge" to resolvedBadge,
+            "authorStreak" to streakCount,
             "likesCount" to 0,
             "commentsCount" to 0,
             "likedBy" to emptyList<String>(),
-            "timestamp" to System.currentTimeMillis()
+            "timestamp" to System.currentTimeMillis(),
+            "lastLikedAt" to System.currentTimeMillis()
         )
 
         db.collection("community_posts")
@@ -132,6 +136,8 @@ fun listenToUserPosts(
             BadgeHelper.getCachedBadge(authorId)?.id ?: ""
         }
 
+        val streakCount = if (context != null) StreakManager.getStreakInfo(context).currentStreak else 1
+
         val postMap = hashMapOf(
             "authorId" to authorId,
             "authorName" to authorName,
@@ -143,10 +149,12 @@ fun listenToUserPosts(
             "textColor" to textColor,
             "tag" to tag,
             "authorBadge" to resolvedBadge,
+            "authorStreak" to streakCount,
             "likesCount" to 0L,
             "commentsCount" to 0L,
             "likedBy" to emptyList<String>(),
             "timestamp" to System.currentTimeMillis(),
+            "lastLikedAt" to System.currentTimeMillis(),
             "postType" to "VIDEO",
             "bgMotionId" to bgMotionId,
             "audioPreset" to audioPreset,
@@ -283,7 +291,8 @@ fun listenToUserPosts(
         } else {
             mapOf(
                 "likedBy" to FieldValue.arrayUnion(userId),
-                "likesCount" to FieldValue.increment(1)
+                "likesCount" to FieldValue.increment(1),
+                "lastLikedAt" to System.currentTimeMillis()
             )
         }
 
@@ -416,13 +425,14 @@ fun listenToUserPosts(
             .addOnFailureListener { onComplete(null) }
     }
 
-    fun updateUserProfile(userId: String, displayName: String, bio: String, onComplete: (Boolean) -> Unit) {
+    fun updateUserProfile(userId: String, displayName: String, bio: String, showBadge: Boolean = true, onComplete: (Boolean) -> Unit) {
         val updates = mapOf(
             "displayName" to displayName,
-            "bio" to bio
+            "bio" to bio,
+            "showBadge" to showBadge
         )
         db.collection("users").document(userId)
-            .update(updates)
+            .set(updates, com.google.firebase.firestore.SetOptions.merge())
             .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
     }

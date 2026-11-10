@@ -48,6 +48,7 @@ class AiChatActivity : AppCompatActivity() {
     private var selectedTopic = "حكم وأمثال"
 
     private var isForPostResult = false
+    private val currentUserId: String get() = AuthManager.currentUser?.uid ?: AuthManager.auth.currentUser?.uid ?: "local_guest"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +69,17 @@ class AiChatActivity : AppCompatActivity() {
         setupHeroCards()
         setupChatRecyclerView()
         updateHeaderKeyStatus()
+
+        // استرجاع سجل المحادثة المحلي الخاص بحساب المستخدم
+        val savedHistory = AiChatHistoryManager.loadHistory(this, currentUserId)
+        if (savedHistory.isNotEmpty()) {
+            messages.addAll(savedHistory)
+            chatAdapter.notifyDataSetChanged()
+            updateListVisibility()
+            rvAiChatMessages.post {
+                rvAiChatMessages.scrollToPosition(messages.size - 1)
+            }
+        }
 
         // إذا كان هناك نص مبدئي قادم من محرر المنشورات
         if (initialPrompt.isNotBlank()) {
@@ -142,10 +154,20 @@ class AiChatActivity : AppCompatActivity() {
 
         btnClearChat.setOnClickListener {
             if (messages.isNotEmpty()) {
-                messages.clear()
-                chatAdapter.notifyDataSetChanged()
-                updateListVisibility()
-                Toast.makeText(this, "تم بدء محادثة جديدة", Toast.LENGTH_SHORT).show()
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                    .setTitle("مسح سجل المحادثة؟")
+                    .setMessage("هل تريد مسح جميع رسائل المحادثة السابقة لهذا الحساب وبدء محادثة جديدة؟ لا يمكن التراجع عن هذا الإجراء.")
+                    .setPositiveButton("مسح المحادثة") { _, _ ->
+                        messages.clear()
+                        AiChatHistoryManager.clearHistory(this, currentUserId)
+                        chatAdapter.notifyDataSetChanged()
+                        updateListVisibility()
+                        Toast.makeText(this, "تم مسح سجل المحادثة بنجاح", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("إلغاء", null)
+                    .show()
+            } else {
+                Toast.makeText(this, "لا توجد رسائل سابقة لمسحها", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -302,6 +324,7 @@ class AiChatActivity : AppCompatActivity() {
 
         // 1. إضافة رسالة المستخدم
         messages.add(AiChatMessage.User(promptText))
+        AiChatHistoryManager.saveHistory(this@AiChatActivity, currentUserId, messages)
         // 2. إضافة حالة التحميل
         messages.add(AiChatMessage.Loading)
         updateListVisibility()
@@ -328,6 +351,7 @@ class AiChatActivity : AppCompatActivity() {
                 isRealAi = isRealAi,
                 modelTag = modelTag
             ))
+            AiChatHistoryManager.saveHistory(this@AiChatActivity, currentUserId, messages)
             val newIdx = messages.size - 1
             chatAdapter.notifyItemInserted(newIdx)
             rvAiChatMessages.smoothScrollToPosition(newIdx)

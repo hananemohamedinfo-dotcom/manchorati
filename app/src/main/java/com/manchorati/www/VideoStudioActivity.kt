@@ -846,11 +846,28 @@ class VideoStudioActivity : AppCompatActivity() {
 
     }
 
-
+    private fun showExitConfirmationDialog() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("مغادرة استوديو الفيديو؟")
+            .setMessage("هل أنت متأكد من رغبتك في الخروج؟ سيتم فقدان التعديلات والتأثيرات الصوتية والمرئية غير المحفوظة.")
+            .setPositiveButton("متابعة التعديل") { d, _ ->
+                d.dismiss()
+            }
+            .setNegativeButton("خروج") { _, _ ->
+                finish()
+            }
+            .show()
+    }
 
     private fun setupListeners() {
 
-        btnBackContainer.setOnClickListener { finish() }
+        btnBackContainer.setOnClickListener { showExitConfirmationDialog() }
+
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        })
 
 
 

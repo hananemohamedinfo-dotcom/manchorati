@@ -119,12 +119,15 @@ class WritersAdapter(
                 followersCount = writer.followersCount
             )
 
+            val isBeginnerBronze = (resolvedBadge.id == BadgeHelper.BADGE_BEGINNER.id || resolvedBadge.tierLevel <= 1)
             if (writer.userId != "manchorati_curated" &&
                 resolvedBadge.id != "official" &&
-                resolvedBadge.iconResId != 0) {
+                BadgeHelper.isBadgeVisibleForUser(writer.userId) &&
+                !isBeginnerBronze) {
                 tvBadge.visibility = View.VISIBLE
                 val title = resolvedBadge.getLocalizedTitle(context)
-                tvBadge.text = title
+                tvBadge.text = "${resolvedBadge.iconEmoji} $title".trim()
+                tvBadge.setCompoundDrawables(null, null, null, null)
                 try {
                     tvBadge.setTextColor(Color.parseColor(resolvedBadge.textColorHex))
                 } catch (e: Exception) {
@@ -132,14 +135,6 @@ class WritersAdapter(
                 }
                 if (resolvedBadge.bgResId != 0) {
                     tvBadge.setBackgroundResource(resolvedBadge.bgResId)
-                }
-                val d = ContextCompat.getDrawable(context, resolvedBadge.iconResId)?.mutate()
-                if (d != null) {
-                    d.setTint(Color.parseColor(resolvedBadge.textColorHex))
-                    val sz = (12 * context.resources.displayMetrics.density).toInt()
-                    d.setBounds(0, 0, sz, sz)
-                    tvBadge.setCompoundDrawables(d, null, null, null)
-                    tvBadge.compoundDrawablePadding = (4 * context.resources.displayMetrics.density).toInt()
                 }
             } else {
                 tvBadge.visibility = View.GONE

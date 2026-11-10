@@ -283,7 +283,9 @@ class WritersActivity : AppCompatActivity() {
                         authorsFromPosts[authorId] = post
                     }
 
-                    if (post.getTimeMillis() >= startOfWeek) {
+                    // احتساب لايكات الأسبوع لجميع الكتّاب المشاركين في التحدي
+                    val wasLikedThisWeek = (post.lastLikedAt >= startOfWeek) || (post.getTimeMillis() >= startOfWeek)
+                    if (wasLikedThisWeek || likes > 0) {
                         weeklyLikesMap[authorId] = (weeklyLikesMap[authorId] ?: 0L) + likes
                     }
                 }
@@ -381,11 +383,14 @@ class WritersActivity : AppCompatActivity() {
         // 1. فرز القائمة بحسب التبويب النشط
         val sortedList = when (activeTabMode) {
             WritersTabMode.WEEKLY -> {
-                allWritersList.sortedWith(
-                    compareByDescending<WriterItem> { it.weeklyLikes }
-                        .thenByDescending { it.totalLikes }
-                        .thenByDescending { it.followersCount }
-                )
+                // عرض جميع الكتاب الذين نشروا أو حصلوا على تفاعل مرتبين حسب تفاعل الأسبوع
+                allWritersList
+                    .filter { it.postsCount > 0 || it.weeklyLikes > 0 || it.totalLikes > 0 }
+                    .sortedWith(
+                        compareByDescending<WriterItem> { it.weeklyLikes }
+                            .thenByDescending { it.totalLikes }
+                            .thenByDescending { it.followersCount }
+                    )
             }
             WritersTabMode.FOLLOWERS -> {
                 allWritersList.sortedWith(
@@ -402,14 +407,8 @@ class WritersActivity : AppCompatActivity() {
             }
         }
 
-        // تحديد كاتب الأسبوع (دائماً متصدر قائمة الأسبوع بغض النظر عن التبويب الحالي)
-        val weeklyChampion = allWritersList
-            .filter { it.userId != "manchorati_curated" }
-            .maxWithOrNull(
-                compareBy<WriterItem> { it.weeklyLikes }
-                    .thenBy { it.totalLikes }
-                    .thenBy { it.followersCount }
-            )
+        // تحديد كاتب الأسبوع (المتصدر الأول في القائمة)
+        val weeklyChampion = if (activeTabMode == WritersTabMode.WEEKLY) sortedList.firstOrNull() else null
         writerOfTheWeek = weeklyChampion
         if (weeklyChampion != null) {
             WriterOfTheWeekHelper.setChampion(this, weeklyChampion.userId, weeklyChampion.displayName)
@@ -432,27 +431,16 @@ class WritersActivity : AppCompatActivity() {
             }.toMutableList()
         }
 
-        // في وضع الأسبوع وبدون بحث، نخفي المركز الأول من القائمة لأنه معروض بالفعل في بطاقة كاتب الأسبوع الكبيرة
-        val displayList = if (activeTabMode == WritersTabMode.WEEKLY && cleanQuery.isEmpty() && writerOfTheWeek != null) {
-            currentFilteredList.filter { it.userId != writerOfTheWeek?.userId }
-        } else {
-            currentFilteredList
-        }
+        // عرض كل الكتّاب في القائمة بما فيهم المتصدر مع وسامه الذهبي
+        val displayList = currentFilteredList
 
         writersAdapter.updateData(displayList, activeTabMode)
 
         // إظهار أو إخفاء الحالة الفارغة
-        val isChampionCardVisible = (activeTabMode == WritersTabMode.WEEKLY && cleanQuery.isEmpty() && writerOfTheWeek != null)
         if (displayList.isEmpty()) {
-            if (isChampionCardVisible) {
-                // الكاتب المتصدر وحده موجود ومعروض بالفعل في البطاقة الذهبية العلوية
-                layoutEmptyWriters.visibility = View.GONE
-                tvLeaderboardSectionTitle.visibility = View.GONE
-            } else {
-                layoutEmptyWriters.visibility = View.VISIBLE
-                tvEmptyWriters.text = if (cleanQuery.isNotEmpty()) getString(R.string.no_writers_found) else getString(R.string.no_weekly_posts_yet)
-                tvLeaderboardSectionTitle.visibility = View.GONE
-            }
+            layoutEmptyWriters.visibility = View.VISIBLE
+            tvEmptyWriters.text = if (cleanQuery.isNotEmpty()) getString(R.string.no_writers_found) else getString(R.string.no_weekly_posts_yet)
+            tvLeaderboardSectionTitle.visibility = View.GONE
         } else {
             layoutEmptyWriters.visibility = View.GONE
             tvLeaderboardSectionTitle.visibility = View.VISIBLE
@@ -478,19 +466,15 @@ class WritersActivity : AppCompatActivity() {
                 totalLikes = champion.totalLikes,
                 followersCount = champion.followersCount
             )
+            val isBeginner = (badge.id == BadgeHelper.BADGE_BEGINNER.id || badge.tierLevel <= 1)
             if (champion.userId != "manchorati_curated" &&
                 badge.id != "official" &&
-                badge.iconResId != 0) {
+                BadgeHelper.isBadgeVisibleForUser(champion.userId) &&
+                !isBeginner) {
                 tvWriterOfWeekBadge.visibility = View.VISIBLE
-                tvWriterOfWeekBadge.text = badge.getLocalizedTitle(this)
-                val d = ContextCompat.getDrawable(this, badge.iconResId)?.mutate()
-                if (d != null) {
-                    d.setTint(Color.parseColor(badge.textColorHex))
-                    val sz = (13 * resources.displayMetrics.density).toInt()
-                    d.setBounds(0, 0, sz, sz)
-                    tvWriterOfWeekBadge.setCompoundDrawables(d, null, null, null)
-                    tvWriterOfWeekBadge.compoundDrawablePadding = (4 * resources.displayMetrics.density).toInt()
-                }
+                val title = badge.getLocalizedTitle(this)
+                tvWriterOfWeekBadge.text = "${badge.iconEmoji} $title".trim()
+                tvWriterOfWeekBadge.setCompoundDrawables(null, null, null, null)
             } else {
                 tvWriterOfWeekBadge.visibility = View.GONE
             }

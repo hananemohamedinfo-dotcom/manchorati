@@ -2275,7 +2275,29 @@ fun applyEditorTheme(isDark: Boolean) {
 
         }
 
-        btnClose.setOnClickListener { dialog.dismiss() }
+        val handleExitEditor = {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                .setTitle("إغلاق محرر الصور؟")
+                .setMessage("هل أنت متأكد من رغبتك في الخروج؟ سيتم فقدان التصميم الحالي.")
+                .setPositiveButton("متابعة التصميم") { d, _ ->
+                    d.dismiss()
+                }
+                .setNegativeButton("خروج") { _, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+
+        btnClose.setOnClickListener { handleExitEditor() }
+
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.action == android.view.KeyEvent.ACTION_UP) {
+                handleExitEditor()
+                true
+            } else {
+                false
+            }
+        }
 
         btnSaveImage.setOnClickListener {
 

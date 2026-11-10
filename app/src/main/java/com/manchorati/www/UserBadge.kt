@@ -79,12 +79,13 @@ object BadgeHelper {
     )
 
     private val userBadgeCache = ConcurrentHashMap<String, UserBadge>()
+    private val userShowBadgeCache = ConcurrentHashMap<String, Boolean>()
     private val pendingFetches = ConcurrentHashMap.newKeySet<String>()
 
     val BADGE_ADMIN = UserBadge(
         id = "admin",
         title = "مشرف التطبيق",
-        iconEmoji = "",
+        iconEmoji = "🛡️",
         iconResId = R.drawable.ic_security_shield,
         bgResId = R.drawable.bg_badge_admin,
         textColorHex = "#818CF8",
@@ -96,7 +97,7 @@ object BadgeHelper {
     val BADGE_CURATED = UserBadge(
         id = "official",
         title = "منشوراتي",
-        iconEmoji = "",
+        iconEmoji = "✨",
         bgResId = 0,
         textColorHex = "#38BDF8",
         tierLevel = 6,
@@ -107,7 +108,7 @@ object BadgeHelper {
     val BADGE_LEGENDARY = UserBadge(
         id = "legendary",
         title = "كاتب أسطوري",
-        iconEmoji = "",
+        iconEmoji = "👑",
         iconResId = R.drawable.ic_crown_royal,
         bgResId = R.drawable.bg_badge_legendary,
         textColorHex = "#F59E0B",
@@ -119,7 +120,7 @@ object BadgeHelper {
     val BADGE_ELITE = UserBadge(
         id = "elite",
         title = "كاتب نخبة",
-        iconEmoji = "",
+        iconEmoji = "💎",
         iconResId = R.drawable.ic_diamond,
         bgResId = R.drawable.bg_badge_elite,
         textColorHex = "#38BDF8",
@@ -131,7 +132,7 @@ object BadgeHelper {
     val BADGE_DISTINGUISHED = UserBadge(
         id = "distinguished",
         title = "كاتب متميز",
-        iconEmoji = "",
+        iconEmoji = "🥇",
         iconResId = R.drawable.ic_badge_star,
         bgResId = R.drawable.bg_badge_writer,
         textColorHex = "#FBBF24",
@@ -143,7 +144,7 @@ object BadgeHelper {
     val BADGE_RISING = UserBadge(
         id = "rising",
         title = "كاتب صاعد",
-        iconEmoji = "",
+        iconEmoji = "🥈",
         iconResId = R.drawable.ic_badge_rising,
         bgResId = R.drawable.bg_badge_rising,
         textColorHex = "#94A3B8",
@@ -155,7 +156,7 @@ object BadgeHelper {
     val BADGE_BEGINNER = UserBadge(
         id = "beginner",
         title = "كاتب مبتدئ",
-        iconEmoji = "",
+        iconEmoji = "🥉",
         iconResId = R.drawable.ic_quill_pen,
         bgResId = R.drawable.bg_badge_beginner,
         textColorHex = "#D97706",
@@ -178,30 +179,40 @@ object BadgeHelper {
             title = "نادي الألفية الأولى (1K)",
             description = "تخطي حاجز 1,000 متابع في المجتمع",
             targetFollowers = 1000L,
-            emoji = "", iconResId = R.drawable.ic_medal
+            emoji = "🎖️", iconResId = R.drawable.ic_medal
         ),
         MilestoneBadge(
             id = "milestone_5k",
             title = "وسام النخبة (5K)",
             description = "الوصول إلى 5,000 متابع نشط",
             targetFollowers = 5000L,
-            emoji = "", iconResId = R.drawable.ic_diamond
+            emoji = "💎", iconResId = R.drawable.ic_diamond
         ),
         MilestoneBadge(
             id = "milestone_7k",
             title = "وسام القمة الذهبي (7K)",
             description = "تخطي 7,000 متابع وتحقيق انتشار واسع",
             targetFollowers = 7000L,
-            emoji = "", iconResId = R.drawable.ic_sparkle_ai
+            emoji = "✨", iconResId = R.drawable.ic_sparkle_ai
         ),
         MilestoneBadge(
             id = "milestone_10k",
             title = "درع الأسطورة الذهبي (10K)",
             description = "بلوغ 10,000 متابع وتربع قمة المجتمع",
             targetFollowers = 10000L,
-            emoji = "", iconResId = R.drawable.ic_crown
+            emoji = "👑", iconResId = R.drawable.ic_crown
         )
     )
+
+    fun setUserBadgeVisibility(userId: String, visible: Boolean) {
+        if (userId.isNotEmpty()) {
+            userShowBadgeCache[userId] = visible
+        }
+    }
+
+    fun isBadgeVisibleForUser(userId: String): Boolean {
+        return if (userId.isNotEmpty()) userShowBadgeCache[userId] ?: true else true
+    }
 
     fun setCachedBadge(userId: String, badge: UserBadge) {
         if (userId.isNotEmpty()) {
@@ -297,6 +308,8 @@ object BadgeHelper {
                 .addOnSuccessListener { doc ->
                     pendingFetches.remove(authorId)
                     if (doc != null && doc.exists()) {
+                        val showBadge = doc.getBoolean("showBadge") ?: true
+                        userShowBadgeCache[authorId] = showBadge
                         val explicitBadge = doc.getString("badge")
                         val email = doc.getString("email")
                         val followersRaw = doc.get("followers")
