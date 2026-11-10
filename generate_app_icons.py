@@ -1,7 +1,7 @@
 import os
 from PIL import Image, ImageDraw
 
-source_path = "manchorati_app_icon_master.png"
+source_path = "manchorati_svg_1024.png"
 if not os.path.exists(source_path):
     raise FileNotFoundError(f"{source_path} not found")
 
@@ -40,16 +40,15 @@ for folder, sizes in densities.items():
     os.makedirs(target_dir, exist_ok=True)
     
     # 1. Adaptive foreground (108dp base)
-    # Safe zone diameter is 66-70% of fg_size. Sizing the squircle tile to 70% ensures
-    # the entire double-beveled gold/dark emblem is fully visible on any OEM shape mask.
+    # Scale emblem to 72% so the full squircle and stardust fit inside any OEM shape
     fg_size = sizes["fg"]
     fg = Image.new("RGBA", (fg_size, fg_size), bg_color)
-    target_emblem = int(fg_size * 0.70)
+    target_emblem = int(fg_size * 0.72)
     scaled_emblem = src.resize((target_emblem, target_emblem), Image.Resampling.LANCZOS)
     
     off_x = (fg_size - target_emblem) // 2
     off_y = (fg_size - target_emblem) // 2
-    fg.paste(scaled_emblem, (off_x, off_y))
+    fg.paste(scaled_emblem, (off_x, off_y), mask=scaled_emblem)
     fg.save(os.path.join(target_dir, "ic_launcher_foreground.png"), "PNG")
     
     # 2. Legacy Launcher Icon (Squircle / Rounded Rect)
@@ -58,7 +57,7 @@ for folder, sizes in densities.items():
     t_size = int(l_size * 0.94)
     scaled_l = src.resize((t_size, t_size), Image.Resampling.LANCZOS)
     off_l = (l_size - t_size) // 2
-    base_l.paste(scaled_l, (off_l, off_l))
+    base_l.paste(scaled_l, (off_l, off_l), mask=scaled_l)
     
     squircle_icon = make_squircle_icon(base_l, l_size)
     squircle_icon.save(os.path.join(target_dir, "ic_launcher.png"), "PNG")
@@ -75,7 +74,8 @@ play_icon = Image.new("RGBA", (play_size, play_size), bg_color)
 p_size = int(play_size * 0.94)
 scaled_p = src.resize((p_size, p_size), Image.Resampling.LANCZOS)
 off_p = (play_size - p_size) // 2
-play_icon.paste(scaled_p, (off_p, off_p))
+play_icon.paste(scaled_p, (off_p, off_p), mask=scaled_p)
 play_icon.convert("RGB").save("play_store_512.png", "PNG")
 play_icon.convert("RGB").save("C:/Users/HP/Desktop/Manchorati_Logo/play_store_512.png", "PNG")
-print("Generated play_store_512.png (512x512 RGB) locally and on Desktop")
+src.save("C:/Users/HP/Desktop/Manchorati_Logo/app_icon_svg_1024.png", "PNG")
+print("Generated play_store_512.png and app_icon_svg_1024.png successfully")

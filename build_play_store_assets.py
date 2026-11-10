@@ -44,7 +44,7 @@ glow_layer = glow_layer.filter(ImageFilter.GaussianBlur(50))
 banner.paste(glow_layer, (0, 0), mask=glow_layer)
 
 # Add 3D App Icon Emblem on the left/center
-icon_src = Image.open("manchorati_app_icon_master.png").convert("RGBA")
+icon_src = Image.open("manchorati_svg_1024.png").convert("RGBA")
 icon_size = 360
 icon_scaled = icon_src.resize((icon_size, icon_size), Image.Resampling.LANCZOS)
 
