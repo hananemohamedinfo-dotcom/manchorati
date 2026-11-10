@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
 
         handleNotificationIntent(intent)
         handleDeepLinkIntent(intent)
+        handleIncomingPostQuote(intent)
         setupPeriodicNotificationSync()
         try {
             com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all_users")
@@ -191,6 +192,7 @@ class MainActivity : AppCompatActivity() {
         setIntent(intent)
         handleNotificationIntent(intent)
         handleDeepLinkIntent(intent)
+        handleIncomingPostQuote(intent)
     }
 
     private fun checkAndRequestNotificationPermission() {
@@ -357,7 +359,7 @@ class MainActivity : AppCompatActivity() {
         }, 3500)
 
         btnAiWriterTop.setOnClickListener {
-            AiWriterBottomSheetDialog.show(this)
+            startActivity(Intent(this, AiChatActivity::class.java))
         }
 
         btnMainNotificationsContainer.setOnClickListener {
@@ -786,7 +788,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnDrawerAiWriter)?.setOnClickListener {
             drawerLayout.closeDrawers()
-            AiWriterBottomSheetDialog.show(this)
+            startActivity(Intent(this, AiChatActivity::class.java))
         }
 
         findViewById<View>(R.id.btnDrawerWriters)?.setOnClickListener {
@@ -927,6 +929,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(goToMarket)
         } catch (e: Exception) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+        }
+    }
+
+    private fun handleIncomingPostQuote(intent: Intent?) {
+        val quote = intent?.getStringExtra("EXTRA_OPEN_ADD_POST_QUOTE")
+        val topic = intent?.getStringExtra("EXTRA_OPEN_ADD_POST_TAG") ?: ""
+        if (!quote.isNullOrEmpty()) {
+            openAddPostWithQuote(quote, topic)
         }
     }
 

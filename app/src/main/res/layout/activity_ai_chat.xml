@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <!-- شريط التطبيق العلوي (Top App Bar) -->
+    <LinearLayout
+        android:id="@+id/toolbarAiChat"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/bg_card"
+        android:elevation="3dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+        <!-- زر الرجوع -->
+        <ImageView
+            android:id="@+id/btnAiBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/text_primary" />
+
+        <!-- أيقونة المساعد والعنوان والحالة -->
+        <FrameLayout
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_category_well"
+            android:padding="7dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sparkle_ai"
+                app:tint="#38BDF8" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مساعد منشوراتي الذكي"
+                android:textColor="@color/text_primary"
+                android:textSize="15.5sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
+
+                <View
+                    android:id="@+id/dotAiStatus"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_status_dot_green"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/tvAiStatusSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google Gemini 3.5 متصل"
+                    android:textColor="#38BDF8"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- زر إعدادات المفتاح -->
+        <LinearLayout
+            android:id="@+id/btnAiKeyTop"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:background="@drawable/bg_tool_chip_idle"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="6dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_key"
+                app:tint="#F59E0B"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tvKeyTopLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="المفتاح"
+                android:textColor="@color/text_primary"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- زر مسح المحادثة -->
+        <ImageView
+            android:id="@+id/btnClearChat"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_refresh"
+            app:tint="@color/text_secondary" />
+    </LinearLayout>
+
+    <!-- مساحة المحادثة والشاشة الترحيبية -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- 1. شاشة البداية النظيفة (Minimalist Hero) تظهر عندما تكون المحادثة فارغة -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/layoutHeroEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="28dp"
+                android:paddingBottom="20dp">
+
+                <!-- أيقونة الترحيب الكبيرة -->
+                <FrameLayout
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:background="@drawable/bg_category_well"
+                    android:padding="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_sparkle_ai"
+                        app:tint="#38BDF8" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مساعد منشوراتي الأدبي"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="بماذا ترغب أن نلهمك اليوم؟ اكتب فكرتك أو اختر من الأفكار أدناه:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- الكروت الأربعة الكبيرة والمريحة للبداية السريعة (ChatGPT Starter Cards) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- كارت 1: حكمة عن الصبر والفرج -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardPromptPatience"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_category_well"
+                                android:padding="7dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_sparkle_ai"
+                                    app:tint="#F59E0B" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="حكمة عن الصبر واليقين"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="13.5sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="صياغة حكمة بليغة ومؤثرة تزرع الطمأنينة وحسن الظن"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11.5sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- كارت 2: خواطر المساء والقهوة -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardPromptCoffee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_category_well"
+                                android:padding="7dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_heart_filled"
+                                    app:tint="#F472B6" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="خواطر المساء وفنجان القهوة"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="13.5sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="كلمات هادئة تفيض بالسكينة ودفء المشاعر"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11.5sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- كارت 3: تحفيز وإصرار على النجاح -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardPromptMotivation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_category_well"
+                                android:padding="7dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_flame"
+                                    app:tint="#38BDF8" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="تحفيز وإصرار على النجاح"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="13.5sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="كلمات قوية تلهم العزيمة ومواصلة الكفاح نحو القمة"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11.5sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- كارت 4: صياغة وتحسين نص المنشور -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardPromptPolish"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_category_well"
+                                android:padding="7dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_quill_pen"
+                                    app:tint="#34D399" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="تحسين وبلاغة كلامك"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="13.5sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="ألصق خاطرتك وسيعيد صياغتها بأرقى أسلوب أدبي فصيح"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11.5sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- 2. قائمة رسائل المحادثة (RecyclerView) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAiChatMessages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="14dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <!-- شريط الإدخال السفلي والأساليب (Bottom Chat Input Bar) -->
+    <LinearLayout
+        android:id="@+id/layoutBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_card"
+        android:elevation="6dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="14dp">
+
+        <!-- رقائق الأسلوب الأدبي السريعة -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:id="@+id/layoutStylePills"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/pillStyleWisdom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:background="@drawable/bg_tool_chip_active"
+                    android:text="حكمة بليغة"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/pillStyleShort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="6dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:text="خاطرة قصيرة"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/pillStylePoem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="6dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:text="شعر فخم"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/pillStylePolish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="6dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:background="@drawable/bg_tool_chip_idle"
+                    android:text="تحسين وبلاغة"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- حقل الإدخال وزر الإرسال العصري -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etChatInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:maxHeight="120dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_bar"
+                android:hint="تحدث مع الذكاء الاصطناعي أو اسأل عن فكرة..."
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
+                android:textSize="13.5sp"
+                android:lineSpacingExtra="2dp"
+                android:imeOptions="actionSend"
+                android:inputType="textCapSentences|textMultiLine" />
+
+            <FrameLayout
+                android:id="@+id/btnSendChat"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_send_comment_circle"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_send"
+                    android:rotation="180"
+                    app:tint="#FFFFFF" />
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

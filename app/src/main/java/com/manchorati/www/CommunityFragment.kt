@@ -347,9 +347,10 @@ class CommunityFragment : Fragment() {
 
         sheetView.findViewById<View>(R.id.btnChoiceAiWriter)?.setOnClickListener {
             dialog.dismiss()
-            AiWriterBottomSheetDialog.show(requireContext()) { generatedQuote ->
-                checkUserAndOpenPostDialog(initialTag = tag, initialContent = generatedQuote)
+            val intent = Intent(requireContext(), AiChatActivity::class.java).apply {
+                putExtra("EXTRA_INITIAL_TOPIC", tag)
             }
+            startActivity(intent)
         }
 
         dialog.show()

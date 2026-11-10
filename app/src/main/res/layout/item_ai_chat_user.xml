@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:gravity="start"
+    android:layoutDirection="rtl"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="300dp"
+        android:background="@drawable/bg_ai_user_bubble"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvUserMsgContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="3dp"
+            tools:text="اكتب لي حكمة بليغة ومؤثرة عن الصبر واليقين وحسن الظن بالله" />
+
+        <TextView
+            android:id="@+id/tvUserMsgTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp"
+            android:textColor="#B3FFFFFF"
+            android:textSize="10sp"
+            tools:text="10:24" />
+    </LinearLayout>
+
+</LinearLayout>

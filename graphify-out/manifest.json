@@ -42,9 +42,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AiWriterManager.kt": {
-    "mtime": 1794301458.2484174,
-    "seen": 1794301793.7626371,
-    "ast_hash": "0543ef9f4806b505c23a165b87ae86cc",
+    "mtime": 1794301846.540162,
+    "seen": 1794303056.5118454,
+    "ast_hash": "6344c4af6de49980c5adbd336066a73b",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/AppFirebaseMessagingService.kt": {
@@ -138,9 +138,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityFragment.kt": {
-    "mtime": 1794178862.1993735,
-    "seen": 1794179383.65056,
-    "ast_hash": "5f74db133eea08dd5884993d174c8da3",
+    "mtime": 1794302849.0753698,
+    "seen": 1794303056.5118454,
+    "ast_hash": "4f4290aa2475038ad90eacfa728cb384",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/CommunityPost.kt": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/MainActivity.kt": {
-    "mtime": 1794178862.208381,
-    "seen": 1794179383.65056,
-    "ast_hash": "6550a09077b711b050a236b2a2d92db6",
+    "mtime": 1794302816.6708665,
+    "seen": 1794303056.5118454,
+    "ast_hash": "c8abe5be3b2416d0f3f7410ea81d6618",
     "semantic_hash": ""
   },
   "app/src/main/java/com/manchorati/www/MainPagerAdapter.kt": {
@@ -1929,6 +1929,24 @@
     "mtime": 1794216453.326251,
     "seen": 1794217425.9732714,
     "ast_hash": "0ce4dba6d05d52a7d88ed4d3dde088f7",
+    "semantic_hash": ""
+  },
+  "app/src/main/java/com/manchorati/www/AiChatActivity.kt": {
+    "mtime": 1794302687.9050653,
+    "seen": 1794303056.5118454,
+    "ast_hash": "e39b2cf32a664567dd8f42ebbef857bf",
+    "semantic_hash": ""
+  },
+  "app/src/main/java/com/manchorati/www/AiChatAdapter.kt": {
+    "mtime": 1794302653.8891895,
+    "seen": 1794303056.5118454,
+    "ast_hash": "3564906040db2c1fef28cb4f7bf0aff2",
+    "semantic_hash": ""
+  },
+  "app/src/main/java/com/manchorati/www/AiChatMessage.kt": {
+    "mtime": 1794302642.0420332,
+    "seen": 1794303056.5118454,
+    "ast_hash": "49f9a35a9ad010d80a8519b1e311fcc9",
     "semantic_hash": ""
   }
 }
