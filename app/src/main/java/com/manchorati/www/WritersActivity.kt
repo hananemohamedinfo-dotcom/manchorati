@@ -421,8 +421,12 @@ class WritersActivity : AppCompatActivity() {
             }
         }
 
-        // تحديد كاتب الأسبوع (المتصدر الأول في القائمة)
-        val weeklyChampion = if (activeTabMode == WritersTabMode.WEEKLY) sortedList.firstOrNull() else null
+        // تحديد كاتب الأسبوع: البحث عن أول مستخدم حقيقي في القائمة؛ وإذا كان الأول بوتاً يتم فحص الذي يليه حتى إيجاد مستخدم حقيقي
+        val weeklyChampion = if (activeTabMode == WritersTabMode.WEEKLY) {
+            sortedList.firstOrNull { !VirtualCommunityManager.isVirtualUser(it.userId) } ?: sortedList.firstOrNull()
+        } else {
+            null
+        }
         writerOfTheWeek = weeklyChampion
         if (weeklyChampion != null) {
             WriterOfTheWeekHelper.setChampion(this, weeklyChampion.userId, weeklyChampion.displayName)

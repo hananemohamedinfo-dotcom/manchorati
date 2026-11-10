@@ -94,7 +94,7 @@ class WritersAdapter(
             ivAvatar.loadUserAvatar(writer.photoUrl)
 
             // إكليل الغار الذهبي لمتصدر الأسبوع
-            val isChamp = (tabMode == WritersTabMode.WEEKLY && rankNumber == 1) || WriterOfTheWeekHelper.isWriterOfTheWeek(context, writer.userId)
+            val isChamp = (tabMode == WritersTabMode.WEEKLY && WriterOfTheWeekHelper.isWriterOfTheWeek(context, writer.userId))
             if (isChamp) {
                 ivWriterLaurelWreath?.visibility = View.VISIBLE
                 ivWriterLaurelWreath?.setOnClickListener {
