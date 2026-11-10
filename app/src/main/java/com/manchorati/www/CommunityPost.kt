@@ -21,6 +21,7 @@ data class CommunityPost(
     val authorBadge: String = "",
     val authorStreak: Int = 0,
     val lastLikedAt: Long = 0L,
+    val likesTimeline: Map<String, Long> = emptyMap(),
     val timestamp: Any? = null,
     val postType: String = "TEXT",
     val bgMotionId: String = "",

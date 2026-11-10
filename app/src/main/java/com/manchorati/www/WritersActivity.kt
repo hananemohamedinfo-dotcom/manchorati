@@ -283,10 +283,24 @@ class WritersActivity : AppCompatActivity() {
                         authorsFromPosts[authorId] = post
                     }
 
-                    // احتساب لايكات الأسبوع لجميع الكتّاب المشاركين في التحدي
-                    val wasLikedThisWeek = (post.lastLikedAt >= startOfWeek) || (post.getTimeMillis() >= startOfWeek)
-                    if (wasLikedThisWeek || likes > 0) {
-                        weeklyLikesMap[authorId] = (weeklyLikesMap[authorId] ?: 0L) + likes
+                    // احتساب لايكات هذا الأسبوع فقط بدقة (من الأحد للأحد) واستبعاد أي لايكات سابقة
+                    val postCreatedThisWeek = post.getTimeMillis() >= startOfWeek
+                    val thisWeekLikes: Long = if (postCreatedThisWeek) {
+                        // المنشور نُشر خلال هذا الأسبوع، فجميع إعجاباته حدثت في هذا الأسبوع
+                        likes
+                    } else if (post.likesTimeline.isNotEmpty()) {
+                        // منشور قديم تلقى إعجابات: نحسب فقط اللايكات التي تمت ابتداءً من الأحد
+                        post.likesTimeline.values.count { it >= startOfWeek }.toLong()
+                    } else if (post.lastLikedAt >= startOfWeek) {
+                        // منشور قديم تلقى إعجاباً في هذا الأسبوع قبل حفظ التايم لاين
+                        1L
+                    } else {
+                        // منشور قديم لم يتلقَ أي إعجاب في هذا الأسبوع
+                        0L
+                    }
+
+                    if (thisWeekLikes > 0L) {
+                        weeklyLikesMap[authorId] = (weeklyLikesMap[authorId] ?: 0L) + thisWeekLikes
                     }
                 }
 
@@ -580,15 +594,18 @@ class WritersActivity : AppCompatActivity() {
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
         val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // 1=Sunday, 2=Monday, ..., 7=Saturday
-        val daysSinceMonday = if (dayOfWeek == Calendar.SUNDAY) 6 else (dayOfWeek - Calendar.MONDAY)
-        cal.add(Calendar.DAY_OF_YEAR, -daysSinceMonday)
+        // حساب بداية الأسبوع من يوم الأحد (من الأحد إلى الأحد)
+        val daysSinceSunday = dayOfWeek - Calendar.SUNDAY
+        cal.add(Calendar.DAY_OF_YEAR, -daysSinceSunday)
         return cal.timeInMillis
     }
 
     private fun getChallengeCountdownText(): String {
         val cal = Calendar.getInstance()
         val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // 1=Sunday, 2=Monday, ..., 7=Saturday
-        val daysRemaining = if (dayOfWeek == Calendar.SUNDAY) 0 else (8 - dayOfWeek)
+        // التحدي أسبوعي من الأحد إلى الأحد:
+        // يوم الأحد هو اليوم الأخير للتحدي (ينتهي اليوم) أو بداية التحدي الجديد
+        val daysRemaining = if (dayOfWeek == Calendar.SUNDAY) 0 else (Calendar.SATURDAY - dayOfWeek + 1)
         return when (daysRemaining) {
             0 -> getString(R.string.challenge_ends_today)
             1 -> getString(R.string.challenge_ends_tomorrow)

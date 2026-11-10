@@ -283,16 +283,19 @@ fun listenToUserPosts(
 
         val docRef = db.collection("community_posts").document(postId)
 
+        val now = System.currentTimeMillis()
         val updates: Map<String, Any> = if (isLiked) {
             mapOf(
                 "likedBy" to FieldValue.arrayRemove(userId),
-                "likesCount" to FieldValue.increment(-1)
+                "likesCount" to FieldValue.increment(-1),
+                "likesTimeline.$userId" to FieldValue.delete()
             )
         } else {
             mapOf(
                 "likedBy" to FieldValue.arrayUnion(userId),
                 "likesCount" to FieldValue.increment(1),
-                "lastLikedAt" to System.currentTimeMillis()
+                "lastLikedAt" to now,
+                "likesTimeline.$userId" to now
             )
         }
 

@@ -45,12 +45,16 @@ class AutoEngagementWorker(
 
                     if (availablePersonas.isNotEmpty()) {
                         val personaIds = availablePersonas.map { it.id }
-                        db.collection("community_posts").document(postId).update(
-                            mapOf(
-                                "likedBy" to FieldValue.arrayUnion(*personaIds.toTypedArray()),
-                                "likesCount" to FieldValue.increment(personaIds.size.toLong())
-                            )
-                        ).await()
+                        val now = System.currentTimeMillis()
+                        val updateMap = mutableMapOf<String, Any>(
+                            "likedBy" to FieldValue.arrayUnion(*personaIds.toTypedArray()),
+                            "likesCount" to FieldValue.increment(personaIds.size.toLong()),
+                            "lastLikedAt" to now
+                        )
+                        personaIds.forEach { pid ->
+                            updateMap["likesTimeline.$pid"] = now
+                        }
+                        db.collection("community_posts").document(postId).update(updateMap).await()
 
                         val primaryPersona = availablePersonas[0]
                         val notifMessage = if (availablePersonas.size > 1) {
@@ -112,12 +116,16 @@ class AutoEngagementWorker(
 
                     if (extraPersonas.isNotEmpty()) {
                         val ids = extraPersonas.map { it.id }
-                        db.collection("community_posts").document(postId).update(
-                            mapOf(
-                                "likedBy" to FieldValue.arrayUnion(*ids.toTypedArray()),
-                                "likesCount" to FieldValue.increment(ids.size.toLong())
-                            )
-                        ).await()
+                        val now = System.currentTimeMillis()
+                        val updateMap = mutableMapOf<String, Any>(
+                            "likedBy" to FieldValue.arrayUnion(*ids.toTypedArray()),
+                            "likesCount" to FieldValue.increment(ids.size.toLong()),
+                            "lastLikedAt" to now
+                        )
+                        ids.forEach { pid ->
+                            updateMap["likesTimeline.$pid"] = now
+                        }
+                        db.collection("community_posts").document(postId).update(updateMap).await()
 
                         val p = extraPersonas[0]
                         FirestoreManager.sendNotification(
