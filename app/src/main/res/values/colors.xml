@@ -19,7 +19,7 @@
     <color name="brand_navy_dark">#0F172A</color> <!-- كحلي ليلي فخم -->
     <color name="brand_navy_surface">#1E2A3A</color> <!-- خلفية اللوغو الرسمية -->
 
-    <color name="ic_launcher_background">#141F2E</color>
+    <color name="ic_launcher_background">#0A111C</color>
     <color name="chip_idle_bg">#E2E8F0</color>
     <color name="chip_idle_stroke">#CBD5E1</color>
     <color name="chip_idle_text">#1E293B</color>
