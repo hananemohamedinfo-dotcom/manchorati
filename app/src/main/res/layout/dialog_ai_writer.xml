@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_bottom_sheet_surface"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="16dp"
+    android:paddingHorizontal="16dp"
     android:layoutDirection="rtl">
 
     <!-- مقبض السحب العلوي -->
@@ -18,23 +20,23 @@
         android:background="@drawable/bg_sheet_handle"
         android:alpha="0.5" />
 
-    <!-- الرأس: الأيقونة والعنوان والمحاولات -->
+    <!-- الشريط العلوي: أيقونة المساعد والعنوان وحالة المفتاح -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="12dp">
 
         <FrameLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:background="@drawable/bg_category_well"
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_sparkle_ai"
                 app:tint="#38BDF8" />
@@ -50,388 +52,645 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ai_writer_title"
+                android:text="مساعد منشوراتي الذكي"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvQuotaBadge"
+            <!-- حالة المفتاح وحصص التوليد -->
+            <LinearLayout
+                android:id="@+id/layoutKeyStatusBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="@string/ai_quota_badge"
-                android:textColor="#38BDF8"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/viewStatusDot"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:background="@drawable/bg_status_dot_green"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/tvQuotaBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مفتاحك الخاص مفعّل (توليد لا محدود)"
+                    android:textColor="#38BDF8"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- زر ضبط المفتاح -->
         <ImageView
             android:id="@+id/btnAiKeyConfig"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:padding="6dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="7dp"
             android:layout_marginEnd="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_key"
-            app:tint="@color/text_secondary" />
+            app:tint="#F59E0B" />
 
+        <!-- زر الإغلاق -->
         <ImageView
             android:id="@+id/btnCloseAiDialog"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:padding="6dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close_small"
             app:tint="@color/text_secondary" />
     </LinearLayout>
 
-    <!-- اختيار الموضوع (Chips) -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ai_topic_label"
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:clipToPadding="false"
-        android:paddingHorizontal="2dp"
-        android:layout_marginBottom="12dp">
-
-        <LinearLayout
-            android:id="@+id/layoutTopicChips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/chipTopicWisdom"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_active"
-                android:text="حكم وأمثال"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipTopicMotivation"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="تحفيز ونجاح"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipTopicLove"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="حب وغرام"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipTopicDua"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="أدعية وأمل"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipTopicCalm"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="خواطر هادئة"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipTopicFarewell"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="وداع وفراق"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- اختيار الأسلوب -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:clipToPadding="false"
-        android:paddingHorizontal="2dp"
-        android:layout_marginBottom="14dp">
-
-        <LinearLayout
-            android:id="@+id/layoutStyleChips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/chipStyleWisdom"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/bg_tool_chip_active"
-                android:text="حكمة بليغة"
-                android:textColor="#FFFFFF"
-                android:textSize="11.5sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipStyleShort"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginStart="6dp"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="خاطرة قصيرة"
-                android:textColor="@color/text_primary"
-                android:textSize="11.5sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipStylePoem"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginStart="6dp"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="شعر فخم"
-                android:textColor="@color/text_primary"
-                android:textSize="11.5sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/chipStylePolish"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginStart="6dp"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:text="تحسين وبلاغة"
-                android:textColor="@color/text_primary"
-                android:textSize="11.5sp"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- إدخال فكرة مخصصة (اختياري) -->
-    <EditText
-        android:id="@+id/etCustomPrompt"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@drawable/bg_search_bar"
-        android:hint="@string/ai_custom_prompt_hint"
-        android:paddingHorizontal="14dp"
-        android:textColor="@color/text_primary"
-        android:textColorHint="@color/text_secondary"
-        android:textSize="13sp"
-        android:layout_marginBottom="14dp"
-        android:singleLine="true" />
-
-    <!-- زر التوليد السحري -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGenerateAi"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:backgroundTint="#0284C7"
-        android:text="@string/ai_generate_btn"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:cornerRadius="14dp"
-        app:icon="@drawable/ic_sparkle_ai"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="#FFFFFF"
-        android:layout_marginBottom="16dp" />
-
-    <!-- صندوق النتيجة -->
+    <!-- بطاقة الترويج لإدخال مفتاح Gemini الشخصي (تختفي إذا كان المستخدم قد أدخل مفتاحه) -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardAiResult"
+        android:id="@+id/cardCustomKeyPromo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="3dp"
-        app:cardBackgroundColor="@color/bg_card"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/bg_card">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp"
+            android:background="@drawable/bg_ai_key_promo">
 
             <TextView
-                android:id="@+id/tvGeneratedQuote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ توليد غير محدود وسريع بمفتاحك المجاني"
+                android:textColor="#38BDF8"
+                android:textSize="12.5sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:lineSpacingExtra="6dp"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="كن كالنخيل عن الأحقاد مرتفعاً، يرمى بصخر فيلقي أطيب الثمر." />
+                android:layout_marginTop="3dp"
+                android:text="اربط حسابك في Google AI Studio مجاناً للاستمتاع بسرعة فائقة وبدون أي حدود يومية."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:lineSpacingExtra="2dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="14dp"
-                android:background="@color/divider_color" />
-
-            <!-- أزرار الإجراءات السريعة في صف متناسق -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:gravity="end"
                 android:orientation="horizontal">
 
-                <!-- نسخ -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAiActionCopy"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
+                    android:id="@+id/btnEnterCustomKey"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:paddingHorizontal="4dp"
-                    android:text="@string/ai_copy_btn"
+                    android:text="إدخال مفتاحي"
+                    android:textColor="#F59E0B"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGetFreeKey"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="مفتاح مجاني (AI Studio)"
                     android:textColor="#38BDF8"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
+                    android:textSize="11.5sp"
+                    app:cornerRadius="10dp"
                     app:strokeColor="#3338BDF8"
-                    app:strokeWidth="1dp"
-                    app:icon="@drawable/ic_copy"
-                    app:iconTint="#38BDF8"
-                    app:iconSize="13dp" />
-
-                <!-- تصميم صورة -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAiActionImage"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1.2"
-                    android:layout_marginEnd="4dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:paddingHorizontal="4dp"
-                    android:text="@string/ai_image_btn"
-                    android:textColor="#34D399"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#3334D399"
-                    app:strokeWidth="1dp"
-                    app:icon="@drawable/ic_share_image"
-                    app:iconTint="#34D399"
-                    app:iconSize="13dp" />
-
-                <!-- تصميم فيديو -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAiActionVideo"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1.2"
-                    android:layout_marginEnd="4dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:paddingHorizontal="4dp"
-                    android:text="@string/ai_video_btn"
-                    android:textColor="#F472B6"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#33F472B6"
-                    app:strokeWidth="1dp"
-                    app:icon="@drawable/ic_video_reel"
-                    app:iconTint="#F472B6"
-                    app:iconSize="13dp" />
-
-                <!-- استخدام/نشر -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAiActionPublish"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:paddingHorizontal="4dp"
-                    android:text="@string/ai_publish_btn"
-                    android:textColor="#FBBF24"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#33FBBF24"
-                    app:strokeWidth="1dp"
-                    app:icon="@drawable/ic_plus"
-                    app:iconTint="#FBBF24"
-                    app:iconSize="13dp" />
+                    app:strokeWidth="1dp" />
             </LinearLayout>
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <!-- منطقة المحادثة القابلة للتمرير -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollChatArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:maxHeight="380dp"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:id="@+id/layoutChatContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 1. رسالة ترحيبية من المساعد الذكي -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <FrameLayout
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_category_well"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_sparkle_ai"
+                        app:tint="#38BDF8" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_ai_bot_bubble"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="مساعد منشوراتي الذكي"
+                        android:textColor="#38BDF8"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="أهلاً بك! اكتب لي أي فكرة أو اختر من المقترحات السريعة أدناه وسأصيغها لك بأرقى تعبير أدبي وبلاغة ساحرة."
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="3dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 2. أفكار سريعة ومقترحات للمحادثة (Quick Prompt Suggestions) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مقترحات سريعة للمحادثة:"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/suggestPatience"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="حكمة عن الصبر والفرج"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/suggestCoffee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="خاطرة دافئة عن القهوة والمساء"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/suggestMotivation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="تحفيز وإصرار على النجاح"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/suggestFriendship"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="اقتباس عن الصداقة والوفاء"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/suggestDua"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="دعاء طمأنينة وراحة بال"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11.5sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- 3. اختيار الأسلوب الأدبي (Style Chips) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutStyleChips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/chipStyleWisdom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_active"
+                        android:text="حكمة بليغة"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chipStyleShort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="خاطرة قصيرة"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chipStylePoem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="شعر فخم"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chipStylePolish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_tool_chip_idle"
+                        android:text="تحسين وصياغة"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- 4. فقاعة المستخدم (User Message Bubble) عند الإرسال -->
+            <LinearLayout
+                android:id="@+id/layoutUserBubble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:visibility="gone"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="280dp"
+                    android:background="@drawable/bg_ai_user_bubble"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvUserPromptText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13.5sp"
+                        android:textStyle="bold"
+                        tools:text="اكتب لي حكمة عن الصبر واليقين" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 5. مؤشر جاري التفكير / التوليد (AI Generating State) -->
+            <LinearLayout
+                android:id="@+id/layoutAiLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_marginBottom="12dp">
+
+                <FrameLayout
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_category_well"
+                    android:padding="6dp">
+
+                    <ProgressBar
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="#38BDF8" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_ai_bot_bubble"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:id="@+id/tvAiThinkingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="جاري استحضار الفكرة وصياغتها بأناقة..."
+                        android:textColor="#38BDF8"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 6. فقاعة نتيجة الذكاء الاصطناعي (AI Result Card) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardAiResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/bg_card"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- شريط العنوان والنموذج -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="صياغة المساعد الأدبي"
+                            android:textColor="#38BDF8"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvAiModelBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_tool_chip_idle"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="3dp"
+                            android:text="Gemini Flash"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- نص الاقتباس البليغ -->
+                    <TextView
+                        android:id="@+id/tvGeneratedQuote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textIsSelectable="true"
+                        tools:text="الصبرُ مطيّةُ النَّجاح، والأملُ بستانُ الروح إن أجدبت جفَته الحياة؛ فاستمسك بحبل اليقين." />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="14dp"
+                        android:background="@color/divider_color" />
+
+                    <!-- أزرار الإجراءات المتناسقة -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <!-- نسخ -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAiActionCopy"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="4dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="نسخ"
+                            android:textColor="#38BDF8"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="10dp"
+                            app:strokeColor="#3338BDF8"
+                            app:strokeWidth="1dp"
+                            app:icon="@drawable/ic_copy"
+                            app:iconTint="#38BDF8"
+                            app:iconSize="13dp" />
+
+                        <!-- صورة -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAiActionImage"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1.2"
+                            android:layout_marginEnd="4dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="تصميم صورة"
+                            android:textColor="#34D399"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="10dp"
+                            app:strokeColor="#3334D399"
+                            app:strokeWidth="1dp"
+                            app:icon="@drawable/ic_share_image"
+                            app:iconTint="#34D399"
+                            app:iconSize="13dp" />
+
+                        <!-- فيديو -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAiActionVideo"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1.1"
+                            android:layout_marginEnd="4dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="فيديو AI"
+                            android:textColor="#F472B6"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="10dp"
+                            app:strokeColor="#33F472B6"
+                            app:strokeWidth="1dp"
+                            app:icon="@drawable/ic_video_reel"
+                            app:iconTint="#F472B6"
+                            app:iconSize="13dp" />
+
+                        <!-- نشر / إدراج -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAiActionPublish"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="إدراج"
+                            android:textColor="#FBBF24"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="10dp"
+                            app:strokeColor="#33FBBF24"
+                            app:strokeWidth="1dp"
+                            app:icon="@drawable/ic_plus"
+                            app:iconTint="#FBBF24"
+                            app:iconSize="13dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- شريط الإدخال الثابت أسفل المحادثة (Chat Input Bottom Bar) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etCustomPrompt"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_bar"
+            android:hint="تحدث مع الذكاء الاصطناعي أو اكتب فكرة المنشور..."
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textSize="13sp"
+            android:maxLines="3"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences|textMultiLine" />
+
+        <!-- زر الإرسال / التوليد الشبيه بتطبيقات المحادثة الحديثة -->
+        <FrameLayout
+            android:id="@+id/btnGenerateAi"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_send_comment_circle"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_send"
+                android:rotation="180"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

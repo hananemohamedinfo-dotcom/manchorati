@@ -4,17 +4,23 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 
@@ -31,77 +37,82 @@ object AiWriterBottomSheetDialog {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_ai_writer, null)
         dialog.setContentView(view)
 
+        // تمديد الـ BottomSheet ليأخذ حجماً مريحاً للمحادثة
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.behavior.skipCollapsed = true
+
+        // عناصر الرأس
         val tvQuotaBadge = view.findViewById<TextView>(R.id.tvQuotaBadge)
+        val viewStatusDot = view.findViewById<View>(R.id.viewStatusDot)
+        val layoutKeyStatusBadge = view.findViewById<View>(R.id.layoutKeyStatusBadge)
         val btnClose = view.findViewById<ImageView>(R.id.btnCloseAiDialog)
-        val btnKeyConfig = view.findViewById<ImageView>(R.id.btnAiKeyConfig)
-        val etCustomPrompt = view.findViewById<EditText>(R.id.etCustomPrompt)
-        val btnGenerate = view.findViewById<MaterialButton>(R.id.btnGenerateAi)
-        val cardResult = view.findViewById<CardView>(R.id.cardAiResult)
+        val btnAiKeyConfig = view.findViewById<ImageView>(R.id.btnAiKeyConfig)
+
+        // بطاقة الترويج للمفتاح الشخصي
+        val cardCustomKeyPromo = view.findViewById<CardView>(R.id.cardCustomKeyPromo)
+        val btnEnterCustomKey = view.findViewById<MaterialButton>(R.id.btnEnterCustomKey)
+        val btnGetFreeKey = view.findViewById<MaterialButton>(R.id.btnGetFreeKey)
+
+        // منطقة المحادثة
+        val scrollChatArea = view.findViewById<NestedScrollView>(R.id.scrollChatArea)
+        val layoutUserBubble = view.findViewById<LinearLayout>(R.id.layoutUserBubble)
+        val tvUserPromptText = view.findViewById<TextView>(R.id.tvUserPromptText)
+        val layoutAiLoading = view.findViewById<LinearLayout>(R.id.layoutAiLoading)
+        val tvAiThinkingText = view.findViewById<TextView>(R.id.tvAiThinkingText)
+        val cardAiResult = view.findViewById<CardView>(R.id.cardAiResult)
+        val tvAiModelBadge = view.findViewById<TextView>(R.id.tvAiModelBadge)
         val tvGeneratedQuote = view.findViewById<TextView>(R.id.tvGeneratedQuote)
 
+        // إجراءات الاقتباس
         val btnCopy = view.findViewById<MaterialButton>(R.id.btnAiActionCopy)
         val btnImage = view.findViewById<MaterialButton>(R.id.btnAiActionImage)
         val btnVideo = view.findViewById<MaterialButton>(R.id.btnAiActionVideo)
         val btnPublish = view.findViewById<MaterialButton>(R.id.btnAiActionPublish)
 
-        // Topic Chips
-        val chipWisdom = view.findViewById<TextView>(R.id.chipTopicWisdom)
-        val chipMotivation = view.findViewById<TextView>(R.id.chipTopicMotivation)
-        val chipLove = view.findViewById<TextView>(R.id.chipTopicLove)
-        val chipDua = view.findViewById<TextView>(R.id.chipTopicDua)
-        val chipCalm = view.findViewById<TextView>(R.id.chipTopicCalm)
-        val chipFarewell = view.findViewById<TextView>(R.id.chipTopicFarewell)
+        // مقترحات المحادثة السريعة
+        val suggestPatience = view.findViewById<TextView>(R.id.suggestPatience)
+        val suggestCoffee = view.findViewById<TextView>(R.id.suggestCoffee)
+        val suggestMotivation = view.findViewById<TextView>(R.id.suggestMotivation)
+        val suggestFriendship = view.findViewById<TextView>(R.id.suggestFriendship)
+        val suggestDua = view.findViewById<TextView>(R.id.suggestDua)
 
-        val allTopicChips = listOf(chipWisdom, chipMotivation, chipLove, chipDua, chipCalm, chipFarewell)
-        var selectedTopic = "حكم وأمثال"
-
-        fun selectTopic(selected: TextView, topicName: String) {
-            selectedTopic = topicName
-            allTopicChips.forEach { chip ->
-                if (chip == selected) {
-                    chip.setBackgroundResource(R.drawable.bg_tool_chip_active)
-                    chip.setTextColor(android.graphics.Color.WHITE)
-                } else {
-                    chip.setBackgroundResource(R.drawable.bg_tool_chip_idle)
-                    chip.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
-                }
-            }
-        }
-
-        chipWisdom.setOnClickListener { selectTopic(chipWisdom, "حكم وأمثال") }
-        chipMotivation.setOnClickListener { selectTopic(chipMotivation, "تحفيز ونجاح") }
-        chipLove.setOnClickListener { selectTopic(chipLove, "حب وغرام") }
-        chipDua.setOnClickListener { selectTopic(chipDua, "أدعية وأمل") }
-        chipCalm.setOnClickListener { selectTopic(chipCalm, "خواطر هادئة") }
-        chipFarewell.setOnClickListener { selectTopic(chipFarewell, "وداع وفراق") }
-
-        // Pre-select topic if provided
-        if (initialTopic.isNotBlank()) {
-            when {
-                initialTopic.contains("حكم") -> selectTopic(chipWisdom, "حكم وأمثال")
-                initialTopic.contains("تحفيز") || initialTopic.contains("تطوير") -> selectTopic(chipMotivation, "تحفيز ونجاح")
-                initialTopic.contains("حب") -> selectTopic(chipLove, "حب وغرام")
-                initialTopic.contains("أدعية") || initialTopic.contains("دعاء") -> selectTopic(chipDua, "أدعية وأمل")
-                initialTopic.contains("قهوة") || initialTopic.contains("مساء") -> selectTopic(chipCalm, "خواطر هادئة")
-                initialTopic.contains("شعر") -> selectTopic(chipWisdom, "شعر وأدب")
-            }
-        }
-
-        // Style Chips
+        // رقائق الأسلوب
         val chipStyleWisdom = view.findViewById<TextView>(R.id.chipStyleWisdom)
         val chipStyleShort = view.findViewById<TextView>(R.id.chipStyleShort)
         val chipStylePoem = view.findViewById<TextView>(R.id.chipStylePoem)
         val chipStylePolish = view.findViewById<TextView>(R.id.chipStylePolish)
-
         val allStyleChips = listOfNotNull(chipStyleWisdom, chipStyleShort, chipStylePoem, chipStylePolish)
         var selectedStyle = if (initialText.isNotBlank()) "تحسين وبلاغة" else "حكمة بليغة"
+
+        // شريط الإدخال السفلي
+        val etCustomPrompt = view.findViewById<EditText>(R.id.etCustomPrompt)
+        val btnGenerateAi = view.findViewById<FrameLayout>(R.id.btnGenerateAi)
+
+        var selectedTopic = if (initialTopic.isNotBlank()) initialTopic else "حكم وأمثال"
+        var currentGeneratedQuote = ""
+
+        fun updateKeyAndQuotaUI() {
+            if (AiWriterManager.hasUserApiKey(context)) {
+                viewStatusDot.setBackgroundResource(R.drawable.bg_status_dot_green)
+                tvQuotaBadge.text = "مفتاحك الشخصي مفعّل (توليد لا محدود)"
+                tvQuotaBadge.setTextColor(Color.parseColor("#10B981"))
+                cardCustomKeyPromo.visibility = View.GONE
+            } else {
+                val remaining = AiWriterManager.getRemainingQuota(context)
+                viewStatusDot.setBackgroundResource(R.drawable.bg_status_dot_amber)
+                tvQuotaBadge.text = "المفتاح التجريبي ($remaining / ${AiWriterManager.MAX_DAILY_QUOTA} محاولات)"
+                tvQuotaBadge.setTextColor(Color.parseColor("#38BDF8"))
+                cardCustomKeyPromo.visibility = View.VISIBLE
+            }
+        }
+        updateKeyAndQuotaUI()
 
         fun selectStyle(selected: TextView, styleName: String) {
             selectedStyle = styleName
             allStyleChips.forEach { chip ->
                 if (chip == selected) {
                     chip.setBackgroundResource(R.drawable.bg_tool_chip_active)
-                    chip.setTextColor(android.graphics.Color.WHITE)
+                    chip.setTextColor(Color.WHITE)
                 } else {
                     chip.setBackgroundResource(R.drawable.bg_tool_chip_idle)
                     chip.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
@@ -114,35 +125,25 @@ object AiWriterBottomSheetDialog {
         chipStylePoem?.setOnClickListener { selectStyle(chipStylePoem, "شعر فخم") }
         chipStylePolish?.setOnClickListener { selectStyle(chipStylePolish, "تحسين وبلاغة") }
 
-        // Pre-fill initial text if coming from post editor
+        // إذا كان هناك نص مبدئي قادم من محرر المنشورات
         if (initialText.isNotBlank()) {
             etCustomPrompt.setText(initialText)
             etCustomPrompt.setSelection(initialText.length)
             chipStylePolish?.let { selectStyle(it, "تحسين وبلاغة") }
         }
 
-        // Quota display
-        fun updateQuotaDisplay() {
-            val remaining = AiWriterManager.getRemainingQuota(context)
-            tvQuotaBadge.text = context.getString(R.string.ai_quota_badge, remaining, AiWriterManager.MAX_DAILY_QUOTA)
-        }
-        updateQuotaDisplay()
-
-        // Close button
+        // أزرار الرأس وإغلاق النافذة
         btnClose.setOnClickListener { dialog.dismiss() }
+        btnAiKeyConfig.setOnClickListener { showGeminiKeyConfigDialog(context) { updateKeyAndQuotaUI() } }
+        layoutKeyStatusBadge.setOnClickListener { showGeminiKeyConfigDialog(context) { updateKeyAndQuotaUI() } }
 
-        // API Key Configuration Dialog (Key icon)
-        btnKeyConfig?.setOnClickListener {
-            showKeyConfigDialog(context)
+        // بطاقة الترويج لمفتاح المستخدم الشخصي
+        btnEnterCustomKey.setOnClickListener { showGeminiKeyConfigDialog(context) { updateKeyAndQuotaUI() } }
+        btnGetFreeKey.setOnClickListener {
+            openAiStudioWeb(context)
         }
 
-        // Quota badge long-click to open Key config
-        tvQuotaBadge.setOnLongClickListener {
-            showKeyConfigDialog(context)
-            true
-        }
-
-        // If used from Add Post, adapt UI
+        // إذا كان الاستخدام من داخل إنشاء المنشور
         val isForPost = onQuoteSelectedWithTopic != null
         if (isForPost) {
             btnPublish.text = context.getString(R.string.ai_use_in_post_btn)
@@ -150,29 +151,42 @@ object AiWriterBottomSheetDialog {
             btnImage.visibility = View.GONE
         }
 
-        var currentGeneratedQuote = ""
-
-        btnGenerate.setOnClickListener {
+        // دالة تنفيذ التوليد
+        fun doGenerate(customPromptOverride: String? = null) {
             val (canGen, message) = AiWriterManager.canGenerate(context)
             if (!canGen) {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                return@setOnClickListener
+                return
             }
 
             AiWriterManager.recordGeneration(context)
-            updateQuotaDisplay()
+            updateKeyAndQuotaUI()
 
-            val customPrompt = etCustomPrompt.text.toString().trim()
-            btnGenerate.isEnabled = false
-            btnGenerate.text = context.getString(R.string.ai_generating)
+            val prompt = (customPromptOverride ?: etCustomPrompt.text.toString()).trim()
 
-            AiWriterManager.generateQuoteSmartAdvanced(context, selectedTopic, customPrompt, selectedStyle) { quote, isRealAi, statusMsg ->
+            // إظهار فقاعة المستخدم
+            layoutUserBubble.visibility = View.VISIBLE
+            tvUserPromptText.text = if (prompt.isNotEmpty()) prompt else "صياغة $selectedStyle في $selectedTopic"
+
+            // إظهار حالة التحميل وإخفاء النتيجة السابقة
+            layoutAiLoading.visibility = View.VISIBLE
+            tvAiThinkingText.text = "جاري استحضار الفكرة وصياغتها بأناقة..."
+            cardAiResult.visibility = View.GONE
+            btnGenerateAi.isEnabled = false
+
+            // التمرير للأسفل لمتابعة المحادثة
+            scrollChatArea.post { scrollChatArea.fullScroll(View.FOCUS_DOWN) }
+
+            AiWriterManager.generateQuoteSmartAdvanced(context, selectedTopic, prompt, selectedStyle) { quote, isRealAi, statusMsg ->
                 currentGeneratedQuote = quote
-                tvGeneratedQuote.text = quote
-                cardResult.visibility = View.VISIBLE
+                layoutAiLoading.visibility = View.GONE
+                btnGenerateAi.isEnabled = true
 
-                btnGenerate.isEnabled = true
-                btnGenerate.text = context.getString(R.string.ai_generate_again_btn)
+                cardAiResult.visibility = View.VISIBLE
+                tvGeneratedQuote.text = quote
+                tvAiModelBadge.text = if (isRealAi) "Google Gemini" else "مكتبة أدبية"
+
+                scrollChatArea.post { scrollChatArea.fullScroll(View.FOCUS_DOWN) }
 
                 if (isRealAi) {
                     Toast.makeText(context, "تمت الصياغة بنجاح بواسطة الذكاء الاصطناعي", Toast.LENGTH_SHORT).show()
@@ -182,7 +196,63 @@ object AiWriterBottomSheetDialog {
             }
         }
 
-        // Action: Copy
+        // إرسال عبر الزر
+        btnGenerateAi.setOnClickListener {
+            doGenerate()
+        }
+
+        // إرسال عبر لوحة المفاتيح
+        etCustomPrompt.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                doGenerate()
+                true
+            } else {
+                false
+            }
+        }
+
+        // ربط المقترحات السريعة
+        suggestPatience?.setOnClickListener {
+            chipStyleWisdom?.let { selectStyle(it, "حكمة بليغة") }
+            selectedTopic = "حكم وأمثال"
+            val text = "حكمة بليغة ومؤثرة عن الصبر واليقين وحسن الظن بالله"
+            etCustomPrompt.setText(text)
+            doGenerate(text)
+        }
+
+        suggestCoffee?.setOnClickListener {
+            chipStyleShort?.let { selectStyle(it, "خاطرة قصيرة") }
+            selectedTopic = "خواطر هادئة"
+            val text = "خاطرة مسائية دافئة وجميلة عن القهوة والسكينة وراحة البال"
+            etCustomPrompt.setText(text)
+            doGenerate(text)
+        }
+
+        suggestMotivation?.setOnClickListener {
+            chipStyleWisdom?.let { selectStyle(it, "حكمة بليغة") }
+            selectedTopic = "تحفيز ونجاح"
+            val text = "كلمات تحفيزية قوية عن الإصرار ومواجهة الصعاب وتحقيق القمة"
+            etCustomPrompt.setText(text)
+            doGenerate(text)
+        }
+
+        suggestFriendship?.setOnClickListener {
+            chipStyleWisdom?.let { selectStyle(it, "حكمة بليغة") }
+            selectedTopic = "حكم وأمثال"
+            val text = "اقتباس راقٍ وعميق عن الصداقة والوفاء والقلوب النقية"
+            etCustomPrompt.setText(text)
+            doGenerate(text)
+        }
+
+        suggestDua?.setOnClickListener {
+            chipStyleShort?.let { selectStyle(it, "خاطرة قصيرة") }
+            selectedTopic = "أدعية وأمل"
+            val text = "دعاء يبعث الطمأنينة وراحة البال وتيسير الأمور"
+            etCustomPrompt.setText(text)
+            doGenerate(text)
+        }
+
+        // الإجراءات على الاقتباس
         btnCopy.setOnClickListener {
             if (currentGeneratedQuote.isNotEmpty()) {
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -192,10 +262,13 @@ object AiWriterBottomSheetDialog {
             }
         }
 
-        // Action: Image Editor (Only if not in post mode)
-        btnAiActionImage(btnImage, context, dialog) { currentGeneratedQuote to selectedTopic }
+        btnImage.setOnClickListener {
+            if (currentGeneratedQuote.isNotEmpty() && context is AppCompatActivity) {
+                dialog.dismiss()
+                ImageUtils.showImageEditorDialog(context, selectedTopic, currentGeneratedQuote)
+            }
+        }
 
-        // Action: Video Studio (Only if not in post mode)
         btnVideo.setOnClickListener {
             if (currentGeneratedQuote.isNotEmpty()) {
                 dialog.dismiss()
@@ -207,7 +280,6 @@ object AiWriterBottomSheetDialog {
             }
         }
 
-        // Action: Publish / Insert
         btnPublish.setOnClickListener {
             if (currentGeneratedQuote.isNotEmpty()) {
                 dialog.dismiss()
@@ -223,6 +295,88 @@ object AiWriterBottomSheetDialog {
     }
 
     /**
+     * فتح صفحة الحصول على مفتاح مجاني من Google AI Studio
+     */
+    private fun openAiStudioWeb(context: Context) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://aistudio.google.com/app/apikey"))
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, "https://aistudio.google.com/app/apikey", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * نافذة متطورة لإدخال مفتاح Gemini الشخصي مع التحقق اللحظي التلقائي
+     */
+    private fun showGeminiKeyConfigDialog(context: Context, onKeyChanged: () -> Unit) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_gemini_key_config, null)
+        val tvStatus = dialogView.findViewById<TextView>(R.id.tvKeyDialogCurrentStatus)
+        val btnOpenStudio = dialogView.findViewById<MaterialButton>(R.id.btnOpenAiStudio)
+        val etKeyInput = dialogView.findViewById<EditText>(R.id.etGeminiApiKeyInput)
+        val tvVerifying = dialogView.findViewById<TextView>(R.id.tvKeyVerifyingStatus)
+        val btnSave = dialogView.findViewById<MaterialButton>(R.id.btnSaveAndVerifyKey)
+        val btnReset = dialogView.findViewById<MaterialButton>(R.id.btnResetDefaultKey)
+
+        val userKey = AiWriterManager.getUserApiKey(context)
+        if (userKey.isNotEmpty()) {
+            tvStatus.text = "مفتاحك الشخصي مفعّل حالياً (توليد لا محدود)"
+            tvStatus.setTextColor(Color.parseColor("#10B981"))
+            etKeyInput.setText(userKey)
+            etKeyInput.setSelection(userKey.length)
+        } else {
+            tvStatus.text = "جاري استخدام المفتاح التجريبي الافتراضي"
+            tvStatus.setTextColor(Color.parseColor("#F59E0B"))
+        }
+
+        val alertDialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        btnOpenStudio.setOnClickListener {
+            openAiStudioWeb(context)
+        }
+
+        btnSave.setOnClickListener {
+            val newKey = etKeyInput.text.toString().trim()
+            if (newKey.isEmpty()) {
+                Toast.makeText(context, "يرجى لصق مفتاح Gemini أولاً", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            btnSave.isEnabled = false
+            btnSave.text = "جاري التحقق..."
+            tvVerifying.visibility = View.VISIBLE
+            tvVerifying.text = "جاري فحص المفتاح مع خوادم Google..."
+
+            AiWriterManager.verifyKeyWithGemini(newKey) { isValid, errorMsg ->
+                btnSave.isEnabled = true
+                btnSave.text = "حفظ وتفعيل المفتاح"
+                tvVerifying.visibility = View.GONE
+
+                if (isValid) {
+                    AiWriterManager.setUserApiKey(context, newKey)
+                    Toast.makeText(context, "تم التحقق من مفتاحك وتفعيله بنجاح! التوليد الآن غير محدود وبسرعة فائقة.", Toast.LENGTH_LONG).show()
+                    onKeyChanged()
+                    alertDialog.dismiss()
+                } else {
+                    val alert = errorMsg ?: "المفتاح غير صالح أو لم يتم تفعيله بعد."
+                    Toast.makeText(context, alert, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        btnReset.setOnClickListener {
+            AiWriterManager.clearUserApiKey(context)
+            Toast.makeText(context, "تمت العودة للمفتاح الافتراضي.", Toast.LENGTH_SHORT).show()
+            onKeyChanged()
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
+    }
+
+    /**
      * Backward compatible show method
      */
     fun show(context: Context, onQuoteSelected: ((String) -> Unit)?) {
@@ -232,64 +386,5 @@ object AiWriterBottomSheetDialog {
             initialTopic = "",
             onQuoteSelectedWithTopic = if (onQuoteSelected != null) { quote, _ -> onQuoteSelected(quote) } else null
         )
-    }
-
-    private fun showKeyConfigDialog(context: Context) {
-        val currentKey = AiWriterManager.getApiKey(context)
-        val input = EditText(context).apply {
-            hint = context.getString(R.string.ai_key_settings_hint)
-            setText(currentKey)
-            setSelection(currentKey.length)
-            setPadding(40, 30, 40, 30)
-        }
-
-        AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.ai_key_settings_title))
-            .setMessage(context.getString(R.string.ai_key_settings_desc))
-            .setView(input)
-            .setPositiveButton(context.getString(R.string.ai_key_save)) { _, _ ->
-                val newKey = input.text.toString().trim()
-                AiWriterManager.setCustomApiKey(context, newKey)
-
-                val currentUser = AuthManager.currentUser ?: AuthManager.auth.currentUser
-                val email = currentUser?.email ?: ""
-                val isAdmin = email.equals("hananemohamedinfo@gmail.com", ignoreCase = true) ||
-                        email.equals("admin@manchorati.com", ignoreCase = true)
-
-                if (isAdmin && newKey.isNotEmpty()) {
-                    AiWriterManager.saveApiKeyToFirestore(newKey, onSuccess = {
-                        Toast.makeText(context, "تم حفظ المفتاح وتعميمه في السحابة بنجاح", Toast.LENGTH_SHORT).show()
-                    }, onFailure = {
-                        Toast.makeText(context, context.getString(R.string.ai_key_saved_toast), Toast.LENGTH_SHORT).show()
-                    })
-                } else {
-                    Toast.makeText(context, context.getString(R.string.ai_key_saved_toast), Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNeutralButton(context.getString(R.string.ai_key_get_free)) { _, _ ->
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://aistudio.google.com/app/apikey"))
-                    context.startActivity(intent)
-                } catch (e: Exception) {
-                    Toast.makeText(context, "https://aistudio.google.com/app/apikey", Toast.LENGTH_LONG).show()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun btnAiActionImage(
-        btnImage: MaterialButton,
-        context: Context,
-        dialog: BottomSheetDialog,
-        quoteProvider: () -> Pair<String, String>
-    ) {
-        btnImage.setOnClickListener {
-            val (quote, topic) = quoteProvider()
-            if (quote.isNotEmpty() && context is AppCompatActivity) {
-                dialog.dismiss()
-                ImageUtils.showImageEditorDialog(context, topic, quote)
-            }
-        }
     }
 }

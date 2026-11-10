@@ -439,8 +439,8 @@
     <string name="ai_key_save">Enregistrer</string>
     <string name="ai_key_get_free">Obtenir une clé gratuite</string>
  <string name="ai_key_saved_toast">Clé API enregistrée avec succès</string>
-    <string name="ai_key_missing_toast">Veuillez configurer la cl\u00e9 Gemini API pour activer l\'IA \u2728</string>
-    <string name="ai_offline_fallback_toast">Impossible de joindre l\'IA, citation locale sugg\u00e9r\u00e9e utilis\u00e9e \u2728</string>
+    <string name="ai_key_missing_toast">Veuillez configurer la clé Gemini API pour activer l\'IA</string>
+    <string name="ai_offline_fallback_toast">Impossible de joindre l\'IA, citation locale suggérée utilisée</string>
  <string name="ai_copied_toast">Citation copiée avec succès</string>
  <string name="ai_quota_exceeded">Vous avez épuisé vos tentatives du jour. Revenez demain</string>
     <string name="ai_topic_wisdom">Sagesse &amp; Citations</string>

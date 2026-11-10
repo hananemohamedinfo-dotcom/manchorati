@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_rounded"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layoutDirection="rtl">
+
+    <!-- الرأس: أيقونة وعنوان -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_category_well"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_key"
+                app:tint="#F59E0B" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مفتاح Google Gemini الشخصي"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKeyDialogCurrentStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="توليد غير محدود من حسابك مباشرة"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- نبذة توضيحية -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="يمكنك الحصول على مفتاح API مجاني 100% من Google AI Studio واستخدامه داخل التطبيق للاستمتاع بتوليد غير محدود للخواطر وبسرعة فائقة."
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- زر الحصول على مفتاح مجاني من جوجل -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOpenAiStudio"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="الحصول على مفتاح مجاني (Google AI Studio)"
+        android:textColor="#38BDF8"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:strokeColor="#3338BDF8"
+        app:strokeWidth="1dp"
+        app:icon="@drawable/ic_sparkle_ai"
+        app:iconTint="#38BDF8"
+        app:iconSize="14dp"
+        android:layout_marginBottom="14dp" />
+
+    <!-- حقل إدخال المفتاح -->
+    <EditText
+        android:id="@+id/etGeminiApiKeyInput"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/bg_search_bar"
+        android:hint="ألصق مفتاح Gemini هنا (AQ... أو AIza...)"
+        android:paddingHorizontal="14dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_secondary"
+        android:textSize="13sp"
+        android:singleLine="true"
+        android:layout_marginBottom="8dp" />
+
+    <!-- مؤشر جاري التحقق -->
+    <TextView
+        android:id="@+id/tvKeyVerifyingStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="جاري التحقق من المفتاح مع سيرفرات Google..."
+        android:textColor="#38BDF8"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+    <!-- أزرار الإجراءات -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveAndVerifyKey"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:backgroundTint="#0284C7"
+            android:text="حفظ وتفعيل المفتاح"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetDefaultKey"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:text="الافتراضي"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>
