@@ -124,6 +124,7 @@ class CommunityFragment : Fragment() {
     private var followingListener: ListenerRegistration? = null
 
     private var allPostsList: List<CommunityPost> = emptyList()
+    private var selectMoodAction: ((MoodType) -> Unit)? = null
     private var deviceId: String = ""
     private var loginDialog: BottomSheetDialog? = null
     private var postsListener: ListenerRegistration? = null
@@ -285,7 +286,8 @@ class CommunityFragment : Fragment() {
             },
             onEditClicked = { post -> showEditDialog(post) },
             onDeleteClicked = { post -> confirmDelete(post.id) },
-            onReportClicked = { post -> showReportDialog(post.id) }
+            onReportClicked = { post -> showReportDialog(post.id) },
+            onTagClicked = { tag -> filterByHashtag(tag) }
         )
         rvCommunity.adapter = communityAdapter
 
@@ -488,6 +490,7 @@ class CommunityFragment : Fragment() {
                 selectMood(mood)
             }
         }
+        selectMoodAction = { selectMood(it) }
     }
 
     private fun setupTagSelector(view: View) {
@@ -1247,15 +1250,30 @@ class CommunityFragment : Fragment() {
             }
         }
     }
+    fun filterByHashtag(tag: String) {
+        if (!isAdded) return
+        val rawTag = tag.trim()
+        if (rawTag.isEmpty()) return
+        selectMoodAction?.invoke(MoodType.ALL)
+        currentTagFilter = rawTag
+        updateTagSelectorUI()
+        applyFilterAndSort()
+        rvCommunity.scrollToPosition(0)
+        val cleanTag = rawTag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+        val displayTag = if (cleanTag.isNotEmpty()) "#" + cleanTag.replace("\\s+".toRegex(), "_") else "#$rawTag"
+        Toast.makeText(requireContext(), "تصفية حسب الهاشتاغ: $displayTag", Toast.LENGTH_SHORT).show()
+    }
+
     fun onSearchQueryChanged(query: String) {
-        val trimmed = query.trim()
+        val trimmed = query.trim().removePrefix("#").trim()
         if (trimmed.isEmpty()) {
             communityAdapter.updateData(allPostsList)
         } else {
             val filtered = allPostsList.filter { post ->
                 post.content.contains(trimmed, ignoreCase = true) ||
                 post.authorName.contains(trimmed, ignoreCase = true) ||
-                post.authorUsername.contains(trimmed, ignoreCase = true)
+                post.authorUsername.contains(trimmed, ignoreCase = true) ||
+                (post.tag ?: "").contains(trimmed, ignoreCase = true)
             }
             communityAdapter.updateData(filtered)
         }

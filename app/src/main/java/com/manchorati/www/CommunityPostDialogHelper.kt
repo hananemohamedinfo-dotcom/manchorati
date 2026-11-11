@@ -203,7 +203,9 @@ object CommunityPostDialogHelper {
 
             if (selectedTag.isNotEmpty()) {
                 tvPreviewTagBadge.visibility = View.VISIBLE
-                tvPreviewTagBadge.text = tagsList.find { it.first == selectedTag }?.second ?: selectedTag
+                val label = tagsList.find { it.first == selectedTag }?.second ?: selectedTag
+                val clean = label.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                tvPreviewTagBadge.text = if (clean.isNotEmpty()) "#" + clean.replace("\\s+".toRegex(), "_") else "#$label"
             } else {
                 tvPreviewTagBadge.visibility = View.GONE
             }
@@ -479,7 +481,8 @@ object CommunityPostDialogHelper {
             for ((tagValue, tagLabel) in tagsList) {
                 val isSelected = selectedTag == tagValue
                 val chip = TextView(context).apply {
-                    text = tagLabel
+                    val cleanLabel = tagLabel.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                    text = if (tagValue.isEmpty()) tagLabel else ("#" + cleanLabel.replace("\\s+".toRegex(), "_"))
                     textSize = 12f
                     gravity = Gravity.CENTER
                     setPadding(chipPadH, chipPadV, chipPadH, chipPadV)

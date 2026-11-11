@@ -76,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:maxWidth="110dp"
+                            android:maxWidth="170dp"
                             android:text="اسم الكاتب"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp"
@@ -130,22 +130,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvPostTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_tool_chip_idle"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:maxWidth="95dp"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
-                android:textColor="#38BDF8"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/btnPostMenu"
@@ -239,6 +223,34 @@
                 android:visibility="gone"
                 app:tint="#EF4444" />
         </FrameLayout>
+
+        <!-- وسم الهاشتاغ التفاعلي أسفل البطاقة -->
+        <LinearLayout
+            android:id="@+id/layoutPostTagContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="2dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvPostTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="#38BDF8"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                android:includeFontPadding="false"
+                android:paddingVertical="2dp"
+                android:paddingHorizontal="4dp"
+                tools:text="#همسات_عشق" />
+        </LinearLayout>
 
         <!-- شريط التفاعل السفلي -->
         <LinearLayout

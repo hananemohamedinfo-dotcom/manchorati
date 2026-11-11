@@ -27,7 +27,8 @@ class CommunityAdapter(
     private val onAuthorClicked: (authorId: String, authorName: String) -> Unit,
     private val onEditClicked: (post: CommunityPost) -> Unit,
     private val onDeleteClicked: (post: CommunityPost) -> Unit,
-    private val onReportClicked: (post: CommunityPost) -> Unit
+    private val onReportClicked: (post: CommunityPost) -> Unit,
+    private val onTagClicked: ((tag: String) -> Unit)? = null
 ) : RecyclerView.Adapter<CommunityAdapter.PostViewHolder>() {
 
     private var postsList: MutableList<CommunityPost> = posts.toMutableList()
@@ -179,7 +180,8 @@ class CommunityAdapter(
         private val tvAuthorBadge: TextView = itemView.findViewById(R.id.tvAuthorBadge)
         private val tvAuthorStreak: TextView? = itemView.findViewById(R.id.tvAuthorStreak)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvPostUsername)
-        private val tvPostTag: TextView = itemView.findViewById(R.id.tvPostTag)
+        private val layoutPostTagContainer: View? = itemView.findViewById(R.id.layoutPostTagContainer)
+        private val tvPostTag: TextView? = itemView.findViewById(R.id.tvPostTag)
         private val btnPostMenu: ImageView = itemView.findViewById(R.id.btnPostMenu)
 
         private val badgeVideoReel: LinearLayout = itemView.findViewById(R.id.badgeVideoReel)
@@ -297,13 +299,27 @@ class CommunityAdapter(
 
             ivAuthorAvatar.loadUserAvatar(post.authorPhotoUrl)
 
-            // شارة التصنيف / الوسم
-            if (!post.tag.isNullOrEmpty()) {
-                tvPostTag.visibility = View.VISIBLE
-                val cleanTag = post.tag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
-                tvPostTag.text = cleanTag.ifEmpty { post.tag }
+            // وسم الهاشتاغ التفاعلي أسفل البطاقة
+            if (!post.tag.isNullOrBlank()) {
+                val rawTag = post.tag.trim()
+                val cleanTag = rawTag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                val hashtagText = if (cleanTag.isNotEmpty()) {
+                    "#" + cleanTag.replace("\\s+".toRegex(), "_")
+                } else {
+                    "#$rawTag"
+                }
+                tvPostTag?.text = hashtagText
+                tvPostTag?.visibility = View.VISIBLE
+                layoutPostTagContainer?.visibility = View.VISIBLE
+
+                tvPostTag?.setOnClickListener {
+                    tvPostTag.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    onTagClicked?.invoke(rawTag)
+                }
             } else {
-                tvPostTag.visibility = View.GONE
+                tvPostTag?.visibility = View.GONE
+                layoutPostTagContainer?.visibility = View.GONE
+                tvPostTag?.setOnClickListener(null)
             }
 
             // تلوين بطاقة المنشور والخط
@@ -591,7 +607,7 @@ class CommunityAdapter(
 
         private fun bindAuthorStreak(post: CommunityPost) {
             val streak = post.authorStreak
-            if (streak > 0 && tvAuthorStreak != null) {
+            if (streak >= 1 && tvAuthorStreak != null) {
                 val emoji = when {
                     streak >= 30 -> "🏆"
                     streak >= 15 -> "🌟"

@@ -135,7 +135,7 @@
     <string name="publish">نشر في المجتمع</string>
     <string name="save_edit_post">حفظ التعديلات</string>
     <string name="tab_background">الخلفية</string>
-    <string name="tab_tag">القسم</string>
+    <string name="tab_tag">الهاشتاغ #</string>
     <string name="tab_text_color">لون الخط</string>
     <string name="tab_font">نوع الخط</string>
     <string name="post_published_success">تم نشر منشورك بنجاح</string>

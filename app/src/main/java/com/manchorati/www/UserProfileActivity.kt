@@ -63,6 +63,8 @@ class UserProfileActivity : AppCompatActivity() {
     private var currentBadge: UserBadge = BadgeHelper.BADGE_BEGINNER
     private var fabAddPostProfile: View? = null
     private var postsListener: ListenerRegistration? = null
+    private var allUserPosts = listOf<CommunityPost>()
+    private var currentProfileTagFilter: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,7 +168,8 @@ class UserProfileActivity : AppCompatActivity() {
                 FirestoreManager.reportPost(post.id, "Profile report") {
                     Toast.makeText(this, getString(R.string.report_received_success), Toast.LENGTH_SHORT).show()
                 }
-            }
+            },
+            onTagClicked = { tag -> filterUserPostsByTag(tag) }
         )
         rvPosts.adapter = adapter
         rvPosts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -905,11 +908,44 @@ class UserProfileActivity : AppCompatActivity() {
                 } else {
                     posts
                 }
-                adapter.updateData(effectivePosts)
+                allUserPosts = effectivePosts
+                val displayPosts = if (currentProfileTagFilter != null) {
+                    val cleanFilter = currentProfileTagFilter!!.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+                    effectivePosts.filter { post ->
+                        val postTag = (post.tag ?: "").trim()
+                        postTag.contains(cleanFilter, ignoreCase = true) || cleanFilter.contains(postTag, ignoreCase = true)
+                    }
+                } else {
+                    effectivePosts
+                }
+                adapter.updateData(displayPosts)
                 tvPostsCount.text = effectivePosts.size.formatCount()
-                layoutEmpty.visibility = if (effectivePosts.isEmpty()) View.VISIBLE else View.GONE
+                layoutEmpty.visibility = if (displayPosts.isEmpty()) View.VISIBLE else View.GONE
                 swipeRefresh.isRefreshing = false
             }
+        }
+    }
+
+    private fun filterUserPostsByTag(tag: String) {
+        val rawTag = tag.trim()
+        if (rawTag.isEmpty()) return
+        val cleanTag = rawTag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
+        val displayTag = if (cleanTag.isNotEmpty()) "#" + cleanTag.replace("\\s+".toRegex(), "_") else "#$rawTag"
+
+        if (currentProfileTagFilter == rawTag) {
+            currentProfileTagFilter = null
+            adapter.updateData(allUserPosts)
+            layoutEmpty.visibility = if (allUserPosts.isEmpty()) View.VISIBLE else View.GONE
+            Toast.makeText(this, "عرض كل منشورات الكاتب", Toast.LENGTH_SHORT).show()
+        } else {
+            currentProfileTagFilter = rawTag
+            val filtered = allUserPosts.filter { post ->
+                val postTag = (post.tag ?: "").trim()
+                postTag.contains(cleanTag, ignoreCase = true) || cleanTag.contains(postTag, ignoreCase = true)
+            }
+            adapter.updateData(filtered)
+            layoutEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+            Toast.makeText(this, "تصفية: $displayTag (المس مجدداً للإلغاء)", Toast.LENGTH_SHORT).show()
         }
     }
 
