@@ -22,6 +22,19 @@ fun ImageView.loadUserAvatar(photoUrl: String?) {
         } else {
             setImageResource(R.drawable.ic_profile)
         }
+    } else if (photoUrl.startsWith("data:image/") || photoUrl.startsWith("base64,")) {
+        try {
+            val pureBase64 = photoUrl.substringAfter("base64,")
+            val bytes = android.util.Base64.decode(pureBase64, android.util.Base64.DEFAULT)
+            load(bytes) {
+                crossfade(true)
+                placeholder(R.drawable.ic_profile)
+                error(R.drawable.ic_profile)
+                transformations(CircleCropTransformation())
+            }
+        } catch (_: Exception) {
+            setImageResource(R.drawable.ic_profile)
+        }
     } else {
         load(photoUrl) {
             crossfade(true)

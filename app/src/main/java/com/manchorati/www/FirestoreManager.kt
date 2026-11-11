@@ -594,6 +594,51 @@ fun reportCommunityPost(postId: String, reporterId: String, reason: String, onCo
     fun reportPost(postId: String, reason: String = "غير محدد", onComplete: (Boolean) -> Unit) {
         reportCommunityPost(postId, "anonymous", reason, onComplete)
     }
+    fun uploadProfilePhotoWebp(
+        userId: String,
+        webpBytes: ByteArray,
+        onSuccess: (downloadUrl: String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        if (userId.isEmpty() || webpBytes.isEmpty()) {
+            onFailure(IllegalArgumentException("Empty userId or bytes"))
+            return
+        }
+
+        val fallbackToBase64 = {
+            val base64 = android.util.Base64.encodeToString(webpBytes, android.util.Base64.NO_WRAP)
+            val dataUrl = "data:image/webp;base64,$base64"
+            onSuccess(dataUrl)
+        }
+
+        try {
+            val storage = com.google.firebase.storage.FirebaseStorage.getInstance()
+            val ref = storage.reference.child("profile_photos/$userId.webp")
+            val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+                .setContentType("image/webp")
+                .setCacheControl("public,max-age=86400")
+                .build()
+
+            ref.putBytes(webpBytes, metadata)
+                .addOnSuccessListener {
+                    ref.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            onSuccess(uri.toString())
+                        }
+                        .addOnFailureListener {
+                            fallbackToBase64()
+                        }
+                }
+                .addOnFailureListener {
+                    // في حال لم يتم تفعيل خدمة Firebase Storage في الكونسول (خطأ 404 Not Found)
+                    // أو فشل الاتصال، نعتمد فوراً على صيغة Base64 المدمجة للـ WebP فتعمل 100% بدون أي انقطاع
+                    fallbackToBase64()
+                }
+        } catch (_: Exception) {
+            fallbackToBase64()
+        }
+    }
+
     fun updateUserProfilePhoto(context: android.content.Context, userId: String, photoUrl: String, onComplete: (Boolean) -> Unit) {
             db.collection("users").document(userId)
                 .update("photoUrl", photoUrl)

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_card"
+    android:layoutDirection="locale"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- مقبض السحب العلوي -->
+    <View
+        android:layout_width="38dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_sheet_handle" />
+
+    <!-- شريط الرأس -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="قص وتعديل الصورة الشخصية"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnCancelCrop"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_close_small"
+            app:tint="@color/text_secondary" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:text="اسحب الصورة وقرّبها لتحديد الجزء الذي تريده داخل الدائرة"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp" />
+
+    <!-- مساحة القص التفاعلية الدائرية -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:background="#111827">
+
+        <com.manchorati.www.CircularCropView
+            android:id="@+id/circularCropView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- مؤشر التحميل أثناء تجهيز أو رفع الصورة -->
+        <ProgressBar
+            android:id="@+id/pbCropLoading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="#38BDF8"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- أزرار الإجراءات السفلية -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnDismissCrop"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="إلغاء"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            app:cornerRadius="12dp"
+            app:strokeColor="@color/divider_color" />
+
+        <Button
+            android:id="@+id/btnApplyCrop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:backgroundTint="#0284C7"
+            android:text="حفظ كصورة شخصية"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+
+</LinearLayout>

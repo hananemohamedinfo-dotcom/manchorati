@@ -498,8 +498,12 @@ class WritersActivity : AppCompatActivity() {
             }.toMutableList()
         }
 
-        // عرض كل الكتّاب في القائمة بما فيهم المتصدر مع وسامه الذهبي
-        val displayList = currentFilteredList
+        // في تبويب كُتّاب الأسبوع، نحصر العرض في أفضل 10 كُتّاب فقط (Top 10) ما لم يكن هناك بحث جاري
+        val displayList = if (activeTabMode == WritersTabMode.WEEKLY && cleanQuery.isEmpty()) {
+            currentFilteredList.take(10)
+        } else {
+            currentFilteredList
+        }
 
         writersAdapter.updateData(displayList, activeTabMode)
 
@@ -511,6 +515,11 @@ class WritersActivity : AppCompatActivity() {
         } else {
             layoutEmptyWriters.visibility = View.GONE
             tvLeaderboardSectionTitle.visibility = View.VISIBLE
+            tvLeaderboardSectionTitle.text = when (activeTabMode) {
+                WritersTabMode.WEEKLY -> getString(R.string.leaderboard_section_title)
+                WritersTabMode.FOLLOWERS -> "الكتّاب الأكثر متابعة 👥"
+                WritersTabMode.ALL -> "جميع كتّاب المجتمع ✍️"
+            }
         }
     }
 

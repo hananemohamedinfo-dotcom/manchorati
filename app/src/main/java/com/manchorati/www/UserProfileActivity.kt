@@ -2,7 +2,9 @@ package com.manchorati.www
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -26,7 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import coil.load
 import coil.transform.CircleCropTransformation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class UserProfileActivity : AppCompatActivity() {
@@ -65,6 +69,19 @@ class UserProfileActivity : AppCompatActivity() {
     private var postsListener: ListenerRegistration? = null
     private var allUserPosts = listOf<CommunityPost>()
     private var currentProfileTagFilter: String? = null
+
+    private var onAvatarCropCallback: ((String) -> Unit)? = null
+
+    private val pickProfileImageLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            val bitmap = CircularCropView.loadBitmapFromUri(this, uri)
+            if (bitmap != null) {
+                showCircularCropDialog(bitmap)
+            } else {
+                Toast.makeText(this, "تعذر تحميل الصورة المحددة", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -780,6 +797,13 @@ class UserProfileActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
+        val btnPickCustomPhoto = dialogView.findViewById<View>(R.id.btnPickCustomPhoto)
+        btnPickCustomPhoto?.setOnClickListener {
+            onAvatarCropCallback = onAvatarSelected
+            pickProfileImageLauncher.launch("image/*")
+            dialog.dismiss()
+        }
+
         val ivGooglePhoto = dialogView.findViewById<ImageView>(R.id.ivGooglePhoto)
         
         val googlePhotoUrl = AuthManager.currentUser?.photoUrl?.toString() ?: ""
@@ -843,6 +867,77 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         dialog.show()
+    }
+
+    private fun showCircularCropDialog(bitmap: Bitmap) {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_circular_crop, null)
+        bottomSheetDialog.setContentView(dialogView)
+
+        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetDialog.behavior.skipCollapsed = true
+
+        val cropView = dialogView.findViewById<CircularCropView>(R.id.circularCropView)
+        val pbCropLoading = dialogView.findViewById<ProgressBar>(R.id.pbCropLoading)
+        val btnApplyCrop = dialogView.findViewById<Button>(R.id.btnApplyCrop)
+        val btnDismissCrop = dialogView.findViewById<Button>(R.id.btnDismissCrop)
+        val btnCancelCrop = dialogView.findViewById<ImageView>(R.id.btnCancelCrop)
+
+        cropView.setImageBitmap(bitmap)
+
+        btnCancelCrop?.setOnClickListener { bottomSheetDialog.dismiss() }
+        btnDismissCrop?.setOnClickListener { bottomSheetDialog.dismiss() }
+
+        btnApplyCrop?.setOnClickListener {
+            val uid = if (activeUserId.isNotEmpty()) activeUserId else (AuthManager.currentUser?.uid ?: "")
+            if (uid.isEmpty()) {
+                Toast.makeText(this, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            pbCropLoading?.visibility = View.VISIBLE
+            btnApplyCrop.isEnabled = false
+            btnDismissCrop?.isEnabled = false
+            btnCancelCrop?.isEnabled = false
+            bottomSheetDialog.setCancelable(false)
+
+            lifecycleScope.launch(Dispatchers.Default) {
+                // قص وتصغير الصورة لأبعاد 160x160 وضغطها بصيغة WebP خفيفة للغاية (~5KB)
+                val webpBytes = cropView.getCroppedWebpBytes(targetSize = 160, quality = 70)
+                withContext(Dispatchers.Main) {
+                    if (webpBytes == null || webpBytes.isEmpty()) {
+                        pbCropLoading?.visibility = View.GONE
+                        btnApplyCrop.isEnabled = true
+                        btnDismissCrop?.isEnabled = true
+                        btnCancelCrop?.isEnabled = true
+                        bottomSheetDialog.setCancelable(true)
+                        Toast.makeText(this@UserProfileActivity, "فشل قص وتجهيز الصورة", Toast.LENGTH_SHORT).show()
+                        return@withContext
+                    }
+
+                    FirestoreManager.uploadProfilePhotoWebp(
+                        userId = uid,
+                        webpBytes = webpBytes,
+                        onSuccess = { downloadUrl ->
+                            pbCropLoading?.visibility = View.GONE
+                            bottomSheetDialog.dismiss()
+                            onAvatarCropCallback?.invoke(downloadUrl)
+                            updateUserProfilePhoto(downloadUrl)
+                        },
+                        onFailure = { error ->
+                            pbCropLoading?.visibility = View.GONE
+                            btnApplyCrop.isEnabled = true
+                            btnDismissCrop?.isEnabled = true
+                            btnCancelCrop?.isEnabled = true
+                            bottomSheetDialog.setCancelable(true)
+                            Toast.makeText(this@UserProfileActivity, "فشل رفع الصورة: ${error.localizedMessage ?: "حدث خطأ أثناء الرفع"}", Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
+            }
+        }
+
+        bottomSheetDialog.show()
     }
 
     private fun updateUserProfilePhoto(photoUrl: String) {

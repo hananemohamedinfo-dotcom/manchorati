@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /profile_photos/{userId}.webp {
+      // السماح للجميع بقراءة الصور الشخصية لعرضها في الملف الشخصي والمنشورات
+      allow read: if true;
+      // السماح للمستخدم بتحديث صورته الشخصية فقط بحجم أقصى 500 كيلوبايت وبصيغة صورة
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId
+                   && request.resource.size < 500 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
