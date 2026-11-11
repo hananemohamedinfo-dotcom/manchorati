@@ -37,11 +37,12 @@ class AutoEngagementWorker(
 
             when (stage) {
                 1 -> {
-                    // المرحلة 1: إضافة 2 إلى 3 إعجابات ذكية
+                    // المرحلة 1: إضافة دفعة أولى من 3 إلى 5 إعجابات ذكية وسريعة
+                    val count = (3..5).random()
                     val availablePersonas = VirtualCommunityManager.PERSONAS
                         .filter { !currentLikedBy.contains(it.id) && it.id != authorId }
                         .shuffled()
-                        .take(3)
+                        .take(count)
 
                     if (availablePersonas.isNotEmpty()) {
                         val personaIds = availablePersonas.map { it.id }
@@ -108,11 +109,12 @@ class AutoEngagementWorker(
                 }
 
                 3 -> {
-                    // المرحلة 3: دفعة إعجابات ختامية لتثبيت التفاعل
+                    // المرحلة 3: دفعة اليوم الثاني (بعد 24 ساعة - 4 إلى 5 إعجابات)
+                    val count = (4..5).random()
                     val extraPersonas = VirtualCommunityManager.PERSONAS
                         .filter { !currentLikedBy.contains(it.id) && it.id != authorId }
                         .shuffled()
-                        .take(2)
+                        .take(count)
 
                     if (extraPersonas.isNotEmpty()) {
                         val ids = extraPersonas.map { it.id }
@@ -128,6 +130,72 @@ class AutoEngagementWorker(
                         db.collection("community_posts").document(postId).update(updateMap).await()
 
                         val p = extraPersonas[0]
+                        FirestoreManager.sendNotification(
+                            recipientId = authorId,
+                            senderId = p.id,
+                            senderName = p.name,
+                            type = "LIKE",
+                            postId = postId,
+                            message = "${p.name} وآخرون أُعجبوا بمنشورك"
+                        )
+                    }
+                }
+
+                4 -> {
+                    // المرحلة 4: دفعة اليوم الثالث (بعد 48 ساعة - 3 إلى 5 إعجابات)
+                    val count = (3..5).random()
+                    val personas = VirtualCommunityManager.PERSONAS
+                        .filter { !currentLikedBy.contains(it.id) && it.id != authorId }
+                        .shuffled()
+                        .take(count)
+
+                    if (personas.isNotEmpty()) {
+                        val ids = personas.map { it.id }
+                        val now = System.currentTimeMillis()
+                        val updateMap = mutableMapOf<String, Any>(
+                            "likedBy" to FieldValue.arrayUnion(*ids.toTypedArray()),
+                            "likesCount" to FieldValue.increment(ids.size.toLong()),
+                            "lastLikedAt" to now
+                        )
+                        ids.forEach { pid ->
+                            updateMap["likesTimeline.$pid"] = now
+                        }
+                        db.collection("community_posts").document(postId).update(updateMap).await()
+
+                        val p = personas[0]
+                        FirestoreManager.sendNotification(
+                            recipientId = authorId,
+                            senderId = p.id,
+                            senderName = p.name,
+                            type = "LIKE",
+                            postId = postId,
+                            message = "${p.name} أعجب بمنشورك"
+                        )
+                    }
+                }
+
+                5 -> {
+                    // المرحلة 5: دفعة اليوم الرابع الختامية (بعد 72 ساعة - 3 إلى 4 إعجابات)
+                    val count = (3..4).random()
+                    val personas = VirtualCommunityManager.PERSONAS
+                        .filter { !currentLikedBy.contains(it.id) && it.id != authorId }
+                        .shuffled()
+                        .take(count)
+
+                    if (personas.isNotEmpty()) {
+                        val ids = personas.map { it.id }
+                        val now = System.currentTimeMillis()
+                        val updateMap = mutableMapOf<String, Any>(
+                            "likedBy" to FieldValue.arrayUnion(*ids.toTypedArray()),
+                            "likesCount" to FieldValue.increment(ids.size.toLong()),
+                            "lastLikedAt" to now
+                        )
+                        ids.forEach { pid ->
+                            updateMap["likesTimeline.$pid"] = now
+                        }
+                        db.collection("community_posts").document(postId).update(updateMap).await()
+
+                        val p = personas[0]
                         FirestoreManager.sendNotification(
                             recipientId = authorId,
                             senderId = p.id,

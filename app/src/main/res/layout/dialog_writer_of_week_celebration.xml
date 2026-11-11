@@ -24,12 +24,14 @@
             android:layout_marginBottom="14dp">
 
             <ImageView
+                android:id="@+id/ivCelebrationLaurel"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_laurel_wreath_frame" />
 
             <ImageView
+                android:id="@+id/ivCelebrationCrown"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
@@ -39,6 +41,7 @@
 
         <!-- Badge Title -->
         <TextView
+            android:id="@+id/tvCelebrationBadgeTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/writer_of_the_week"

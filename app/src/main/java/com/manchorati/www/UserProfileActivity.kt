@@ -169,6 +169,16 @@ class UserProfileActivity : AppCompatActivity() {
             }
         )
         rvPosts.adapter = adapter
+        rvPosts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val fab = fabAddPostProfile ?: return
+                if (dy > 4 && fab.visibility == View.VISIBLE) {
+                    fab.visibility = View.GONE
+                } else if (dy < -4 && fab.visibility != View.VISIBLE && btnProfileMenu.visibility == View.VISIBLE) {
+                    fab.visibility = View.VISIBLE
+                }
+            }
+        })
     }
 
     private fun showEditPostDialog(post: CommunityPost) {
@@ -403,12 +413,20 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun updateLaurelWreathUI() {
-        val isChamp = WriterOfTheWeekHelper.isWriterOfTheWeek(this, targetUserId)
-        if (isChamp) {
+        val champRank = WriterOfTheWeekHelper.getChampionRank(this, targetUserId)
+        if (champRank in 1..3) {
             ivProfileLaurelWreath?.visibility = View.VISIBLE
+            val laurelColor = when (champRank) {
+                1 -> Color.parseColor("#F59E0B") // Gold
+                2 -> Color.parseColor("#CBD5E1") // Silver
+                3 -> Color.parseColor("#CD7F32") // Bronze
+                else -> Color.parseColor("#F59E0B")
+            }
+            ivProfileLaurelWreath?.setColorFilter(laurelColor)
             ivProfileLaurelWreath?.setOnClickListener {
                 ivProfileLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
-                WriterOfTheWeekHelper.showWriterOfWeekDialog(this, tvName.text.toString())
+                val isSelf = (targetUserId.isNotEmpty() && targetUserId == activeUserId) || (targetUserId.isEmpty() && activeUserId.isNotEmpty())
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, champRank, tvName.text.toString(), isSelf = isSelf)
             }
         } else {
             ivProfileLaurelWreath?.visibility = View.GONE
@@ -860,18 +878,28 @@ class UserProfileActivity : AppCompatActivity() {
         postsListener?.remove()
         postsListener = FirestoreManager.listenToUserPosts(targetUserId) { posts ->
             runOnUiThread {
-                val effectivePosts = if (posts.isEmpty() && targetUserId.startsWith("persona_")) {
-                    val dbHelper = DatabaseHelper(this)
-                    val raw = dbHelper.getRandomCuratedPosts(6)
-                    raw.mapIndexed { idx, p ->
-                        VirtualCommunityManager.toVirtualCommunityPost(
-                            p,
-                            this,
-                            staggerMinutesAgo = (idx + 1) * 360L
-                        ).copy(
+                val effectivePosts = if (targetUserId.startsWith("persona_")) {
+                    val persona = VirtualCommunityManager.getPersonaById(targetUserId)
+                    val baseList = if (posts.isEmpty()) {
+                        val dbHelper = DatabaseHelper(this)
+                        val raw = dbHelper.getRandomCuratedPosts(6)
+                        raw.mapIndexed { idx, p ->
+                            VirtualCommunityManager.toVirtualCommunityPost(
+                                p,
+                                this,
+                                staggerMinutesAgo = (idx + 1) * 360L
+                            )
+                        }
+                    } else {
+                        posts
+                    }
+                    baseList.map { p ->
+                        p.copy(
                             authorId = targetUserId,
-                            authorName = targetUserName,
-                            authorUsername = currentUsername
+                            authorName = targetUserName.ifEmpty { persona.name },
+                            authorUsername = if (currentUsername.isNotEmpty()) currentUsername else persona.username,
+                            authorPhotoUrl = persona.avatarResource,
+                            authorBadge = persona.badge
                         )
                     }
                 } else {

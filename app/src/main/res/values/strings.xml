@@ -637,7 +637,7 @@
  <string name="weekly_champion_congrats">مبروك للمتصدر! انشر وشارك خواطرك لتكون كاتب الأسبوع القادم</string>
     <string name="no_weekly_posts_yet">كن أول من ينشر هذا الأسبوع ويحصد لقب كاتب الأسبوع!</string>
     <string name="leaderboard_rank_format">#%d</string>
-    <string name="leaderboard_section_title">قائمة المتصدرين</string>
+    <string name="leaderboard_section_title">قائمة المتصدرين (أفضل 10 كُتّاب) 🏆</string>
     <string name="writer_of_the_week_celebration_desc">تُوّج الكاتب %s بلقب كاتب الأسبوع بفضل تفاعل القراء وجمال الكلمات، وحصل على إكليل الغار الذهبي طيلة هذا الأسبوع!</string>
     <string name="great_congrats">رائع، مبارك له!</string>
     <string name="studio_text_size">حجم النص</string>

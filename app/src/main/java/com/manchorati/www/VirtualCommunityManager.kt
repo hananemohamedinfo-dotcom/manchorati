@@ -222,9 +222,12 @@ object VirtualCommunityManager {
 
     /**
      * جدولة التفاعل التلقائي على منشور جديد:
-     * - لايكات أولية بعد دقيقة ونصف
-     * - تعليق تشجيعي بعد 4 دقائق
-     * - دفعة لايكات ثانية بعد 12 دقيقة
+     * - دفعة 1 (فورية بعد 45 ثانية): 3-5 إعجابات للتشجيع الفوري
+     * - مرحلة 2 (بعد 3 دقائق): تعليق ذكي وسياقي
+     * - دفعة 3 (اليوم الثاني - بعد 24 ساعة): 4-5 إعجابات
+     * - دفعة 4 (اليوم الثالث - بعد 48 ساعة): 3-5 إعجابات
+     * - دفعة 5 (اليوم الرابع - بعد 72 ساعة): 3-4 إعجابات
+     * المجموع الإجمالي: نحو 15-20 إعجاباً موزعة بتدرج طبيعي عبر الأسبوع
      */
     fun scheduleAutoEngagement(
         context: Context,
@@ -238,7 +241,7 @@ object VirtualCommunityManager {
 
         val workManager = WorkManager.getInstance(context.applicationContext)
 
-        // مرحلة 1: لايكات أولية (بعد 90 ثانية)
+        // مرحلة 1: لايكات أولية سريعة ومحفزة (بعد 45 ثانية - 3 إلى 5 لايكات)
         val dataStage1 = Data.Builder()
             .putString("POST_ID", postId)
             .putString("AUTHOR_ID", authorId)
@@ -250,10 +253,10 @@ object VirtualCommunityManager {
 
         val reqStage1 = OneTimeWorkRequestBuilder<AutoEngagementWorker>()
             .setInputData(dataStage1)
-            .setInitialDelay(90, TimeUnit.SECONDS)
+            .setInitialDelay(45, TimeUnit.SECONDS)
             .build()
 
-        // مرحلة 2: تعليق تشجيعي (بعد 4 دقائق)
+        // مرحلة 2: تعليق تشجيعي وسياقي (بعد 3 دقائق)
         val dataStage2 = Data.Builder()
             .putString("POST_ID", postId)
             .putString("AUTHOR_ID", authorId)
@@ -265,10 +268,10 @@ object VirtualCommunityManager {
 
         val reqStage2 = OneTimeWorkRequestBuilder<AutoEngagementWorker>()
             .setInputData(dataStage2)
-            .setInitialDelay(4, TimeUnit.MINUTES)
+            .setInitialDelay(3, TimeUnit.MINUTES)
             .build()
 
-        // مرحلة 3: لايكات إضافية (بعد 12 دقيقة)
+        // مرحلة 3: دفعة اليوم الثاني (بعد 24 ساعة - 4 إلى 5 لايكات)
         val dataStage3 = Data.Builder()
             .putString("POST_ID", postId)
             .putString("AUTHOR_ID", authorId)
@@ -280,14 +283,46 @@ object VirtualCommunityManager {
 
         val reqStage3 = OneTimeWorkRequestBuilder<AutoEngagementWorker>()
             .setInputData(dataStage3)
-            .setInitialDelay(12, TimeUnit.MINUTES)
+            .setInitialDelay(24, TimeUnit.HOURS)
+            .build()
+
+        // مرحلة 4: دفعة اليوم الثالث (بعد 48 ساعة - 3 إلى 5 لايكات)
+        val dataStage4 = Data.Builder()
+            .putString("POST_ID", postId)
+            .putString("AUTHOR_ID", authorId)
+            .putString("AUTHOR_NAME", authorName)
+            .putString("CONTENT", content)
+            .putString("TAG", tag)
+            .putInt("STAGE", 4)
+            .build()
+
+        val reqStage4 = OneTimeWorkRequestBuilder<AutoEngagementWorker>()
+            .setInputData(dataStage4)
+            .setInitialDelay(48, TimeUnit.HOURS)
+            .build()
+
+        // مرحلة 5: دفعة اليوم الرابع (بعد 72 ساعة - 3 إلى 4 لايكات)
+        val dataStage5 = Data.Builder()
+            .putString("POST_ID", postId)
+            .putString("AUTHOR_ID", authorId)
+            .putString("AUTHOR_NAME", authorName)
+            .putString("CONTENT", content)
+            .putString("TAG", tag)
+            .putInt("STAGE", 5)
+            .build()
+
+        val reqStage5 = OneTimeWorkRequestBuilder<AutoEngagementWorker>()
+            .setInputData(dataStage5)
+            .setInitialDelay(72, TimeUnit.HOURS)
             .build()
 
         workManager.enqueue(reqStage1)
         workManager.enqueue(reqStage2)
         workManager.enqueue(reqStage3)
+        workManager.enqueue(reqStage4)
+        workManager.enqueue(reqStage5)
 
-        Log.d(TAG, "Auto-engagement scheduled successfully for post: $postId")
+        Log.d(TAG, "Auto-engagement (5-stage 4-day drip) scheduled successfully for post: $postId")
     }
 
     /**
@@ -364,7 +399,7 @@ object VirtualCommunityManager {
             val persona = getPersonaForId(quote.id)
             val bgId = BG_PRESETS[Math.abs(quote.id.hashCode()) % BG_PRESETS.size]
             val fontId = FONT_PRESETS[Math.abs(quote.id.hashCode() / 4) % FONT_PRESETS.size]
-            val initialLikes = 12 + (Math.abs(quote.id.hashCode()) % 30)
+            val initialLikes = 6 + (Math.abs(quote.id.hashCode()) % 10)
             val sampleLikedBy = PERSONAS.shuffled().take(initialLikes).map { it.id }
 
             val postMap = hashMapOf<String, Any>(

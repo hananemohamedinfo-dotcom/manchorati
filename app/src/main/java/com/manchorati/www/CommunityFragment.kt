@@ -667,8 +667,12 @@ class CommunityFragment : Fragment() {
             val moodKeywords = selectedMood.keywords
             val userPostsMatching = list.filter { post ->
                 val content = post.content.lowercase()
-                val tag = (post.tag ?: "").lowercase()
-                post.tag == selectedMood.title || post.tag == selectedMood.defaultTag || moodKeywords.any { kw -> content.contains(kw) }
+                val tag = (post.tag ?: "").trim()
+                if (tag.isNotEmpty() && tag != "خواطر" && tag != "عام") {
+                    tag == selectedMood.title || tag == selectedMood.defaultTag
+                } else {
+                    post.tag == selectedMood.title || post.tag == selectedMood.defaultTag || moodKeywords.any { kw -> content.contains(kw) }
+                }
             }
 
             if (isAdded) {

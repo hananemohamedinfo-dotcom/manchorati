@@ -276,13 +276,19 @@ class CommunityAdapter(
             }
 
             // تحميل الصورة الشخصية أو الأفاتار
-            // فحص ما إذا كان صاحب المنشور هو كاتب الأسبوع (المتوج بإكليل الغار)
-            val isWriterOfWeek = WriterOfTheWeekHelper.isWriterOfTheWeek(itemView.context, post.authorId)
-            if (isWriterOfWeek) {
+            // فحص ما إذا كان صاحب المنشور من متصدري الأسبوع (المتوجين بإكليل الغار الذهبي أو الفضي أو البرونزي)
+            val champRank = WriterOfTheWeekHelper.getChampionRank(itemView.context, post.authorId)
+            if (champRank in 1..3) {
                 ivAuthorLaurelWreath?.visibility = View.VISIBLE
+                val wreathColor = when (champRank) {
+                    1 -> Color.parseColor("#F59E0B") // ذهبي
+                    2 -> Color.parseColor("#CBD5E1") // فضي
+                    else -> Color.parseColor("#CD7F32") // برونزي
+                }
+                ivAuthorLaurelWreath?.setColorFilter(wreathColor)
                 ivAuthorLaurelWreath?.setOnClickListener {
                     ivAuthorLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
-                    WriterOfTheWeekHelper.showWriterOfWeekDialog(itemView.context, post.authorName)
+                    WriterOfTheWeekHelper.showRankCelebrationDialog(itemView.context, champRank, post.authorName, isSelf = false)
                 }
             } else {
                 ivAuthorLaurelWreath?.visibility = View.GONE

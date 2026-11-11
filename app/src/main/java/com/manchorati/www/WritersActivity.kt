@@ -54,6 +54,7 @@ class WritersActivity : AppCompatActivity() {
     private lateinit var layoutEmptyWriters: LinearLayout
     private lateinit var tvEmptyWriters: TextView
     private lateinit var pbWritersLoading: ProgressBar
+    private var confettiCelebration: ConfettiView? = null
 
     private lateinit var writersAdapter: WritersAdapter
     private var allWritersList = mutableListOf<WriterItem>()
@@ -137,6 +138,7 @@ class WritersActivity : AppCompatActivity() {
         layoutEmptyWriters = findViewById(R.id.layoutEmptyWriters)
         tvEmptyWriters = findViewById(R.id.tvEmptyWriters)
         pbWritersLoading = findViewById(R.id.pbWritersLoading)
+        confettiCelebration = findViewById(R.id.confettiCelebration)
 
         tvChallengeCountdown.text = getChallengeCountdownText()
     }
@@ -397,8 +399,41 @@ class WritersActivity : AppCompatActivity() {
         // 1. فرز القائمة بحسب التبويب النشط
         val sortedList = when (activeTabMode) {
             WritersTabMode.WEEKLY -> {
-                // عرض جميع الكتاب الذين نشروا أو حصلوا على تفاعل مرتبين حسب تفاعل الأسبوع
-                allWritersList
+                // استراتيجية السقف الديناميكي (Ghost Ceiling):
+                // المستخدم الحقيقي دائماً هو المتصدر الأسبوعي، والـ Bots يتم تحجيم تفاعلهم ليكون تابعاً للمستخدم الحقيقي
+                val realUsers = allWritersList.filter { !VirtualCommunityManager.isVirtualUser(it.userId) }
+                    .sortedWith(
+                        compareByDescending<WriterItem> { it.weeklyLikes }
+                            .thenByDescending { it.totalLikes }
+                            .thenByDescending { it.followersCount }
+                    )
+
+                val topRealUser = realUsers.firstOrNull { it.weeklyLikes > 0L }
+                val maxAllowedBotLikes = if (topRealUser != null) {
+                    (topRealUser.weeklyLikes - 1).coerceAtLeast(1L)
+                } else {
+                    6L
+                }
+
+                val virtualUsers = allWritersList.filter { VirtualCommunityManager.isVirtualUser(it.userId) }
+                    .sortedWith(
+                        compareByDescending<WriterItem> { it.weeklyLikes }
+                            .thenByDescending { it.totalLikes }
+                    )
+
+                var currentBotCap = maxAllowedBotLikes
+                val adjustedVirtual = virtualUsers.map { bot ->
+                    val cappedLikes = if (bot.weeklyLikes >= currentBotCap) {
+                        val assigned = currentBotCap
+                        if (currentBotCap > 1L) currentBotCap -= 1L
+                        assigned
+                    } else {
+                        bot.weeklyLikes.coerceAtMost(maxAllowedBotLikes)
+                    }
+                    bot.copy(weeklyLikes = cappedLikes)
+                }
+
+                (realUsers + adjustedVirtual)
                     .filter { it.postsCount > 0 || it.weeklyLikes > 0 || it.totalLikes > 0 }
                     .sortedWith(
                         compareByDescending<WriterItem> { it.weeklyLikes }
@@ -436,6 +471,20 @@ class WritersActivity : AppCompatActivity() {
         // 2. إسناد الرتب للمستخدمين (1, 2, 3...)
         sortedList.forEachIndexed { index, writerItem ->
             writerItem.rank = index + 1
+        }
+
+        // حفظ المتصدرين الثلاثة الأوائل لدعم إكليل الغار الذهبي والفضي والبرونزي
+        if (activeTabMode == WritersTabMode.WEEKLY) {
+            val top3List = sortedList.take(3).map { it.userId to it.displayName }
+            WriterOfTheWeekHelper.setTop3Champions(this, top3List)
+
+            // فحص احتفال المستخدم إذا كان في قائمة أفضل 10 (أو التوب 3)
+            if (activeUserId.isNotEmpty()) {
+                val myRankItem = sortedList.firstOrNull { it.userId == activeUserId }
+                if (myRankItem != null && myRankItem.rank in 1..10) {
+                    checkAndTriggerCelebration(myRankItem.rank, myRankItem.displayName)
+                }
+            }
         }
 
         // 3. تطبيق فلتر البحث بالاسم أو @username أو النبذة التعريفية bio
@@ -579,6 +628,27 @@ class WritersActivity : AppCompatActivity() {
                     updateWriterOfWeekFollowUI()
                 }
                 Toast.makeText(this, getString(R.string.save_error), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkAndTriggerCelebration(userRank: Int, userName: String) {
+        val startOfWeek = getStartOfWeek()
+        val prefs = getSharedPreferences("writers_celebration_prefs", Context.MODE_PRIVATE)
+        val lastCelebratedWeek = prefs.getLong("last_celebrated_week_$activeUserId", 0L)
+        val lastCelebratedRank = prefs.getInt("last_celebrated_rank_$activeUserId", 999)
+
+        val shouldCelebrate = (lastCelebratedWeek != startOfWeek) || (userRank < lastCelebratedRank && userRank <= 3)
+
+        if (shouldCelebrate) {
+            prefs.edit()
+                .putLong("last_celebrated_week_$activeUserId", startOfWeek)
+                .putInt("last_celebrated_rank_$activeUserId", userRank)
+                .apply()
+
+            confettiCelebration?.post {
+                confettiCelebration?.startConfetti()
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, userRank, userName, isSelf = true)
             }
         }
     }

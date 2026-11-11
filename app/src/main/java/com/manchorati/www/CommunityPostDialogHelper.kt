@@ -776,7 +776,7 @@ object CommunityPostDialogHelper {
                         text = context.getString(tmpl.nameRes)
                         setTextColor(tmpl.textColor)
                         textSize = 12f
-                        typeface = ThemeHelper.getFontTypeface(context, tmpl.defaultFont)
+                        typeface = android.graphics.Typeface.DEFAULT_BOLD
                         setSingleLine(true)
                     }
                     addView(tvTitle)

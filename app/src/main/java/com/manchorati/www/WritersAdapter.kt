@@ -93,13 +93,25 @@ class WritersAdapter(
             // تحميل الصورة
             ivAvatar.loadUserAvatar(writer.photoUrl)
 
-            // إكليل الغار الذهبي لمتصدر الأسبوع
-            val isChamp = (tabMode == WritersTabMode.WEEKLY && WriterOfTheWeekHelper.isWriterOfTheWeek(context, writer.userId))
-            if (isChamp) {
+            // إكليل الغار (ذهبي للمركز 1، فضي للمركز 2، برونزي للمركز 3)
+            val champRank = if (tabMode == WritersTabMode.WEEKLY) {
+                val assigned = WriterOfTheWeekHelper.getChampionRank(context, writer.userId)
+                if (assigned in 1..3) assigned else (if (rankNumber in 1..3) rankNumber else 0)
+            } else {
+                WriterOfTheWeekHelper.getChampionRank(context, writer.userId)
+            }
+
+            if (champRank in 1..3) {
                 ivWriterLaurelWreath?.visibility = View.VISIBLE
+                val wreathColor = when (champRank) {
+                    1 -> Color.parseColor("#F59E0B") // ذهبي
+                    2 -> Color.parseColor("#CBD5E1") // فضي
+                    else -> Color.parseColor("#CD7F32") // برونزي
+                }
+                ivWriterLaurelWreath?.setColorFilter(wreathColor)
                 ivWriterLaurelWreath?.setOnClickListener {
                     ivWriterLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
-                    WriterOfTheWeekHelper.showWriterOfWeekDialog(context, writer.displayName)
+                    WriterOfTheWeekHelper.showRankCelebrationDialog(context, champRank, writer.displayName, isSelf = false)
                 }
             } else {
                 ivWriterLaurelWreath?.visibility = View.GONE

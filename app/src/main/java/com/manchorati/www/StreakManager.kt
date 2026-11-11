@@ -269,7 +269,13 @@ object StreakManager {
             layout.alpha = 1.0f
         } else {
             val remaining = target - currentStreak
-            tvStatus.text = parent.context.getString(R.string.streak_remaining_days, remaining)
+            val remainingText = when {
+                remaining == 1 -> "باقٍ يوم واحد"
+                remaining == 2 -> "باقٍ يومان"
+                remaining in 3..10 -> "باقي $remaining أيام"
+                else -> "باقي $remaining يوماً"
+            }
+            tvStatus.text = remainingText
             tvStatus.setTextColor(Color.parseColor("#94A3B8"))
             layout.alpha = 0.85f
         }
