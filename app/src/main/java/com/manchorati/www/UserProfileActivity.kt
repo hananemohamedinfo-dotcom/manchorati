@@ -804,25 +804,47 @@ class UserProfileActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        val ivGooglePhoto = dialogView.findViewById<ImageView>(R.id.ivGooglePhoto)
-        
+        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val googlePhotoUrl = AuthManager.currentUser?.photoUrl?.toString() ?: ""
-        if (googlePhotoUrl.isNotEmpty()) {
-            ivGooglePhoto.load(googlePhotoUrl) {
-                crossfade(true)
-                transformations(CircleCropTransformation())
+        val savedCustomPhoto = prefs.getString("user_custom_photo", "")?.takeIf { it.isNotEmpty() }
+            ?: prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() && !it.startsWith("avatar_") && it != googlePhotoUrl }
+
+        val layoutCustomUploadedPhoto = dialogView.findViewById<View>(R.id.layoutCustomUploadedPhoto)
+        val ivCustomUploadedPhoto = dialogView.findViewById<ImageView>(R.id.ivCustomUploadedPhoto)
+
+        if (!savedCustomPhoto.isNullOrEmpty()) {
+            layoutCustomUploadedPhoto?.visibility = View.VISIBLE
+            ivCustomUploadedPhoto?.loadUserAvatar(savedCustomPhoto)
+            layoutCustomUploadedPhoto?.setOnClickListener {
+                if (onAvatarSelected != null) {
+                    onAvatarSelected(savedCustomPhoto)
+                } else {
+                    updateUserProfilePhoto(savedCustomPhoto)
+                }
+                dialog.dismiss()
             }
         } else {
-            ivGooglePhoto.setImageResource(R.drawable.ic_profile)
+            layoutCustomUploadedPhoto?.visibility = View.GONE
         }
 
-        ivGooglePhoto.setOnClickListener {
-            if (onAvatarSelected != null) {
-                onAvatarSelected(googlePhotoUrl)
-            } else {
-                updateUserProfilePhoto(googlePhotoUrl)
+        val layoutGooglePhoto = dialogView.findViewById<View>(R.id.layoutGooglePhoto)
+        val ivGooglePhoto = dialogView.findViewById<ImageView>(R.id.ivGooglePhoto)
+        
+        if (googlePhotoUrl.isNotEmpty()) {
+            layoutGooglePhoto?.visibility = View.VISIBLE
+            ivGooglePhoto?.loadUserAvatar(googlePhotoUrl)
+            val selectGooglePhoto = {
+                if (onAvatarSelected != null) {
+                    onAvatarSelected(googlePhotoUrl)
+                } else {
+                    updateUserProfilePhoto(googlePhotoUrl)
+                }
+                dialog.dismiss()
             }
-            dialog.dismiss()
+            layoutGooglePhoto?.setOnClickListener { selectGooglePhoto() }
+            ivGooglePhoto?.setOnClickListener { selectGooglePhoto() }
+        } else {
+            layoutGooglePhoto?.visibility = View.GONE
         }
 
         val avatars = listOf(
@@ -921,6 +943,8 @@ class UserProfileActivity : AppCompatActivity() {
                         onSuccess = { downloadUrl ->
                             pbCropLoading?.visibility = View.GONE
                             bottomSheetDialog.dismiss()
+                            val customPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                            customPrefs.edit().putString("user_custom_photo", downloadUrl).apply()
                             onAvatarCropCallback?.invoke(downloadUrl)
                             updateUserProfilePhoto(downloadUrl)
                         },
