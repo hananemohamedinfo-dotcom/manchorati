@@ -1177,9 +1177,13 @@ header.app-header {
 
             <canvas id="webStudioCanvas" width="1080" height="1080"></canvas>
 
-            <div style="margin-top: 20px; display: flex; gap: 12px; width: 100%; max-width: 500px;">
-                <button class="btn-submit-form" id="btnDownload" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 500px;">
+                <button class="btn-submit-form" id="btnDownload" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: currentColor;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
                     <span>تحميل الصورة عالية الدقة</span>
+                </button>
+                <button class="btn-submit-form" id="btnPublishCommunity" style="background: rgba(56, 189, 248, 0.15); border: 1.5px solid var(--brand-primary); color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>نشر في مجتمع منشوراتي ✨</span>
                 </button>
             </div>
         </div>
@@ -1235,12 +1239,14 @@ header.app-header {
             <div class="form-group">
                 <label class="form-label">خلفية البطاقة (تدرجات منشوراتي الرسمية):</label>
                 <div class="gradient-palette" id="paletteGrid">
-                    <div class="palette-item active" style="background: linear-gradient(135deg, #0F172A, #1E293B);" data-from="#0F172A" data-to="#1E293B"></div>
-                    <div class="palette-item" style="background: linear-gradient(135deg, #0284C7, #0369A1);" data-from="#0284C7" data-to="#0369A1"></div>
-                    <div class="palette-item" style="background: linear-gradient(135deg, #78350F, #B45309);" data-from="#78350F" data-to="#B45309"></div>
-                    <div class="palette-item" style="background: linear-gradient(135deg, #3B0764, #6B21A8);" data-from="#3B0764" data-to="#6B21A8"></div>
-                    <div class="palette-item" style="background: linear-gradient(135deg, #064E3B, #047857);" data-from="#064E3B" data-to="#047857"></div>
-                    <div class="palette-item" style="background: linear-gradient(135deg, #881337, #9F1239);" data-from="#881337" data-to="#9F1239"></div>
+                    <div class="palette-item active" style="background: linear-gradient(135deg, #0B0F19, #1E293B);" data-from="#0B0F19" data-to="#1E293B" data-border="#EAB308" data-bgid="card_luxury" title="فاخر ملكي"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #091A28, #022C43);" data-from="#091A28" data-to="#022C43" data-border="#0284C7" data-bgid="card_neon_cyber" title="نيون أزرق"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #4A0E2E, #9A3412);" data-from="#4A0E2E" data-to="#9A3412" data-border="#F59E0B" data-bgid="card_sunset" title="غروب ذهبي"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #991B1B, #DC2626);" data-from="#991B1B" data-to="#DC2626" data-border="#EF4444" data-bgid="card_crimson_brand" title="أحمر قرمزي"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #064E3B, #047857);" data-from="#064E3B" data-to="#047857" data-border="#10B981" data-bgid="card_emerald" title="زمرد أخضر"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #1E1B4B, #312E81);" data-from="#1E1B4B" data-to="#312E81" data-border="#6366F1" data-bgid="card_glass_royal" title="بنفسجي ملكي"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #0F172A, #0369A1);" data-from="#0F172A" data-to="#0369A1" data-border="#38BDF8" data-bgid="card_ocean_breeze" title="نسيم البحر"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #F6F0EA, #DFD2C0);" data-from="#F6F0EA" data-to="#DFD2C0" data-border="#D6C4AE" data-bgid="card_classic_paper" title="ورق كلاسيكي"></div>
                 </div>
             </div>
         </div>
@@ -1279,7 +1285,9 @@ header.app-header {
         const canvasDimsBadge = document.getElementById("canvasDimsBadge");
 
         let currentRatio = "1:1";
-        let currentGradient = { from: "#0F172A", to: "#1E293B" };
+        let currentGradient = { from: "#0B0F19", to: "#1E293B" };
+        let currentBorder = "#EAB308";
+        let currentBgId = "card_luxury";
 
         const randomQuotesSample = [
             { text: "الخوف لا يمنع من الموت، ولكنه يمنع من الحياة.", author: "نجيب محفوظ" },
@@ -1320,8 +1328,8 @@ header.app-header {
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, w, h);
 
-            // Frame borders
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+            // Frame borders (Signature Android App Frame)
+            ctx.strokeStyle = currentBorder || "rgba(255, 255, 255, 0.12)";
             ctx.lineWidth = 14;
             ctx.strokeRect(36, 36, w - 72, h - 72);
 
@@ -1389,6 +1397,8 @@ header.app-header {
                     from: item.getAttribute("data-from"),
                     to: item.getAttribute("data-to")
                 };
+                currentBorder = item.getAttribute("data-border") || "rgba(255, 255, 255, 0.12)";
+                currentBgId = item.getAttribute("data-bgid") || "card_luxury";
                 redrawCanvas();
             });
         });
@@ -1408,13 +1418,51 @@ header.app-header {
             link.click();
         });
 
+        const btnPublish = document.getElementById("btnPublishCommunity");
+        if (btnPublish) {
+            btnPublish.addEventListener("click", () => {
+                const text = textInput.value.trim();
+                if (!text) {
+                    alert("الرجاء كتابة نص الاقتباس أولاً");
+                    return;
+                }
+                const author = authorInput.value.trim() || "كاتب منشوراتي";
+                const userPosts = JSON.parse(localStorage.getItem("manchorati_user_posts") || "[]");
+                const newPost = {
+                    id: 'studio-' + Date.now(),
+                    authorName: author,
+                    authorUsername: 'my_profile',
+                    authorPhotoUrl: '',
+                    authorBadge: 'مصمم الاستوديو 🎨',
+                    authorStreak: 4,
+                    content: text,
+                    bgId: currentBgId || 'card_luxury',
+                    fontId: fontSelect.value.toLowerCase(),
+                    textColor: '#FFFFFF',
+                    tag: 'تصميم الاستوديو',
+                    mood: 'CHILL',
+                    likesCount: 1,
+                    commentsCount: 0,
+                    timestamp: Date.now()
+                };
+                userPosts.unshift(newPost);
+                localStorage.setItem("manchorati_user_posts", JSON.stringify(userPosts));
+                window.location.href = "index.html";
+            });
+        }
+
         window.addEventListener("DOMContentLoaded", () => {
             // Check URL param ?text= or ?quote=
             const urlParams = new URLSearchParams(window.location.search);
             const quoteText = urlParams.get("text") || urlParams.get("quote");
             const author = urlParams.get("author");
+            const bg = urlParams.get("bg");
             if (quoteText) textInput.value = quoteText;
             if (author) authorInput.value = author;
+            if (bg) {
+                const targetP = document.querySelector(`.palette-item[data-bgid='${bg}']`);
+                if (targetP) targetP.click();
+            }
             redrawCanvas();
         });
     </script>
