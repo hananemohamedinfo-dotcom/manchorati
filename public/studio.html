@@ -1409,9 +1409,9 @@ header.app-header {
         });
 
         window.addEventListener("DOMContentLoaded", () => {
-            // Check URL param ?id=
+            // Check URL param ?text= or ?quote=
             const urlParams = new URLSearchParams(window.location.search);
-            const quoteText = urlParams.get("text");
+            const quoteText = urlParams.get("text") || urlParams.get("quote");
             const author = urlParams.get("author");
             if (quoteText) textInput.value = quoteText;
             if (author) authorInput.value = author;

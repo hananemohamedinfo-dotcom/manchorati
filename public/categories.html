@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الأقسام والتصنيفات الأدبية • منشوراتي (Manchorati)</title>
-    <meta name="description" content="تصفح كافة الأقسام والتصنيفات الأدبية في منشوراتي: حكم وأمثال، خواطر عميقة، تحفيز ونجاح، حب وغرام، شعر وأدب.">
+    <title>موسوعة الأقسام والتصنيفات الأدبية • منشوراتي (Manchorati)</title>
+    <meta name="description" content="تصفح كافة الأقسام والتصنيفات الأدبية في منشوراتي: أكثر من 21,600 اقتباس وحكمة مصنفة عبر 24 قسماً منتقاة بعناية.">
     <link rel="icon" href="assets/icon.png" type="image/png">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1049,82 +1049,442 @@ header.app-header {
     }
 }
 
-</style>
-<link rel="stylesheet" href="assets/style.css">
-    <style>
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            margin-top: 24px;
-        }
-        .category-card {
-            background: var(--bg-card);
-            border: 1px solid var(--divider-color);
-            border-radius: var(--radius-card);
-            padding: 24px;
-            box-shadow: var(--shadow-card);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-        }
-        .category-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--brand-primary);
-            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.2);
-        }
-        .category-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-        .category-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: #FFFFFF;
-            margin-bottom: 8px;
-        }
-        .category-desc {
-            font-size: 13.5px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-        .category-quote-sample {
-            background: rgba(11, 19, 31, 0.6);
-            border-right: 3px solid var(--brand-primary);
-            padding: 10px 14px;
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            font-size: 13px;
-            color: var(--text-primary);
-            font-style: italic;
-            margin-bottom: 16px;
-        }
-        .btn-browse-category {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--brand-primary);
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: var(--radius-pill);
-            font-size: 13px;
-            font-weight: 700;
-            transition: var(--transition);
-        }
-        .btn-browse-category:hover {
-            background: var(--brand-primary-blue);
-            color: #FFFFFF;
-        }
+
+/* ==========================================================================
+   CATEGORIES BROWSER CUSTOM STYLING
+   ========================================================================== */
+
+.categories-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 80px 16px;
+}
+
+.categories-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.categories-header .page-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.categories-header .page-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    line-height: 1.6;
+}
+
+.search-box-wrap {
+    max-width: 500px;
+    margin: 0 auto 24px auto;
+    position: relative;
+}
+
+.search-box-wrap input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-pill);
+    padding: 12px 44px 12px 18px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: 'Tajawal', sans-serif;
+    outline: none;
+    transition: var(--transition);
+}
+
+.search-box-wrap input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.search-box-wrap svg {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    fill: var(--text-secondary);
+    pointer-events: none;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.category-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-primary);
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.2);
+}
+
+.category-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.category-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-icon-box svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--brand-primary);
+}
+
+.category-count-badge {
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--brand-primary);
+    font-family: 'Cairo', sans-serif;
+}
+
+.category-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+}
+
+.category-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    flex-grow: 1;
+}
+
+.category-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.btn-browse-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--brand-primary);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.category-card:hover .btn-browse-category {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+    border-color: var(--brand-primary-blue);
+}
+
+/* ==========================================================================
+   CATEGORY POSTS VIEWER (Matching CategoryPostsActivity.kt)
+   ========================================================================== */
+
+#categoryPostsSection {
+    display: none;
+}
+
+.category-viewer-header {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 76px;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+}
+
+.viewer-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-back-categories {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--divider-color);
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-back-categories:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--brand-primary);
+}
+
+.viewer-title-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer-category-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.viewer-category-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.viewer-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.font-control-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    color: #FFFFFF;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.font-control-btn:hover {
+    background: var(--brand-primary-blue);
+    border-color: var(--brand-primary);
+}
+
+.category-posts-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.cat-post-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: var(--transition);
+}
+
+.cat-post-card:hover {
+    border-color: rgba(56, 189, 248, 0.25);
+}
+
+.cat-post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cat-post-tag {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brand-primary);
+    background: rgba(56, 189, 248, 0.08);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+}
+
+.cat-post-number {
+    font-size: 12px;
+    color: var(--text-faint);
+    font-family: 'Cairo', sans-serif;
+}
+
+.cat-post-text {
+    font-family: 'Tajawal', sans-serif;
+    color: #F8FAFC;
+    line-height: 1.8;
+    word-break: break-word;
+    white-space: pre-line;
+    text-align: right;
+}
+
+.cat-post-divider {
+    height: 1px;
+    background: var(--divider-color);
+    margin: 2px 0;
+}
+
+.cat-post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.cat-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cat-action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+}
+
+.cat-action-btn.btn-studio-action {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: var(--brand-primary);
+}
+
+.cat-action-btn.btn-studio-action:hover {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+}
+
+.cat-action-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+}
+
+.load-more-container {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.btn-load-more {
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    color: #FFFFFF;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 32px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-load-more:hover {
+    background: var(--brand-primary-blue);
+    border-color: var(--brand-primary);
+}
+
+/* Toast notification */
+.toast-notice {
+    position: fixed;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(14, 165, 233, 0.95);
+    color: #FFFFFF;
+    padding: 10px 22px;
+    border-radius: var(--radius-pill);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.toast-notice.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+@media (max-width: 640px) {
+    .category-viewer-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .viewer-controls {
+        justify-content: space-between;
+    }
+}
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Header (No Emojis) -->
     <header class="app-header">
         <div class="header-container">
             <a href="index.html" class="brand-section">
@@ -1153,116 +1513,493 @@ header.app-header {
         </div>
     </header>
 
-    <!-- Content -->
-    <main class="main-wrapper single-column">
-        <div class="page-container">
-            <div class="page-header">
+    <main class="categories-container">
+        
+        <!-- ================= VIEW 1: CATEGORIES GRID ================= -->
+        <section id="categoriesGridSection">
+            <div class="categories-header">
                 <h1 class="page-title">موسوعة الأقسام والتصنيفات الأدبية</h1>
-                <p class="page-subtitle">اكتشف آلاف الاقتباسات المصنفة بعناية لتناسب كل حالاتك ومشاعر إلهامك</p>
+                <p class="page-subtitle">أكثر من 21,600 اقتباس وحكمة مصنفة بعناية عبر 24 قسماً أدبياً لتناسب كافة الحالات والمشاعر</p>
+                <div class="search-box-wrap">
+                    <input type="text" id="categorySearchInput" placeholder="ابحث عن قسم (حكم، حب، خواطر، صداقة...)" oninput="filterCategories()">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </div>
             </div>
 
-            <div class="categories-grid">
-                <!-- حكم وأمثال -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">📜</div>
-                        <h2 class="category-title">حكم وأمثال</h2>
-                        <p class="category-desc">عصارة تجارب الحكماء والفلاسفة عبر العصور، دروس في الحياة وبصيرة تنير دربك في مواجهة الصعاب.</p>
-                        <div class="category-quote-sample">«الخوف لا يمنع من الموت، ولكنه يمنع من الحياة.» — نجيب محفوظ</div>
-                    </div>
-                    <a href="/?cat=حكم وأمثال" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
+            <div class="categories-grid" id="categoriesGrid">
 
-                <!-- حب وغرام -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">❤️</div>
-                        <h2 class="category-title">حب وغرام</h2>
-                        <p class="category-desc">أعذب كلمات العشق والشوق والرومانسية، نصوص دافئة تعبر عن المشاعر الصادقة وجمال الوصال.</p>
-                        <div class="category-quote-sample">«الحب أن أهواك في حزني وفي فرحي، ولا نتغير أبداً.» — نزار قباني</div>
-                    </div>
-                    <a href="/?cat=حب وغرام" class="btn-browse-category">تصفح منشورات القسم ←</a>
+        <div class="category-card" data-cat-id="1" data-cat-name="إسلامية">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 4c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.1c-2.5-1.07-4.5-3.8-4.9-6.9 1.43-.76 3.12-1.2 4.9-1.2s3.47.44 4.9 1.2c-.4 3.1-2.4 5.83-4.9 6.9z"/></svg>
                 </div>
-
-                <!-- تحفيز ونجاح -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">💪</div>
-                        <h2 class="category-title">تحفيز ونجاح</h2>
-                        <p class="category-desc">شحنات طاقة إيجابية وإصرار لتحقيق الأهداف وتخطي العثرات، كلمات تصنع القوة في داخلك.</p>
-                        <div class="category-quote-sample">«إذا لم تزد شيئاً على الدنيا، كنتَ أنتَ زائداً عليها.» — مصطفى صادق الرافعي</div>
-                    </div>
-                    <a href="/?cat=تحفيز ونجاح" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- خواطر عميقة -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">🌌</div>
-                        <h2 class="category-title">خواطر عميقة</h2>
-                        <p class="category-desc">تأملات فلسفية ووجدانية في الوجود، النفس الإنسانية، والصمت الذي يحمل في طياته أعمق المعاني.</p>
-                        <div class="category-quote-sample">«ليس من يكتب بالحبر كمن يكتب بدم قلبه.» — جبران خليل جبران</div>
-                    </div>
-                    <a href="/?cat=خواطر عميقة" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- حزن وعتاب -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">💔</div>
-                        <h2 class="category-title">حزن وعتاب</h2>
-                        <p class="category-desc">بوح للمشاعر الجريحة، نصوص تصف آلام الفراق، وخيبة الأمل بأسلوب أدبي رقيق يواسي القلوب.</p>
-                        <div class="category-quote-sample">«أقسى أنواع العتاب هو ذلك الذي ينتهي بصمت تام.»</div>
-                    </div>
-                    <a href="/?cat=حزن وعتاب" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- أدب وشعر -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">✒️</div>
-                        <h2 class="category-title">أدب وشعر</h2>
-                        <p class="category-desc">أبيات من الشعر العربي الأصيل والمعاصر، روائع المعلقات والقصائد الخالدة على مر التاريخ.</p>
-                        <div class="category-quote-sample">«وما نيل المطالب بالتمني .. ولكن تؤخذ الدنيا غلابا» — أحمد شوقي</div>
-                    </div>
-                    <a href="/?cat=أدب وشعر" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- أمل وتفاؤل -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">✨</div>
-                        <h2 class="category-title">أمل وتفاؤل</h2>
-                        <p class="category-desc">رسائل استبشار ونور في عتمة الأيام، تذكرك بأن بعد كل عسر يسراً وأن الفرج قريب بإذن الله.</p>
-                        <div class="category-quote-sample">«سنصير يوماً ما نريد، لا رحلة تبتدئ ولا درب ينتهي.» — محمود درويش</div>
-                    </div>
-                    <a href="/?cat=أمل وتفاؤل" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- أدعية وروحانيات -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">🤲</div>
-                        <h2 class="category-title">أدعية وروحانيات</h2>
-                        <p class="category-desc">أدعية مأثورة وخواطر إيمانية تريح النفس وتملأ الفؤاد سكينة وطمأنينة ويقيناً بالله عز وجل.</p>
-                        <div class="category-quote-sample">«دع الأيام تفعل ما تشاءُ وطب نفساً إذا حكم القضاءُ» — الشافعي</div>
-                    </div>
-                    <a href="/?cat=أدعية وروحانيات" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
-
-                <!-- صداقة ووفاء -->
-                <div class="category-card">
-                    <div>
-                        <div class="category-icon">🤝</div>
-                        <h2 class="category-title">صداقة ووفاء</h2>
-                        <p class="category-desc">كلمات عن قيمة الصديق الحقيقي، معنى الوفاء، والروابط الإنسانية النقية التي تدوم طول العمر.</p>
-                        <div class="category-quote-sample">«الصديق الحقيقي هو من يمسك بيدك حين يفلتها العالم كله.»</div>
-                    </div>
-                    <a href="/?cat=صداقة ووفاء" class="btn-browse-category">تصفح منشورات القسم ←</a>
-                </div>
+                <span class="category-count-badge">2,185 منشور</span>
+            </div>
+            <h2 class="category-title">إسلامية</h2>
+            <p class="category-desc">آيات، أدعية، وأذكار مأثورة وخواطر إيمانية عطرة تريح القلوب.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(1)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
             </div>
         </div>
+    
+
+        <div class="category-card" data-cat-id="2" data-cat-name="حب وغرام">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <span class="category-count-badge">1,550 منشور</span>
+            </div>
+            <h2 class="category-title">حب وغرام</h2>
+            <p class="category-desc">أعذب كلمات الغرام والمشاعر الرومانسية الصادقة والبوح العاطفي.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(2)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="3" data-cat-name="شوق وحنين">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                </div>
+                <span class="category-count-badge">773 منشور</span>
+            </div>
+            <h2 class="category-title">شوق وحنين</h2>
+            <p class="category-desc">رسائل الحنين ولوعة البعد وأشواق اللقاء للأحبة الغائبين.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(3)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="4" data-cat-name="وداع وفراق">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                </div>
+                <span class="category-count-badge">332 منشور</span>
+            </div>
+            <h2 class="category-title">وداع وفراق</h2>
+            <p class="category-desc">كلمات توديع مؤثرة ومشاعر الفراق الصعبة وألم الرحيل.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(4)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="5" data-cat-name="مدح">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+                <span class="category-count-badge">347 منشور</span>
+            </div>
+            <h2 class="category-title">مدح</h2>
+            <p class="category-desc">أجمل عبارات الثناء والتقدير والمدح للأفاضل والكرماء.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(5)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="6" data-cat-name="العيد">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M19 12h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3zm-7-9l-6 6h4v8h4v-8h4l-6-6z"/></svg>
+                </div>
+                <span class="category-count-badge">340 منشور</span>
+            </div>
+            <h2 class="category-title">العيد</h2>
+            <p class="category-desc">تهاني ومعايدات وتبريكات عيد الفطر وعيد الأضحى المبارك.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(6)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="7" data-cat-name="متنوعة">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                </div>
+                <span class="category-count-badge">1,681 منشور</span>
+            </div>
+            <h2 class="category-title">متنوعة</h2>
+            <p class="category-desc">باقة منتقاة من الكلمات والعبارات في شتى مجالات الحياة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(7)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="8" data-cat-name="نكت">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                </div>
+                <span class="category-count-badge">383 منشور</span>
+            </div>
+            <h2 class="category-title">نكت</h2>
+            <p class="category-desc">طرائف وضحكات ونكت مرحة لزرع الابتسامة على الوجوه.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(8)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="9" data-cat-name="مقالب">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                </div>
+                <span class="category-count-badge">332 منشور</span>
+            </div>
+            <h2 class="category-title">مقالب</h2>
+            <p class="category-desc">مواقف كوميدية وقفشات مسلية للمرح والمزاح اللطيف.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(9)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="10" data-cat-name="رمضان">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.5-11.5A10.02 10.02 0 0 1 12.3 2z"/></svg>
+                </div>
+                <span class="category-count-badge">418 منشور</span>
+            </div>
+            <h2 class="category-title">رمضان</h2>
+            <p class="category-desc">تهاني وروحانيات وأدعية شهر رمضان المبارك وفضائله العظيمة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(10)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="11" data-cat-name="حكم وأمثال">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                </div>
+                <span class="category-count-badge">1,243 منشور</span>
+            </div>
+            <h2 class="category-title">حكم وأمثال</h2>
+            <p class="category-desc">عصارة تجارب الحكماء وأمثال خالدة تنير مسالك الحياة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(11)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="12" data-cat-name="عتاب">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
+                </div>
+                <span class="category-count-badge">538 منشور</span>
+            </div>
+            <h2 class="category-title">عتاب</h2>
+            <p class="category-desc">كلمات مودة ومشاعر لوم رقيقة للأحباب دون جرح أو خصام.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(12)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="13" data-cat-name="صباحية">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm-1 4h2v2.95h-2V19.5zm-7.45-.96l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+                </div>
+                <span class="category-count-badge">328 منشور</span>
+            </div>
+            <h2 class="category-title">صباحية</h2>
+            <p class="category-desc">أجمل تحيات الصباح ونسمات الإشراق وبشائر الخير والنشاط.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(13)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="14" data-cat-name="مسائية">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M9.37 5.51A7.35 7.35 0 0 0 9.1 7.5c0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27A9.03 9.03 0 0 1 12 21c-4.97 0-9-4.03-9-9 0-3.36 1.84-6.28 4.56-7.81.59.4 1.2.85 1.81 1.32z"/></svg>
+                </div>
+                <span class="category-count-badge">144 منشور</span>
+            </div>
+            <h2 class="category-title">مسائية</h2>
+            <p class="category-desc">همسات المساء وسكون الليل والتحايا الدافئة للأحبة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(14)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="15" data-cat-name="الم وحزن">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                </div>
+                <span class="category-count-badge">673 منشور</span>
+            </div>
+            <h2 class="category-title">الم وحزن</h2>
+            <p class="category-desc">نصوص أدبية تعبر عن الحزن والألم ومواساة القلوب الجريحة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(15)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="16" data-cat-name="إعتذار">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                </div>
+                <span class="category-count-badge">63 منشور</span>
+            </div>
+            <h2 class="category-title">إعتذار</h2>
+            <p class="category-desc">رسائل اعتذار نبيلة وتسامح صادق لإصلاح ما أفسده الخلاف.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(16)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="17" data-cat-name="يوم الجمعة">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/></svg>
+                </div>
+                <span class="category-count-badge">255 منشور</span>
+            </div>
+            <h2 class="category-title">يوم الجمعة</h2>
+            <p class="category-desc">فضائل وأدعية وتبريكات يوم الجمعة المبارك وسورة الكهف.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(17)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="18" data-cat-name="حكم">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
+                </div>
+                <span class="category-count-badge">1,170 منشور</span>
+            </div>
+            <h2 class="category-title">حكم</h2>
+            <p class="category-desc">أقوال مأثورة وقواعد في الأخلاق والسلوك وحسن التدبير.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(18)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="19" data-cat-name="مزخرفة">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <span class="category-count-badge">1,569 منشور</span>
+            </div>
+            <h2 class="category-title">مزخرفة</h2>
+            <p class="category-desc">نصوص واقتباسات مزخرفة بأشكال ورموز فنية رائعة ومميزة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(19)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="20" data-cat-name="خواطر">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                </div>
+                <span class="category-count-badge">1,379 منشور</span>
+            </div>
+            <h2 class="category-title">خواطر</h2>
+            <p class="category-desc">تأملات وجدانية وهمسات قلم في النفس والحياة والواقع.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(20)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="21" data-cat-name="صداقة">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <span class="category-count-badge">110 منشور</span>
+            </div>
+            <h2 class="category-title">صداقة</h2>
+            <p class="category-desc">معاني الصداقة الحقيقية ووفاء الإخوة وجمال الرفقة الصالحة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(21)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="22" data-cat-name="English">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                </div>
+                <span class="category-count-badge">200 منشور</span>
+            </div>
+            <h2 class="category-title">English</h2>
+            <p class="category-desc">Inspiring English quotes, thoughts, wisdom, and reflections.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(22)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="23" data-cat-name="همسات عشق القلوب">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <span class="category-count-badge">2,510 منشور</span>
+            </div>
+            <h2 class="category-title">همسات عشق القلوب</h2>
+            <p class="category-desc">همسات راقية وأشعار وجدانية عذبة تلامس شغاف القلوب.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(23)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="category-card" data-cat-id="24" data-cat-name="متنوعة">
+            <div class="category-card-top">
+                <div class="category-icon-box">
+                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                </div>
+                <span class="category-count-badge">3,089 منشور</span>
+            </div>
+            <h2 class="category-title">متنوعة</h2>
+            <p class="category-desc">مجموعة ضخمة وشاملة من المنشورات والحالات المتنوعة.</p>
+            <div class="category-card-footer">
+                <button class="btn-browse-category" onclick="openCategory(24)">
+                    <span>تصفح المنشورات</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    
+            </div>
+        </section>
+
+        <!-- ================= VIEW 2: CATEGORY POSTS VIEWER ================= -->
+        <section id="categoryPostsSection">
+            <div class="category-viewer-header">
+                <div class="viewer-header-left">
+                    <button class="btn-back-categories" onclick="closeCategoryView()">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        <span>العودة للأقسام</span>
+                    </button>
+                    <div class="viewer-title-box">
+                        <span class="viewer-category-title" id="activeCategoryTitle">اسم القسم</span>
+                        <span class="viewer-category-count" id="activeCategoryCount">0 منشور</span>
+                    </div>
+                </div>
+
+                <div class="viewer-controls">
+                    <div class="search-box-wrap" style="margin:0; width: 220px;">
+                        <input type="text" id="postFilterInput" placeholder="بحث داخل القسم..." oninput="filterCurrentCategoryPosts()" style="padding: 8px 36px 8px 12px; font-size: 12.5px;">
+                        <svg viewBox="0 0 24 24" style="right: 12px; width: 14px; height: 14px;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    </div>
+                    <button class="font-control-btn" onclick="changeFontSize(-2)" title="تصغير الخط">A-</button>
+                    <button class="font-control-btn" onclick="changeFontSize(2)" title="تكبير الخط">A+</button>
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="category-posts-feed" id="categoryPostsFeed">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <div class="load-more-container" id="loadMoreWrap" style="display:none;">
+                <button class="btn-load-more" onclick="renderNextBatch()">تحميل المزيد من الاقتباسات</button>
+            </div>
+        </section>
+
     </main>
+
+    <!-- Toast Notice -->
+    <div class="toast-notice" id="toastNotice">تم نسخ المنشور بنجاح!</div>
 
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="mobile-bottom-nav">
@@ -1283,5 +2020,243 @@ header.app-header {
             <span>الكُتّاب</span>
         </a>
     </nav>
+
+    <!-- Injected Categories Data -->
+    <script>
+        const ALL_CATEGORIES = [{"id": 1, "name": "إسلامية", "count": 2185, "desc": "آيات، أدعية، وأذكار مأثورة وخواطر إيمانية عطرة تريح القلوب."}, {"id": 2, "name": "حب وغرام", "count": 1550, "desc": "أعذب كلمات الغرام والمشاعر الرومانسية الصادقة والبوح العاطفي."}, {"id": 3, "name": "شوق وحنين", "count": 773, "desc": "رسائل الحنين ولوعة البعد وأشواق اللقاء للأحبة الغائبين."}, {"id": 4, "name": "وداع وفراق", "count": 332, "desc": "كلمات توديع مؤثرة ومشاعر الفراق الصعبة وألم الرحيل."}, {"id": 5, "name": "مدح", "count": 347, "desc": "أجمل عبارات الثناء والتقدير والمدح للأفاضل والكرماء."}, {"id": 6, "name": "العيد", "count": 340, "desc": "تهاني ومعايدات وتبريكات عيد الفطر وعيد الأضحى المبارك."}, {"id": 7, "name": "متنوعة", "count": 1681, "desc": "باقة منتقاة من الكلمات والعبارات في شتى مجالات الحياة."}, {"id": 8, "name": "نكت", "count": 383, "desc": "طرائف وضحكات ونكت مرحة لزرع الابتسامة على الوجوه."}, {"id": 9, "name": "مقالب", "count": 332, "desc": "مواقف كوميدية وقفشات مسلية للمرح والمزاح اللطيف."}, {"id": 10, "name": "رمضان", "count": 418, "desc": "تهاني وروحانيات وأدعية شهر رمضان المبارك وفضائله العظيمة."}, {"id": 11, "name": "حكم وأمثال", "count": 1243, "desc": "عصارة تجارب الحكماء وأمثال خالدة تنير مسالك الحياة."}, {"id": 12, "name": "عتاب", "count": 538, "desc": "كلمات مودة ومشاعر لوم رقيقة للأحباب دون جرح أو خصام."}, {"id": 13, "name": "صباحية", "count": 328, "desc": "أجمل تحيات الصباح ونسمات الإشراق وبشائر الخير والنشاط."}, {"id": 14, "name": "مسائية", "count": 144, "desc": "همسات المساء وسكون الليل والتحايا الدافئة للأحبة."}, {"id": 15, "name": "الم وحزن", "count": 673, "desc": "نصوص أدبية تعبر عن الحزن والألم ومواساة القلوب الجريحة."}, {"id": 16, "name": "إعتذار", "count": 63, "desc": "رسائل اعتذار نبيلة وتسامح صادق لإصلاح ما أفسده الخلاف."}, {"id": 17, "name": "يوم الجمعة", "count": 255, "desc": "فضائل وأدعية وتبريكات يوم الجمعة المبارك وسورة الكهف."}, {"id": 18, "name": "حكم", "count": 1170, "desc": "أقوال مأثورة وقواعد في الأخلاق والسلوك وحسن التدبير."}, {"id": 19, "name": "مزخرفة", "count": 1569, "desc": "نصوص واقتباسات مزخرفة بأشكال ورموز فنية رائعة ومميزة."}, {"id": 20, "name": "خواطر", "count": 1379, "desc": "تأملات وجدانية وهمسات قلم في النفس والحياة والواقع."}, {"id": 21, "name": "صداقة", "count": 110, "desc": "معاني الصداقة الحقيقية ووفاء الإخوة وجمال الرفقة الصالحة."}, {"id": 22, "name": "English", "count": 200, "desc": "Inspiring English quotes, thoughts, wisdom, and reflections."}, {"id": 23, "name": "همسات عشق القلوب", "count": 2510, "desc": "همسات راقية وأشعار وجدانية عذبة تلامس شغاف القلوب."}, {"id": 24, "name": "متنوعة", "count": 3089, "desc": "مجموعة ضخمة وشاملة من المنشورات والحالات المتنوعة."}];
+        let activeCategoryId = null;
+        let activeCategoryPosts = [];
+        let filteredCategoryPosts = [];
+        let currentPostRenderIndex = 0;
+        const BATCH_SIZE = 30;
+        let currentFontSize = 16;
+
+        // Categories Grid Filter
+        function filterCategories() {
+            const query = document.getElementById("categorySearchInput").value.trim().toLowerCase();
+            const cards = document.querySelectorAll(".category-card");
+            cards.forEach(card => {
+                const name = (card.getAttribute("data-cat-name") || "").toLowerCase();
+                if (!query || name.includes(query)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Open Category
+        async function openCategory(catId, pushState = true) {
+            const cat = ALL_CATEGORIES.find(c => c.id === catId);
+            if (!cat) return;
+
+            activeCategoryId = catId;
+            document.getElementById("activeCategoryTitle").textContent = cat.name;
+            document.getElementById("activeCategoryCount").textContent = cat.count.toLocaleString() + " منشور";
+            document.getElementById("categoriesGridSection").style.display = "none";
+            document.getElementById("categoryPostsSection").style.display = "block";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            if (pushState) {
+                const url = new URL(window.location);
+                url.searchParams.set("cat", catId);
+                window.history.pushState({ catId: catId }, "", url);
+            }
+
+            const feed = document.getElementById("categoryPostsFeed");
+            feed.innerHTML = `
+                <div style="text-align:center; padding: 40px 0; color: var(--text-secondary);">
+                    <div style="display:inline-block; width:30px; height:30px; border:3px solid rgba(56,189,248,0.2); border-top-color:var(--brand-primary); border-radius:50%; animation: spin 0.8s linear infinite;"></div>
+                    <p style="margin-top:12px; font-family:'Cairo', sans-serif;">جارِ تحميل المنشورات...</p>
+                </div>
+            `;
+
+            try {
+                const res = await fetch(`assets/categories/cat_${catId}.json`);
+                if (!res.ok) throw new Error("Failed to load category data");
+                activeCategoryPosts = await res.json();
+                filteredCategoryPosts = [...activeCategoryPosts];
+                currentPostRenderIndex = 0;
+                feed.innerHTML = "";
+                renderNextBatch();
+            } catch (err) {
+                feed.innerHTML = `
+                    <div style="text-align:center; padding: 40px 0; color: var(--brand-rose);">
+                        <p style="font-family:'Cairo', sans-serif;">عذراً، تعذر تحميل المنشورات حالياً.</p>
+                        <button class="btn-browse-category" onclick="openCategory(${catId})" style="margin-top:12px;">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Close Category View
+        function closeCategoryView(pushState = true) {
+            activeCategoryId = null;
+            document.getElementById("categoriesGridSection").style.display = "block";
+            document.getElementById("categoryPostsSection").style.display = "none";
+            document.getElementById("categoryPostsFeed").innerHTML = "";
+
+            if (pushState) {
+                const url = new URL(window.location);
+                url.searchParams.delete("cat");
+                window.history.pushState({}, "", url);
+            }
+        }
+
+        // Render Next Batch
+        function renderNextBatch() {
+            const feed = document.getElementById("categoryPostsFeed");
+            const cat = ALL_CATEGORIES.find(c => c.id === activeCategoryId);
+            const catName = cat ? cat.name : "اقتباس";
+
+            const nextIndex = Math.min(currentPostRenderIndex + BATCH_SIZE, filteredCategoryPosts.length);
+            const batch = filteredCategoryPosts.slice(currentPostRenderIndex, nextIndex);
+
+            const fragment = document.createDocumentFragment();
+
+            batch.forEach((post, i) => {
+                const globalIndex = currentPostRenderIndex + i + 1;
+                const card = document.createElement("div");
+                card.className = "cat-post-card";
+                card.innerHTML = `
+                    <div class="cat-post-meta">
+                        <span class="cat-post-tag">${catName}</span>
+                        <span class="cat-post-number">#${globalIndex}</span>
+                    </div>
+                    <div class="cat-post-text" style="font-size: ${currentFontSize}px;">${escapeHtml(post.text)}</div>
+                    <div class="cat-post-divider"></div>
+                    <div class="cat-post-actions">
+                        <button class="cat-action-btn" onclick="copyPostText('${escapeQuoteJs(post.text)}')" title="نسخ">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                            <span>نسخ</span>
+                        </button>
+                        <button class="cat-action-btn" onclick="sharePost('${escapeQuoteJs(post.text)}')" title="مشاركة">
+                            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                            <span>مشاركة</span>
+                        </button>
+                        <button class="cat-action-btn btn-studio-action" onclick="openInStudio('${escapeQuoteJs(post.text)}')" title="تصميم في الاستوديو">
+                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            <span>تصميم</span>
+                        </button>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+
+            feed.appendChild(fragment);
+            currentPostRenderIndex = nextIndex;
+
+            const loadMoreWrap = document.getElementById("loadMoreWrap");
+            if (currentPostRenderIndex < filteredCategoryPosts.length) {
+                loadMoreWrap.style.display = "block";
+            } else {
+                loadMoreWrap.style.display = "none";
+            }
+        }
+
+        // Filter Posts Inside Category
+        function filterCurrentCategoryPosts() {
+            const query = document.getElementById("postFilterInput").value.trim().toLowerCase();
+            if (!query) {
+                filteredCategoryPosts = [...activeCategoryPosts];
+            } else {
+                filteredCategoryPosts = activeCategoryPosts.filter(p => p.text.toLowerCase().includes(query));
+            }
+            currentPostRenderIndex = 0;
+            const feed = document.getElementById("categoryPostsFeed");
+            feed.innerHTML = "";
+            renderNextBatch();
+        }
+
+        // Font Size Controls
+        function changeFontSize(delta) {
+            const newSize = currentFontSize + delta;
+            if (newSize >= 13 && newSize <= 28) {
+                currentFontSize = newSize;
+                const texts = document.querySelectorAll(".cat-post-text");
+                texts.forEach(t => t.style.fontSize = currentFontSize + "px");
+            }
+        }
+
+        // Copy
+        function copyPostText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("تم نسخ المنشور بنجاح!");
+            }).catch(() => {
+                // fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                showToast("تم نسخ المنشور بنجاح!");
+            });
+        }
+
+        // Share
+        function sharePost(text) {
+            if (navigator.share) {
+                navigator.share({
+                    title: "منشوراتي - Manchorati",
+                    text: text + "\n\nعبر تطبيق منشوراتي 🌟",
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                copyPostText(text);
+                showToast("تم نسخ المنشور للمشاركة!");
+            }
+        }
+
+        // Open in Studio
+        function openInStudio(text) {
+            window.location.href = "studio.html?quote=" + encodeURIComponent(text);
+        }
+
+        // Toast
+        let toastTimer = null;
+        function showToast(msg) {
+            const t = document.getElementById("toastNotice");
+            t.textContent = msg;
+            t.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                t.classList.remove("show");
+            }, 2400);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        function escapeQuoteJs(str) {
+            if (!str) return "";
+            return str.replace(/\\/g, "\\\\")
+                      .replace(/'/g, "\\'")
+                      .replace(/"/g, '&quot;')
+                      .replace(/\n/g, " ");
+        }
+
+        // Handle Popstate (browser back/forward)
+        window.addEventListener("popstate", (e) => {
+            const url = new URL(window.location);
+            const catId = url.searchParams.get("cat");
+            if (catId) {
+                openCategory(parseInt(catId), false);
+            } else {
+                closeCategoryView(false);
+            }
+        });
+
+        // Handle Initial URL Param
+        window.addEventListener("DOMContentLoaded", () => {
+            const url = new URL(window.location);
+            const catId = url.searchParams.get("cat");
+            if (catId) {
+                openCategory(parseInt(catId), false);
+            }
+        });
+    </script>
 </body>
 </html>

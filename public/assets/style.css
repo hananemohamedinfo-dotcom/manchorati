@@ -1035,3 +1035,24 @@ header.app-header {
         padding: 0 8px;
     }
 }
+
+
+/* Categories Widget Links */
+.category-chip-link {
+    display: inline-block;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    color: var(--text-primary);
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+.category-chip-link:hover {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+    transform: translateY(-1px);
+}
