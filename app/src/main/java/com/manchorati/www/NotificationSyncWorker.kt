@@ -39,6 +39,7 @@ class NotificationSyncWorker(
                         val sender = if (notif.senderName.isNotEmpty()) notif.senderName else appContext.getString(R.string.app_name)
                         val body = when (notif.type) {
                             "LIKE" -> appContext.getString(R.string.notif_liked_post, sender)
+                            "COMMENT_LIKE" -> appContext.getString(R.string.notif_liked_comment, sender)
                             "COMMENT" -> appContext.getString(R.string.notif_commented_post, sender)
                             "FOLLOW" -> appContext.getString(R.string.notif_followed_you, sender)
                             "NEW_POST" -> appContext.getString(R.string.notif_new_post, sender)

@@ -94,13 +94,13 @@ object AiWriterBottomSheetDialog {
         fun updateKeyAndQuotaUI() {
             if (AiWriterManager.hasUserApiKey(context)) {
                 viewStatusDot.setBackgroundResource(R.drawable.bg_status_dot_green)
-                tvQuotaBadge.text = "مفتاحك الشخصي مفعّل (توليد لا محدود)"
+                tvQuotaBadge.text = context.getString(R.string.ai_key_custom_active)
                 tvQuotaBadge.setTextColor(Color.parseColor("#10B981"))
                 cardCustomKeyPromo.visibility = View.GONE
             } else {
                 val remaining = AiWriterManager.getRemainingQuota(context)
                 viewStatusDot.setBackgroundResource(R.drawable.bg_status_dot_amber)
-                tvQuotaBadge.text = "المفتاح التجريبي ($remaining / ${AiWriterManager.MAX_DAILY_QUOTA} محاولات)"
+                tvQuotaBadge.text = context.getString(R.string.ai_key_trial_format, remaining, AiWriterManager.MAX_DAILY_QUOTA)
                 tvQuotaBadge.setTextColor(Color.parseColor("#38BDF8"))
                 cardCustomKeyPromo.visibility = View.VISIBLE
             }
@@ -170,7 +170,7 @@ object AiWriterBottomSheetDialog {
 
             // إظهار حالة التحميل وإخفاء النتيجة السابقة
             layoutAiLoading.visibility = View.VISIBLE
-            tvAiThinkingText.text = "جاري استحضار الفكرة وصياغتها بأناقة..."
+            tvAiThinkingText.text = context.getString(R.string.ai_thinking_prompt)
             cardAiResult.visibility = View.GONE
             btnGenerateAi.isEnabled = false
 
@@ -184,12 +184,12 @@ object AiWriterBottomSheetDialog {
 
                 cardAiResult.visibility = View.VISIBLE
                 tvGeneratedQuote.text = quote
-                tvAiModelBadge.text = if (isRealAi) "Google Gemini" else "مكتبة أدبية"
+                tvAiModelBadge.text = if (isRealAi) "Google Gemini" else context.getString(R.string.ai_model_library)
 
                 scrollChatArea.post { scrollChatArea.fullScroll(View.FOCUS_DOWN) }
 
                 if (isRealAi) {
-                    Toast.makeText(context, "تمت الصياغة بنجاح بواسطة الذكاء الاصطناعي", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.ai_generate_success_toast), Toast.LENGTH_SHORT).show()
                 } else if (!statusMsg.isNullOrEmpty()) {
                     Toast.makeText(context, statusMsg, Toast.LENGTH_LONG).show()
                 }
@@ -320,12 +320,12 @@ object AiWriterBottomSheetDialog {
 
         val userKey = AiWriterManager.getUserApiKey(context)
         if (userKey.isNotEmpty()) {
-            tvStatus.text = "مفتاحك الشخصي مفعّل حالياً (توليد لا محدود)"
+            tvStatus.text = context.getString(R.string.ai_key_custom_active_dialog)
             tvStatus.setTextColor(Color.parseColor("#10B981"))
             etKeyInput.setText(userKey)
             etKeyInput.setSelection(userKey.length)
         } else {
-            tvStatus.text = "جاري استخدام المفتاح التجريبي الافتراضي"
+            tvStatus.text = context.getString(R.string.ai_key_default_trial_status)
             tvStatus.setTextColor(Color.parseColor("#F59E0B"))
         }
 
@@ -340,27 +340,27 @@ object AiWriterBottomSheetDialog {
         btnSave.setOnClickListener {
             val newKey = etKeyInput.text.toString().trim()
             if (newKey.isEmpty()) {
-                Toast.makeText(context, "يرجى لصق مفتاح Gemini أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.ai_key_empty_toast, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             btnSave.isEnabled = false
-            btnSave.text = "جاري التحقق..."
+            btnSave.text = context.getString(R.string.ai_key_verifying_button)
             tvVerifying.visibility = View.VISIBLE
-            tvVerifying.text = "جاري فحص المفتاح مع خوادم Google..."
+            tvVerifying.text = context.getString(R.string.ai_key_checking_servers)
 
             AiWriterManager.verifyKeyWithGemini(newKey) { isValid, errorMsg ->
                 btnSave.isEnabled = true
-                btnSave.text = "حفظ وتفعيل المفتاح"
+                btnSave.text = context.getString(R.string.ai_key_btn_save)
                 tvVerifying.visibility = View.GONE
 
                 if (isValid) {
                     AiWriterManager.setUserApiKey(context, newKey)
-                    Toast.makeText(context, "تم التحقق من مفتاحك وتفعيله بنجاح! التوليد الآن غير محدود وبسرعة فائقة.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.ai_key_success), Toast.LENGTH_LONG).show()
                     onKeyChanged()
                     alertDialog.dismiss()
                 } else {
-                    val alert = errorMsg ?: "المفتاح غير صالح أو لم يتم تفعيله بعد."
+                    val alert = errorMsg ?: context.getString(R.string.ai_key_invalid_toast)
                     Toast.makeText(context, alert, Toast.LENGTH_LONG).show()
                 }
             }
@@ -368,7 +368,7 @@ object AiWriterBottomSheetDialog {
 
         btnReset.setOnClickListener {
             AiWriterManager.clearUserApiKey(context)
-            Toast.makeText(context, "تمت العودة للمفتاح الافتراضي.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.ai_key_reset_toast), Toast.LENGTH_SHORT).show()
             onKeyChanged()
             alertDialog.dismiss()
         }

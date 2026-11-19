@@ -54,15 +54,6 @@ object CommunityPostDialogHelper {
         dialog.setContentView(dialogView)
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        dialog.setOnShowListener {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
-            }
-        }
-
         val density = context.resources.displayMetrics.density
 
         // Header and preview views
@@ -107,6 +98,66 @@ object CommunityPostDialogHelper {
         var selectedTextColor = editingPost?.textColor ?: (if (editingPost == null) "#FFFFFF" else "")
         var selectedTag = editingPost?.tag ?: initialTag
 
+        var sheetBehavior: BottomSheetBehavior<View>? = null
+
+        val isPostModified = {
+            val hasContent = etContent.text.toString().trim().isNotEmpty()
+            if (editingPost != null) {
+                etContent.text.toString().trim() != editingPost.content.trim()
+            } else {
+                hasContent || selectedBg.startsWith("content://") || selectedBg.startsWith("file://")
+            }
+        }
+
+        val updateBehaviorLock = {
+            val modified = isPostModified()
+            sheetBehavior?.let { b ->
+                b.isHideable = !modified
+            }
+        }
+
+        val handleDismissAttempt = {
+            val isModified = isPostModified()
+            if (isModified) {
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                    .setTitle(context.getString(R.string.discard_post_title))
+                    .setMessage(context.getString(R.string.discard_post_message))
+                    .setPositiveButton(context.getString(R.string.discard_post_keep_writing)) { d, _ ->
+                        d.dismiss()
+                        sheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    .setNegativeButton(context.getString(R.string.discard_post_confirm)) { _, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            } else {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                sheetBehavior = behavior
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+                updateBehaviorLock()
+
+                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(sheet: View, newState: Int) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                            if (isPostModified()) {
+                                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                                handleDismissAttempt()
+                            }
+                        }
+                    }
+                    override fun onSlide(sheet: View, slideOffset: Float) {}
+                })
+            }
+        }
+
         // Load Author Profile
         val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val user = AuthManager.currentUser ?: AuthManager.auth.currentUser
@@ -115,33 +166,17 @@ object CommunityPostDialogHelper {
             ?: editingPost?.authorPhotoUrl
             ?: ""
         ivPreviewAvatar.loadUserAvatar(authorPhoto)
-        tvPreviewAuthorName.text = if (authorName.isNotEmpty()) authorName else context.getString(R.string.you_author)
+
+        val savedProfileName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+        val finalAuthorName = savedProfileName
+            ?: authorName.takeIf { it.isNotBlank() && it != user?.displayName }
+            ?: authorName.takeIf { it.isNotBlank() }
+            ?: user?.displayName?.takeIf { it.isNotBlank() }
+            ?: context.getString(R.string.you_author)
+
+        tvPreviewAuthorName.text = finalAuthorName
 
         dialog.setCanceledOnTouchOutside(false)
-
-        val handleDismissAttempt = {
-            val hasContent = etContent.text.toString().trim().isNotEmpty()
-            val isModified = if (editingPost != null) {
-                etContent.text.toString().trim() != editingPost.content.trim()
-            } else {
-                hasContent || selectedBg.startsWith("content://") || selectedBg.startsWith("file://")
-            }
-
-            if (isModified) {
-                com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-                    .setTitle("تجاهل المنشور؟")
-                    .setMessage("لديك نص أو تعديلات غير منشورة. هل تريد التراجع وفقدان ما كتبته؟")
-                    .setPositiveButton("متابعة الكتابة") { d, _ ->
-                        d.dismiss()
-                    }
-                    .setNegativeButton("تجاهل وخروج") { _, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-            } else {
-                dialog.dismiss()
-            }
-        }
 
         btnCloseDialog.setOnClickListener { handleDismissAttempt() }
 
@@ -262,6 +297,7 @@ object CommunityPostDialogHelper {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateCharCounterState(s?.length ?: 0)
+                updateBehaviorLock()
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -815,6 +851,13 @@ object CommunityPostDialogHelper {
                 return@setOnClickListener
             }
 
+            val wordCount = content.split("\\s+".toRegex()).count { it.isNotBlank() }
+            if (wordCount < 5) {
+                Toast.makeText(context, context.getString(R.string.post_min_words_error), Toast.LENGTH_LONG).show()
+                etContent.requestFocus()
+                return@setOnClickListener
+            }
+
             if (BadWordsFilter.containsBadWords(content)) {
                 Toast.makeText(context, context.getString(R.string.post_bad_words), Toast.LENGTH_LONG).show()
                 return@setOnClickListener
@@ -834,7 +877,7 @@ object CommunityPostDialogHelper {
             if (editingPost == null) {
                 FirestoreManager.publishCommunityPost(
                     authorId = currentUser.uid,
-                    authorName = authorName,
+                    authorName = finalAuthorName,
                     authorUsername = authorUsername,
                     authorPhotoUrl = authorPhoto,
                     content = content,

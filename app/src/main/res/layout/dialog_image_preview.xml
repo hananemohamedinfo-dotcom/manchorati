@@ -584,7 +584,7 @@
 
                         android:layout_height="wrap_content"
 
-                        android:text="تعديل النص"
+                        android:text="@string/card_editor_edit_text"
 
                         android:textColor="#F8FAFC"
 
@@ -2334,7 +2334,7 @@
 
                         android:layout_height="wrap_content"
 
-                        android:text="خلط عشوائي"
+                        android:text="@string/card_editor_random_mix"
 
                         android:textColor="#FFFFFF"
 

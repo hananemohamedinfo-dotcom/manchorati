@@ -14,11 +14,21 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/icon"
-            android:contentDescription="@string/app_name" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/divider_color">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/app_logo"
+                android:contentDescription="@string/app_name" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvPrivacyTitle"
@@ -92,7 +102,7 @@
             android:id="@+id/cbAcceptTerms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="#EF4444" />
+            android:buttonTint="@color/brand_primary" />
 
         <TextView
             android:id="@+id/tvCheckboxLabel"

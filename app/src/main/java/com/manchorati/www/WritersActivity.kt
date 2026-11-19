@@ -123,7 +123,7 @@ class WritersActivity : AppCompatActivity() {
         ivWriterOfWeekLaurelWreath = findViewById(R.id.ivWriterOfWeekLaurelWreath)
         ivWriterOfWeekLaurelWreath.setOnClickListener {
             writerOfTheWeek?.let { champion ->
-                WriterOfTheWeekHelper.showWriterOfWeekDialog(this, champion.displayName)
+                WriterOfTheWeekHelper.showWriterOfWeekDialog(this, champion.displayName, champion.photoUrl)
             }
         }
         tvWriterOfWeekName = findViewById(R.id.tvWriterOfWeekName)
@@ -399,41 +399,9 @@ class WritersActivity : AppCompatActivity() {
         // 1. فرز القائمة بحسب التبويب النشط
         val sortedList = when (activeTabMode) {
             WritersTabMode.WEEKLY -> {
-                // استراتيجية السقف الديناميكي (Ghost Ceiling):
-                // المستخدم الحقيقي دائماً هو المتصدر الأسبوعي، والـ Bots يتم تحجيم تفاعلهم ليكون تابعاً للمستخدم الحقيقي
-                val realUsers = allWritersList.filter { !VirtualCommunityManager.isVirtualUser(it.userId) }
-                    .sortedWith(
-                        compareByDescending<WriterItem> { it.weeklyLikes }
-                            .thenByDescending { it.totalLikes }
-                            .thenByDescending { it.followersCount }
-                    )
-
-                val topRealUser = realUsers.firstOrNull { it.weeklyLikes > 0L }
-                val maxAllowedBotLikes = if (topRealUser != null) {
-                    (topRealUser.weeklyLikes - 1).coerceAtLeast(1L)
-                } else {
-                    6L
-                }
-
-                val virtualUsers = allWritersList.filter { VirtualCommunityManager.isVirtualUser(it.userId) }
-                    .sortedWith(
-                        compareByDescending<WriterItem> { it.weeklyLikes }
-                            .thenByDescending { it.totalLikes }
-                    )
-
-                var currentBotCap = maxAllowedBotLikes
-                val adjustedVirtual = virtualUsers.map { bot ->
-                    val cappedLikes = if (bot.weeklyLikes >= currentBotCap) {
-                        val assigned = currentBotCap
-                        if (currentBotCap > 1L) currentBotCap -= 1L
-                        assigned
-                    } else {
-                        bot.weeklyLikes.coerceAtMost(maxAllowedBotLikes)
-                    }
-                    bot.copy(weeklyLikes = cappedLikes)
-                }
-
-                (realUsers + adjustedVirtual)
+                // استراتيجية الترتيب الأسبوعي الصارم والعادل:
+                // فرز جميع الكتّاب بحسب تفاعلهم الأسبوعي أولاً، ثم التفاعل الإجمالي، ثم المتابعين
+                allWritersList
                     .filter { it.postsCount > 0 || it.weeklyLikes > 0 || it.totalLikes > 0 }
                     .sortedWith(
                         compareByDescending<WriterItem> { it.weeklyLikes }
@@ -456,9 +424,14 @@ class WritersActivity : AppCompatActivity() {
             }
         }
 
-        // تحديد كاتب الأسبوع: البحث عن أول مستخدم حقيقي في القائمة؛ وإذا كان الأول بوتاً يتم فحص الذي يليه حتى إيجاد مستخدم حقيقي
+        // 2. إسناد الرتب للمستخدمين (1, 2, 3...)
+        sortedList.forEachIndexed { index, writerItem ->
+            writerItem.rank = index + 1
+        }
+
+        // تحديد كاتب الأسبوع: المتصدر الفعلي للمركز الأول دائماً (Rank #1) بدون أي تناقض نهائياً
         val weeklyChampion = if (activeTabMode == WritersTabMode.WEEKLY) {
-            sortedList.firstOrNull { !VirtualCommunityManager.isVirtualUser(it.userId) } ?: sortedList.firstOrNull()
+            sortedList.firstOrNull()
         } else {
             null
         }
@@ -468,21 +441,18 @@ class WritersActivity : AppCompatActivity() {
         }
         updateWriterOfTheWeekCard()
 
-        // 2. إسناد الرتب للمستخدمين (1, 2, 3...)
-        sortedList.forEachIndexed { index, writerItem ->
-            writerItem.rank = index + 1
-        }
-
         // حفظ المتصدرين الثلاثة الأوائل لدعم إكليل الغار الذهبي والفضي والبرونزي
         if (activeTabMode == WritersTabMode.WEEKLY) {
-            val top3List = sortedList.take(3).map { it.userId to it.displayName }
-            WriterOfTheWeekHelper.setTop3Champions(this, top3List)
+            val eligibleTop3 = sortedList
+                .take(3)
+                .map { it.userId to it.displayName }
+            WriterOfTheWeekHelper.setTop3Champions(this, eligibleTop3)
 
-            // فحص احتفال المستخدم إذا كان في قائمة أفضل 10 (أو التوب 3)
+            // فحص احتفال المستخدم: فقط إذا كان هو المتصدر الفعلي للمركز الأول ولديه نشاط
             if (activeUserId.isNotEmpty()) {
                 val myRankItem = sortedList.firstOrNull { it.userId == activeUserId }
-                if (myRankItem != null && myRankItem.rank in 1..10) {
-                    checkAndTriggerCelebration(myRankItem.rank, myRankItem.displayName)
+                if (myRankItem != null && myRankItem.rank == 1 && (myRankItem.weeklyLikes > 0L || myRankItem.postsCount > 0)) {
+                    checkAndTriggerCelebration(myRankItem.rank, myRankItem.displayName, myRankItem.photoUrl)
                 }
             }
         }
@@ -517,8 +487,8 @@ class WritersActivity : AppCompatActivity() {
             tvLeaderboardSectionTitle.visibility = View.VISIBLE
             tvLeaderboardSectionTitle.text = when (activeTabMode) {
                 WritersTabMode.WEEKLY -> getString(R.string.leaderboard_section_title)
-                WritersTabMode.FOLLOWERS -> "الكتّاب الأكثر متابعة 👥"
-                WritersTabMode.ALL -> "جميع كتّاب المجتمع ✍️"
+                WritersTabMode.FOLLOWERS -> getString(R.string.writers_tab_most_followed)
+                WritersTabMode.ALL -> getString(R.string.writers_tab_all_writers)
             }
         }
     }
@@ -531,34 +501,39 @@ class WritersActivity : AppCompatActivity() {
             tvLeaderboardCongrats.visibility = View.VISIBLE
 
             ivWriterOfWeekAvatar.loadUserAvatar(champion.photoUrl)
+            ivWriterOfWeekLaurelWreath.setColorFilter(WriterOfTheWeekHelper.getRankColor(1))
+            ivWriterOfWeekLaurelWreath.setOnClickListener {
+                ivWriterOfWeekLaurelWreath.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, 1, champion.displayName, champion.photoUrl, isSelf = (champion.userId == activeUserId))
+            }
             tvWriterOfWeekName.text = champion.displayName
             val cleanHandle = champion.username.removePrefix("@").trim()
             tvWriterOfWeekUsername.text = if (cleanHandle.isNotEmpty()) "@$cleanHandle" else getString(R.string.user_default_handle)
 
-            // شارة الرتبة (بدون تكرار الإيموجي)
-            val badge = BadgeHelper.getBadgeForProfile(
-                explicitBadge = champion.badge,
-                email = null,
-                totalLikes = champion.totalLikes,
-                followersCount = champion.followersCount
-            )
-            val isBeginner = (badge.id == BadgeHelper.BADGE_BEGINNER.id || badge.tierLevel <= 1)
-            if (champion.userId != "manchorati_curated" &&
-                badge.id != "official" &&
-                BadgeHelper.isBadgeVisibleForUser(champion.userId) &&
-                !isBeginner) {
+            // شارة كاتب الأسبوع الذهبية
+            if (BadgeHelper.isBadgeVisibleForUser(champion.userId)) {
                 tvWriterOfWeekBadge.visibility = View.VISIBLE
-                val title = badge.getLocalizedTitle(this)
-                tvWriterOfWeekBadge.text = "${badge.iconEmoji} $title".trim()
+                tvWriterOfWeekBadge.text = WriterOfTheWeekHelper.getRankBadgeTitle(this, 1)
+                tvWriterOfWeekBadge.setBackgroundResource(R.drawable.bg_gold_crown_badge)
+                tvWriterOfWeekBadge.setTextColor(Color.WHITE)
                 tvWriterOfWeekBadge.setCompoundDrawables(null, null, null, null)
+                tvWriterOfWeekBadge.setOnClickListener {
+                    tvWriterOfWeekBadge.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    WriterOfTheWeekHelper.showRankCelebrationDialog(this, 1, champion.displayName, champion.photoUrl, isSelf = (champion.userId == activeUserId))
+                }
             } else {
                 tvWriterOfWeekBadge.visibility = View.GONE
             }
 
-            // النص التحفيزي
-            if (champion.weeklyLikes > 0L) {
+            // النص التحفيزي المتناسق والذكي
+            if (activeUserId.isNotEmpty() && champion.userId == activeUserId) {
+                // المستخدم الحالي هو صاحب المركز الأول!
+                tvLeaderboardCongrats.text = getString(R.string.weekly_champion_self)
+            } else if (champion.weeklyLikes > 0L) {
+                // كاتب آخر يتصدر الأسبوع
                 tvLeaderboardCongrats.text = getString(R.string.weekly_champion_congrats)
             } else {
+                // لم يتفاعل أحد بعد هذا الأسبوع
                 tvLeaderboardCongrats.text = getString(R.string.no_weekly_posts_yet)
             }
 
@@ -641,7 +616,8 @@ class WritersActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAndTriggerCelebration(userRank: Int, userName: String) {
+    private fun checkAndTriggerCelebration(userRank: Int, userName: String, photoUrl: String? = null) {
+        if (userRank !in 1..3) return
         val startOfWeek = getStartOfWeek()
         val prefs = getSharedPreferences("writers_celebration_prefs", Context.MODE_PRIVATE)
         val lastCelebratedWeek = prefs.getLong("last_celebrated_week_$activeUserId", 0L)
@@ -657,7 +633,7 @@ class WritersActivity : AppCompatActivity() {
 
             confettiCelebration?.post {
                 confettiCelebration?.startConfetti()
-                WriterOfTheWeekHelper.showRankCelebrationDialog(this, userRank, userName, isSelf = true)
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, userRank, userName, photoUrl, isSelf = true)
             }
         }
     }
@@ -677,17 +653,18 @@ class WritersActivity : AppCompatActivity() {
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
         val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // 1=Sunday, 2=Monday, ..., 7=Saturday
-        // حساب بداية الأسبوع من يوم الأحد (من الأحد إلى الأحد)
-        val daysSinceSunday = dayOfWeek - Calendar.SUNDAY
-        cal.add(Calendar.DAY_OF_YEAR, -daysSinceSunday)
+        // أسبوع التحدي يبدأ من الإثنين (00:00) وينتهي ليلة الأحد (23:59:59).
+        // في يوم الأحد (اليوم الختامي للتحدي)، نحسب لايكات الأسبوع كاملة من الإثنين الماضي (6 أيام مضت).
+        val daysSinceMonday = if (dayOfWeek == Calendar.SUNDAY) 6 else (dayOfWeek - Calendar.MONDAY)
+        cal.add(Calendar.DAY_OF_YEAR, -daysSinceMonday)
         return cal.timeInMillis
     }
 
     private fun getChallengeCountdownText(): String {
         val cal = Calendar.getInstance()
         val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // 1=Sunday, 2=Monday, ..., 7=Saturday
-        // التحدي أسبوعي من الأحد إلى الأحد:
-        // يوم الأحد هو اليوم الأخير للتحدي (ينتهي اليوم) أو بداية التحدي الجديد
+        // التحدي أسبوعي يبدأ من الإثنين وينتهي ليلة الأحد:
+        // يوم الأحد هو اليوم الأخير للتحدي (ينتهي الليلة)، والإثنين يبدأ التحدي الجديد (متبقي 6 أيام)
         val daysRemaining = if (dayOfWeek == Calendar.SUNDAY) 0 else (Calendar.SATURDAY - dayOfWeek + 1)
         return when (daysRemaining) {
             0 -> getString(R.string.challenge_ends_today)

@@ -92,7 +92,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="تعديل الفيديو"
+                android:text="@string/reel_edit_video"
                 android:textColor="#F1F5F9"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -228,7 +228,7 @@
                     android:id="@+id/tvReelAudioTrack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="موسيقى تصويرية"
+                    android:text="@string/reel_soundtrack"
                     android:textColor="#F1F5F9"
                     android:textSize="10.5sp" />
             </LinearLayout>
@@ -304,7 +304,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="واتساب"
+            android:text="@string/reel_whatsapp"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -335,7 +335,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="تحميل"
+            android:text="@string/reel_download"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -365,7 +365,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="مشاركة"
+            android:text="@string/reel_share"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
             android:textStyle="bold" />

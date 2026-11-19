@@ -12,7 +12,9 @@ data class Comment(
     val replyToAuthorName: String = "",
     val replyToCommentId: String = "",
     var timestamp: Long = 0L,
-    val isEdited: Boolean = false
+    val isEdited: Boolean = false,
+    var likesCount: Long = 0L,
+    var likedBy: List<String> = emptyList()
 ) {
-    constructor() : this("", "", "", "", "", "", "", 0L, false)
+    constructor() : this("", "", "", "", "", "", "", 0L, false, 0L, emptyList())
 }

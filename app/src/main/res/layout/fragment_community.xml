@@ -147,30 +147,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:paddingHorizontal="14dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvMoodSelectorTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mood_selector_title"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="12.5sp"
                     android:textStyle="bold" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvActiveMoodSubtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="@string/mood_selector_subtitle"
                     android:textColor="@color/text_secondary"
-                    android:textSize="10.5sp" />
+                    android:textSize="11sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
             </LinearLayout>
 
             <!-- كبسولات المزاج أفقية السحب -->
@@ -362,7 +360,7 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingTop="4dp"
-                android:paddingBottom="84dp" />
+                android:paddingBottom="96dp" />
 
             <!-- الحالة الفارغة في حال عدم وجود منشورات بالتصنيف -->
             <LinearLayout
@@ -420,7 +418,7 @@
         android:id="@+id/fabAddPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
+        android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:backgroundTint="#0284C7"
         android:src="@android:drawable/ic_input_add"

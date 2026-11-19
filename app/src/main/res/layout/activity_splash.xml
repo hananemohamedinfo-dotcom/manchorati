@@ -14,8 +14,8 @@
         <!-- الأيقونة الفاخرة للتطبيق -->
         <ImageView
             android:id="@+id/ivSplashLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
             android:src="@drawable/app_logo"
             android:scaleType="fitCenter" />
 
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="منشوراتي"
+            android:text="@string/app_name"
             android:textColor="#F8FAFC"
             android:textSize="26sp"
             android:textStyle="bold" />
@@ -33,16 +33,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="أفضل وأجمل المنشورات والكلمات"
+            android:text="@string/splash_subtitle"
             android:textColor="#94A3B8"
             android:textSize="13.5sp" />
 
-        <!-- مؤشر تحميل خفيف أسفل الشعار بلون الشريط السماوي -->
+        <!-- مؤشر تحميل خفيف أسفل الشعار بلون الريشة الكريستالية الفيروزية -->
         <ProgressBar
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="32dp"
-            android:indeterminateTint="#0284C7" />
+            android:indeterminateTint="#38BDF8" />
 
     </LinearLayout>
 
@@ -52,7 +52,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:text="الإصدار 1.0"
+        android:text="@string/splash_version"
         android:textColor="#64748B"
         android:textSize="11sp" />
 

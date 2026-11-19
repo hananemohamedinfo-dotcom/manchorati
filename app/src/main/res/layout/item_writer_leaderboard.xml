@@ -16,10 +16,11 @@
     <!-- شارة الترتيب Rank Badge -->
     <FrameLayout
         android:id="@+id/layoutRankBadge"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/bg_rank_normal">
+        android:background="@drawable/bg_rank_normal"
+        android:padding="2dp">
 
         <TextView
             android:id="@+id/tvWriterRank"
@@ -27,15 +28,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="12.5sp"
             android:textStyle="bold"
             tools:text="1" />
     </FrameLayout>
 
     <!-- صورة الكاتب Avatar -->
     <FrameLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:layout_marginStart="12dp">
 
         <ImageView
@@ -49,8 +50,8 @@
         <!-- إكليل الغار الذهبي لمتصدر الأسبوع -->
         <ImageView
             android:id="@+id/ivWriterLaurelWreath"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_laurel_wreath_frame"
             android:visibility="gone" />
@@ -98,11 +99,11 @@
                 android:layout_marginStart="6dp"
                 android:background="@drawable/bg_badge_beginner"
                 android:maxLines="1"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="1dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2.5dp"
                 android:singleLine="true"
                 android:textColor="#D97706"
-                android:textSize="10sp"
+                android:textSize="10.5sp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:text="أسطوري"
@@ -142,11 +143,12 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
+        android:minWidth="68dp"
         android:background="@drawable/bg_tool_chip_active"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:paddingHorizontal="14dp"
+        android:paddingHorizontal="12dp"
         android:text="@string/follow"
         android:textColor="#FFFFFF"
         android:textSize="12sp"

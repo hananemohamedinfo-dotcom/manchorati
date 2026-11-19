@@ -268,16 +268,22 @@ fun changeUsername(
 
     // تسجيل الخروج الكامل (Firebase + Google)
     fun signOut(context: Context, onComplete: () -> Unit) {
+        val uid = auth.currentUser?.uid ?: ""
         // 1. تسجيل الخروج من Firebase
         auth.signOut()
 
         // 2. تسجيل الخروج من حساب Google
         getGoogleClient(context).signOut().addOnCompleteListener {
-            // 3. مسح الاسم المخزن محلياً
-            context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                .edit()
+            // 3. مسح البيانات المخزنة محلياً للحساب المتصل
+            val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+            val editor = prefs.edit()
                 .remove("user_name")
-                .apply()
+                .remove("user_photo")
+                .remove("user_custom_photo")
+            if (uid.isNotEmpty()) {
+                editor.remove("user_custom_photo_$uid")
+            }
+            editor.apply()
 
             onComplete()
         }

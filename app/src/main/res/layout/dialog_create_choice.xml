@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_bottom_sheet_surface"
-    android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -21,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="18dp"
-        android:text="ماذا تريد أن تصنع اليوم؟"
+        android:text="@string/create_choice_title"
         android:textColor="@color/text_primary"
         android:textSize="17.5sp"
         android:textStyle="bold" />
@@ -55,7 +54,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="كتابة منشور جديد"
+                    android:text="@string/create_post_title"
                     android:textColor="@color/text_primary"
                     android:textSize="15.5sp"
                     android:textStyle="bold" />
@@ -64,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="مشاركة خواطر واقتباسات مع مجتمع القراء"
+                    android:text="@string/create_post_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -107,7 +106,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="استوديو الفيديو وصانع الحالات"
+                    android:text="@string/create_video_title"
                     android:textColor="@color/text_primary"
                     android:textSize="15.5sp"
                     android:textStyle="bold" />
@@ -116,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="صناعة فيديو متحرك جاهز للنشر والمشاركة"
+                    android:text="@string/create_video_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -159,7 +158,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="كاتب الذكاء الاصطناعي"
+                    android:text="@string/create_ai_title"
                     android:textColor="@color/text_primary"
                     android:textSize="15.5sp"
                     android:textStyle="bold" />
@@ -168,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="توليد عبارات وخواطر مخصصة لمزاجك فوراً"
+                    android:text="@string/create_ai_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>

@@ -376,26 +376,75 @@ object AiWriterManager {
         val currentModel = ACTIVE_MODELS[modelIndex]
         val endpoint = "https://generativelanguage.googleapis.com/v1beta/models/$currentModel:generateContent?key=$apiKey"
 
-        val isPolishMode = style.contains("تحسين") || style.contains("Polish") || style.contains("صياغة")
+        val selectedLang = LocaleHelper.getSelectedLanguage(context)
+        val isPolishMode = style.contains("تحسين") || style.contains("Polish") || style.contains("صياغة") || style.contains("Amélioration") || style.contains("Sublimer")
 
-        val userInstruction = if (isPolishMode && customPrompt.isNotBlank()) {
-            buildString {
-                append("أنت أديب فصيح وخبير لغوي عربي بارع لتطبيق منشوراتي.")
-                append("\nالمطلوب: أعد صياغة وتحسين النص التالي ليكون غاية في البلاغة والتأثير مع الحفاظ على معناه الأصلي وتصحيح أي أخطاء لغوية:")
-                append("\nالنص المطلوب تحسينه: $customPrompt")
-                append("\nالتصنيف: $topic")
-                append("\nشروط حتمية وصارمة: أخرج فقط النص المحسن باللغة العربية الفصحى البليغة، بدون أي مقدمات (مثل 'إليك النص')، وبدون أي شروحات أو تذييل، وبدون نجوم Markdown (**)، وبدون علامات تنصيص زائدة. فقط النص المحسن.")
-            }
-        } else {
-            buildString {
-                append("أنت أديب فصيح ومساعد ذكاء اصطناعي عربي لتطبيق منشوراتي.")
-                append("\nالمطلوب: صياغة اقتباس أدبي أو خاطرة عربية راقية ومؤثرة جداً.")
-                append("\nالتصنيف: $topic")
-                append("\nالأسلوب: $style")
-                if (customPrompt.isNotBlank()) {
-                    append("\nالمعنى أو الفكرة المطلوبة: $customPrompt")
+        val userInstruction = when (selectedLang) {
+            "fr" -> {
+                if (isPolishMode && customPrompt.isNotBlank()) {
+                    buildString {
+                        append("Tu es un écrivain et styliste littéraire d'élite pour l'application Manchorati.")
+                        append("\nMission : Reformule et sublime le texte suivant avec une grande éloquence littéraire, du raffinement et une parfaite correction grammaticale, en conservant le sens profond d'origine :")
+                        append("\nTexte à sublimer : $customPrompt")
+                        append("\nThème : $topic")
+                        append("\nConsignes strictes : Réponds UNIQUEMENT avec le texte amélioré en français soigné, sans aucune formule d'introduction (comme 'Voici :'), sans explications ni commentaires, sans astérisques Markdown (**), et sans guillemets superflus. Uniquement le texte final.")
+                    }
+                } else {
+                    buildString {
+                        append("Tu es un écrivain littéraire éloquent et un assistant d'intelligence artificielle pour l'application Manchorati.")
+                        append("\nMission : Rédige une citation inspirante, une pensée profonde ou un poème élégant et percutant.")
+                        append("\nThème : $topic")
+                        append("\nStyle demandé : $style")
+                        if (customPrompt.isNotBlank()) {
+                            append("\nIdée ou inspiration demandée : $customPrompt")
+                        }
+                        append("\nConsignes strictes : Réponds UNIQUEMENT avec le texte de la citation en français élégant et raffiné, sans aucune introduction, sans explications, sans astérisques Markdown (**), et sans guillemets superflus. Uniquement le texte pur.")
+                    }
                 }
-                append("\nشروط حتمية وصارمة: أخرج فقط نص الاقتباس باللغة العربية الفصحى البليغة، مؤثراً وعميقاً، بدون أي مقدمات (مثل 'إليك، هاك')، وبدون أي شروحات، وبدون نجوم Markdown (**)، وبدون علامات تنصيص زائدة. فقط نص الاقتباس خالصاً.")
+            }
+            "en" -> {
+                if (isPolishMode && customPrompt.isNotBlank()) {
+                    buildString {
+                        append("You are an expert literary editor and eloquent writer for the Manchorati app.")
+                        append("\nTask: Rewrite and elevate the following text to make it deeply impactful, poetic, and refined while preserving its original core meaning and fixing any grammatical flaws:")
+                        append("\nText to polish: $customPrompt")
+                        append("\nTopic: $topic")
+                        append("\nStrict rules: Output ONLY the polished text in elegant English, with no intro phrases (like 'Here is:'), no explanations or footnotes, no Markdown asterisks (**), and no unnecessary quotes. Pure text only.")
+                    }
+                } else {
+                    buildString {
+                        append("You are an eloquent literary writer and AI assistant for the Manchorati app.")
+                        append("\nTask: Craft a profound, beautiful and impactful literary quote or poetic reflection.")
+                        append("\nTopic: $topic")
+                        append("\nStyle: $style")
+                        if (customPrompt.isNotBlank()) {
+                            append("\nRequested inspiration/prompt: $customPrompt")
+                        }
+                        append("\nStrict rules: Output ONLY the quote text in polished, captivating English, with no intro phrases, no explanations, no Markdown asterisks (**), and no unnecessary quotes. Pure text only.")
+                    }
+                }
+            }
+            else -> {
+                if (isPolishMode && customPrompt.isNotBlank()) {
+                    buildString {
+                        append("أنت أديب فصيح وخبير لغوي عربي بارع لتطبيق منشوراتي.")
+                        append("\nالمطلوب: أعد صياغة وتحسين النص التالي ليكون غاية في البلاغة والتأثير مع الحفاظ على معناه الأصلي وتصحيح أي أخطاء لغوية:")
+                        append("\nالنص المطلوب تحسينه: $customPrompt")
+                        append("\nالتصنيف: $topic")
+                        append("\nشروط حتمية وصارمة: أخرج فقط النص المحسن باللغة العربية الفصحى البليغة، بدون أي مقدمات (مثل 'إليك النص')، وبدون أي شروحات أو تذييل، وبدون نجوم Markdown (**)، وبدون علامات تنصيص زائدة. فقط النص المحسن.")
+                    }
+                } else {
+                    buildString {
+                        append("أنت أديب فصيح ومساعد ذكاء اصطناعي عربي لتطبيق منشوراتي.")
+                        append("\nالمطلوب: صياغة اقتباس أدبي أو خاطرة عربية راقية ومؤثرة جداً.")
+                        append("\nالتصنيف: $topic")
+                        append("\nالأسلوب: $style")
+                        if (customPrompt.isNotBlank()) {
+                            append("\nالمعنى أو الفكرة المطلوبة: $customPrompt")
+                        }
+                        append("\nشروط حتمية وصارمة: أخرج فقط نص الاقتباس باللغة العربية الفصحى البليغة، مؤثراً وعميقاً، بدون أي مقدمات (مثل 'إليك، هاك')، وبدون أي شروحات، وبدون نجوم Markdown (**)، وبدون علامات تنصيص زائدة. فقط نص الاقتباس خالصاً.")
+                    }
+                }
             }
         }
 
@@ -484,11 +533,11 @@ object AiWriterManager {
      */
     fun cleanGeminiOutput(rawText: String): String {
         var text = rawText.trim()
-        text = text.replace(Regex("^(?:إليك|هاك|اقتباس|الخاطرة|النص المحسن|حكمة|إليك هذه الحكمة|إليك واحدة من أعمق الحكم)[^\\n:]*[:\\n]+", RegexOption.IGNORE_CASE), "").trim()
+        text = text.replace(Regex("^(?:إليك|هاك|اقتباس|الخاطرة|النص المحسن|حكمة|إليك هذه الحكمة|إليك واحدة من أعمق الحكم|Voici|Here is|Here's)[^\\n:]*[:\\n]+", RegexOption.IGNORE_CASE), "").trim()
         text = text.replace(Regex("^[>\\s]+"), "")
         text = text.replace(Regex("\\*\\*(.*?)\\*\\*"), "$1")
         text = text.replace(Regex("\\*(.*?)\\*"), "$1")
-        val explanationSplit = text.split(Regex("\\n+(?:لماذا|الشرح|المعنى|السبب)[:\\s]"))
+        val explanationSplit = text.split(Regex("\\n+(?:لماذا|الشرح|المعنى|السبب|Why|Explication|Explanation)[:\\s]"))
         if (explanationSplit.isNotEmpty()) {
             text = explanationSplit[0]
         }

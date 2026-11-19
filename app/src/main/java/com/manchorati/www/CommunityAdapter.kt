@@ -180,6 +180,8 @@ class CommunityAdapter(
         private val tvAuthorBadge: TextView = itemView.findViewById(R.id.tvAuthorBadge)
         private val tvAuthorStreak: TextView? = itemView.findViewById(R.id.tvAuthorStreak)
         private val tvUsername: TextView = itemView.findViewById(R.id.tvPostUsername)
+        private val tvPostTime: TextView? = itemView.findViewById(R.id.tvPostTime)
+        private val tvPostTimeSeparator: View? = itemView.findViewById(R.id.tvPostTimeSeparator)
         private val layoutPostTagContainer: View? = itemView.findViewById(R.id.layoutPostTagContainer)
         private val tvPostTag: TextView? = itemView.findViewById(R.id.tvPostTag)
         private val btnPostMenu: ImageView = itemView.findViewById(R.id.btnPostMenu)
@@ -224,7 +226,7 @@ class CommunityAdapter(
             boundPost = post
             val currentPost = getCurrentPost()
             tvLikesCount.text = currentPost.likesCount.formatCount()
-            tvCommentsCount.text = currentPost.commentsCount.formatCount()
+            tvCommentsCount.text = maxOf(0L, currentPost.commentsCount).formatCount()
             val effectiveUid = getEffectiveUserId()
             val isLiked = effectiveUid.isNotEmpty() && currentPost.likedBy.contains(effectiveUid)
             updateLikeUI(isLiked, currentPost.likesCount)
@@ -240,7 +242,13 @@ class CommunityAdapter(
                     itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(250).start()
                 }.start()
             }
-            tvAuthor.text = post.authorName
+            val effectiveAuthorName = if (post.authorId.isNotEmpty() && post.authorId == currentUserId) {
+                itemView.context.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+                    .getString("user_name", "")?.takeIf { it.isNotBlank() } ?: post.authorName
+            } else {
+                post.authorName
+            }
+            tvAuthor.text = effectiveAuthorName
             val cleanAuthorHandle = post.authorUsername.removePrefix("@").trim()
             if (cleanAuthorHandle.isNotEmpty()) {
                 tvUsername.visibility = View.VISIBLE
@@ -248,6 +256,24 @@ class CommunityAdapter(
             } else {
                 tvUsername.text = itemView.context.getString(R.string.user_default_handle)
             }
+
+            // عرض توقيت نشر المنشور (منذ دقيقتين، منذ ساعتين، إلخ)
+            val postTime = post.getTimeMillis()
+            if (postTime > 0L) {
+                val timeAgoStr = TimeAgoUtils.formatTimeAgo(itemView.context, postTime)
+                if (timeAgoStr.isNotEmpty()) {
+                    tvPostTime?.visibility = View.VISIBLE
+                    tvPostTime?.text = timeAgoStr
+                    tvPostTimeSeparator?.visibility = View.VISIBLE
+                } else {
+                    tvPostTime?.visibility = View.GONE
+                    tvPostTimeSeparator?.visibility = View.GONE
+                }
+            } else {
+                tvPostTime?.visibility = View.GONE
+                tvPostTimeSeparator?.visibility = View.GONE
+            }
+
             tvContent.text = post.content
 
             val isVideo = post.postType.equals("VIDEO", ignoreCase = true) || post.bgMotionId.isNotEmpty()
@@ -279,25 +305,28 @@ class CommunityAdapter(
 
             // تحميل الصورة الشخصية أو الأفاتار
             // فحص ما إذا كان صاحب المنشور من متصدري الأسبوع (المتوجين بإكليل الغار الذهبي أو الفضي أو البرونزي)
+            val isBadgeVisible = BadgeHelper.isBadgeVisibleForUser(post.authorId)
             val champRank = WriterOfTheWeekHelper.getChampionRank(itemView.context, post.authorId)
-            if (champRank in 1..3) {
+            if (champRank in 1..3 && isBadgeVisible) {
                 ivAuthorLaurelWreath?.visibility = View.VISIBLE
-                val wreathColor = when (champRank) {
-                    1 -> Color.parseColor("#F59E0B") // ذهبي
-                    2 -> Color.parseColor("#CBD5E1") // فضي
-                    else -> Color.parseColor("#CD7F32") // برونزي
-                }
+                val wreathColor = WriterOfTheWeekHelper.getRankColor(champRank)
                 ivAuthorLaurelWreath?.setColorFilter(wreathColor)
                 ivAuthorLaurelWreath?.setOnClickListener {
                     ivAuthorLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
-                    WriterOfTheWeekHelper.showRankCelebrationDialog(itemView.context, champRank, post.authorName, isSelf = false)
+                    WriterOfTheWeekHelper.showRankCelebrationDialog(itemView.context, champRank, post.authorName, post.authorPhotoUrl, isSelf = false)
                 }
             } else {
                 ivAuthorLaurelWreath?.visibility = View.GONE
                 ivAuthorLaurelWreath?.setOnClickListener(null)
             }
 
-            ivAuthorAvatar.loadUserAvatar(post.authorPhotoUrl)
+            val effectiveAvatar = if (post.authorId.isNotEmpty() && post.authorId == currentUserId) {
+                itemView.context.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+                    .getString("user_photo", "")?.takeIf { it.isNotEmpty() } ?: post.authorPhotoUrl
+            } else {
+                post.authorPhotoUrl
+            }
+            ivAuthorAvatar.loadUserAvatar(effectiveAvatar)
 
             // وسم الهاشتاغ التفاعلي أسفل البطاقة
             if (!post.tag.isNullOrBlank()) {
@@ -341,7 +370,7 @@ class CommunityAdapter(
 
             // العدادات السفلية بصيغة K / M
             tvLikesCount.text = post.likesCount.formatCount()
-            tvCommentsCount.text = post.commentsCount.formatCount()
+            tvCommentsCount.text = maxOf(0L, post.commentsCount).formatCount()
 
             val effectiveUid = getEffectiveUserId()
 
@@ -506,10 +535,10 @@ class CommunityAdapter(
                 val ctx = view.context
                 val popup = PopupMenu(ctx, view)
                 if (isVideo) {
-                    popup.menu.add(0, 15, 0, "فتح في الاستوديو")
+                    popup.menu.add(0, 15, 0, ctx.getString(R.string.menu_open_in_studio))
                 }
-                popup.menu.add(0, 16, 1, "تحويل إلى فيديو / ستوري")
-                popup.menu.add(0, 14, 2, "مشاركة في حالة واتساب")
+                popup.menu.add(0, 16, 1, ctx.getString(R.string.menu_convert_to_video_story))
+                popup.menu.add(0, 14, 2, ctx.getString(R.string.menu_share_whatsapp_status))
                 popup.menu.add(0, 13, 1, ctx.getString(R.string.download_post_image))
                 popup.menu.add(0, 10, 2, ctx.getString(R.string.post_action_share_story))
                 popup.menu.add(0, 11, 3, if (BookmarkManager.isBookmarked(ctx, post.id)) ctx.getString(R.string.post_action_remove_bookmark) else ctx.getString(R.string.post_action_bookmark))
@@ -569,7 +598,7 @@ class CommunityAdapter(
         }
 
         private fun bindAuthorBadge(badge: UserBadge, post: CommunityPost) {
-            // فحص خصوصية المستخدم: هل اختار إظهار رتبته الأدبية؟
+            // فحص خصوصية المستخدم: هل اختار إظهار رتبته الأدبية وشاراته؟
             if (!BadgeHelper.isBadgeVisibleForUser(post.authorId)) {
                 tvAuthorBadge.visibility = View.GONE
                 return
@@ -585,10 +614,13 @@ class CommunityAdapter(
                 return
             }
 
+            // عرض إيموجي رتبة الكاتب الأدبية فقط بدون أي إطار أو خلفية
             val emoji = badge.iconEmoji
             if (emoji.isNotEmpty()) {
                 tvAuthorBadge.setCompoundDrawables(null, null, null, null)
                 tvAuthorBadge.text = emoji
+                tvAuthorBadge.background = null
+                tvAuthorBadge.setPadding(0, 0, 0, 0)
                 tvAuthorBadge.visibility = View.VISIBLE
             } else {
                 tvAuthorBadge.visibility = View.GONE
@@ -606,22 +638,39 @@ class CommunityAdapter(
         }
 
         private fun bindAuthorStreak(post: CommunityPost) {
+            // فحص خصوصية المستخدم وخيار إظهار شارة السلسلة في المنشورات
+            val currentUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+            val isMyPost = (post.authorId == currentUid)
+            val isStreakVisible = if (isMyPost) {
+                StreakManager.isStreakBadgeVisible(itemView.context)
+            } else {
+                BadgeHelper.isBadgeVisibleForUser(post.authorId)
+            }
+
+            if (!isStreakVisible || !BadgeHelper.isBadgeVisibleForUser(post.authorId)) {
+                tvAuthorStreak?.visibility = View.GONE
+                tvAuthorStreak?.setOnClickListener(null)
+                return
+            }
+
             val streak = post.authorStreak
-            if (streak >= 1 && tvAuthorStreak != null) {
-                val emoji = when {
-                    streak >= 30 -> "🏆"
-                    streak >= 15 -> "🌟"
-                    streak >= 7 -> "🔥"
-                    streak >= 3 -> "⚡"
-                    else -> "✨"
+            // عرض إيموجي المرحلة فقط بدون أي إطار أو خلفية
+            if (streak >= 7 && tvAuthorStreak != null) {
+                val (emoji, milestoneTitle) = when {
+                    streak >= 100 -> "👑" to "درع أسطورة الإلهام (نادي المئة يوم)"
+                    streak >= 60 -> "💎" to "وسام جوهرة المثابرة (60 يوماً)"
+                    streak >= 30 -> "🌟" to "وسام نجم الإبداع (30 يوماً)"
+                    else -> "🔥" to "وسام شعلة الإلهام (7 أيام)"
                 }
-                tvAuthorStreak.text = "$emoji $streak"
+                tvAuthorStreak.text = emoji
+                tvAuthorStreak.background = null
+                tvAuthorStreak.setPadding(0, 0, 0, 0)
                 tvAuthorStreak.visibility = View.VISIBLE
                 tvAuthorStreak.setOnClickListener {
                     tvAuthorStreak.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
                     Toast.makeText(
                         itemView.context,
-                        "سلسلة التفاعل والإلهام: $streak يوم متواصل! $emoji",
+                        "$milestoneTitle $emoji",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

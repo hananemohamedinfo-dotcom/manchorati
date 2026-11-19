@@ -61,6 +61,13 @@
     <string name="comment_bad_words">التعليق يحتوي على كلمات غير لائقة</string>
     <string name="login_required_to_comment">يرجى تسجيل الدخول أولاً للتعليق</string>
     <string name="comments_count_format">%d تعليق</string>
+    <string name="comments_count_one">تعليق واحد</string>
+    <string name="comments_count_two">تعليقان</string>
+    <string name="comments_count_plural">%d تعليقات</string>
+    <string name="comments_count_many">%d تعليق</string>
+    <string name="comment_deleted_success">تم حذف التعليق بنجاح</string>
+    <string name="comment_delete_error">تعذر حذف التعليق، يرجى المحاولة لاحقاً</string>
+    <string name="comment_deleting">جاري حذف التعليق...</string>
 
     <!-- إجراءات المنشورات -->
     <string name="post_action_like">إعجاب</string>
@@ -279,6 +286,8 @@
     <string name="notif_followed_you">%s بدأ بمتابعتك</string>
     <string name="notif_new_post">%s نشر منشوراً جديداً</string>
     <string name="notif_replied_comment">%s ردّ على تعليقك</string>
+    <string name="notif_liked_comment">%s أعجب بتعليقك</string>
+    <string name="comment_liked_by_you">أعجبك</string>
 
     <!-- عناصر إضافية في الملف الشخصي والواجهات -->
  <string name="featured_writer">كاتب متميز</string>
@@ -480,6 +489,10 @@
     <string name="studio_animations">حركات</string>
     <string name="studio_texts">نصوص</string>
     <string name="studio_backgrounds">خلفيات</string>
+    <string name="studio_stickers">ملصقات</string>
+    <string name="studio_sticker_pick_gallery">من هاتفي</string>
+    <string name="studio_sticker_remove">إزالة الملصق</string>
+    <string name="studio_sticker_drag_hint">اسحب الملصق لتحريكه، أو قرّب إصبعين لتغيير حجمه</string>
     <string name="studio_settings">إعدادات</string>
     <string name="studio_edit_quote_title">تعديل نص المنشور</string>
     <string name="studio_edit_quote_subtitle">عدّل النص ليظهر فوراً بتأثيرات الحركة في الفيديو</string>
@@ -565,6 +578,19 @@
     <string name="day_wed">أربعاء</string>
     <string name="day_thu">خميس</string>
     <string name="day_fri">جمعة</string>
+    <string name="streak_subtitle_100">أسطورة حقيقية! لقد تجاوزت 100 يوم من الإلهام المستمر</string>
+    <string name="streak_subtitle_60">إنجاز مبهر! شهران كاملان من العادة الإيجابية والتميز</string>
+    <string name="streak_subtitle_30">رائع جداً! أتممت شهراً كاملاً من الإلهام والقراءة</string>
+    <string name="streak_subtitle_7">بداية قوية! أتممت أسبوعك الأول وحافظت على شعلتك</string>
+    <string name="streak_subtitle_default">بداية موفقة! عد غداً لمتابعة سلسلتك وإشعال الشعلة</string>
+    <string name="streak_milestone_7">وسام شعلة الإلهام (7 أيام)</string>
+    <string name="streak_milestone_30">وسام نجم الإبداع (30 يوماً)</string>
+    <string name="streak_milestone_60">وسام جوهرة المثابرة (60 يوماً)</string>
+    <string name="streak_milestone_100">درع أسطورة الإلهام (100 يوم)</string>
+    <string name="streak_show_badge_title">إظهار شارة السلسلة في المنشورات</string>
+    <string name="streak_show_badge_subtitle">عرض إيموجي التفاعل والإلهام بجانب اسمك في منشوراتك</string>
+    <string name="profile_show_badges_title">إظهار الشارات والأوسمة</string>
+    <string name="profile_show_badges_subtitle">إظهار رتبتك وشارات الإنجاز وسلسلة الأيام بجانب اسمك في المنشورات وقائمة المتصدرين</string>
 
     <!-- Misc UI -->
     <string name="badge_new">جديد</string>
@@ -645,4 +671,213 @@
     <string name="studio_size_normal">عادي</string>
     <string name="studio_size_large">كبير</string>
     <string name="studio_size_xlarge">ضخم</string>
+    <string name="you_label">أنت</string>
+    <string name="weekly_champion_self">أنت متصدر هذا الأسبوع! استمر في نشر إبداعاتك للحفاظ على الصدارة 👑</string>
+
+    <!-- Choice Dialog (FAB +) -->
+    <string name="create_choice_title">ماذا تريد أن تصنع اليوم؟</string>
+    <string name="create_post_title">كتابة منشور جديد</string>
+    <string name="create_post_desc">مشاركة خواطر واقتباسات مع مجتمع القراء</string>
+    <string name="create_video_title">استوديو الفيديو وصانع الحالات</string>
+    <string name="create_video_desc">صناعة فيديو متحرك جاهز للنشر والمشاركة</string>
+    <string name="create_ai_title">كاتب الذكاء الاصطناعي</string>
+    <string name="create_ai_desc">توليد عبارات وخواطر مخصصة لمزاجك فوراً</string>
+
+    <!-- Add Post Dialog Tabs -->
+    <string name="dialog_post_templates">قوالب البطاقة</string>
+    <string name="dialog_post_background">الخلفية</string>
+    <string name="dialog_post_tag">الوسم</string>
+    <string name="dialog_post_text_color">لون النص</string>
+    <string name="dialog_post_font">نوع الخط</string>
+
+    <!-- Writers Activity Titles & Badges -->
+    <string name="writers_tab_most_followed">الكتّاب الأكثر متابعة 👥</string>
+    <string name="writers_tab_all_writers">جميع كتّاب المجتمع ✍️</string>
+    <string name="writer_of_week_rank1">كاتب الأسبوع 🥇</string>
+    <string name="writer_of_week_rank2">وصيف الأسبوع 🥈</string>
+    <string name="writer_of_week_rank3">متميز الأسبوع 🥉</string>
+
+    <!-- Celebration Dialogs -->
+    <string name="celebration_rank1_title">كاتب الأسبوع الذهبي 🥇</string>
+    <string name="celebration_rank1_self">تهانينا يا بطل! أنت كاتب الأسبوع المتوج بالمركز الأول عالمياً 🥇 وحصلت على إكليل الغار الذهبي وتاج الصدارة الملكي!</string>
+    <string name="celebration_rank1_other">تُوّج الكاتب %s بلقب كاتب الأسبوع بفضل تفاعل القراء وجمال الكلمات، وحصل على إكليل الغار الذهبي طيلة هذا الأسبوع!</string>
+    <string name="celebration_rank2_title">وصيف الأسبوع الفضي 🥈</string>
+    <string name="celebration_rank2_self">إنجاز استثنائي! حققت المركز الثاني هذا الأسبوع وتوجت رسمياً بإكليل الغار الفضي 🥈!</string>
+    <string name="celebration_rank2_other">تألق الكاتب %s وحقق المركز الثاني هذا الأسبوع، ونال إكليل الغار الفضي بجدارة!</string>
+    <string name="celebration_rank3_title">الكاتب المتميز البرونزي 🥉</string>
+    <string name="celebration_rank3_self">مبارك تألقك! أنت في المركز الثالث هذا الأسبوع وحصدت إكليل الغار البرونزي 🥉!</string>
+    <string name="celebration_rank3_other">حصد الكاتب %s المركز الثالث هذا الأسبوع وتوّج بإكليل الغار البرونزي!</string>
+
+    <!-- Account Warnings & Actions -->
+    <string name="account_banned_title">حسابك محظور</string>
+    <string name="account_banned_desc">تم حظر حسابك من النشر في المجتمع لمخالفته شروط وقواعد الاستخدام.</string>
+    <string name="filter_by_hashtag">تصفية حسب الهاشتاغ: %s</string>
+    <string name="login_success">تم تسجيل الدخول بنجاح</string>
+    <string name="login_failed">فشل الدخول: %s</string>
+
+    <!-- Splash & General -->
+    <string name="splash_subtitle">أفضل وأجمل المنشورات والكلمات</string>
+    <string name="splash_version">الإصدار 1.1.8</string>
+
+    <!-- Reels & Video -->
+    <string name="reel_brand_title">ريلز منشوراتي</string>
+    <string name="reel_edit_video">تعديل الفيديو</string>
+    <string name="reel_whatsapp">واتساب</string>
+    <string name="reel_download">تحميل</string>
+    <string name="reel_share">مشاركة</string>
+    <string name="reel_soundtrack">موسيقى تصويرية</string>
+
+    <!-- Audio Trimmer -->
+    <string name="audio_trimmer_title">محرر مقطع الموسيقى</string>
+    <string name="audio_trimmer_duration">المدة: %d ثانية</string>
+    <string name="audio_trimmer_hint">اسحب المسار الأزرق يميناً ويساراً لاختيار مقطعك المفضل بدقة</string>
+    <string name="audio_trimmer_change">تغيير الصوت</string>
+    <string name="audio_trimmer_confirm">تأكيد واستخدام المقطع</string>
+
+    <!-- Avatar Picker & Crop -->
+    <string name="avatar_pick_from_phone">اختيار صورة من الهاتف</string>
+    <string name="avatar_crop_fast_desc">قص الجزء الذي تريده بدقة وبأعلى سرعة</string>
+    <string name="avatar_your_uploaded">صورتك المرفوعة من الهاتف</string>
+    <string name="avatar_reuse_uploaded">انقر هنا لإعادة استخدام صورتك المرفوعة</string>
+    <string name="avatar_use_google">استخدام صورة حساب جوجل</string>
+    <string name="avatar_google_desc">الصورة الأصلية المرتبطة ببريدك الإلكتروني</string>
+    <string name="avatar_boys_group">رمزيات شباب (10)</string>
+    <string name="avatar_girls_group">رمزيات بنات (10)</string>
+    <string name="crop_profile_title">قص وتعديل الصورة الشخصية</string>
+    <string name="crop_profile_hint">اسحب الصورة وقرّبها لتحديد الجزء الذي تريده داخل الدائرة</string>
+    <string name="crop_profile_save">حفظ كصورة شخصية</string>
+
+    <!-- AI Chat & Writer -->
+    <string name="ai_assistant_title">مساعد منشوراتي الذكي</string>
+    <string name="ai_connected_badge">Google Gemini متصل</string>
+    <string name="ai_writer_helper_title">مساعد منشوراتي الأدبي</string>
+    <string name="ai_welcome_desc">أهلاً بك! اكتب لي أي فكرة أو اختر من المقترحات السريعة أدناه وسأصيغها لك بأرقى تعبير أدبي وبلاغة ساحرة.</string>
+    <string name="ai_suggestions_title">مقترحات سريعة للمحادثة:</string>
+    <string name="ai_suggest_wisdom">حكمة عن الصبر والفرج</string>
+    <string name="ai_suggest_coffee">خاطرة دافئة عن القهوة والمساء</string>
+    <string name="ai_suggest_motivate">تحفيز وإصرار على النجاح</string>
+    <string name="ai_suggest_friendship">اقتباس عن الصداقة والوفاء</string>
+    <string name="ai_suggest_dua">دعاء طمأنينة وراحة بال</string>
+    <string name="ai_style_quote">خاطرة قصيرة</string>
+    <string name="ai_style_refine">تحسين وبلاغة</string>
+    <string name="ai_action_copy">نسخ</string>
+    <string name="ai_action_image">صورة</string>
+    <string name="ai_action_video">فيديو</string>
+    <string name="ai_action_insert">إدراج</string>
+    <string name="ai_action_publish">نشر</string>
+    <string name="ai_chat_input_hint">تحدث مع الذكاء الاصطناعي أو اسأل عن فكرة...</string>
+    <string name="ai_key_active">مفتاحك الخاص مفعّل (توليد لا محدود)</string>
+    <string name="ai_promo_banner_title">⚡ توليد غير محدود وسريع بمفتاحك المجاني</string>
+    <string name="ai_promo_banner_desc">اربط حسابك في Google AI Studio مجاناً للاستمتاع بسرعة فائقة وبدون أي حدود يومية.</string>
+    <string name="ai_btn_enter_key">إدخال مفتاحي</string>
+    <string name="ai_btn_get_free_key">مفتاح مجاني (AI Studio)</string>
+    <string name="cancel">إلغاء</string>
+
+    <!-- Post 3-Dots Menu -->
+    <string name="menu_open_in_studio">فتح في الاستوديو</string>
+    <string name="menu_convert_to_video_story">تحويل إلى فيديو / ستوري</string>
+    <string name="menu_share_whatsapp_status">مشاركة في حالة واتساب</string>
+
+    <!-- AI Assistant Strings -->
+    <string name="ai_clear_chat_title">مسح سجل المحادثة؟</string>
+    <string name="ai_clear_chat_message">هل تريد مسح جميع رسائل المحادثة السابقة وبدء محادثة جديدة؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="ai_clear_chat_confirm">مسح المحادثة</string>
+    <string name="ai_clear_chat_success">تم مسح سجل المحادثة بنجاح</string>
+    <string name="ai_no_chat_to_clear">لا توجد رسائل سابقة لمسحها</string>
+    <string name="ai_key_custom_active">مفتاحك الشخصي مفعّل (غير محدود)</string>
+    <string name="ai_key_trial_format">المفتاح التجريبي (%1$d / %2$d محاولات)</string>
+    <string name="ai_key_dialog_title">مفتاح Google Gemini الشخصي</string>
+    <string name="ai_key_dialog_subtitle">توليد غير محدود من حسابك مباشرة</string>
+    <string name="ai_key_dialog_desc">يمكنك الحصول على مفتاح API مجاني 100% من Google AI Studio واستخدامه داخل التطبيق للاستمتاع بتوليد غير محدود للخواطر وبسرعة فائقة.</string>
+    <string name="ai_key_btn_get_free">الحصول على مفتاح مجاني (Google AI Studio)</string>
+    <string name="ai_key_input_hint">ألصق مفتاح Gemini هنا (AQ... أو AIza...)</string>
+    <string name="ai_key_btn_save">حفظ وتفعيل المفتاح</string>
+    <string name="ai_key_btn_reset">استعادة الافتراضي</string>
+    <string name="ai_key_verifying">جاري التحقق من المفتاح مع خوادم Google...</string>
+    <string name="ai_key_success">تم التحقق من مفتاحك وتفعيله بنجاح! التوليد الآن غير محدود.</string>
+    <string name="ai_key_reset_toast">تمت العودة للمفتاح الافتراضي.</string>
+    <string name="ai_key_empty_toast">يرجى لصق مفتاح Gemini أولاً</string>
+    <string name="ai_polish_input_hint">ألصق أو اكتب النص الذي ترغب في تحسين بلاغته...</string>
+    <string name="ai_polish_toast_hint">ألصق كتابتك في الحقل أدناه لإعادة صياغتها ببلاغة</string>
+    <string name="ai_card_wisdom_title">حكمة عن الصبر واليقين</string>
+    <string name="ai_card_wisdom_desc">صياغة حكمة بليغة ومؤثرة تزرع الطمأنينة وحسن الظن</string>
+    <string name="ai_card_evening_title">خواطر المساء وفنجان القهوة</string>
+    <string name="ai_card_evening_desc">كلمات هادئة تفيض بالسكينة ودفء المشاعر</string>
+    <string name="ai_card_motivation_title">تحفيز وإصرار على النجاح</string>
+    <string name="ai_card_motivation_desc">كلمات قوية تلهم العزيمة ومواصلة الكفاح نحو القمة</string>
+    <string name="ai_card_polish_title">تحسين وبلاغة كلامك</string>
+    <string name="ai_card_polish_desc">ألصق خاطرتك وسيعيد صياغتها بأرقى أسلوب أدبي فصيح</string>
+    <string name="ai_model_library">مكتبة أدبية</string>
+    <string name="ai_key_default_trial_status">جاري استخدام المفتاح التجريبي الافتراضي</string>
+    <string name="ai_key_custom_active_dialog">مفتاحك الشخصي مفعّل حالياً (توليد لا محدود)</string>
+    <string name="ai_key_verifying_button">جاري التحقق...</string>
+    <string name="ai_key_checking_servers">جاري فحص المفتاح مع خوادم Google...</string>
+    <string name="ai_key_invalid_toast">المفتاح غير صالح أو لم يتم تفعيله بعد.</string>
+    <string name="ai_prompt_sample_wisdom">اكتب لي حكمة بليغة ومؤثرة عن الصبر واليقين وحسن الظن بالله</string>
+    <string name="ai_prompt_sample_evening">خاطرة مسائية دافئة وجميلة عن فنجان القهوة والسكينة وراحة البال</string>
+    <string name="ai_prompt_sample_motivation">كلمات تحفيزية قوية تلهم العزيمة ومواصلة الكفاح نحو القمة</string>
+    <string name="ai_thinking_prompt">جاري استحضار الفكرة وصياغتها بأناقة...</string>
+    <string name="ai_generate_success_toast">تمت الصياغة بنجاح بواسطة الذكاء الاصطناعي</string>
+
+    <!-- Card Editor Localized Strings -->
+    <string name="card_editor_edit_text">تعديل النص</string>
+    <string name="card_editor_random_mix">خلط عشوائي</string>
+    <string name="card_editor_close_title">إغلاق محرر الصور؟</string>
+    <string name="card_editor_close_message">هل أنت متأكد من رغبتك في الخروج؟ سيتم فقدان التصميم الحالي.</string>
+    <string name="card_editor_keep_editing">متابعة التصميم</string>
+    <string name="card_editor_exit">خروج</string>
+    <string name="card_editor_chars_count">%1$d حرف</string>
+
+    <!-- Video Studio Localized Strings -->
+    <string name="studio_tool_ratio">المقاس</string>
+    <string name="studio_tool_filters">فلاتر</string>
+    <string name="studio_tool_trim_video">قص الفيديو</string>
+    <string name="studio_tool_slow_motion">سلو موشن</string>
+    <string name="studio_tool_stickers">ملصقات</string>
+    <string name="studio_tool_framing">التأطير</string>
+    <string name="studio_exit_title">مغادرة استوديو الفيديو؟</string>
+    <string name="studio_exit_message">هل أنت متأكد من رغبتك في الخروج؟ سيتم فقدان التعديلات والتأثيرات الصوتية والمرئية غير المحفوظة.</string>
+    <string name="studio_exit_stay">متابعة التعديل</string>
+    <string name="studio_exit_confirm">خروج</string>
+    <string name="studio_presets_title">قوالب وثيمات جاهزة</string>
+    <string name="studio_luts_title">فلاتر تلوين سينمائية (LUTs)</string>
+    <string name="studio_stickers_title">ملصقات و GIFs متحركة</string>
+    <string name="studio_audio_effects_title">الموسيقى والمؤثرات الصوتية</string>
+    <string name="studio_trim_audio_btn">تعديل المقطع</string>
+    <string name="studio_bg_motion_title">خلفيات الفيديو والـ Motion</string>
+    <string name="studio_btn_add_image">+ صورة</string>
+    <string name="studio_btn_add_video">+ فيديو</string>
+    <string name="studio_bg_active_video">فيديو نشط</string>
+    <string name="studio_bg_active_image">صورة نشطة</string>
+    <string name="studio_bg_cat_motion_videos">فيديوهات متحركة</string>
+    <string name="studio_bg_cat_shaders">شيدرز</string>
+    <string name="studio_bg_cat_nature">طبيعة</string>
+    <string name="studio_bg_cat_dark">داكنة</string>
+    <string name="studio_bg_cat_islamic">إسلاميات</string>
+    <string name="studio_bg_cat_gradient">تدرجات</string>
+    <string name="studio_audio_cat_all">الكل</string>
+    <string name="studio_audio_cat_music">موسيقى</string>
+    <string name="studio_audio_cat_nature">طبيعة</string>
+    <string name="studio_audio_cat_rain">مطر</string>
+    <string name="studio_audio_cat_calm">استرخاء</string>
+    <string name="studio_audio_cat_phone">هاتفي</string>
+    <string name="studio_filter_original">أصلي</string>
+    <string name="discard_post_title">تجاهل المنشور؟</string>
+    <string name="discard_post_message">لديك نص أو تعديلات غير منشورة. هل تريد التراجع وفقدان ما كتبته؟</string>
+    <string name="discard_post_keep_writing">متابعة الكتابة</string>
+    <string name="discard_post_confirm">تجاهل وخروج</string>
+    <string name="discard_profile_title">تجاهل التعديلات؟</string>
+    <string name="discard_profile_message">لديك تعديلات لم يتم حفظها بعد في ملفك الشخصي. هل تريد التراجع وفقدان التغييرات؟</string>
+    <string name="discard_profile_keep_editing">متابعة التعديل</string>
+    <string name="discard_profile_confirm">تجاهل وخروج</string>
+    <string name="post_min_words_error">يجب أن يحتوي المنشور على 5 كلمات على الأقل لضمان محتوى مفيد</string>
+    <string name="comment_action_copy">نسخ التعليق</string>
+    <string name="comment_action_reply">الرد على التعليق</string>
+    <string name="comment_action_edit">تعديل التعليق</string>
+    <string name="comment_action_delete">حذف التعليق</string>
+    <string name="comment_action_report">إبلاغ عن التعليق</string>
+    <string name="comment_copied_toast">تم نسخ التعليق إلى الحافظة</string>
+    <string name="comment_report_confirm_title">إبلاغ عن التعليق؟</string>
+    <string name="comment_report_confirm_msg">هل أنت متأكد من رغبتك في الإبلاغ عن هذا التعليق لانتهاكه معايير المجتمع؟</string>
+    <string name="comment_report_success">شكراً لك، تم إرسال البلاغ لمراجعته من الإدارة</string>
 </resources>

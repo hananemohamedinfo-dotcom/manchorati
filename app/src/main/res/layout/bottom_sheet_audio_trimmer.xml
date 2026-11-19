@@ -98,7 +98,7 @@
 
                 android:layout_height="wrap_content"
 
-                android:text="محرر مقطع الموسيقى"
+                android:text="@string/audio_trimmer_title"
 
                 android:textColor="#F8FAFC"
 
@@ -526,7 +526,7 @@
 
         android:paddingHorizontal="20dp"
 
-        android:text="اسحب المسار الأزرق يميناً ويساراً لاختيار مقطعك المفضل بدقة"
+        android:text="@string/audio_trimmer_hint"
 
         android:textColor="#64748B"
 
@@ -622,7 +622,7 @@
 
             android:gravity="center"
 
-            android:text="إلغاء"
+            android:text="@string/cancel"
 
             android:textColor="#94A3B8"
 
@@ -654,7 +654,7 @@
 
             android:paddingHorizontal="10dp"
 
-            android:text="تغيير الصوت"
+            android:text="@string/audio_trimmer_change"
 
             android:textColor="#38BDF8"
 
@@ -684,7 +684,7 @@
 
             android:gravity="center"
 
-            android:text="تأكيد واستخدام المقطع"
+            android:text="@string/audio_trimmer_confirm"
 
             android:textColor="#FFFFFF"
 

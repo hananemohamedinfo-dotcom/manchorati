@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:gravity="start"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="horizontal">
 
     <FrameLayout
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="جاري استحضار الفكرة وصياغتها بأناقة..."
+            android:text="@string/ai_generating"
             android:textColor="#38BDF8"
             android:textSize="12.5sp"
             android:textStyle="bold" />

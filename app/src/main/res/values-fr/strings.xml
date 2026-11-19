@@ -60,6 +60,13 @@
     <string name="comment_bad_words">Le commentaire contient des mots inappropriés</string>
     <string name="login_required_to_comment">Veuillez vous connecter pour commenter</string>
     <string name="comments_count_format">%d commentaires</string>
+    <string name="comments_count_one">1 commentaire</string>
+    <string name="comments_count_two">2 commentaires</string>
+    <string name="comments_count_plural">%d commentaires</string>
+    <string name="comments_count_many">%d commentaires</string>
+    <string name="comment_deleted_success">Commentaire supprimé avec succès</string>
+    <string name="comment_delete_error">Échec de la suppression du commentaire</string>
+    <string name="comment_deleting">Suppression du commentaire...</string>
 
     <!-- Actions sur les publications -->
     <string name="post_action_like">J’aime</string>
@@ -276,6 +283,8 @@
     <string name="notif_followed_you">%s a commencé à vous suivre</string>
     <string name="notif_new_post">%s a publié un nouveau post</string>
     <string name="notif_replied_comment">%s a répondu à votre commentaire</string>
+    <string name="notif_liked_comment">%s a aimé votre commentaire</string>
+    <string name="comment_liked_by_you">J\'aime</string>
 
     <!-- Éléments additionnels de profil et interface -->
  <string name="featured_writer">Rédacteur d’élite</string>
@@ -562,6 +571,19 @@
     <string name="day_wed">Mer</string>
     <string name="day_thu">Jeu</string>
     <string name="day_fri">Ven</string>
+    <string name="streak_subtitle_100">Véritable légende ! Vous avez dépassé 100 jours d’inspiration continue</string>
+    <string name="streak_subtitle_60">Exploit remarquable ! Deux mois complets d’habitudes positives</string>
+    <string name="streak_subtitle_30">Magnifique ! Vous avez complété un mois d’inspiration et de lecture</string>
+    <string name="streak_subtitle_7">Départ puissant ! Vous avez complété votre première semaine et gardé la flamme</string>
+    <string name="streak_subtitle_default">Bon début ! Revenez demain pour continuer votre série et allumer la flamme</string>
+    <string name="streak_milestone_7">Badge Flamme d’inspiration (7 jours)</string>
+    <string name="streak_milestone_30">Badge Étoile de créativité (30 jours)</string>
+    <string name="streak_milestone_60">Badge Joyau de persévérance (60 jours)</string>
+    <string name="streak_milestone_100">Bouclier Légende d’inspiration (100 jours)</string>
+    <string name="streak_show_badge_title">Afficher le badge de série sur les publications</string>
+    <string name="streak_show_badge_subtitle">Afficher l’émoji d’inspiration à côté de votre nom sur vos publications</string>
+    <string name="profile_show_badges_title">Afficher les badges et médailles</string>
+    <string name="profile_show_badges_subtitle">Afficher votre rang, vos badges et votre série de jours à côté de votre nom sur vos publications</string>
 
     <!-- Interface diverse -->
     <string name="badge_new">Nouveau</string>
@@ -642,4 +664,222 @@
     <string name="studio_size_normal">Normal</string>
     <string name="studio_size_large">Grand</string>
     <string name="studio_size_xlarge">Très grand</string>
+    <string name="you_label">Vous</string>
+    <string name="weekly_champion_self">Vous êtes le champion de la semaine ! Continuez à publier pour rester en tête 👑</string>
+
+    <!-- Missing keys -->
+    <string name="tab_reels">Reels</string>
+    <string name="font_amiri">Amiri</string>
+    <string name="font_almarai">Almarai</string>
+    <string name="studio_stickers">Stickers</string>
+    <string name="studio_sticker_pick_gallery">Depuis la galerie</string>
+    <string name="studio_sticker_remove">Supprimer le sticker</string>
+    <string name="studio_sticker_drag_hint">Glissez pour déplacer, pincez pour redimensionner</string>
+
+    <!-- Choice Dialog (FAB +) -->
+    <string name="create_choice_title">Que souhaitez-vous créer aujourd\'hui ?</string>
+    <string name="create_post_title">Écrire une publication</string>
+    <string name="create_post_desc">Partager des pensées et citations avec la communauté</string>
+    <string name="create_video_title">Studio vidéo &amp; Stories</string>
+    <string name="create_video_desc">Créer une vidéo animée prête à partager</string>
+    <string name="create_ai_title">Rédacteur IA</string>
+    <string name="create_ai_desc">Générer des citations selon votre humeur instantanément</string>
+
+    <!-- Add Post Dialog Tabs -->
+    <string name="dialog_post_templates">Modèles</string>
+    <string name="dialog_post_background">Arrière-plan</string>
+    <string name="dialog_post_tag">Thème</string>
+    <string name="dialog_post_text_color">Couleur</string>
+    <string name="dialog_post_font">Police</string>
+
+    <!-- Writers Activity Titles & Badges -->
+    <string name="writers_tab_most_followed">Auteurs les plus suivis 👥</string>
+    <string name="writers_tab_all_writers">Tous les auteurs de la communauté ✍️</string>
+    <string name="writer_of_week_rank1">Auteur de la semaine 🥇</string>
+    <string name="writer_of_week_rank2">Dauphin de la semaine 🥈</string>
+    <string name="writer_of_week_rank3">Auteur distingué 🥉</string>
+
+    <!-- Celebration Dialogs -->
+    <string name="celebration_rank1_title">Auteur d\'Or de la semaine 🥇</string>
+    <string name="celebration_rank1_self">Félicitations champion ! Vous êtes couronné Auteur de la semaine 🥇 et recevez la couronne de laurier d\'or !</string>
+    <string name="celebration_rank1_other">L\'auteur %s a été couronné Auteur de la semaine grâce à l\'amour des lecteurs, et reçoit la couronne de laurier d\'or !</string>
+    <string name="celebration_rank2_title">Dauphin d\'Argent de la semaine 🥈</string>
+    <string name="celebration_rank2_self">Exploit remarquable ! Vous décrochez la 2e place cette semaine et la couronne de laurier d\'argent 🥈 !</string>
+    <string name="celebration_rank2_other">L\'auteur %s brille à la 2e place cette semaine et remporte la couronne de laurier d\'argent !</string>
+    <string name="celebration_rank3_title">Auteur de Bronze distingué 🥉</string>
+    <string name="celebration_rank3_self">Bravo pour votre talent ! Vous êtes 3e cette semaine et recevez la couronne de laurier de bronze 🥉 !</string>
+    <string name="celebration_rank3_other">L\'auteur %s décroche la 3e place cette semaine et est couronné de laurier de bronze !</string>
+
+    <!-- Account Warnings & Actions -->
+    <string name="account_banned_title">Compte suspendu</string>
+    <string name="account_banned_desc">Votre compte a été suspendu pour non-respect des règles de la communauté.</string>
+    <string name="filter_by_hashtag">Filtrer par hashtag : %s</string>
+    <string name="login_success">Connexion réussie</string>
+    <string name="login_failed">Échec de connexion : %s</string>
+
+    <!-- Splash & General -->
+    <string name="splash_subtitle">Les meilleures citations et pensées</string>
+    <string name="splash_version">Version 1.1.8</string>
+
+    <!-- Reels & Video -->
+    <string name="reel_brand_title">Reels Manchorati</string>
+    <string name="reel_edit_video">Modifier la vidéo</string>
+    <string name="reel_whatsapp">WhatsApp</string>
+    <string name="reel_download">Télécharger</string>
+    <string name="reel_share">Partager</string>
+    <string name="reel_soundtrack">Bande sonore</string>
+
+    <!-- Audio Trimmer -->
+    <string name="audio_trimmer_title">Éditeur d\'extrait audio</string>
+    <string name="audio_trimmer_duration">Durée : %d secondes</string>
+    <string name="audio_trimmer_hint">Glissez le curseur bleu pour sélectionner précisément votre extrait</string>
+    <string name="audio_trimmer_change">Changer le son</string>
+    <string name="audio_trimmer_confirm">Confirmer et utiliser l\'extrait</string>
+
+    <!-- Avatar Picker & Crop -->
+    <string name="avatar_pick_from_phone">Choisir une photo de l\'appareil</string>
+    <string name="avatar_crop_fast_desc">Recadrez rapidement la zone souhaitée avec précision</string>
+    <string name="avatar_your_uploaded">Votre photo importée de l\'appareil</string>
+    <string name="avatar_reuse_uploaded">Appuyez ici pour réutiliser votre photo importée</string>
+    <string name="avatar_use_google">Utiliser la photo du compte Google</string>
+    <string name="avatar_google_desc">La photo de profil originale associée à votre email</string>
+    <string name="avatar_boys_group">Avatars Hommes (10)</string>
+    <string name="avatar_girls_group">Avatars Femmes (10)</string>
+    <string name="crop_profile_title">Recadrer la photo de profil</string>
+    <string name="crop_profile_hint">Faites glisser et zoomez pour ajuster votre photo dans le cercle</string>
+    <string name="crop_profile_save">Enregistrer comme photo de profil</string>
+
+    <!-- AI Chat & Writer -->
+    <string name="ai_assistant_title">Assistant Intelligent Manchorati</string>
+    <string name="ai_connected_badge">Google Gemini connecté</string>
+    <string name="ai_writer_helper_title">Assistant Littéraire Manchorati</string>
+    <string name="ai_welcome_desc">Bienvenue ! Écrivez une idée ou choisissez parmi les suggestions ci-dessous pour une formulation éloquente.</string>
+    <string name="ai_suggestions_title">Suggestions rapides pour la conversation :</string>
+    <string name="ai_suggest_wisdom">Sagesse sur la patience et le soulagement</string>
+    <string name="ai_suggest_coffee">Pensée chaleureuse du soir et café</string>
+    <string name="ai_suggest_motivate">Motivation et persévérance pour réussir</string>
+    <string name="ai_suggest_friendship">Citation sur l\'amitié et la loyauté</string>
+    <string name="ai_suggest_dua">Prière de sérénité et paix d\'esprit</string>
+    <string name="ai_style_quote">Courte pensée</string>
+    <string name="ai_style_refine">Amélioration littéraire</string>
+    <string name="ai_action_copy">Copier</string>
+    <string name="ai_action_image">Image</string>
+    <string name="ai_action_video">Vidéo</string>
+    <string name="ai_action_insert">Insérer</string>
+    <string name="ai_action_publish">Publier</string>
+    <string name="ai_chat_input_hint">Discutez avec l\'IA ou demandez une inspiration...</string>
+    <string name="ai_key_active">Votre clé privée est activée (Génération illimitée)</string>
+    <string name="ai_promo_banner_title">⚡ Génération rapide et illimitée avec votre clé gratuite</string>
+    <string name="ai_promo_banner_desc">Liez votre compte gratuit Google AI Studio pour profiter d\'une vitesse maximale sans limites quotidiennes.</string>
+    <string name="ai_btn_enter_key">Entrer ma clé</string>
+    <string name="ai_btn_get_free_key">Clé gratuite (AI Studio)</string>
+    <string name="cancel">Annuler</string>
+
+    <!-- Post 3-Dots Menu -->
+    <string name="menu_open_in_studio">Ouvrir dans le Studio</string>
+    <string name="menu_convert_to_video_story">Convertir en Vidéo / Story</string>
+    <string name="menu_share_whatsapp_status">Partager en statut WhatsApp</string>
+
+    <!-- AI Assistant Strings -->
+    <string name="ai_clear_chat_title">Effacer la conversation ?</string>
+    <string name="ai_clear_chat_message">Voulez-vous effacer tous les messages de la conversation et en commencer une nouvelle ? Cette action est irréversible.</string>
+    <string name="ai_clear_chat_confirm">Effacer</string>
+    <string name="ai_clear_chat_success">L\'historique de la conversation a été effacé</string>
+    <string name="ai_no_chat_to_clear">Aucun message à effacer</string>
+    <string name="ai_key_custom_active">Votre clé personnelle est activée (Illimité)</string>
+    <string name="ai_key_trial_format">Clé d\'essai (%1$d / %2$d essais)</string>
+    <string name="ai_key_dialog_title">Clé Google Gemini personnelle</string>
+    <string name="ai_key_dialog_subtitle">Génération illimitée depuis votre compte</string>
+    <string name="ai_key_dialog_desc">Obtenez une clé API 100% gratuite sur Google AI Studio pour profiter d\'une génération illimitée et ultrarapide directement dans l\'application.</string>
+    <string name="ai_key_btn_get_free">Obtenir une clé gratuite (AI Studio)</string>
+    <string name="ai_key_input_hint">Collez votre clé Gemini ici (AIza...)</string>
+    <string name="ai_key_btn_save">Enregistrer et activer la clé</string>
+    <string name="ai_key_btn_reset">Rétablir la clé par défaut</string>
+    <string name="ai_key_verifying">Vérification de la clé avec les serveurs Google...</string>
+    <string name="ai_key_success">Clé vérifiée et activée avec succès ! La génération est désormais illimitée.</string>
+    <string name="ai_key_reset_toast">Retour à la clé par défaut.</string>
+    <string name="ai_key_empty_toast">Veuillez d\'abord coller votre clé Gemini</string>
+    <string name="ai_polish_input_hint">Collez ou écrivez le texte à sublimer...</string>
+    <string name="ai_polish_toast_hint">Collez votre texte dans le champ ci-dessous pour le reformuler avec élégance</string>
+    <string name="ai_card_wisdom_title">Sagesse, patience &amp; sérénité</string>
+    <string name="ai_card_wisdom_desc">Une citation inspirante et apaisante qui cultive l\'optimisme</string>
+    <string name="ai_card_evening_title">Pensées du soir &amp; café</string>
+    <string name="ai_card_evening_desc">Des mots doux empreints de calme et de poésie</string>
+    <string name="ai_card_motivation_title">Motivation &amp; persévérance</string>
+    <string name="ai_card_motivation_desc">Des phrases percutantes pour stimuler l\'ambition et la réussite</string>
+    <string name="ai_card_polish_title">Sublimer &amp; enrichir vos mots</string>
+    <string name="ai_card_polish_desc">Collez votre texte pour lui donner une touche littéraire raffinée</string>
+    <string name="ai_model_library">Bibliothèque littéraire</string>
+    <string name="ai_key_default_trial_status">Utilisation de la clé d\'essai par défaut</string>
+    <string name="ai_key_custom_active_dialog">Votre clé personnelle est actuellement activée (Illimité)</string>
+    <string name="ai_key_verifying_button">Vérification en cours...</string>
+    <string name="ai_key_checking_servers">Vérification de la clé auprès des serveurs Google...</string>
+    <string name="ai_key_invalid_toast">La clé est invalide ou n\'a pas encore été activée.</string>
+    <string name="ai_prompt_sample_wisdom">Écris-moi une pensée sage et inspirante sur la patience et l\'espérance.</string>
+    <string name="ai_prompt_sample_evening">Une douce pensée du soir autour d\'une tasse de café et de la sérénité.</string>
+    <string name="ai_prompt_sample_motivation">Des paroles motivantes et inspirantes pour nourrir l\'ambition et le succès.</string>
+    <string name="ai_thinking_prompt">Inspiration en cours et mise en forme élégante...</string>
+    <string name="ai_generate_success_toast">Formulation réussie grâce à l\'IA</string>
+
+    <!-- Card Editor Localized Strings -->
+    <string name="card_editor_edit_text">Modifier le texte</string>
+    <string name="card_editor_random_mix">Mélange aléatoire</string>
+    <string name="card_editor_close_title">Quitter l\'éditeur d\'images ?</string>
+    <string name="card_editor_close_message">Voulez-vous vraiment quitter ? Les modifications actuelles seront perdues.</string>
+    <string name="card_editor_keep_editing">Continuer l\'édition</string>
+    <string name="card_editor_exit">Quitter</string>
+    <string name="card_editor_chars_count">%1$d caractères</string>
+
+    <!-- Video Studio Localized Strings -->
+    <string name="studio_tool_ratio">Format</string>
+    <string name="studio_tool_filters">Filtres</string>
+    <string name="studio_tool_trim_video">Découper vidéo</string>
+    <string name="studio_tool_slow_motion">Ralenti</string>
+    <string name="studio_tool_stickers">Autocollants</string>
+    <string name="studio_tool_framing">Cadrage</string>
+    <string name="studio_exit_title">Quitter le studio vidéo ?</string>
+    <string name="studio_exit_message">Voulez-vous vraiment quitter ? Les modifications audio et vidéo non sauvegardées seront perdues.</string>
+    <string name="studio_exit_stay">Poursuivre l\'édition</string>
+    <string name="studio_exit_confirm">Quitter</string>
+    <string name="studio_presets_title">Modèles &amp; Thèmes prêts</string>
+    <string name="studio_luts_title">Filtres cinématiques (LUTs)</string>
+    <string name="studio_stickers_title">Autocollants &amp; GIFs animés</string>
+    <string name="studio_audio_effects_title">Musiques &amp; Effets sonores</string>
+    <string name="studio_trim_audio_btn">Découper l\'audio</string>
+    <string name="studio_bg_motion_title">Fonds vidéo &amp; Motion</string>
+    <string name="studio_btn_add_image">+ Image</string>
+    <string name="studio_btn_add_video">+ Vidéo</string>
+    <string name="studio_bg_active_video">Vidéo active</string>
+    <string name="studio_bg_active_image">Image active</string>
+    <string name="studio_bg_cat_motion_videos">Vidéos animées</string>
+    <string name="studio_bg_cat_shaders">Shaders</string>
+    <string name="studio_bg_cat_nature">Nature</string>
+    <string name="studio_bg_cat_dark">Sombres</string>
+    <string name="studio_bg_cat_islamic">Islamique</string>
+    <string name="studio_bg_cat_gradient">Dégradés</string>
+    <string name="studio_audio_cat_all">Tous</string>
+    <string name="studio_audio_cat_music">Musique</string>
+    <string name="studio_audio_cat_nature">Nature</string>
+    <string name="studio_audio_cat_rain">Pluie</string>
+    <string name="studio_audio_cat_calm">Détente</string>
+    <string name="studio_audio_cat_phone">Mon appareil</string>
+    <string name="studio_filter_original">Original</string>
+    <string name="discard_post_title">Abandonner la publication ?</string>
+    <string name="discard_post_message">Vous avez des modifications non publiées. Voulez-vous vraiment quitter et perdre votre texte ?</string>
+    <string name="discard_post_keep_writing">Continuer à écrire</string>
+    <string name="discard_post_confirm">Abandonner et quitter</string>
+    <string name="discard_profile_title">Ignorer les modifications ?</string>
+    <string name="discard_profile_message">Vous avez des modifications non enregistrées sur votre profil. Voulez-vous vraiment quitter et perdre vos modifications ?</string>
+    <string name="discard_profile_keep_editing">Continuer à modifier</string>
+    <string name="discard_profile_confirm">Ignorer et quitter</string>
+    <string name="post_min_words_error">La publication doit contenir au moins 5 mots pour un contenu de qualité</string>
+    <string name="comment_action_copy">Copier le commentaire</string>
+    <string name="comment_action_reply">Répondre au commentaire</string>
+    <string name="comment_action_edit">Modifier le commentaire</string>
+    <string name="comment_action_delete">Supprimer le commentaire</string>
+    <string name="comment_action_report">Signaler le commentaire</string>
+    <string name="comment_copied_toast">Commentaire copié dans le presse-papiers</string>
+    <string name="comment_report_confirm_title">Signaler ce commentaire ?</string>
+    <string name="comment_report_confirm_msg">Êtes-vous sûr de vouloir signaler ce commentaire pour non-respect des règles ?</string>
+    <string name="comment_report_success">Merci, votre signalement a été envoyé à l\'équipe de modération</string>
 </resources>

@@ -56,6 +56,7 @@ class NotificationsAdapter(
             val sender = if (notification.senderName.isNotBlank()) notification.senderName else context.getString(R.string.app_name)
             val localizedMessage = when (notification.type) {
                 "LIKE" -> context.getString(R.string.notif_liked_post, sender)
+                "COMMENT_LIKE" -> context.getString(R.string.notif_liked_comment, sender)
                 "COMMENT" -> context.getString(R.string.notif_commented_post, sender)
                 "FOLLOW" -> context.getString(R.string.notif_followed_you, sender)
                 "NEW_POST" -> context.getString(R.string.notif_new_post, sender)
@@ -80,12 +81,16 @@ class NotificationsAdapter(
 
             // تخصيص الأيقونة واللون حسب نوع الإشعار
             when (notification.type) {
-                "LIKE" -> {
+                "LIKE", "COMMENT_LIKE" -> {
                     ivIcon.setImageResource(R.drawable.ic_heart_filled)
                     ivIcon.setColorFilter(Color.parseColor("#EF4444"))
                 }
+                "REPLY" -> {
+                    ivIcon.setImageResource(R.drawable.ic_chat_bubble_outline)
+                    ivIcon.setColorFilter(Color.parseColor("#8B5CF6"))
+                }
                 "COMMENT" -> {
-                    ivIcon.setImageResource(android.R.drawable.stat_notify_chat)
+                    ivIcon.setImageResource(R.drawable.ic_chat_bubble_outline)
                     ivIcon.setColorFilter(Color.parseColor("#2563EB"))
                 }
                 "FOLLOW" -> {
@@ -101,7 +106,7 @@ class NotificationsAdapter(
                     ivIcon.setColorFilter(Color.parseColor("#10B981"))
                 }
                 "report_dismissed" -> {
-                    ivIcon.setImageResource(android.R.drawable.ic_dialog_info)
+                    ivIcon.setImageResource(R.drawable.ic_check_small)
                     ivIcon.setColorFilter(Color.parseColor("#38BDF8"))
                 }
                 "post_removed" -> {
@@ -113,7 +118,7 @@ class NotificationsAdapter(
                     ivIcon.setColorFilter(Color.parseColor("#F59E0B"))
                 }
                 else -> {
-                    ivIcon.setImageResource(android.R.drawable.ic_popup_reminder)
+                    ivIcon.setImageResource(R.drawable.ic_notification_bell)
                     ivIcon.setColorFilter(Color.parseColor("#64748B"))
                 }
             }

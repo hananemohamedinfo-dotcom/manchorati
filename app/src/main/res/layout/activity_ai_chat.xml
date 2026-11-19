@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main"
     android:orientation="vertical"
-    android:layoutDirection="rtl">
+    android:layoutDirection="locale">
 
     <!-- شريط التطبيق العلوي (Top App Bar مع دعم الـ System Insets) -->
     <LinearLayout
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="مساعد منشوراتي الذكي"
+                android:text="@string/ai_assistant_title"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:maxLines="1"
@@ -86,7 +86,7 @@
                     android:id="@+id/tvAiStatusSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Google Gemini 3.5 متصل"
+                    android:text="@string/ai_connected_badge"
                     android:textColor="#38BDF8"
                     android:textSize="11sp"
                     android:maxLines="1"
@@ -178,7 +178,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="مساعد منشوراتي الأدبي"
+                    android:text="@string/ai_writer_helper_title"
                     android:textColor="@color/text_primary"
                     android:textSize="19sp"
                     android:textStyle="bold"
@@ -187,7 +187,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="بماذا ترغب أن نلهمك اليوم؟ اختر من الأفكار أو اكتب فكرتك:"
+                    android:text="@string/ai_welcome_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12.5sp"
                     android:gravity="center"
@@ -244,7 +244,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="حكمة عن الصبر واليقين"
+                                    android:text="@string/ai_card_wisdom_title"
                                     android:textColor="@color/text_primary"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -252,7 +252,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="صياغة حكمة بليغة ومؤثرة تزرع الطمأنينة وحسن الظن"
+                                    android:text="@string/ai_card_wisdom_desc"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11.5sp"
                                     android:layout_marginTop="2dp" />
@@ -304,7 +304,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="خواطر المساء وفنجان القهوة"
+                                    android:text="@string/ai_card_evening_title"
                                     android:textColor="@color/text_primary"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -312,7 +312,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="كلمات هادئة تفيض بالسكينة ودفء المشاعر"
+                                    android:text="@string/ai_card_evening_desc"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11.5sp"
                                     android:layout_marginTop="2dp" />
@@ -364,7 +364,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="تحفيز وإصرار على النجاح"
+                                    android:text="@string/ai_card_motivation_title"
                                     android:textColor="@color/text_primary"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -372,7 +372,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="كلمات قوية تلهم العزيمة ومواصلة الكفاح نحو القمة"
+                                    android:text="@string/ai_card_motivation_desc"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11.5sp"
                                     android:layout_marginTop="2dp" />
@@ -424,7 +424,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="تحسين وبلاغة كلامك"
+                                    android:text="@string/ai_card_polish_title"
                                     android:textColor="@color/text_primary"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -432,7 +432,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="ألصق خاطرتك وسيعيد صياغتها بأرقى أسلوب أدبي فصيح"
+                                    android:text="@string/ai_card_polish_desc"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11.5sp"
                                     android:layout_marginTop="2dp" />
@@ -491,7 +491,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="12dp"
                     android:background="@drawable/bg_tool_chip_active"
-                    android:text="حكمة بليغة"
+                    android:text="@string/ai_style_wisdom"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -506,7 +506,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="12dp"
                     android:background="@drawable/bg_tool_chip_idle"
-                    android:text="خاطرة قصيرة"
+                    android:text="@string/ai_style_quote"
                     android:textColor="@color/text_primary"
                     android:textSize="11sp"
                     android:clickable="true"
@@ -520,7 +520,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="12dp"
                     android:background="@drawable/bg_tool_chip_idle"
-                    android:text="شعر فخم"
+                    android:text="@string/ai_style_poem"
                     android:textColor="@color/text_primary"
                     android:textSize="11sp"
                     android:clickable="true"
@@ -534,7 +534,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="12dp"
                     android:background="@drawable/bg_tool_chip_idle"
-                    android:text="تحسين وبلاغة"
+                    android:text="@string/ai_style_refine"
                     android:textColor="@color/text_primary"
                     android:textSize="11sp"
                     android:clickable="true"
@@ -557,7 +557,7 @@
                 android:maxHeight="120dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_search_bar"
-                android:hint="تحدث مع الذكاء الاصطناعي أو اسأل عن فكرة..."
+                android:hint="@string/ai_chat_input_hint"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="10dp"
                 android:textColor="@color/text_primary"

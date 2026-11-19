@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.media.*
 import android.net.Uri
 import android.os.Build
@@ -48,6 +49,7 @@ object VideoExporter {
             var videoCodec: MediaCodec? = null
             var inputSurface: CodecInputSurface? = null
             var bitmap: Bitmap? = null
+            var bgVideoRetriever: MediaMetadataRetriever? = null
 
             try {
                 val isStory = config.aspectRatio == "9:16"
@@ -93,6 +95,21 @@ object VideoExporter {
                 bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
 
+                bgVideoRetriever = if (!config.bgVideoPath.isNullOrEmpty()) {
+                    try {
+                        MediaMetadataRetriever().apply {
+                            setDataSource(config.bgVideoPath)
+                        }
+                    } catch (_: Exception) { null }
+                } else null
+
+                val bgVideoDurationMs = if (bgVideoRetriever != null) {
+                    try {
+                        val durStr = bgVideoRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                        durStr?.toLongOrNull()?.coerceAtLeast(500L) ?: 1000L
+                    } catch (_: Exception) { 1000L }
+                } else 1000L
+
                 var videoTrackIndex = -1
                 var audioTrackIndex = -1
                 var muxerStarted = false
@@ -101,6 +118,36 @@ object VideoExporter {
 
                 for (frame in 0 until totalFrames) {
                     val timeMs = (frame * 1000L) / FRAME_RATE
+
+                    // Draw video background frame if active (with trimming support)
+                    if (bgVideoRetriever != null) {
+                        val segStartMs = (config.bgVideoStartSec * 1000L).toLong().coerceAtLeast(0L)
+                        val segEndMs = if (config.bgVideoEndSec > config.bgVideoStartSec) {
+                            (config.bgVideoEndSec * 1000L).toLong().coerceAtMost(bgVideoDurationMs)
+                        } else {
+                            bgVideoDurationMs
+                        }
+                        val segDurationMs = (segEndMs - segStartMs).coerceAtLeast(500L)
+                        val speed = config.bgVideoSpeed.coerceIn(0.1f, 5.0f)
+                        val scaledTimeMs = (timeMs * speed).toLong()
+                        val loopTimeMs = segStartMs + (scaledTimeMs % segDurationMs)
+                        val frameUs = loopTimeMs * 1000L
+                        val bgFrame = try {
+                            bgVideoRetriever.getFrameAtTime(frameUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+                                ?: bgVideoRetriever.getFrameAtTime(frameUs, MediaMetadataRetriever.OPTION_CLOSEST)
+                        } catch (_: Exception) { null }
+
+                        if (bgFrame != null) {
+                            val srcW = bgFrame.width.toFloat()
+                            val srcH = bgFrame.height.toFloat()
+                            val scale = maxOf(width.toFloat() / srcW, height.toFloat() / srcH)
+                            val scaledW = srcW * scale
+                            val scaledH = srcH * scale
+                            val dx = (width - scaledW) / 2f
+                            val dy = (height - scaledH) / 2f
+                            canvas.drawBitmap(bgFrame, null, RectF(dx, dy, dx + scaledW, dy + scaledH), null)
+                        }
+                    }
 
                     // Draw onto bitmap
                     VideoMotionRenderer.renderFrame(context, canvas, width, height, timeMs, config)
@@ -190,6 +237,7 @@ object VideoExporter {
                 e.printStackTrace()
                 mainHandler.post { onError(e) }
             } finally {
+                try { bgVideoRetriever?.release() } catch (_: Exception) {}
                 try { inputSurface?.release() } catch (_: Exception) {}
                 try { videoCodec?.stop(); videoCodec?.release() } catch (_: Exception) {}
                 try { muxer?.release() } catch (_: Exception) {}

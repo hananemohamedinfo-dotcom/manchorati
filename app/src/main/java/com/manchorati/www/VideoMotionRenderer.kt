@@ -36,8 +36,34 @@ object VideoMotionRenderer {
         val imageZoomScale: Float = 1.0f, // Touch pinch zoom multiplier (0.5f to 5.0f)
         val audioStartOffsetMs: Long = 0L, // Trimming start offset for custom music
         val colorFilter: String = "none", // VN Cinematic LUTs: none, teal_orange, moody, vintage_90s, noir_bw, cyberpunk, sunset_gold
-        val textSizeScale: Float = 1.0f // Text size multiplier (default 1.0f)
+        val textSizeScale: Float = 1.0f, // Text size multiplier (default 1.0f)
+        val stickerPath: String? = null, // Local animated GIF or sticker path
+        val stickerX: Float = 0.5f, // Relative center (0..1)
+        val stickerY: Float = 0.76f, // Relative center (0..1)
+        val stickerScale: Float = 1.0f, // Relative scale multiplier (0.4f to 3.0f)
+        val stickerRotation: Float = 0f,
+        val bgVideoPath: String? = null, // Local MP4 loop video path for animated background
+        val bgVideoStartSec: Float = 0f, // Start offset for video background trimming (seconds)
+        val bgVideoEndSec: Float = 0f, // End offset for video background trimming (seconds)
+        val bgVideoSpeed: Float = 1.0f, // Playback speed multiplier (0.25f to 2.0f) for Slow Motion
+        val stickers: List<StickerItem> = emptyList() // Multiple stickers with timing!
     )
+
+    data class StickerItem(
+        val id: String = java.util.UUID.randomUUID().toString(),
+        val path: String,
+        var x: Float = 0.5f,
+        var y: Float = 0.5f,
+        var scale: Float = 1.0f,
+        var rotation: Float = 0f,
+        var startSec: Float = 0f,
+        var endSec: Float = 15f
+    ) {
+        fun isVisibleAt(timeMs: Long): Boolean {
+            val sec = timeMs / 1000f
+            return sec >= startSec && sec <= endSec
+        }
+    }
 
     // Pre-allocated deterministic particles
     private const val NUM_STARS = 65
@@ -186,23 +212,23 @@ object VideoMotionRenderer {
         val cardRect = RectF(cardLeft, cardTop, cardRight, cardBottom)
         canvas.drawRoundRect(cardRect, cardRadius, cardRadius, shadowPaint)
 
-        // Frosted Glass Card Fill
+        // Frosted Glass Card Fill with Luxury Depth
         val cardPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#380B1220")
+            color = if (config.customImageBitmap != null) Color.parseColor("#660B1220") else Color.parseColor("#480B1220")
             style = Paint.Style.FILL
         }
         canvas.drawRoundRect(cardRect, cardRadius, cardRadius, cardPaint)
 
-        // Card Border with subtle gradient
+        // Card Border with subtle luxury gradient
         val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             shader = LinearGradient(
                 cardLeft, cardTop, cardRight, cardBottom,
-                intArrayOf(Color.parseColor("#55FFFFFF"), Color.parseColor("#15FFFFFF"), Color.parseColor("#4038BDF8")),
-                floatArrayOf(0f, 0.6f, 1f),
+                intArrayOf(Color.parseColor("#80FFFFFF"), Color.parseColor("#25FFFFFF"), Color.parseColor("#6038BDF8")),
+                floatArrayOf(0f, 0.55f, 1f),
                 Shader.TileMode.CLAMP
             )
             style = Paint.Style.STROKE
-            strokeWidth = 2f * S
+            strokeWidth = 1.8f * S
         }
         canvas.drawRoundRect(cardRect, cardRadius, cardRadius, borderPaint)
 
@@ -355,7 +381,15 @@ object VideoMotionRenderer {
 
         when (config.animStyle.lowercase()) {
             "typewriter" -> {
-                val typeRatio = (animProgress / 0.70f).coerceIn(0f, 1f)
+                // Elegant, readable typing pace:
+                // At 1.0x (normal), typing spans ~55% to 65% of the video duration (or ~80ms per character)
+                // At 0.5x (slow), typing spans ~85% to 90% of the video duration (deep calm pacing)
+                val maxTypingTime = (totalMs * 0.88f).coerceAtLeast(2000f)
+                val charPaceMs = 80L
+                val contentLen = maxOf(1, config.content.length)
+                val baseTimeMs = (contentLen * charPaceMs).toFloat().coerceIn(totalMs * 0.45f, totalMs * 0.65f)
+                val targetDurationMs = (baseTimeMs / speed).coerceIn(1500f, maxTypingTime).toLong()
+                val typeRatio = (loopTimeMs.toFloat() / targetDurationMs.toFloat()).coerceIn(0f, 1f)
                 val charCount = (config.content.length * typeRatio).toInt()
                 val isBlinking = ((loopTimeMs / 380) % 2 == 0L) && typeRatio < 1.0f
                 textToDraw = config.content.take(charCount) + (if (isBlinking) " |" else "")
@@ -363,7 +397,11 @@ object VideoMotionRenderer {
             "word_by_word" -> {
                 val words = config.content.split(Regex("\\s+")).filter { it.isNotEmpty() }
                 if (words.isNotEmpty()) {
-                    val wordRatio = (animProgress / 0.75f).coerceIn(0f, 1f)
+                    val maxTypingTime = (totalMs * 0.88f).coerceAtLeast(2000f)
+                    val wordPaceMs = 320L
+                    val baseTimeMs = (words.size * wordPaceMs).toFloat().coerceIn(totalMs * 0.45f, totalMs * 0.65f)
+                    val targetDurationMs = (baseTimeMs / speed).coerceIn(1500f, maxTypingTime).toLong()
+                    val wordRatio = (loopTimeMs.toFloat() / targetDurationMs.toFloat()).coerceIn(0f, 1f)
                     val visibleCount = maxOf(1, (words.size * wordRatio).toInt().coerceAtMost(words.size))
                     textToDraw = words.take(visibleCount).joinToString(" ")
                 }
@@ -471,6 +509,32 @@ object VideoMotionRenderer {
             canvas.drawText("تطبيق منشوراتي للاقتباسات والخواطر", w / 2f, brandY + 22f * S, subBrandPaint)
         }
 
+        // 8. Animated GIF / Multiple Stickers Overlay with Timing Support
+        val allStickers = if (config.stickers.isNotEmpty()) {
+            config.stickers
+        } else if (!config.stickerPath.isNullOrEmpty()) {
+            listOf(StickerItem(path = config.stickerPath, x = config.stickerX, y = config.stickerY, scale = config.stickerScale, rotation = config.stickerRotation, startSec = 0f, endSec = config.durationSec.toFloat()))
+        } else {
+            emptyList()
+        }
+
+        for (stk in allStickers) {
+            if (!stk.isVisibleAt(loopTimeMs)) continue
+            val baseSize = minOf(w, h) * 0.28f * stk.scale.coerceIn(0.4f, 3.5f)
+            val stickerPixelX = stk.x.coerceIn(0.04f, 0.96f) * w
+            val stickerPixelY = stk.y.coerceIn(0.04f, 0.96f) * h
+            val relativeTimeMs = maxOf(0L, loopTimeMs - (stk.startSec * 1000L).toLong())
+            StickerDrawer.drawSticker(
+                canvas = canvas,
+                filePath = stk.path,
+                targetCenterX = stickerPixelX,
+                targetCenterY = stickerPixelY,
+                targetSizePx = baseSize,
+                rotationDeg = stk.rotation,
+                timeMs = relativeTimeMs
+            )
+        }
+
         if (saveCount != -1) {
             canvas.restoreToCount(saveCount)
         }
@@ -485,6 +549,14 @@ object VideoMotionRenderer {
         config: VideoConfig,
         S: Float
     ) {
+        if (!config.bgVideoPath.isNullOrEmpty()) {
+            // Live preview: TextureView plays video beneath this transparent canvas.
+            // Offline export: VideoExporter draws background frame before calling renderFrame.
+            // Translucent dark tint for maximum quote card readability
+            canvas.drawColor(Color.parseColor("#33000000"))
+            return
+        }
+
         val bgPaint = Paint()
 
         if (config.customImageBitmap != null) {
@@ -499,7 +571,7 @@ object VideoMotionRenderer {
                     // Stretched blurred background
                     val bgDst = RectF(0f, 0f, w, h)
                     canvas.drawBitmap(bmp, null, bgDst, bgPaint)
-                    canvas.drawColor(Color.parseColor("#99000000"))
+                    canvas.drawColor(Color.parseColor("#4D000000"))
 
                     // Aspect-fit centered with touch zoom & pan
                     val fitScale = minOf(w / bmp.width.toFloat(), h / bmp.height.toFloat()) * touchZoom
@@ -527,11 +599,11 @@ object VideoMotionRenderer {
             }
             canvas.restore()
 
-            // Dark vignette overlay
+            // Clean Luxury Cinematic Vignette (keeps user photo clear & bright while ensuring text legibility)
             val overlay = LinearGradient(
                 0f, 0f, 0f, h,
-                intArrayOf(Color.parseColor("#80000000"), Color.parseColor("#99000000"), Color.parseColor("#B3000000")),
-                floatArrayOf(0f, 0.5f, 1f),
+                intArrayOf(Color.parseColor("#26000000"), Color.parseColor("#15000000"), Color.parseColor("#4D000000")),
+                floatArrayOf(0f, 0.45f, 1f),
                 Shader.TileMode.CLAMP
             )
             bgPaint.shader = overlay

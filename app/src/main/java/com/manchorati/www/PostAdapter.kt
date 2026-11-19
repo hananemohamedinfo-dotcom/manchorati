@@ -41,7 +41,7 @@ class PostAdapter(
         val post = posts[position]
         holder.tvContent.text = post.content
         holder.tvContent.textSize = fontSizeSp
-        holder.tvCategory.text = post.categoryName
+        holder.tvCategory.text = Category.getLocalizedCategoryName(holder.itemView.context, post.categoryName)
 
         updateFavoriteIcon(holder.btnFavorite, post.isFavorite)
 

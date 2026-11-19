@@ -60,6 +60,13 @@
     <string name="comment_bad_words">Comment contains inappropriate words</string>
     <string name="login_required_to_comment">Please log in first to comment</string>
     <string name="comments_count_format">%d comments</string>
+    <string name="comments_count_one">1 comment</string>
+    <string name="comments_count_two">2 comments</string>
+    <string name="comments_count_plural">%d comments</string>
+    <string name="comments_count_many">%d comments</string>
+    <string name="comment_deleted_success">Comment deleted successfully</string>
+    <string name="comment_delete_error">Failed to delete comment, please try again</string>
+    <string name="comment_deleting">Deleting comment...</string>
 
     <!-- Post Actions -->
     <string name="post_action_like">Like</string>
@@ -276,6 +283,8 @@
     <string name="notif_followed_you">%s started following you</string>
     <string name="notif_new_post">%s published a new post</string>
     <string name="notif_replied_comment">%s replied to your comment</string>
+    <string name="notif_liked_comment">%s liked your comment</string>
+    <string name="comment_liked_by_you">Liked</string>
 
     <!-- Additional Profile &amp; UI -->
  <string name="featured_writer">Featured Writer</string>
@@ -562,6 +571,19 @@
     <string name="day_wed">Wed</string>
     <string name="day_thu">Thu</string>
     <string name="day_fri">Fri</string>
+    <string name="streak_subtitle_100">True legend! You have surpassed 100 days of continuous inspiration</string>
+    <string name="streak_subtitle_60">Impressive achievement! Two full months of positive habits</string>
+    <string name="streak_subtitle_30">Wonderful! You completed a full month of inspiration and reading</string>
+    <string name="streak_subtitle_7">Strong start! You completed your first week and kept your flame burning</string>
+    <string name="streak_subtitle_default">Great start! Come back tomorrow to continue your streak and light the flame</string>
+    <string name="streak_milestone_7">Inspiration Flame Badge (7 days)</string>
+    <string name="streak_milestone_30">Creative Star Badge (30 days)</string>
+    <string name="streak_milestone_60">Perseverance Jewel Badge (60 days)</string>
+    <string name="streak_milestone_100">Legend of Inspiration Shield (100 days)</string>
+    <string name="streak_show_badge_title">Show streak badge on posts</string>
+    <string name="streak_show_badge_subtitle">Display inspiration emoji next to your name on your posts</string>
+    <string name="profile_show_badges_title">Show Badges &amp; Medals</string>
+    <string name="profile_show_badges_subtitle">Show your rank, achievement badges, and day streak next to your name on posts and leaderboards</string>
 
     <!-- Misc UI -->
     <string name="badge_new">New</string>
@@ -642,4 +664,222 @@
     <string name="studio_size_normal">Normal</string>
     <string name="studio_size_large">Large</string>
     <string name="studio_size_xlarge">X-Large</string>
+    <string name="you_label">You</string>
+    <string name="weekly_champion_self">You are this week\'s champion! Keep posting to stay on top 👑</string>
+
+    <!-- Missing keys -->
+    <string name="tab_reels">Reels</string>
+    <string name="font_amiri">Amiri</string>
+    <string name="font_almarai">Almarai</string>
+    <string name="studio_stickers">Stickers</string>
+    <string name="studio_sticker_pick_gallery">From Gallery</string>
+    <string name="studio_sticker_remove">Remove Sticker</string>
+    <string name="studio_sticker_drag_hint">Drag to move, pinch with two fingers to resize</string>
+
+    <!-- Choice Dialog (FAB +) -->
+    <string name="create_choice_title">What would you like to create today?</string>
+    <string name="create_post_title">Write a new post</string>
+    <string name="create_post_desc">Share thoughts and quotes with the community</string>
+    <string name="create_video_title">Video Studio &amp; Stories</string>
+    <string name="create_video_desc">Create an animated video ready to share</string>
+    <string name="create_ai_title">AI Writer</string>
+    <string name="create_ai_desc">Generate quotes tailored to your mood instantly</string>
+
+    <!-- Add Post Dialog Tabs -->
+    <string name="dialog_post_templates">Templates</string>
+    <string name="dialog_post_background">Background</string>
+    <string name="dialog_post_tag">Tag</string>
+    <string name="dialog_post_text_color">Text Color</string>
+    <string name="dialog_post_font">Font</string>
+
+    <!-- Writers Activity Titles & Badges -->
+    <string name="writers_tab_most_followed">Most Followed Writers 👥</string>
+    <string name="writers_tab_all_writers">All Community Writers ✍️</string>
+    <string name="writer_of_week_rank1">Writer of the Week 🥇</string>
+    <string name="writer_of_week_rank2">Weekly Runner-up 🥈</string>
+    <string name="writer_of_week_rank3">Distinguished Writer 🥉</string>
+
+    <!-- Celebration Dialogs -->
+    <string name="celebration_rank1_title">Golden Writer of the Week 🥇</string>
+    <string name="celebration_rank1_self">Congratulations champion! You are crowned Writer of the Week 🥇 and earned the Golden Laurel Wreath!</string>
+    <string name="celebration_rank1_other">Writer %s was crowned Writer of the Week and receives the Golden Laurel Wreath all week!</string>
+    <string name="celebration_rank2_title">Silver Weekly Runner-up 🥈</string>
+    <string name="celebration_rank2_self">Outstanding achievement! You achieved 2nd place this week and earned the Silver Laurel Wreath 🥈!</string>
+    <string name="celebration_rank2_other">Writer %s achieved 2nd place this week and earned the Silver Laurel Wreath!</string>
+    <string name="celebration_rank3_title">Bronze Distinguished Writer 🥉</string>
+    <string name="celebration_rank3_self">Congratulations! You are 3rd place this week and earned the Bronze Laurel Wreath 🥉!</string>
+    <string name="celebration_rank3_other">Writer %s achieved 3rd place this week and is crowned with the Bronze Laurel Wreath!</string>
+
+    <!-- Account Warnings & Actions -->
+    <string name="account_banned_title">Account Suspended</string>
+    <string name="account_banned_desc">Your account has been suspended for violating community rules.</string>
+    <string name="filter_by_hashtag">Filter by hashtag: %s</string>
+    <string name="login_success">Logged in successfully</string>
+    <string name="login_failed">Login failed: %s</string>
+
+    <!-- Splash & General -->
+    <string name="splash_subtitle">The finest quotes and literary thoughts</string>
+    <string name="splash_version">Version 1.1.8</string>
+
+    <!-- Reels & Video -->
+    <string name="reel_brand_title">Manchorati Reels</string>
+    <string name="reel_edit_video">Edit Video</string>
+    <string name="reel_whatsapp">WhatsApp</string>
+    <string name="reel_download">Download</string>
+    <string name="reel_share">Share</string>
+    <string name="reel_soundtrack">Soundtrack</string>
+
+    <!-- Audio Trimmer -->
+    <string name="audio_trimmer_title">Audio Clip Editor</string>
+    <string name="audio_trimmer_duration">Duration: %d seconds</string>
+    <string name="audio_trimmer_hint">Drag the blue track horizontally to precisely select your favorite clip</string>
+    <string name="audio_trimmer_change">Change Audio</string>
+    <string name="audio_trimmer_confirm">Confirm &amp; Use Clip</string>
+
+    <!-- Avatar Picker & Crop -->
+    <string name="avatar_pick_from_phone">Choose photo from device</string>
+    <string name="avatar_crop_fast_desc">Crop the desired part quickly and accurately</string>
+    <string name="avatar_your_uploaded">Your uploaded photo</string>
+    <string name="avatar_reuse_uploaded">Tap here to reuse your uploaded photo</string>
+    <string name="avatar_use_google">Use Google account photo</string>
+    <string name="avatar_google_desc">Original photo linked to your email</string>
+    <string name="avatar_boys_group">Men Avatars (10)</string>
+    <string name="avatar_girls_group">Women Avatars (10)</string>
+    <string name="crop_profile_title">Crop Profile Picture</string>
+    <string name="crop_profile_hint">Drag and pinch to fit your photo inside the circle</string>
+    <string name="crop_profile_save">Save as Profile Picture</string>
+
+    <!-- AI Chat & Writer -->
+    <string name="ai_assistant_title">Manchorati AI Assistant</string>
+    <string name="ai_connected_badge">Google Gemini Connected</string>
+    <string name="ai_writer_helper_title">Manchorati Literary Assistant</string>
+    <string name="ai_welcome_desc">Welcome! Write any thought or pick from the suggestions below, and I will craft it eloquently.</string>
+    <string name="ai_suggestions_title">Quick Conversation Suggestions:</string>
+    <string name="ai_suggest_wisdom">Wisdom on patience and relief</string>
+    <string name="ai_suggest_coffee">Warm evening reflection &amp; coffee</string>
+    <string name="ai_suggest_motivate">Motivation &amp; persistence for success</string>
+    <string name="ai_suggest_friendship">Quote on friendship and loyalty</string>
+    <string name="ai_suggest_dua">Prayer of serenity and peace of mind</string>
+    <string name="ai_style_quote">Short thought</string>
+    <string name="ai_style_refine">Style &amp; polish</string>
+    <string name="ai_action_copy">Copy</string>
+    <string name="ai_action_image">Image</string>
+    <string name="ai_action_video">Video</string>
+    <string name="ai_action_insert">Insert</string>
+    <string name="ai_action_publish">Publish</string>
+    <string name="ai_chat_input_hint">Chat with AI or ask for inspiration...</string>
+    <string name="ai_key_active">Personal key active (Unlimited generation)</string>
+    <string name="ai_promo_banner_title">⚡ Fast, unlimited generation with your free key</string>
+    <string name="ai_promo_banner_desc">Connect your free Google AI Studio account for blazing fast speed without daily quotas.</string>
+    <string name="ai_btn_enter_key">Enter My Key</string>
+    <string name="ai_btn_get_free_key">Free Key (AI Studio)</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Post 3-Dots Menu -->
+    <string name="menu_open_in_studio">Open in Studio</string>
+    <string name="menu_convert_to_video_story">Convert to Video / Story</string>
+    <string name="menu_share_whatsapp_status">Share to WhatsApp Status</string>
+
+    <!-- AI Assistant Strings -->
+    <string name="ai_clear_chat_title">Clear Chat History?</string>
+    <string name="ai_clear_chat_message">Do you want to clear all previous chat messages and start a new conversation? This action cannot be undone.</string>
+    <string name="ai_clear_chat_confirm">Clear Chat</string>
+    <string name="ai_clear_chat_success">Chat history cleared successfully</string>
+    <string name="ai_no_chat_to_clear">No messages to clear</string>
+    <string name="ai_key_custom_active">Personal key active (Unlimited)</string>
+    <string name="ai_key_trial_format">Trial Key (%1$d / %2$d attempts)</string>
+    <string name="ai_key_dialog_title">Personal Google Gemini Key</string>
+    <string name="ai_key_dialog_subtitle">Unlimited generation directly from your account</string>
+    <string name="ai_key_dialog_desc">Get a 100% free API key from Google AI Studio and use it in the app for unlimited, ultra-fast thought generation.</string>
+    <string name="ai_key_btn_get_free">Get Free Key (Google AI Studio)</string>
+    <string name="ai_key_input_hint">Paste Gemini key here (AQ... or AIza...)</string>
+    <string name="ai_key_btn_save">Save &amp; Activate Key</string>
+    <string name="ai_key_btn_reset">Restore Default</string>
+    <string name="ai_key_verifying">Verifying key with Google servers...</string>
+    <string name="ai_key_success">Key verified and activated successfully! Generation is now unlimited.</string>
+    <string name="ai_key_reset_toast">Reverted to default key.</string>
+    <string name="ai_key_empty_toast">Please paste your Gemini key first</string>
+    <string name="ai_polish_input_hint">Paste or type the text you want to refine...</string>
+    <string name="ai_polish_toast_hint">Paste your writing in the field below to polish eloquently</string>
+    <string name="ai_card_wisdom_title">Wisdom on Patience &amp; Hope</string>
+    <string name="ai_card_wisdom_desc">Eloquently crafted wisdom bringing peace and reassurance</string>
+    <string name="ai_card_evening_title">Evening Reflections &amp; Coffee</string>
+    <string name="ai_card_evening_desc">Calm words filled with warmth and tranquility</string>
+    <string name="ai_card_motivation_title">Motivation &amp; Drive to Succeed</string>
+    <string name="ai_card_motivation_desc">Empowering words that fuel ambition and perseverance</string>
+    <string name="ai_card_polish_title">Polish &amp; Elevate Your Writing</string>
+    <string name="ai_card_polish_desc">Paste your thought and let AI refine it with elegant phrasing</string>
+    <string name="ai_model_library">Literary Library</string>
+    <string name="ai_key_default_trial_status">Using default trial key</string>
+    <string name="ai_key_custom_active_dialog">Your personal key is currently active (Unlimited)</string>
+    <string name="ai_key_verifying_button">Verifying...</string>
+    <string name="ai_key_checking_servers">Checking key with Google servers...</string>
+    <string name="ai_key_invalid_toast">Invalid key or not yet activated.</string>
+    <string name="ai_prompt_sample_wisdom">Write me an inspiring and wise quote about patience and hope.</string>
+    <string name="ai_prompt_sample_evening">A warm evening reflection about a cup of coffee and peace of mind.</string>
+    <string name="ai_prompt_sample_motivation">Empowering motivational words inspiring determination to reach the top.</string>
+    <string name="ai_thinking_prompt">Crafting your inspiration with elegance...</string>
+    <string name="ai_generate_success_toast">Successfully crafted by AI</string>
+
+    <!-- Card Editor Localized Strings -->
+    <string name="card_editor_edit_text">Edit text</string>
+    <string name="card_editor_random_mix">Random mix</string>
+    <string name="card_editor_close_title">Exit Image Editor?</string>
+    <string name="card_editor_close_message">Are you sure you want to exit? The current design will be lost.</string>
+    <string name="card_editor_keep_editing">Continue Editing</string>
+    <string name="card_editor_exit">Exit</string>
+    <string name="card_editor_chars_count">%1$d chars</string>
+
+    <!-- Video Studio Localized Strings -->
+    <string name="studio_tool_ratio">Ratio</string>
+    <string name="studio_tool_filters">Filters</string>
+    <string name="studio_tool_trim_video">Trim Video</string>
+    <string name="studio_tool_slow_motion">Slow Motion</string>
+    <string name="studio_tool_stickers">Stickers</string>
+    <string name="studio_tool_framing">Framing</string>
+    <string name="studio_exit_title">Exit Video Studio?</string>
+    <string name="studio_exit_message">Are you sure you want to exit? Any unsaved audio or video edits will be lost.</string>
+    <string name="studio_exit_stay">Keep Editing</string>
+    <string name="studio_exit_confirm">Exit</string>
+    <string name="studio_presets_title">Ready Templates &amp; Themes</string>
+    <string name="studio_luts_title">Cinematic Filters (LUTs)</string>
+    <string name="studio_stickers_title">Stickers &amp; Animated GIFs</string>
+    <string name="studio_audio_effects_title">Music &amp; Sound Effects</string>
+    <string name="studio_trim_audio_btn">Trim Audio</string>
+    <string name="studio_bg_motion_title">Video &amp; Motion Backgrounds</string>
+    <string name="studio_btn_add_image">+ Image</string>
+    <string name="studio_btn_add_video">+ Video</string>
+    <string name="studio_bg_active_video">Active Video</string>
+    <string name="studio_bg_active_image">Active Image</string>
+    <string name="studio_bg_cat_motion_videos">Animated Videos</string>
+    <string name="studio_bg_cat_shaders">Shaders</string>
+    <string name="studio_bg_cat_nature">Nature</string>
+    <string name="studio_bg_cat_dark">Dark</string>
+    <string name="studio_bg_cat_islamic">Islamic</string>
+    <string name="studio_bg_cat_gradient">Gradients</string>
+    <string name="studio_audio_cat_all">All</string>
+    <string name="studio_audio_cat_music">Music</string>
+    <string name="studio_audio_cat_nature">Nature</string>
+    <string name="studio_audio_cat_rain">Rain</string>
+    <string name="studio_audio_cat_calm">Relaxation</string>
+    <string name="studio_audio_cat_phone">My Device</string>
+    <string name="studio_filter_original">Original</string>
+    <string name="discard_post_title">Discard post?</string>
+    <string name="discard_post_message">You have unpublished text or changes. Are you sure you want to discard what you wrote?</string>
+    <string name="discard_post_keep_writing">Keep writing</string>
+    <string name="discard_post_confirm">Discard and exit</string>
+    <string name="discard_profile_title">Discard changes?</string>
+    <string name="discard_profile_message">You have unsaved changes in your profile. Are you sure you want to discard your changes?</string>
+    <string name="discard_profile_keep_editing">Keep editing</string>
+    <string name="discard_profile_confirm">Discard and exit</string>
+    <string name="post_min_words_error">Post must contain at least 5 words to ensure meaningful content</string>
+    <string name="comment_action_copy">Copy comment</string>
+    <string name="comment_action_reply">Reply to comment</string>
+    <string name="comment_action_edit">Edit comment</string>
+    <string name="comment_action_delete">Delete comment</string>
+    <string name="comment_action_report">Report comment</string>
+    <string name="comment_copied_toast">Comment copied to clipboard</string>
+    <string name="comment_report_confirm_title">Report comment?</string>
+    <string name="comment_report_confirm_msg">Are you sure you want to report this comment for violating community standards?</string>
+    <string name="comment_report_success">Thank you, your report has been submitted for review</string>
 </resources>

@@ -339,6 +339,8 @@ fun listenToUserPosts(
                         }
 
                         val isEdited = doc.getBoolean("isEdited") ?: false
+                        val likesCount = doc.getLong("likesCount") ?: 0L
+                        val likedBy = (doc.get("likedBy") as? List<*>)?.filterIsInstance<String>() ?: emptyList()
 
                         val comment = Comment(
                             id = doc.id,
@@ -349,7 +351,9 @@ fun listenToUserPosts(
                             replyToAuthorName = replyToAuthorName,
                             replyToCommentId = replyToCommentId,
                             timestamp = timeVal,
-                            isEdited = isEdited
+                            isEdited = isEdited,
+                            likesCount = likesCount,
+                            likedBy = likedBy
                         )
                         commentsList.add(comment)
                     } catch (_: Exception) {
@@ -376,13 +380,15 @@ fun listenToUserPosts(
             "content" to content,
             "replyToAuthorName" to replyToAuthorName,
             "replyToCommentId" to replyToCommentId,
-            "timestamp" to System.currentTimeMillis()
+            "timestamp" to System.currentTimeMillis(),
+            "likesCount" to 0L,
+            "likedBy" to emptyList<String>()
         )
 
         val postRef = db.collection("community_posts").document(postId)
         postRef.collection("comments").add(commentMap)
             .addOnSuccessListener {
-                postRef.update("commentsCount", FieldValue.increment(1))
+                postRef.set(mapOf("commentsCount" to FieldValue.increment(1)), SetOptions.merge())
                 onComplete(true)
             }
             .addOnFailureListener { onComplete(false) }
@@ -400,12 +406,41 @@ fun listenToUserPosts(
     }
 
     fun deleteComment(postId: String, commentId: String, onComplete: (Boolean) -> Unit) {
+        if (postId.isEmpty() || commentId.isEmpty()) {
+            onComplete(false)
+            return
+        }
         val postRef = db.collection("community_posts").document(postId)
         postRef.collection("comments").document(commentId).delete()
             .addOnSuccessListener {
-                postRef.update("commentsCount", FieldValue.increment(-1))
-                onComplete(true)
+                db.runTransaction { transaction ->
+                    val snapshot = transaction.get(postRef)
+                    if (snapshot.exists()) {
+                        val currentCount = snapshot.getLong("commentsCount") ?: 0L
+                        val newCount = maxOf(0L, currentCount - 1L)
+                        transaction.update(postRef, "commentsCount", newCount)
+                    }
+                }.addOnCompleteListener {
+                    onComplete(true)
+                }
             }
+            .addOnFailureListener { e ->
+                android.util.Log.e("FirestoreManager", "deleteComment failed: postId=$postId, commentId=$commentId", e)
+                onComplete(false)
+            }
+    }
+
+    fun reportComment(postId: String, commentId: String, reporterId: String, reason: String = "غير محدد", onComplete: (Boolean) -> Unit) {
+        val reportMap = hashMapOf(
+            "postId" to postId,
+            "commentId" to commentId,
+            "reporterId" to reporterId,
+            "reason" to reason,
+            "type" to "COMMENT",
+            "timestamp" to System.currentTimeMillis()
+        )
+        db.collection("reports").add(reportMap)
+            .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
     }
 
@@ -420,6 +455,57 @@ fun listenToUserPosts(
             )
             .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
+    }
+
+    fun toggleCommentLike(
+        postId: String,
+        comment: Comment,
+        userId: String,
+        userName: String,
+        isLiked: Boolean,
+        onComplete: (Boolean) -> Unit = {}
+    ) {
+        if (postId.isEmpty() || comment.id.isEmpty() || userId.isEmpty()) {
+            onComplete(false)
+            return
+        }
+
+        val commentRef = db.collection("community_posts").document(postId)
+            .collection("comments").document(comment.id)
+
+        val updates = if (isLiked) {
+            mapOf(
+                "likedBy" to FieldValue.arrayUnion(userId),
+                "likesCount" to FieldValue.increment(1)
+            )
+        } else {
+            mapOf(
+                "likedBy" to FieldValue.arrayRemove(userId),
+                "likesCount" to FieldValue.increment(-1)
+            )
+        }
+
+        commentRef.update(updates)
+            .addOnSuccessListener {
+                if (isLiked && comment.authorId.isNotEmpty() && comment.authorId != userId) {
+                    sendNotification(
+                        recipientId = comment.authorId,
+                        senderId = userId,
+                        senderName = userName,
+                        type = "COMMENT_LIKE",
+                        postId = postId,
+                        message = ""
+                    )
+                }
+                onComplete(true)
+            }
+            .addOnFailureListener { onComplete(false) }
+    }
+
+    fun updatePostCommentsCount(postId: String, count: Long) {
+        if (postId.isEmpty()) return
+        db.collection("community_posts").document(postId)
+            .update("commentsCount", count)
     }
 
     fun getUserProfile(userId: String, onComplete: (Map<String, Any>?) -> Unit) {

@@ -68,7 +68,7 @@ class WritersAdapter(
                     layoutRankBadge.setBackgroundResource(R.drawable.bg_gold_crown_badge)
                     tvWriterRank.text = "1"
                     tvWriterRank.setTextColor(Color.WHITE)
-                    ivCrownSmall.visibility = View.VISIBLE
+                    ivCrownSmall.visibility = View.GONE
                 }
                 2 -> {
                     layoutRankBadge.setBackgroundResource(R.drawable.bg_silver_badge)
@@ -94,24 +94,21 @@ class WritersAdapter(
             ivAvatar.loadUserAvatar(writer.photoUrl)
 
             // إكليل الغار (ذهبي للمركز 1، فضي للمركز 2، برونزي للمركز 3)
+            val hasActivity = writer.weeklyLikes > 0L || writer.postsCount > 0
             val champRank = if (tabMode == WritersTabMode.WEEKLY) {
                 val assigned = WriterOfTheWeekHelper.getChampionRank(context, writer.userId)
-                if (assigned in 1..3) assigned else (if (rankNumber in 1..3) rankNumber else 0)
+                if (assigned in 1..3) assigned else (if (rankNumber in 1..3 && hasActivity) rankNumber else 0)
             } else {
                 WriterOfTheWeekHelper.getChampionRank(context, writer.userId)
             }
 
-            if (champRank in 1..3) {
+            if (champRank in 1..3 && BadgeHelper.isBadgeVisibleForUser(writer.userId)) {
                 ivWriterLaurelWreath?.visibility = View.VISIBLE
-                val wreathColor = when (champRank) {
-                    1 -> Color.parseColor("#F59E0B") // ذهبي
-                    2 -> Color.parseColor("#CBD5E1") // فضي
-                    else -> Color.parseColor("#CD7F32") // برونزي
-                }
+                val wreathColor = WriterOfTheWeekHelper.getRankColor(champRank)
                 ivWriterLaurelWreath?.setColorFilter(wreathColor)
                 ivWriterLaurelWreath?.setOnClickListener {
                     ivWriterLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
-                    WriterOfTheWeekHelper.showRankCelebrationDialog(context, champRank, writer.displayName, isSelf = false)
+                    WriterOfTheWeekHelper.showRankCelebrationDialog(context, champRank, writer.displayName, writer.photoUrl, isSelf = false)
                 }
             } else {
                 ivWriterLaurelWreath?.visibility = View.GONE
@@ -124,32 +121,41 @@ class WritersAdapter(
             tvUsername.text = if (cleanHandle.isNotEmpty()) "@$cleanHandle" else context.getString(R.string.user_default_handle)
 
             // رتبة الكاتب Badge
-            val resolvedBadge = BadgeHelper.getBadgeForProfile(
-                explicitBadge = writer.badge,
-                email = null,
-                totalLikes = writer.totalLikes,
-                followersCount = writer.followersCount
-            )
-
-            val isBeginnerBronze = (resolvedBadge.id == BadgeHelper.BADGE_BEGINNER.id || resolvedBadge.tierLevel <= 1)
-            if (writer.userId != "manchorati_curated" &&
-                resolvedBadge.id != "official" &&
-                BadgeHelper.isBadgeVisibleForUser(writer.userId) &&
-                !isBeginnerBronze) {
-                tvBadge.visibility = View.VISIBLE
-                val title = resolvedBadge.getLocalizedTitle(context)
-                tvBadge.text = "${resolvedBadge.iconEmoji} $title".trim()
-                tvBadge.setCompoundDrawables(null, null, null, null)
-                try {
-                    tvBadge.setTextColor(Color.parseColor(resolvedBadge.textColorHex))
-                } catch (e: Exception) {
-                    tvBadge.setTextColor(Color.parseColor("#F59E0B"))
-                }
-                if (resolvedBadge.bgResId != 0) {
-                    tvBadge.setBackgroundResource(resolvedBadge.bgResId)
-                }
-            } else {
+            val isBadgeVisible = BadgeHelper.isBadgeVisibleForUser(writer.userId)
+            if (champRank in 1..3) {
+                // إخفاء البادج النصي لمتصدري الأسبوع 1 و 2 و 3 لمنع قص النص، حيث يميّزهم الترتيب وإكليل الغار
                 tvBadge.visibility = View.GONE
+                tvBadge.setOnClickListener(null)
+            } else {
+                val resolvedBadge = BadgeHelper.getBadgeForProfile(
+                    explicitBadge = writer.badge,
+                    email = null,
+                    totalLikes = writer.totalLikes,
+                    followersCount = writer.followersCount
+                )
+
+                val isBeginnerBronze = (resolvedBadge.id == BadgeHelper.BADGE_BEGINNER.id || resolvedBadge.tierLevel <= 1)
+                if (writer.userId != "manchorati_curated" &&
+                    resolvedBadge.id != "official" &&
+                    isBadgeVisible &&
+                    !isBeginnerBronze) {
+                    tvBadge.visibility = View.VISIBLE
+                    val title = resolvedBadge.getLocalizedTitle(context)
+                    tvBadge.text = "${resolvedBadge.iconEmoji} $title".trim()
+                    tvBadge.setCompoundDrawables(null, null, null, null)
+                    try {
+                        tvBadge.setTextColor(Color.parseColor(resolvedBadge.textColorHex))
+                    } catch (e: Exception) {
+                        tvBadge.setTextColor(Color.parseColor("#F59E0B"))
+                    }
+                    if (resolvedBadge.bgResId != 0) {
+                        tvBadge.setBackgroundResource(resolvedBadge.bgResId)
+                    }
+                    tvBadge.setOnClickListener(null)
+                } else {
+                    tvBadge.visibility = View.GONE
+                    tvBadge.setOnClickListener(null)
+                }
             }
 
             // الإحصائيات بحسب التبويب النشط
@@ -165,11 +171,17 @@ class WritersAdapter(
                 }
             }
 
-            // زر المتابعة
+            // زر المتابعة أو شارة حساب المستخدم الحالي
             if (currentUserId.isNotEmpty() && writer.userId == currentUserId) {
-                btnFollow.visibility = View.GONE
+                btnFollow.visibility = View.VISIBLE
+                btnFollow.text = context.getString(R.string.you_label)
+                btnFollow.setBackgroundResource(R.drawable.bg_tool_chip_idle)
+                btnFollow.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+                btnFollow.setOnClickListener(null)
+                btnFollow.isClickable = false
             } else {
                 btnFollow.visibility = View.VISIBLE
+                btnFollow.isClickable = true
                 if (writer.isFollowing) {
                     btnFollow.text = context.getString(R.string.following)
                     btnFollow.setBackgroundResource(R.drawable.bg_tool_chip_idle)

@@ -108,114 +108,111 @@
         </LinearLayout>
 
         <!-- سطر الإجراءات أسفل الفقاعة: الوقت • معدل • رد • تعديل • حذف -->
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="3dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:scrollbars="none"
+            android:overScrollMode="never">
 
-            <TextView
-                android:id="@+id/tvCommentTime"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                tools:text="منذ 5 د" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <!-- علامة (معدّل) -->
-            <TextView
-                android:id="@+id/tvEditedBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/edited_badge"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/tvCommentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    tools:text="منذ 5 د" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5dp"
-                android:text="•"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
+                <!-- علامة (معدّل) -->
+                <TextView
+                    android:id="@+id/tvEditedBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:text="@string/edited_badge"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
-            <!-- زر الرد -->
-            <TextView
-                android:id="@+id/btnReplyComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="1dp"
-                android:text="@string/reply_button"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+                <!-- نقطة فاصلة لزر الإعجاب -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="4dp"
+                    android:text="•"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
-            <!-- نقطة فاصلة لزر التعديل -->
-            <TextView
-                android:id="@+id/tvEditSeparator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5dp"
-                android:text="•"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                <!-- زر الإعجاب بالتعليق -->
+                <LinearLayout
+                    android:id="@+id/btnLikeComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="1dp">
 
-            <!-- زر التعديل -->
-            <TextView
-                android:id="@+id/btnEditComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="1dp"
-                android:text="@string/edit_button"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                    <ImageView
+                        android:id="@+id/ivCommentLikeIcon"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ic_heart_outline"
+                        app:tint="@color/text_secondary" />
 
-            <!-- نقطة فاصلة لزر الحذف -->
-            <TextView
-                android:id="@+id/tvDeleteSeparator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5dp"
-                android:text="•"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                    <TextView
+                        android:id="@+id/tvCommentLikesCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:text="@string/post_action_like"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-            <!-- زر الحذف نصي أنيق مثل فيسبوك -->
-            <TextView
-                android:id="@+id/btnDeleteComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="1dp"
-                android:text="@string/delete_button"
-                android:textColor="#EF4444"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="4dp"
+                    android:text="•"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
+
+                <!-- زر الرد -->
+                <TextView
+                    android:id="@+id/btnReplyComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="3dp"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:text="@string/reply_button"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </HorizontalScrollView>
     </LinearLayout>
 </LinearLayout>

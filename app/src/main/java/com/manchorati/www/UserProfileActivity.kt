@@ -42,6 +42,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var rvPosts: RecyclerView
     private lateinit var adapter: CommunityAdapter
     private lateinit var tvName: TextView
+    private var tvHeaderTitle: TextView? = null
     private lateinit var tvProfileBadge: TextView
     private lateinit var tvProfileUsername: TextView
     private lateinit var btnProfileMenu: ImageView
@@ -60,6 +61,7 @@ class UserProfileActivity : AppCompatActivity() {
 
     private var targetUserId: String = ""
     private var targetUserName: String = ""
+    private var targetUserPhotoUrl: String = ""
     private var activeUserId: String = ""
     private var currentUsername: String = ""
     private var isFollowing = false
@@ -115,8 +117,10 @@ class UserProfileActivity : AppCompatActivity() {
                         val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                         val localName = prefs.getString("user_name", user.displayName ?: "مستخدم") ?: (user.displayName ?: "مستخدم")
                         val localPhoto = prefs.getString("user_photo", user.photoUrl?.toString() ?: "") ?: (user.photoUrl?.toString() ?: "")
+                        targetUserPhotoUrl = localPhoto
                         targetUserName = localName
                         tvName.text = targetUserName
+                        tvHeaderTitle?.text = targetUserName
 
                         if (currentUsername.isEmpty()) {
                             currentUsername = AuthManager.generateBaseUsername(user.displayName, user.email)
@@ -214,6 +218,10 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun initViews() {
         tvName = findViewById(R.id.tvProfileName)
+        tvHeaderTitle = findViewById(R.id.tvHeaderTitle)
+        if (targetUserName.isNotEmpty() && targetUserName != "فاعل خير") {
+            tvHeaderTitle?.text = targetUserName
+        }
         tvProfileBadge = findViewById(R.id.tvProfileBadge)
         tvProfileUsername = findViewById(R.id.tvProfileUsername)
         btnProfileMenu = findViewById(R.id.btnProfileMenu)
@@ -320,6 +328,14 @@ class UserProfileActivity : AppCompatActivity() {
                         ?: data["name"] as? String 
                         ?: targetUserName
 
+                    if (name.isNotBlank() && name != "فاعل خير" && name != "مستخدم") {
+                        targetUserName = name
+                        if (targetUserId == activeUserId) {
+                            getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                                .edit().putString("user_name", name).apply()
+                        }
+                    }
+
                     val usernameFromDoc = data["username"] as? String ?: ""
                     if (usernameFromDoc.isNotEmpty()) {
                         currentUsername = usernameFromDoc
@@ -327,7 +343,11 @@ class UserProfileActivity : AppCompatActivity() {
                     
                     val photoUrl = data["photoUrl"] as? String ?: ""
                     if (photoUrl.isNotEmpty()) {
+                        targetUserPhotoUrl = photoUrl
                         ivProfileAvatar.loadUserAvatar(photoUrl)
+                        if (targetUserId == activeUserId) {
+                            updatePhotoInOldPosts(photoUrl)
+                        }
                     }
 
                     val followersRaw = data["followers"]
@@ -345,6 +365,7 @@ class UserProfileActivity : AppCompatActivity() {
                         }
 
                     tvName.text = name
+                    tvHeaderTitle?.text = name
 
                     if (currentUsername.isNotEmpty()) {
                         tvProfileUsername.visibility = View.VISIBLE
@@ -422,31 +443,46 @@ class UserProfileActivity : AppCompatActivity() {
             tvProfileBadge.visibility = View.GONE
             return
         }
-        tvProfileBadge.visibility = View.VISIBLE
-        val title = badge.getLocalizedTitle(this@UserProfileActivity)
-        tvProfileBadge.text = "${badge.iconEmoji} $title".trim()
-        tvProfileBadge.setBackgroundResource(badge.bgResId)
-        try {
-            tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
-        } catch (_: Exception) {}
-        tvProfileBadge.setCompoundDrawables(null, null, null, null)
+
+        val champRank = WriterOfTheWeekHelper.getChampionRank(this, targetUserId)
+        if (champRank in 1..3) {
+            // شارة كاتب الأسبوع (المركز 1، 2، أو 3)
+            tvProfileBadge.visibility = View.VISIBLE
+            tvProfileBadge.text = WriterOfTheWeekHelper.getRankBadgeTitle(this, champRank)
+            tvProfileBadge.setBackgroundResource(WriterOfTheWeekHelper.getRankBadgeBgRes(champRank))
+            tvProfileBadge.setTextColor(Color.WHITE)
+            tvProfileBadge.setCompoundDrawables(null, null, null, null)
+            tvProfileBadge.setOnClickListener {
+                tvProfileBadge.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                val isSelf = (targetUserId.isNotEmpty() && targetUserId == activeUserId) || (targetUserId.isEmpty() && activeUserId.isNotEmpty())
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, champRank, tvName.text.toString(), targetUserPhotoUrl.ifEmpty { null }, isSelf = isSelf)
+            }
+        } else {
+            tvProfileBadge.visibility = View.VISIBLE
+            val title = badge.getLocalizedTitle(this@UserProfileActivity)
+            tvProfileBadge.text = "${badge.iconEmoji} $title".trim()
+            tvProfileBadge.setBackgroundResource(badge.bgResId)
+            try {
+                tvProfileBadge.setTextColor(Color.parseColor(badge.textColorHex))
+            } catch (_: Exception) {}
+            tvProfileBadge.setCompoundDrawables(null, null, null, null)
+            tvProfileBadge.setOnClickListener {
+                showWriterChallengesBottomSheet(badge, currentFollowersCount)
+            }
+        }
     }
 
     private fun updateLaurelWreathUI() {
+        val isVisible = BadgeHelper.isBadgeVisibleForUser(targetUserId)
         val champRank = WriterOfTheWeekHelper.getChampionRank(this, targetUserId)
-        if (champRank in 1..3) {
+        if (champRank in 1..3 && isVisible) {
             ivProfileLaurelWreath?.visibility = View.VISIBLE
-            val laurelColor = when (champRank) {
-                1 -> Color.parseColor("#F59E0B") // Gold
-                2 -> Color.parseColor("#CBD5E1") // Silver
-                3 -> Color.parseColor("#CD7F32") // Bronze
-                else -> Color.parseColor("#F59E0B")
-            }
+            val laurelColor = WriterOfTheWeekHelper.getRankColor(champRank)
             ivProfileLaurelWreath?.setColorFilter(laurelColor)
             ivProfileLaurelWreath?.setOnClickListener {
                 ivProfileLaurelWreath?.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
                 val isSelf = (targetUserId.isNotEmpty() && targetUserId == activeUserId) || (targetUserId.isEmpty() && activeUserId.isNotEmpty())
-                WriterOfTheWeekHelper.showRankCelebrationDialog(this, champRank, tvName.text.toString(), isSelf = isSelf)
+                WriterOfTheWeekHelper.showRankCelebrationDialog(this, champRank, tvName.text.toString(), targetUserPhotoUrl.ifEmpty { null }, isSelf = isSelf)
             }
         } else {
             ivProfileLaurelWreath?.visibility = View.GONE
@@ -805,9 +841,12 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val currentUid = AuthManager.currentUser?.uid ?: ""
         val googlePhotoUrl = AuthManager.currentUser?.photoUrl?.toString() ?: ""
-        val savedCustomPhoto = prefs.getString("user_custom_photo", "")?.takeIf { it.isNotEmpty() }
-            ?: prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() && !it.startsWith("avatar_") && it != googlePhotoUrl }
+        val userCustomKey = if (currentUid.isNotEmpty()) "user_custom_photo_$currentUid" else "user_custom_photo"
+        val savedCustomPhoto = if (currentUid.isNotEmpty()) {
+            prefs.getString(userCustomKey, "")?.takeIf { it.isNotEmpty() }
+        } else null
 
         val layoutCustomUploadedPhoto = dialogView.findViewById<View>(R.id.layoutCustomUploadedPhoto)
         val ivCustomUploadedPhoto = dialogView.findViewById<ImageView>(R.id.ivCustomUploadedPhoto)
@@ -944,7 +983,10 @@ class UserProfileActivity : AppCompatActivity() {
                             pbCropLoading?.visibility = View.GONE
                             bottomSheetDialog.dismiss()
                             val customPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                            customPrefs.edit().putString("user_custom_photo", downloadUrl).apply()
+                            customPrefs.edit()
+                                .putString("user_custom_photo_$uid", downloadUrl)
+                                .putString("user_custom_photo", downloadUrl)
+                                .apply()
                             onAvatarCropCallback?.invoke(downloadUrl)
                             updateUserProfilePhoto(downloadUrl)
                         },
@@ -1025,7 +1067,18 @@ class UserProfileActivity : AppCompatActivity() {
                         )
                     }
                 } else {
-                    posts
+                    val userPhoto = targetUserPhotoUrl.takeIf { it.isNotEmpty() }
+                    val userName = targetUserName.takeIf { it.isNotBlank() }
+                    if (userPhoto != null || userName != null) {
+                        posts.map { p ->
+                            p.copy(
+                                authorPhotoUrl = userPhoto ?: p.authorPhotoUrl,
+                                authorName = userName ?: p.authorName
+                            )
+                        }
+                    } else {
+                        posts
+                    }
                 }
                 allUserPosts = effectivePosts
                 val displayPosts = if (currentProfileTagFilter != null) {
@@ -1075,7 +1128,12 @@ class UserProfileActivity : AppCompatActivity() {
             return
         }
 
-        val authorName = user.displayName ?: (if (targetUserName.isNotEmpty() && targetUserName != "فاعل خير") targetUserName else "مستخدم")
+        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val savedName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+        val authorName = targetUserName.takeIf { it.isNotBlank() && it != "فاعل خير" && it != "مستخدم" }
+            ?: savedName
+            ?: user.displayName
+            ?: "مستخدم"
         val authorUsername = if (currentUsername.isNotEmpty()) currentUsername else AuthManager.generateBaseUsername(user.displayName, user.email)
 
         showAddPostBottomSheet(user.uid, authorName, authorUsername)
@@ -1106,15 +1164,6 @@ class UserProfileActivity : AppCompatActivity() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_edit_profile, null)
         dialog.setContentView(dialogView)
 
-        dialog.setOnShowListener {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let { sheet ->
-                val behavior = BottomSheetBehavior.from(sheet)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
-            }
-        }
-
         val btnClose = dialogView.findViewById<ImageView>(R.id.btnCloseEditProfile)
         val btnChangeAvatar = dialogView.findViewById<View>(R.id.btnChangeAvatar)
         val btnChangeAvatarText = dialogView.findViewById<View>(R.id.btnChangeAvatarText)
@@ -1130,8 +1179,6 @@ class UserProfileActivity : AppCompatActivity() {
         val btnSave = dialogView.findViewById<TextView>(R.id.btnSaveProfile)
         val pbSave = dialogView.findViewById<ProgressBar>(R.id.pbSaveProfile)
 
-        btnClose.setOnClickListener { dialog.dismiss() }
-
         // تحميل صورة المستخدم الحالية وإعدادات الخصوصية
         val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentShowBadge = prefs.getBoolean("show_badge", true)
@@ -1140,18 +1187,111 @@ class UserProfileActivity : AppCompatActivity() {
             ?: (AuthManager.currentUser?.photoUrl?.toString() ?: "")
         ivEditAvatarPreview.loadUserAvatar(selectedPhotoUrl)
 
+        val initialPhotoUrl = selectedPhotoUrl
+        val initialName = tvName.text.toString().trim()
+        val initialBio = if (tvBio.text.toString() == "لا توجد نبذة شخصية بعد." || tvBio.text.toString() == "فاعل خير") "" else tvBio.text.toString().trim()
+        val initialUsername = currentUsername.removePrefix("@").trim().lowercase()
+        val initialShowBadge = currentShowBadge
+
+        var sheetBehavior: BottomSheetBehavior<View>? = null
+
+        val hasProfileChanges = {
+            val currentName = etName.text.toString().trim()
+            val currentBio = etBio.text.toString().trim()
+            val currentUName = etUsername.text.toString().trim().lowercase()
+            val currentBadge = switchShowBadge?.isChecked ?: true
+            val photoChanged = selectedPhotoUrl != initialPhotoUrl
+            val nameChanged = currentName != initialName
+            val bioChanged = currentBio != initialBio
+            val usernameChanged = currentUName != initialUsername
+            val badgeChanged = currentBadge != initialShowBadge
+            photoChanged || nameChanged || bioChanged || usernameChanged || badgeChanged
+        }
+
+        val updateBehaviorLock = {
+            val modified = hasProfileChanges()
+            sheetBehavior?.let { b ->
+                b.isHideable = !modified
+            }
+        }
+
+        val handleDismissAttempt = {
+            if (hasProfileChanges()) {
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                    .setTitle(getString(R.string.discard_profile_title))
+                    .setMessage(getString(R.string.discard_profile_message))
+                    .setPositiveButton(getString(R.string.discard_profile_keep_editing)) { d, _ ->
+                        d.dismiss()
+                        sheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    .setNegativeButton(getString(R.string.discard_profile_confirm)) { _, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            } else {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.setCanceledOnTouchOutside(false)
+        btnClose.setOnClickListener { handleDismissAttempt() }
+
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.action == android.view.KeyEvent.ACTION_UP) {
+                handleDismissAttempt()
+                true
+            } else {
+                false
+            }
+        }
+
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { sheet ->
+                val behavior = BottomSheetBehavior.from(sheet)
+                sheetBehavior = behavior
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+                updateBehaviorLock()
+
+                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(sheet: View, newState: Int) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                            if (hasProfileChanges()) {
+                                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                                handleDismissAttempt()
+                            }
+                        }
+                    }
+                    override fun onSlide(sheet: View, slideOffset: Float) {}
+                })
+            }
+        }
+
         val openAvatarPicker = {
             showSelectAvatarDialog { chosenAvatar ->
                 selectedPhotoUrl = chosenAvatar
                 ivEditAvatarPreview.loadUserAvatar(chosenAvatar)
+                updateBehaviorLock()
             }
         }
         btnChangeAvatar.setOnClickListener { openAvatarPicker() }
         btnChangeAvatarText.setOnClickListener { openAvatarPicker() }
 
+        switchShowBadge?.setOnCheckedChangeListener { _, _ ->
+            updateBehaviorLock()
+        }
+
         // الاسم والنبذة
         etName.setText(tvName.text.toString())
-        val initialBio = if (tvBio.text.toString() == "لا توجد نبذة شخصية بعد." || tvBio.text.toString() == "فاعل خير") "" else tvBio.text.toString()
+        etName.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateBehaviorLock()
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+
         etBio.setText(initialBio)
         tvBioCounter.text = "${initialBio.length}/150"
 
@@ -1159,12 +1299,12 @@ class UserProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 tvBioCounter.text = "${s?.length ?: 0}/150"
+                updateBehaviorLock()
             }
             override fun afterTextChanged(s: android.text.Editable?) {}
         })
 
         // اسم المستخدم الفريد (@)
-        val initialUsername = currentUsername.removePrefix("@").trim()
         etUsername.setText(initialUsername)
         var isUsernameValid = true
 
@@ -1174,6 +1314,7 @@ class UserProfileActivity : AppCompatActivity() {
         etUsername.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateBehaviorLock()
                 checkRunnable?.let { handler.removeCallbacks(it) }
 
                 val inputVal = s?.toString()?.trim()?.lowercase() ?: ""
@@ -1284,6 +1425,7 @@ class UserProfileActivity : AppCompatActivity() {
                             .apply()
                         BadgeHelper.setUserBadgeVisibility(activeUserId, shouldShowBadge)
                         updateBadgeUI(currentBadge)
+                        updateLaurelWreathUI()
                         updateNameInCommunityPosts(newName)
 
                         // تحديث الصورة الشخصية إذا تم اختيار صورة جديدة
@@ -1458,14 +1600,35 @@ class UserProfileActivity : AppCompatActivity() {
 
         val user = AuthManager.currentUser
         val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val currentUserName = user?.displayName 
-            ?: prefs.getString("user_name", "فاعل خير") 
-            ?: "فاعل خير"
+        val savedUserName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+        var currentLiveAuthorName = savedUserName 
+            ?: user?.displayName?.takeIf { it.isNotBlank() }
+            ?: getString(R.string.default_user_name)
 
-        // تحميل صورة المستخدم في شريط التعليق
-        val currentPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+        var currentLivePhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
             ?: user?.photoUrl?.toString() ?: ""
-        ivCurrentUserAvatar?.loadUserAvatar(currentPhoto)
+        ivCurrentUserAvatar?.loadUserAvatar(currentLivePhotoUrl)
+
+        if (user != null) {
+            com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("users").document(user.uid).get()
+                .addOnSuccessListener { uDoc ->
+                    if (uDoc.exists()) {
+                        val dName = uDoc.getString("displayName")?.takeIf { it.isNotBlank() }
+                            ?: uDoc.getString("name")?.takeIf { it.isNotBlank() }
+                        val pUrl = uDoc.getString("photoUrl")?.takeIf { it.isNotBlank() }
+                        if (dName != null) {
+                            currentLiveAuthorName = dName
+                            prefs.edit().putString("user_name", dName).apply()
+                        }
+                        if (pUrl != null) {
+                            currentLivePhotoUrl = pUrl
+                            prefs.edit().putString("user_photo", pUrl).apply()
+                            ivCurrentUserAvatar?.loadUserAvatar(pUrl)
+                        }
+                    }
+                }
+        }
 
         val resetBannerState = {
             replyingToComment = null
@@ -1498,10 +1661,12 @@ class UserProfileActivity : AppCompatActivity() {
 
         rvComments.layoutManager = LinearLayoutManager(this)
         
-        val commentsAdapter = CommentsAdapter(
+        lateinit var commentsAdapter: CommentsAdapter
+        commentsAdapter = CommentsAdapter(
             comments = emptyList(),
             currentUserId = activeUserId,
             postAuthorId = post.authorId,
+            postId = post.id,
             onUserClicked = { clickedUserId, clickedUserName ->
                 val intent = android.content.Intent(this, UserProfileActivity::class.java).apply {
                     putExtra("USER_ID", clickedUserId)
@@ -1539,27 +1704,81 @@ class UserProfileActivity : AppCompatActivity() {
                 imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
-                androidx.appcompat.app.AlertDialog.Builder(this)
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+                etInput.clearFocus()
+
+                val alertDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.delete_button)
                     .setMessage(R.string.confirm_delete_comment)
-                    .setPositiveButton(R.string.delete_button) { _, _ ->
-                        FirestoreManager.deleteComment(post.id, comment.id) {}
+                    .setPositiveButton(R.string.delete_button) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                        commentsAdapter.removeComment(comment.id)
+                        Toast.makeText(this@UserProfileActivity, R.string.comment_deleting, Toast.LENGTH_SHORT).show()
+                        FirestoreManager.deleteComment(post.id, comment.id) { success ->
+                            runOnUiThread {
+                                if (success) {
+                                    Toast.makeText(this@UserProfileActivity, R.string.comment_deleted_success, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(this@UserProfileActivity, R.string.comment_delete_error, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
+                    .setNegativeButton(R.string.no) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                    }
+                    .create()
+
+                alertDialog.setOnShowListener {
+                    alertDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)
+                        ?.setTextColor(Color.parseColor("#EF4444"))
+                    alertDialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
+                        ?.setTextColor(Color.parseColor("#94A3B8"))
+                }
+                alertDialog.show()
+            },
+            onLikeCommentClicked = { comment, isLiked ->
+                if (activeUserId.isNotEmpty()) {
+                    FirestoreManager.toggleCommentLike(
+                        postId = post.id,
+                        comment = comment,
+                        userId = activeUserId,
+                        userName = currentLiveAuthorName,
+                        isLiked = isLiked
+                    )
+                }
             }
         )
         rvComments.adapter = commentsAdapter
 
+        val formatCommentCountText: (Long) -> String = { count ->
+            when {
+                count <= 0L -> getString(R.string.no_comments_title)
+                count == 1L -> getString(R.string.comments_count_one)
+                count == 2L -> getString(R.string.comments_count_two)
+                count in 3L..10L -> String.format(getString(R.string.comments_count_plural), count)
+                else -> String.format(getString(R.string.comments_count_many), count)
+            }
+        }
+
         FirestoreManager.listenToComments(post.id) { list ->
             runOnUiThread {
+                val currentSize = list.size.toLong()
+                if (currentSize != post.commentsCount) {
+                    post.commentsCount = currentSize
+                    adapter.updatePostStats(post)
+                    if (!post.id.startsWith("vpost_") && !post.id.startsWith("curated_")) {
+                        FirestoreManager.updatePostCommentsCount(post.id, currentSize)
+                    }
+                }
                 commentsAdapter.updateData(list)
                 if (list.isEmpty()) {
                     layoutEmptyComments?.visibility = View.VISIBLE
-                    tvCommentsCountHeader?.text = getString(R.string.comments_count_zero)
+                    tvCommentsCountHeader?.text = formatCommentCountText(0L)
                 } else {
                     layoutEmptyComments?.visibility = View.GONE
-                    tvCommentsCountHeader?.text = getString(R.string.comments_count_format, list.size)
+                    tvCommentsCountHeader?.text = formatCommentCountText(list.size.toLong())
                     rvComments.scrollToPosition(list.size - 1)
                 }
             }
@@ -1600,8 +1819,13 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
             val currentActiveId = currentUser.uid
-            val currentAuthorName = currentUser.displayName ?: currentUserName
-            val currentPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            val savedProfileName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+            val currentAuthorName = currentLiveAuthorName.takeIf { it.isNotBlank() }
+                ?: savedProfileName
+                ?: currentUser.displayName?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.default_user_name)
+            val currentPhotoUrl = currentLivePhotoUrl.takeIf { it.isNotEmpty() }
+                ?: prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
                 ?: currentUser.photoUrl?.toString() ?: ""
 
             val replyAuthorName = replyingToComment?.authorName ?: ""
@@ -1628,9 +1852,9 @@ class UserProfileActivity : AppCompatActivity() {
                             recipientId = targetRepliedComment.authorId,
                             senderId = currentActiveId,
                             senderName = currentAuthorName,
-                            type = "COMMENT",
+                            type = "REPLY",
                             postId = post.id,
-                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\""
+                            message = getString(R.string.notif_replied_comment, currentAuthorName)
                         )
                     }
 

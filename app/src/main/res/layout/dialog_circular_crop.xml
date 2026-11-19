@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="قص وتعديل الصورة الشخصية"
+            android:text="@string/crop_profile_title"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
-        android:text="اسحب الصورة وقرّبها لتحديد الجزء الذي تريده داخل الدائرة"
+        android:text="@string/crop_profile_hint"
         android:textColor="@color/text_secondary"
         android:textSize="12sp" />
 
@@ -90,7 +90,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="إلغاء"
+            android:text="@string/cancel"
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             app:cornerRadius="12dp"
@@ -102,7 +102,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:backgroundTint="#0284C7"
-            android:text="حفظ كصورة شخصية"
+            android:text="@string/crop_profile_save"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"

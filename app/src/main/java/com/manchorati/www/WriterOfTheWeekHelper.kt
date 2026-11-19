@@ -10,6 +10,7 @@ import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.card.MaterialCardView
 import java.util.Calendar
 
 object WriterOfTheWeekHelper {
@@ -104,10 +105,47 @@ object WriterOfTheWeekHelper {
         return prefs.getString(KEY_CHAMPION_NAME, null) ?: DEFAULT_CHAMPION_NAME
     }
 
+    fun getRankBadgeTitle(context: Context? = null, rank: Int): String {
+        return when (rank) {
+            1 -> context?.getString(R.string.writer_of_week_rank1) ?: "كاتب الأسبوع 🥇"
+            2 -> context?.getString(R.string.writer_of_week_rank2) ?: "وصيف الأسبوع 🥈"
+            3 -> context?.getString(R.string.writer_of_week_rank3) ?: "متميز الأسبوع 🥉"
+            else -> ""
+        }
+    }
+
+    fun getRankBadgeTitle(rank: Int): String = getRankBadgeTitle(null, rank)
+
+    fun getRankBadgeBgRes(rank: Int): Int {
+        return when (rank) {
+            1 -> R.drawable.bg_gold_crown_badge
+            2 -> R.drawable.bg_silver_badge
+            3 -> R.drawable.bg_bronze_badge
+            else -> 0
+        }
+    }
+
+    fun getRankColor(rank: Int): Int {
+        return when (rank) {
+            1 -> Color.parseColor("#FFD700") // Glowing Royal Gold
+            2 -> Color.parseColor("#F8FAFC") // Pure Radiant Silver White
+            3 -> Color.parseColor("#EA580C") // Vivid Copper Bronze
+            else -> Color.TRANSPARENT
+        }
+    }
+
     /**
-     * Shows an elegant dialogue celebrating the Writer rank (Gold, Silver, Bronze, Top 10)
+     * Shows an elegant dialogue celebrating the Writer rank (Gold, Silver, Bronze for Top 3 only)
      */
-    fun showRankCelebrationDialog(context: Context, rank: Int, authorName: String, isSelf: Boolean = false) {
+    fun showRankCelebrationDialog(
+        context: Context,
+        rank: Int,
+        authorName: String,
+        authorPhotoUrl: String? = null,
+        isSelf: Boolean = false
+    ) {
+        if (rank !in 1..3) return
+
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
@@ -120,6 +158,8 @@ object WriterOfTheWeekHelper {
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        val cardDialog = view.findViewById<MaterialCardView>(R.id.cardCelebrationDialog)
+        val ivAvatar = view.findViewById<ImageView>(R.id.ivCelebrationAvatar)
         val ivLaurel = view.findViewById<ImageView>(R.id.ivCelebrationLaurel)
         val ivCrown = view.findViewById<ImageView>(R.id.ivCelebrationCrown)
         val tvBadgeTitle = view.findViewById<TextView>(R.id.tvCelebrationBadgeTitle)
@@ -128,61 +168,55 @@ object WriterOfTheWeekHelper {
         val btnClose = view.findViewById<TextView>(R.id.btnCloseCelebration)
 
         tvName.text = authorName.ifEmpty { getChampionDisplayName(context) }
+        ivAvatar?.loadUserAvatar(authorPhotoUrl)
 
         when (rank) {
             1 -> {
-                val goldColor = Color.parseColor("#F59E0B")
-                tvBadgeTitle.text = "كاتب الأسبوع الذهبي 🥇"
-                tvBadgeTitle.setTextColor(goldColor)
+                val goldColor = Color.parseColor("#FFD700")
+                val amberGold = Color.parseColor("#F59E0B")
+                cardDialog?.strokeColor = amberGold
+                tvBadgeTitle.text = context.getString(R.string.celebration_rank1_title)
+                tvBadgeTitle.setTextColor(amberGold)
                 ivLaurel.setColorFilter(goldColor)
                 ivCrown.visibility = View.VISIBLE
                 ivCrown.setColorFilter(goldColor)
                 btnClose.setBackgroundResource(R.drawable.bg_gold_crown_badge)
                 tvDesc.text = if (isSelf) {
-                    "تهانينا يا بطل! أنت كاتب الأسبوع المتوج بالمركز الأول عالمياً 🥇 وحصلت على إكليل الغار الذهبي وتاج الصدارة الملكي!"
+                    context.getString(R.string.celebration_rank1_self)
                 } else {
-                    "تُوّج الكاتب ${tvName.text} بلقب كاتب الأسبوع بفضل تفاعل القراء وجمال الكلمات، وحصل على إكليل الغار الذهبي طيلة هذا الأسبوع!"
+                    context.getString(R.string.celebration_rank1_other, tvName.text)
                 }
             }
             2 -> {
-                val silverColor = Color.parseColor("#CBD5E1")
-                tvBadgeTitle.text = "وصيف الأسبوع الفضي 🥈"
-                tvBadgeTitle.setTextColor(silverColor)
+                val silverColor = Color.parseColor("#F8FAFC")
+                val silverBorder = Color.parseColor("#CBD5E1")
+                cardDialog?.strokeColor = silverBorder
+                tvBadgeTitle.text = context.getString(R.string.celebration_rank2_title)
+                tvBadgeTitle.setTextColor(silverBorder)
                 ivLaurel.setColorFilter(silverColor)
                 ivCrown.visibility = View.VISIBLE
                 ivCrown.setColorFilter(silverColor)
                 btnClose.setBackgroundResource(R.drawable.bg_silver_badge)
                 tvDesc.text = if (isSelf) {
-                    "إنجاز استثنائي! حققت المركز الثاني هذا الأسبوع وتوجت رسمياً بإكليل الغار الفضي 🥈!"
+                    context.getString(R.string.celebration_rank2_self)
                 } else {
-                    "تألق الكاتب ${tvName.text} وحقق المركز الثاني هذا الأسبوع، ونال إكليل الغار الفضي بجدارة!"
+                    context.getString(R.string.celebration_rank2_other, tvName.text)
                 }
             }
             3 -> {
-                val bronzeColor = Color.parseColor("#CD7F32")
-                tvBadgeTitle.text = "الكاتب المتميز البرونزي 🥉"
+                val bronzeColor = Color.parseColor("#EA580C")
+                val bronzeBorder = Color.parseColor("#FB923C")
+                cardDialog?.strokeColor = bronzeBorder
+                tvBadgeTitle.text = context.getString(R.string.celebration_rank3_title)
                 tvBadgeTitle.setTextColor(bronzeColor)
                 ivLaurel.setColorFilter(bronzeColor)
                 ivCrown.visibility = View.VISIBLE
                 ivCrown.setColorFilter(bronzeColor)
                 btnClose.setBackgroundResource(R.drawable.bg_bronze_badge)
                 tvDesc.text = if (isSelf) {
-                    "مبارك تألقك! أنت في المركز الثالث هذا الأسبوع وحصدت إكليل الغار البرونزي 🥉!"
+                    context.getString(R.string.celebration_rank3_self)
                 } else {
-                    "حصد الكاتب ${tvName.text} المركز الثالث هذا الأسبوع وتوّج بإكليل الغار البرونزي!"
-                }
-            }
-            else -> {
-                val cyanColor = Color.parseColor("#38BDF8")
-                tvBadgeTitle.text = "نخبة كُتّاب الأسبوع (Top 10) 🌟"
-                tvBadgeTitle.setTextColor(cyanColor)
-                ivLaurel.setColorFilter(cyanColor)
-                ivCrown.visibility = View.GONE
-                btnClose.setBackgroundResource(R.drawable.bg_button_gradient_primary)
-                tvDesc.text = if (isSelf) {
-                    "برافو! لقد دخلت رسمياً قائمة أفضل 10 كُتّاب لهذا الأسبوع (المركز #$rank)! 👏 واصل النشر لتصعد إلى منصة التتويج الثلاثية!"
-                } else {
-                    "أحد أبرز كُتّاب الأسبوع ضمن قائمة أفضل 10 متصدرين الأكثر إلهاماً وتفاعلاً!"
+                    context.getString(R.string.celebration_rank3_other, tvName.text)
                 }
             }
         }
@@ -195,7 +229,7 @@ object WriterOfTheWeekHelper {
         dialog.show()
     }
 
-    fun showWriterOfWeekDialog(context: Context, authorName: String) {
-        showRankCelebrationDialog(context, 1, authorName, isSelf = false)
+    fun showWriterOfWeekDialog(context: Context, authorName: String, authorPhotoUrl: String? = null) {
+        showRankCelebrationDialog(context, 1, authorName, authorPhotoUrl, isSelf = false)
     }
 }

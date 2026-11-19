@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كُتّاب الأسبوع وتحديات الإلهام • منشوراتي (Manchorati)</title>
+    <meta name="description" content="تعرف على نخبة كُتّاب منشوراتي وتحديات الكتابة وسلاسل الإلهام اليومية وشارات التميز.">
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+/* ==========================================================================
+   منشوراتي (MANCHORATI) - STYLESHEET
+   الهوية الرسمية لتطبيق منشوراتي المستوحاة من نظام أندرويد (تطابق 100%)
+   ========================================================================== */
+
+:root {
+    /* الألوان الرسمية من colors.xml في تطبيق منشوراتي */
+    --bg-main: #0B131F;
+    --bg-card: #141E2E;
+    --bg-surface: #1E2A3A;
+    --bg-card-hover: #19263A;
+    --divider-color: #1E2A3A;
+    --border-light: rgba(255, 255, 255, 0.08);
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-faint: #64748B;
+
+    --brand-primary: #38BDF8;
+    --brand-primary-blue: #0284C7;
+    --brand-gold: #F59E0B;
+    --brand-gold-warm: #D4AF37;
+    --brand-rose: #EF4444;
+    --brand-emerald: #10B981;
+
+    --chip-idle-bg: #1E2A3A;
+    --chip-idle-stroke: #334155;
+    --chip-idle-text: #CBD5E1;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-card: 16px;
+    --radius-pill: 9999px;
+
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.25);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-surface);
+    border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary-blue);
+}
+
+/* ==========================================================================
+   HEADER (TOP APP BAR)
+   ========================================================================== */
+header.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(11, 19, 31, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--divider-color);
+    height: 64px;
+}
+
+.header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.brand-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    border: 1.5px solid var(--brand-primary);
+}
+
+.brand-texts {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.1;
+}
+
+.brand-tag {
+    font-size: 10px;
+    color: var(--brand-primary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Desktop Navigation Links */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link.active {
+    color: var(--brand-primary);
+    background: rgba(56, 189, 248, 0.12);
+    font-weight: 700;
+}
+
+/* Header Action */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-download-app {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-download-app:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    background: linear-gradient(135deg, #0369A1, var(--brand-primary-blue));
+}
+
+.btn-download-app svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* ==========================================================================
+   MAIN 3-COLUMN APP CONTAINER (FACEBOOK / TWITTER STYLE)
+   ========================================================================== */
+.main-wrapper {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px 16px 40px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 680px) 280px;
+    gap: 20px;
+    align-items: start;
+    flex: 1;
+}
+
+/* For sub-pages with 2 columns or 1 column */
+.main-wrapper.single-column {
+    grid-template-columns: minmax(0, 840px);
+    justify-content: center;
+}
+
+/* Sidebars */
+.sidebar {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    box-shadow: var(--shadow-card);
+}
+
+.sidebar-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 8px;
+}
+
+/* Side Menu Links */
+.side-menu-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.side-menu-item a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.side-menu-item a:hover {
+    background: var(--bg-surface);
+    color: #FFFFFF;
+}
+
+.side-menu-item.active a {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.side-menu-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Writer of the Week Spotlight Widget */
+.writer-spotlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.laurel-avatar-frame {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.laurel-wreath-img {
+    position: absolute;
+    inset: -6px;
+    width: 84px;
+    height: 84px;
+    pointer-events: none;
+}
+
+.spotlight-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--brand-gold);
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.spotlight-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.spotlight-badge {
+    font-size: 11px;
+    color: var(--brand-gold);
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* Daily Streak Widget */
+.streak-widget {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.08));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.streak-flame {
+    font-size: 32px;
+    line-height: 1;
+    animation: flameBounce 1.5s infinite ease-in-out;
+}
+
+@keyframes flameBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.streak-text h4 {
+    font-size: 14px;
+    color: var(--brand-gold);
+    font-family: 'Cairo', sans-serif;
+}
+
+.streak-text p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   CENTER FEED (COLONNE PRINCIPALE - 1 POST PAR LIGNE)
+   ========================================================================== */
+.feed-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Create Post / Studio Trigger Bar (Like Facebook "بماذا تفكر؟") */
+.create-post-box {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-card);
+}
+
+.user-mini-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.create-post-input {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-pill);
+    padding: 10px 18px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.create-post-input:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+}
+
+.btn-open-studio-header {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--brand-primary);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 9px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.btn-open-studio-header:hover {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+}
+
+/* Mood & Category horizontal chips */
+.chips-bar-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chips-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+}
+
+.chips-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.chip-item {
+    background: var(--chip-idle-bg);
+    border: 1px solid var(--chip-idle-stroke);
+    color: var(--chip-idle-text);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    user-select: none;
+}
+
+.chip-item:hover {
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+}
+
+.chip-item.active {
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+    box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+}
+
+/* ==========================================================================
+   POST CARD (EXACT ITEM_COMMUNITY_POST.XML MATCH)
+   ========================================================================== */
+.post-item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.post-item-card:hover {
+    border-color: rgba(56, 189, 248, 0.35);
+}
+
+/* Post Header */
+.card-author-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 8px;
+}
+
+.author-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.author-avatar-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    border: 1.5px solid var(--divider-color);
+    flex-shrink: 0;
+}
+
+.author-name-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-name-text {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.author-badge-pill {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.author-streak-badge {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.author-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-top: 1px;
+}
+
+.btn-card-menu {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-card-menu:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+/* Inner Quote Card (layoutPostCard) */
+.inner-quote-card {
+    margin: 6px 12px;
+    padding: 24px 20px;
+    border-radius: var(--radius-md);
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.quote-body-text {
+    font-size: 18.5px;
+    line-height: 1.85;
+    color: var(--text-primary);
+    word-break: break-word;
+    white-space: pre-line;
+    text-align: center;
+}
+
+/* Double click heart animation */
+.heart-pop {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    fill: var(--brand-rose);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.heart-pop.active {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Hashtag row */
+.card-tag-row {
+    padding: 6px 16px 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag-badge-link {
+    color: var(--brand-primary);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.tag-badge-link:hover {
+    text-decoration: underline;
+}
+
+/* Card Bottom Action Bar */
+.card-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 14px;
+    border-top: 1px solid var(--border-light);
+    margin-top: 6px;
+}
+
+.action-bar-left, .action-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.card-action-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+.card-action-btn.liked {
+    color: var(--brand-rose);
+}
+
+.card-action-btn.bookmarked {
+    color: var(--brand-gold);
+}
+
+.card-action-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.card-action-btn.liked svg {
+    fill: var(--brand-rose);
+    stroke: var(--brand-rose);
+}
+
+.card-action-btn.bookmarked svg {
+    fill: var(--brand-gold);
+    stroke: var(--brand-gold);
+}
+
+/* Collapsible Comments Section */
+.card-comments-drawer {
+    display: none;
+    border-top: 1px solid var(--border-light);
+    background: rgba(11, 19, 31, 0.4);
+    padding: 16px;
+}
+
+.card-comments-drawer.open {
+    display: block;
+}
+
+.comment-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.comment-text-box {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    outline: none;
+}
+
+.comment-text-box:focus {
+    border-color: var(--brand-primary);
+}
+
+.btn-send-comment {
+    background: var(--brand-primary-blue);
+    border: none;
+    color: #FFFFFF;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-item {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.comment-author-name {
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+.comment-time {
+    color: var(--text-faint);
+}
+
+.comment-content {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+/* AdSense In-feed Placement */
+.feed-adsense-slot {
+    background: rgba(19, 29, 46, 0.5);
+    border: 1px dashed var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 180px;
+    color: var(--text-faint);
+}
+
+.feed-adsense-slot span {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   MOBILE BOTTOM NAVIGATION BAR (PHOTOCOPY OF ANDROID APP)
+   ========================================================================== */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(11, 19, 31, 0.98);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--divider-color);
+    z-index: 200;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+}
+
+.bottom-nav-item.active {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.bottom-nav-item svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* ==========================================================================
+   PAGES CONTENT (ABOUT, CONTACT, CATEGORIES, WRITERS)
+   ========================================================================== */
+.page-container {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 32px 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.page-header {
+    text-align: center;
+    border-bottom: 1px solid var(--divider-color);
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    font-size: 15px;
+    color: var(--brand-primary);
+}
+
+.page-content p {
+    margin-bottom: 16px;
+    font-size: 15.5px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.page-content h2 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 28px 0 12px;
+    border-right: 4px solid var(--brand-primary);
+    padding-right: 12px;
+}
+
+.page-content ul {
+    padding-right: 24px;
+    margin-bottom: 20px;
+}
+
+.page-content li {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-input, .form-textarea {
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-input:focus, .form-textarea:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.btn-submit-form {
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-start;
+}
+
+.btn-submit-form:hover {
+    background: linear-gradient(135deg, #0369A1, var(--brand-primary-blue));
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (BREAKPOINTS)
+   ========================================================================== */
+@media (max-width: 1080px) {
+    .main-wrapper {
+        grid-template-columns: 240px minmax(0, 1fr);
+    }
+    .sidebar-right {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    header.app-header .header-nav {
+        display: none;
+    }
+    .main-wrapper {
+        grid-template-columns: 1fr;
+        padding: 12px 10px 80px; /* space for mobile bottom nav */
+    }
+    .sidebar-left, .sidebar-right {
+        display: none;
+    }
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    .card-author-header {
+        padding: 12px 12px 6px;
+    }
+    .inner-quote-card {
+        margin: 4px 8px;
+        padding: 18px 14px;
+    }
+    .quote-body-text {
+        font-size: 16.5px;
+    }
+    .card-action-bar {
+        padding: 0 8px;
+    }
+}
+
+    </style>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+    <!-- Header (No Emojis) -->
+    <header class="app-header">
+        <div class="header-container">
+            <a href="index.html" class="brand-section">
+                <img src="assets/logo.png" alt="منشوراتي" class="brand-logo-img">
+                <div class="brand-texts">
+                    <span class="brand-name">منشوراتي</span>
+                    <span class="brand-tag">MANCHORATI</span>
+                </div>
+            </a>
+
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">المجتمع</a>
+                <a href="studio.html" class="nav-link">الاستوديو</a>
+                <a href="categories.html" class="nav-link">الأقسام</a>
+                <a href="writers.html" class="nav-link active">الكُتّاب</a>
+                <a href="about.html" class="nav-link">عن المنصة</a>
+                <a href="contact.html" class="nav-link">اتصل بنا</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.manchorati.www" target="_blank" class="btn-download-app">
+                    <svg viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+                    <span>التطبيق</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content (Real Firestore Leaderboard) -->
+    <main class="main-wrapper single-column">
+        <div class="page-container">
+            <div class="page-header">
+                <h1 class="page-title">لوحة شرف كُتّاب منشوراتي</h1>
+                <p class="page-subtitle">ترتيب كُتّاب المجتمع الحقيقيين بناءً على تفاعل القراء والإعجابات في Firebase</p>
+            </div>
+
+            <!-- Leaderboard -->
+            <h2 style="font-family: 'Cairo', sans-serif; font-size: 20px; color: #FFFFFF; margin-bottom: 16px;">متصدرو التفاعل في مجتمعنا</h2>
+            <div class="writers-leaderboard">
+
+                <div class="writer-rank-card" style="border-color: #F59E0B; background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), var(--bg-surface));">
+                    <div class="writer-rank-left">
+                        <span class="rank-number rank-gold">#1</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="data:image/webp;base64,UklGRo4OAABXRUJQVlA4WAoAAAAgAAAAnwAAnwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggoAwAAHA+AJ0BKqAAoAA+nUKbSyWjoyGqUI2gsBOJY2uFHkkWLAHrsA2l3/7pWgFsACw6ZaGn3iWwr3UD+nURTx/fX/b98L6Lp4DldA4JwTI2n4MTUl1ENLVhQyH0sEcaWJqZxlx2RN0D6DzyPEpqlL6C1PbH8ZMeNMSJOy4SXblWS1jioRvaDO8mB7P+zAJBNZgH9P1/14IIdTeUVT0hfCFkqYktLV1Jl/odK7JFIvm6PG/V3KGsdZM5nbJtftF23fDKeiv3Wwuzyme3UKo5ofLhs2pL5Fgfu0fXlqFG6aAKXQC7fiVguKFHMpYcbjQP1dGEm5mSuU17QI1TZY0tqSjBn7TyaUC+/M1780GZZr7gDOWuOd1uEP4E9rAdXaTBlgRyx8hA+BNUddT+x1995uuW8n+pgEFZfIx/GNrUMzWrJFOxn6uayp0hzty53urfWQvHhZ/mGfD9UU8fbj8fbjhraX3QCq1P83fDdazHwh7SuGpPqOeDE1ghEzNyiJr8PCrRhAj3YHEQ7Qtyu+Z87rzfZbaDfRZb04ADKRKg7AB7s7GlNgncnqgBVz7GwK1P1w+nhxRjl7EK55S3JCnnFedmxdJ2lDA78LCZklBh6bgrmZFhAdMsXMnk4I8OU8zrESZPlXZBVENw4HpH60VbrLp+CdJ4x29DwHUAGpgCcbAA/ujH44FxafZZBMVxwMU3T3wYZEUBWzAxAqgSmF9zD4iW93A4uH0b42I3kN2KzfRX2WaDki6gcuuyuLluniV5656A7eN2D9KKzb+9k1jzTXO3lGyKOFV+lGCosaXqtVa1mBmTSCSGxeD8yswhoxLICzhL3RDQNDI1qFgY1XNoEUcf/3szbDvtAj7JfAWf7+MflwdD7TOqHhlLQFKJTKtZ3krmZfpzPj3LxQM/NiOwPoKnkLFSuqE12Ki74p8YP0MJM8tl3PY6Kz9LKdhxoSddkYLE7NtxyWxcKLC6g2bvz/ORtMWeOa1apShZJ9hDiAdKhowdFCWSm4ZwkRCFM/RMPsmr8pojguS9/LJzq0zOfsn6Ntg2Qr5uJb45ZxjQvyfK13LW0d/PoPpjfhvnP8SR1WN48OnpXsE7gboYygnDMlwKVFT1zpTAFXDlF0vMNoxybQ26fkbSdGmi19nhJHG6N5kgd8BuVuYXcZdhSijUeeKXWPKhWLV8jRnaeo/bWg9YFcbBxGrvyXXMCPbAfKpACtqdJHTINcZiF39COXH6GS/jKOsMYCwxxXyuhWtf9Up4Yu1Clmu4aagK2bNRh0Jvm4VeFFy/Iovm4mpq3iKqMOSjLLuzlcUj5lHxfVK4QI9FuGMpxHIh6GYJgx1BAxtYNH1nDQrBsIYkUOPk92cJ/rv//OvHquUkOgokS8FH+q66USgu4h2otTeg2dFCdiWLqJRa/oXlPFdAR7+bcEEQELSIpxMIYTUcI27J2aNzXGol6zMnqR9lv3eNZbl9CKPhi3Qc8iib2d9hUJncl/DmkNYVQFp35gbyaN/Uo5yu59YRwm3K1cqFls/dqSvSTZMPPHVpZ1t54Ya/CelUBOK0y6LJ3CAM14rCZw0aeHanmM/B2/IvpFtHrL/CPcamfM6r3ZbOwt+g08/NvxNwBUKWeqFM727Nr9LHetqsbMvek/DxiQNb4KtiFNVvyZjEyxUXmSRTpAwbbyfcSDt4IdWYcNel4M68kgnXsHxXijJJ0nNEn876TtZiRm1T8Gqo2cFP36R0lWRVkBwzYG/XMDhM9SuPa4OjB1HCVBx8QXf8TNoWLtu+ImrACZfBid3IMuWklktAZA3phlMblFj4IO6Vb4r2pSHS/MSjIHnzNKPmnTE+g1HNx2sSTj7YNUX/g4X2xMc9zCATP2AZNnKLnNN9mzhog7huWqXUobqQ+97JgB5ZaDpT2JWsJKmu2IoLxYY56b7biLL0a/m8+pzfFcjFMnDDq8lCJldvssMxnZ3MvT3C15P5TvDgkgNH3gnL0qrlmsLBhJGVPskmGoGJ+XFRj5V4QhA1UF8qBlQ6gO9lcKhrvEguZG4vQlGvSYaRKBw/Jws35Ny0AODwxqqOcb5hZk2qxTT16bNMBw5RP1HsQZ5m4DOc0+q+t97mqPQCJnywYpNuQ+I5xZYXZMUoLbAs2kksU48v3VJNEt26vlfZufOX1m3wmaea1kIoJIAl5fc51xsM0AIzZPbbz0vtw/udWJdE1YISxoZGWSaHfmNhhbAyWz87COZxMkAfWmGHEM6KniXOq3SrDeVo6pNkdV3og9W1dWlr49Pn3dnTYF9jssMcTdBGFRHs45Pr4t7YayFyXn86LIZBJ3XYnm1CKPx5m2Yz/0Fq9IHbdo5LbDKB3kQNYtw+ErllkYbtjy2LwtyHJGSCaGACQtOJdj1xZCJQJ/SZ1EoP14Hz5OUf0dfsMTjlYjB2YlvIax5rK2UDiL+bP7iLizoIB4VT9c+T1zemQYI0NWYW91ppDfMq49pvLiGBEXv1eVR2rqRl7V4ZnoCb8Wh+EzJya9n657IhTzpSoG7eCSxVEqAPXXkvPJ3xZ4Jd+O4KSmz23F0nEvOtJM/JDIiAD1qDWlNROlzi2SXWBAlXY0pcR5KWXZhyoiXWXFiC4BQNZ5xp+WEwRiAf76GEXzR8b1wmmKDMVtZMy/ZSitjFiqqLrDufGfy/3rbhO0/KLerNKi0ta8bT3O4D9uDRYjWZgfQHaYzPu62IgXlIEJxB1LfGxni7waKJC4eSIYRkeYoNNVLYyaLmu/ytbspjOuXGdrhbFvcOJ8+njrua2PsCeBAqxSMu5VwoEFonMaFIgBhA7WLvBP4px2bC8Yn6C1Z5ZtIXAR/Hvybl34s2tCIYy3yshsfjLzI4+ZDz9DhyrQzOg/MEcizlWb2Hv+yiInwXxu0gO23rkvlmFA1P/4nD+BIRG+dQiDXiBRUhz5gxx6z89amEr1Zx00SUSevltpiNpXdWj3JFb4fOTr5bPXzWHBZMGHbJVQVO7ocsUQZ2iaBMsTwHz9i+f/8AL9KZ+o5QHvzRQYQPBHKfSkQ/PacAP22BJrj7TwyG9ol5P1pp/rPuPYLwk8i0PvTJ0Hxicdwdi56mdYhp3NOhBi4R+EPpf4nbkxhXJjrLdLJ474dCUEBoUK9C2hlUVSocr+OGBV2bo4J1NKLYGtGi/Hd+I/2nPonqae5Nrsgn4/XyHzTUEXQAfMmN5U/VkkjW7HT1NN7dNar0ZOpH8+O+FxO0ONbssUf73x2ehzWywbplX2LmW1c+IfbHJCRQgEMpnemoLe3LVXHoyox4k96z45XtwPEWzjosBb4QRW2gydTRBGEi4AceBd3B/j5u/9qxKRdjF3jA/hrXRS1G1IVUtpZsz+c6q1RRp7fqYy7F2eIhFgv6+jKfxomn1uRJRK2rJ/adAcH+5iJ+bugC1cB+/Ete/z0zr82BvdAC3l8MUJyYkZZZRgYLkrHRZiLkHO1xr/Q5HrE+ycQJE0mBlRcs6lKKpOdS1nUbGgNJk84TeJJh7rgbfV/rKPDH5PS6fLH+4tLd4jUyaom34Pv9jDdqYOF8w0cqW4/R75GCmllQ58CE1juX2ADASmKbGbt0SSySHR27RcXxmdOfNZ1L9ozCNroj/Oeb8JEnDAG72jRQsTynd+QR97MzIPKZv/ayO+bZaH20wD5BUBsP+zwr+PgGPrIPb0QFI17LWliCCK1eUVOjtkAoNFigUMh39qILKg44KVmVr5aP8V/vBvTKhJCsElQebNXhoSroVl0JF1uFJg/EWVHjI8yh8HWFjj2GdfsJ9gzKSJXZ36HoaYPNVX9APc0zcNSno3M4ciWQMjJetA7AP2tc5CkedJoosQQdKQIf2cufXfYPnnPMvDUSvLSCITrSKtIxcgNYtZ5MwGmrLDDswqZdPBQYhGRrsefUSgi/dK1kH2yMq1gbK610YtQ+09nRn6J77GKmczE0gm8p1VaDzSzU1lJwhL6Eqg5CkoYrnkoISvSkPwCsUW4JRzakqiv3rxn2ESq1Cr3OgsztG+dS6fu1hbYDymwt0mOu+EPxyFDq60MMcTGGVqxl86b/xUZOYX+dSM7PmgjgMgUPDLnSgDZKSkpEAA2Nwf7rKyvEfQU3g8NMIUPahum5unkPhkIFQ8y/HDc3G7qRESpLzDyJwISKI8KfWG91rFmwPKG7xASm7800Oe4hz/fn27JEAoIQsas5PL8zmaEN9BPdKb0kFfymystXH/25GZXYZoLjQDFqgTab572X5AO6Zva8gufcumU5qYkHklh4kkd3wfAkKeNuF0ywu0PD0zEWzAejkKDQsOu+OJabjEs+loz94fLBgeWyoAA=" alt="محمد" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                محمد
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@mohamed1 • 7 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: #F59E0B; font-size: 16px;">12,282</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number rank-silver">#2</span>
+                        <div class="author-avatar-box">ز</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                زينب اليعقوبي
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@zineb_y • 4 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">92</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number rank-bronze">#3</span>
+                        <div class="author-avatar-box">N</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Nouzhi Meryem
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@nouzhi_merye_5129 • 6 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">91</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#4</span>
+                        <div class="author-avatar-box">ي</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                يوسف الرحماني
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@youssef_r • 3 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">63</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#5</span>
+                        <div class="author-avatar-box">أ</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                أمين الفاسي
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@amine_elfassi • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">60</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#6</span>
+                        <div class="author-avatar-box">س</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                سناء بوزيد
+                                <span class="writer-badge-tag">verified</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@sanaa_b • 3 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">59</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#7</span>
+                        <div class="author-avatar-box">ي</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                ياسين العلمي
+                                <span class="writer-badge-tag">writer</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@yassine_al • 3 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">59</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#8</span>
+                        <div class="author-avatar-box">ف</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                فاطمة الزهراء
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@fz_zahra • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">52</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#9</span>
+                        <div class="author-avatar-box">إ</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                إلهام المنصوري
+                                <span class="writer-badge-tag">writer</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@ilham_m • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">50</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#10</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocJUNREwO5tGFFbRvf7NBB9JyAAtBZC_z1kmpxs7gaPHxOvygA=s96-c" alt="Aissa Sk" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Aissa Sk
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@aissa_sk_92 • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">40</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#11</span>
+                        <div class="author-avatar-box">ط</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                طارق بنسودة
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@tariq_b • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">34</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#12</span>
+                        <div class="author-avatar-box">ح</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                حمزة الصالحي
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@hamza_s • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">32</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#13</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocKrw2qxceb-5vz0a2tIDL9QuJIalLje0srdsezQNTgvHBAVRQ=s96-c" alt="Benkador Hanane" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Benkador Hanane
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@benkador_han • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">30</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#14</span>
+                        <div class="author-avatar-box">و</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                وفاء الصنهاجي
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@wafaa_s • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">26</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#15</span>
+                        <div class="author-avatar-box">ح</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                حنان
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@hanane • 7 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">24</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#16</span>
+                        <div class="author-avatar-box">Y</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Youssef elbatouli
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@youssef_elbatouli • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">22</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#17</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocKmAYZGJyRUHmhRn2W6N4DyK1VmJzNG8RkjeriHxDcwrWLYgw=s96-c" alt="Sanae Ouarji" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Sanae Ouarji
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@sanae_ouarji_8215 • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">22</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#18</span>
+                        <div class="author-avatar-box">م</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                مريم الإدريسي
+                                <span class="writer-badge-tag">verified</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@maryam_idrissi • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">17</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#19</span>
+                        <div class="author-avatar-box">أ</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                أسماء الزياني
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@asmaa_zayani • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">15</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#20</span>
+                        <div class="author-avatar-box">م</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                مصطفى الوديع
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@mostafa_w • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">14</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#21</span>
+                        <div class="author-avatar-box">س</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                سارة بناني
+                                <span class="writer-badge-tag">verified</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@sara_bennani • 2 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">13</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#22</span>
+                        <div class="author-avatar-box">ك</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                كوثر المرابط
+                                <span class="writer-badge-tag">writer</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@kaoutar_m • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">13</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#23</span>
+                        <div class="author-avatar-box">ع</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                عادل المتوكل
+                                <span class="writer-badge-tag">writer</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@adel_m • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">12</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#24</span>
+                        <div class="author-avatar-box">ك</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                كريم الناصري
+                                <span class="writer-badge-tag">writer</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@karim_n • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">12</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#25</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocI_W2Ygtijm9w8MGvZCqCz7GJOdZqDJSjhhYOLcLsZhiaZCEw=s96-c" alt="Hasna hanane" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Hasna hanane
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@hasna • 4 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">9</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#26</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocLNLtuN2xgBEf-ISgdOMAMlrq5UxM0O5O1KaNs1KfDoGduOsA=s96-c" alt="Yassine Hanane" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Yassine Hanane
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@yassine_hana • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">9</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#27</span>
+                        <div class="author-avatar-box">ب</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                بلال المراكشي
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@bilal_m • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">8</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#28</span>
+                        <div class="author-avatar-box">ه</div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                هدى العمراني
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@houda_amrani • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">7</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#29</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocLbge9i5YmRPuFsCI8_6LnDORJI-kHWDHcPUM8oZ6-VZrdj6g=s96-c" alt="Just Another Ueser" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Just Another Ueser
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@just_another_9962 • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">6</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#30</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocIYUcJvO7z_vRRpmfNHCgHkYWxjJKhClu9xEBOQ4ip2a3c_h6Y=s96-c" alt="samilor" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                samilor
+                                <span class="writer-badge-tag">beginner</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@sami_lorn • 4 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">1</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#31</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocLJDyA3DVQrVfzvdxy9ZjVIgNGllEB_XDW9mp7nahUqaqSO8dnX=s96-c" alt="One Piece" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                One Piece
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@one_piece • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">1</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+
+                <div class="writer-rank-card" >
+                    <div class="writer-rank-left">
+                        <span class="rank-number ">#32</span>
+                        <div class="author-avatar-box" style="padding:0; overflow:hidden;"><img src="https://lh3.googleusercontent.com/a/ACg8ocKHyXtAvfIe9i1f8I_bDQYOLy9HhvdAVRMo8sfWerwjkdoHLQ=s96-c" alt="Ss Ayoub" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div>
+                            <div style="font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 15px; color: #FFFFFF;">
+                                Ss Ayoub
+                                
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">@ss_ayoub_3793 • 1 منشورات</div>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="font-family: 'Cairo', sans-serif; font-weight: 700; color: var(--text-primary); font-size: 16px;">0</span>
+                        <div style="font-size: 11px; color: var(--text-secondary);">إعجاب حقيقي</div>
+                    </div>
+                </div>
+    
+            </div>
+
+            <!-- Writing Challenges -->
+            <h2 style="font-family: 'Cairo', sans-serif; font-size: 20px; color: #FFFFFF; margin: 35px 0 16px;">تحديات الكتابة</h2>
+            <div class="challenges-grid">
+                <div class="challenge-box">
+                    <h3 style="font-family: 'Cairo', sans-serif; font-size: 16px; color: #FFFFFF; margin: 8px 0;">تحدي السلسلة الذهبية (7 أيام)</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">انشر خاطرة واحدة يومياً لمدة 7 أيام متتالية للحصول على شارة اللهب البرتقالية وتصدر الخلاصة.</p>
+                </div>
+
+                <div class="challenge-box">
+                    <h3 style="font-family: 'Cairo', sans-serif; font-size: 16px; color: #FFFFFF; margin: 8px 0;">تحدي خواطر الأمل</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">اكتب أكثر خاطرة ملهمة تحت وسم #أمل_وتفاؤل، المنشور الأكثر إعجاباً يُتوج كاتبُه في الصفحة الرئيسية.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation (No Emojis) -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>المجتمع</span>
+        </a>
+        <a href="studio.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            <span>الاستوديو</span>
+        </a>
+        <a href="categories.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+            <span>الأقسام</span>
+        </a>
+        <a href="writers.html" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+            <span>الكُتّاب</span>
+        </a>
+    </nav>
+</body>
+</html>

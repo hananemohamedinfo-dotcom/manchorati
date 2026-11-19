@@ -50,8 +50,13 @@ class AiChatActivity : AppCompatActivity() {
     private var isForPostResult = false
     private val currentUserId: String get() = AuthManager.currentUser?.uid ?: AuthManager.auth.currentUser?.uid ?: "local_guest"
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.applyLayoutDirection(this)
         androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_ai_chat)
 
@@ -155,19 +160,19 @@ class AiChatActivity : AppCompatActivity() {
         btnClearChat.setOnClickListener {
             if (messages.isNotEmpty()) {
                 com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                    .setTitle("مسح سجل المحادثة؟")
-                    .setMessage("هل تريد مسح جميع رسائل المحادثة السابقة لهذا الحساب وبدء محادثة جديدة؟ لا يمكن التراجع عن هذا الإجراء.")
-                    .setPositiveButton("مسح المحادثة") { _, _ ->
+                    .setTitle(R.string.ai_clear_chat_title)
+                    .setMessage(R.string.ai_clear_chat_message)
+                    .setPositiveButton(R.string.ai_clear_chat_confirm) { _, _ ->
                         messages.clear()
                         AiChatHistoryManager.clearHistory(this, currentUserId)
                         chatAdapter.notifyDataSetChanged()
                         updateListVisibility()
-                        Toast.makeText(this, "تم مسح سجل المحادثة بنجاح", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.ai_clear_chat_success, Toast.LENGTH_SHORT).show()
                     }
-                    .setNegativeButton("إلغاء", null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show()
             } else {
-                Toast.makeText(this, "لا توجد رسائل سابقة لمسحها", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.ai_no_chat_to_clear, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -247,28 +252,28 @@ class AiChatActivity : AppCompatActivity() {
 
     private fun setupHeroCards() {
         findViewById<View>(R.id.cardPromptPatience).setOnClickListener {
-            selectStyle(pillStyleWisdom, "حكمة بليغة")
+            selectStyle(pillStyleWisdom, getString(R.string.ai_style_wisdom))
             selectedTopic = "حكم وأمثال"
-            sendMessage("اكتب لي حكمة بليغة ومؤثرة عن الصبر واليقين وحسن الظن بالله")
+            sendMessage(getString(R.string.ai_prompt_sample_wisdom))
         }
 
         findViewById<View>(R.id.cardPromptCoffee).setOnClickListener {
-            selectStyle(pillStyleShort, "خاطرة قصيرة")
+            selectStyle(pillStyleShort, getString(R.string.ai_style_quote))
             selectedTopic = "خواطر هادئة"
-            sendMessage("خاطرة مسائية دافئة وجميلة عن فنجان القهوة والسكينة وراحة البال")
+            sendMessage(getString(R.string.ai_prompt_sample_evening))
         }
 
         findViewById<View>(R.id.cardPromptMotivation).setOnClickListener {
-            selectStyle(pillStyleWisdom, "حكمة بليغة")
+            selectStyle(pillStyleWisdom, getString(R.string.ai_style_wisdom))
             selectedTopic = "تحفيز ونجاح"
-            sendMessage("كلمات تحفيزية قوية تلهم العزيمة ومواصلة الكفاح نحو القمة")
+            sendMessage(getString(R.string.ai_prompt_sample_motivation))
         }
 
         findViewById<View>(R.id.cardPromptPolish).setOnClickListener {
-            selectStyle(pillStylePolish, "تحسين وبلاغة")
-            etChatInput.hint = "ألصق أو اكتب النص الذي ترغب في تحسين بلاغته..."
+            selectStyle(pillStylePolish, getString(R.string.ai_style_refine))
+            etChatInput.hint = getString(R.string.ai_polish_input_hint)
             etChatInput.requestFocus()
-            Toast.makeText(this, "ألصق كتابتك في الحقل أدناه لإعادة صياغتها ببلاغة", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.ai_polish_toast_hint, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -298,13 +303,13 @@ class AiChatActivity : AppCompatActivity() {
         if (AiWriterManager.hasUserApiKey(this)) {
             dotAiStatus.setBackgroundResource(R.drawable.bg_status_dot_green)
             dotKeyBadge.setBackgroundResource(R.drawable.bg_status_dot_green)
-            tvAiStatusSubtitle.text = "مفتاحك الشخصي مفعّل (غير محدود)"
+            tvAiStatusSubtitle.text = getString(R.string.ai_key_custom_active)
             tvAiStatusSubtitle.setTextColor(Color.parseColor("#10B981"))
         } else {
             val remaining = AiWriterManager.getRemainingQuota(this)
             dotAiStatus.setBackgroundResource(R.drawable.bg_status_dot_amber)
             dotKeyBadge.setBackgroundResource(R.drawable.bg_status_dot_amber)
-            tvAiStatusSubtitle.text = "المفتاح التجريبي ($remaining / ${AiWriterManager.MAX_DAILY_QUOTA} محاولات)"
+            tvAiStatusSubtitle.text = getString(R.string.ai_key_trial_format, remaining, AiWriterManager.MAX_DAILY_QUOTA)
             tvAiStatusSubtitle.setTextColor(Color.parseColor("#38BDF8"))
         }
     }
@@ -344,7 +349,7 @@ class AiChatActivity : AppCompatActivity() {
             }
 
             // إضافة رسالة المساعد
-            val modelTag = if (isRealAi) "Google Gemini" else "مكتبة أدبية"
+            val modelTag = if (isRealAi) "Google Gemini" else getString(R.string.ai_model_library)
             messages.add(AiChatMessage.Bot(
                 quote = quote,
                 topic = selectedTopic,
@@ -393,12 +398,12 @@ class AiChatActivity : AppCompatActivity() {
 
         val userKey = AiWriterManager.getUserApiKey(this)
         if (userKey.isNotEmpty()) {
-            tvStatus.text = "مفتاحك الشخصي مفعّل حالياً (توليد لا محدود)"
+            tvStatus.text = getString(R.string.ai_key_custom_active_dialog)
             tvStatus.setTextColor(Color.parseColor("#10B981"))
             etKeyInput.setText(userKey)
             etKeyInput.setSelection(userKey.length)
         } else {
-            tvStatus.text = "جاري استخدام المفتاح التجريبي الافتراضي"
+            tvStatus.text = getString(R.string.ai_key_default_trial_status)
             tvStatus.setTextColor(Color.parseColor("#F59E0B"))
         }
 
@@ -418,27 +423,27 @@ class AiChatActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             val newKey = etKeyInput.text.toString().trim()
             if (newKey.isEmpty()) {
-                Toast.makeText(this, "يرجى لصق مفتاح Gemini أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.ai_key_empty_toast, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             btnSave.isEnabled = false
-            btnSave.text = "جاري التحقق..."
+            btnSave.text = getString(R.string.ai_key_verifying_button)
             tvVerifying.visibility = View.VISIBLE
-            tvVerifying.text = "جاري فحص المفتاح مع خوادم Google..."
+            tvVerifying.text = getString(R.string.ai_key_checking_servers)
 
             AiWriterManager.verifyKeyWithGemini(newKey) { isValid, errorMsg ->
                 btnSave.isEnabled = true
-                btnSave.text = "حفظ وتفعيل المفتاح"
+                btnSave.text = getString(R.string.ai_key_btn_save)
                 tvVerifying.visibility = View.GONE
 
                 if (isValid) {
                     AiWriterManager.setUserApiKey(this, newKey)
-                    Toast.makeText(this, "تم التحقق من مفتاحك وتفعيله بنجاح! التوليد الآن غير محدود.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.ai_key_success, Toast.LENGTH_LONG).show()
                     updateHeaderKeyStatus()
                     alertDialog.dismiss()
                 } else {
-                    val alert = errorMsg ?: "المفتاح غير صالح أو لم يتم تفعيله بعد."
+                    val alert = errorMsg ?: getString(R.string.ai_key_invalid_toast)
                     Toast.makeText(this, alert, Toast.LENGTH_LONG).show()
                 }
             }
@@ -446,7 +451,7 @@ class AiChatActivity : AppCompatActivity() {
 
         btnReset.setOnClickListener {
             AiWriterManager.clearUserApiKey(this)
-            Toast.makeText(this, "تمت العودة للمفتاح الافتراضي.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.ai_key_reset_toast, Toast.LENGTH_SHORT).show()
             updateHeaderKeyStatus()
             alertDialog.dismiss()
         }

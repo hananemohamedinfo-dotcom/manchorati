@@ -223,11 +223,18 @@ class MainActivity : AppCompatActivity() {
                 if (isFinishing || isDestroyed || !doc.exists()) return@addOnSuccessListener
                 val isBlocked = doc.getBoolean("isBlocked") ?: false
                 val adminWarning = doc.getString("adminWarning") ?: ""
+                val displayName = doc.getString("displayName") ?: doc.getString("name")
+                val photoUrl = doc.getString("photoUrl")
 
-                getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
-                    .edit()
-                    .putBoolean("is_blocked", isBlocked)
-                    .apply()
+                val prefsEditor = getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE).edit()
+                prefsEditor.putBoolean("is_blocked", isBlocked)
+                if (!displayName.isNullOrBlank()) {
+                    prefsEditor.putString("user_name", displayName)
+                }
+                if (!photoUrl.isNullOrBlank()) {
+                    prefsEditor.putString("user_photo", photoUrl)
+                }
+                prefsEditor.apply()
 
                 if (adminWarning.isNotBlank()) {
                     androidx.appcompat.app.AlertDialog.Builder(this)
@@ -423,6 +430,7 @@ class MainActivity : AppCompatActivity() {
         val sender = if (notif.senderName.isNotEmpty()) notif.senderName else getString(R.string.app_name)
         val body = when (notif.type) {
             "LIKE" -> getString(R.string.notif_liked_post, sender)
+            "COMMENT_LIKE" -> getString(R.string.notif_liked_comment, sender)
             "COMMENT" -> getString(R.string.notif_commented_post, sender)
             "FOLLOW" -> getString(R.string.notif_followed_you, sender)
             "NEW_POST" -> getString(R.string.notif_new_post, sender)
@@ -597,13 +605,12 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 highlightTab(position)
                 if (::cardTopToolbar.isInitialized) {
-                    cardTopToolbar.visibility = if (position == 1) View.GONE else View.VISIBLE
+                    cardTopToolbar.visibility = View.VISIBLE
                 }
                 tvToolbarTitle.text = when (position) {
                     0 -> getString(R.string.tab_community)
-                    1 -> getString(R.string.tab_reels)
-                    2 -> getString(R.string.tab_categories)
-                    3 -> getString(R.string.tab_favorites)
+                    1 -> getString(R.string.tab_categories)
+                    2 -> getString(R.string.tab_favorites)
                     else -> getString(R.string.app_name)
                 }
                 supportFragmentManager.fragments.forEach { f ->
@@ -858,10 +865,10 @@ class MainActivity : AppCompatActivity() {
         if (user != null) {
             // جلب الاسم المحدث من SharedPreferences
             val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val savedName = prefs.getString("user_name", user.displayName ?: "فاعل خير")
+            val savedName = prefs.getString("user_name", user.displayName ?: getString(R.string.anonymous_author))
             tvName?.text = savedName
 
-            tvUsername?.text = user.email ?: "@مستخدم"
+            tvUsername?.text = user.email ?: getString(R.string.user_default_handle)
             btnLogout?.visibility = View.VISIBLE
 
             val photoUrl = user.photoUrl?.toString()
@@ -908,12 +915,18 @@ class MainActivity : AppCompatActivity() {
             .setTitle(getString(R.string.logout_confirm_title))
             .setMessage(getString(R.string.logout_confirm_msg))
             .setPositiveButton(getString(R.string.drawer_logout)) { _, _ ->
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                 FirebaseAuth.getInstance().signOut()
                 AuthManager.getGoogleClient(this).signOut().addOnCompleteListener {
-                    getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                        .edit()
+                    val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    val editor = prefs.edit()
                         .remove("user_name")
-                        .apply()
+                        .remove("user_photo")
+                        .remove("user_custom_photo")
+                    if (uid.isNotEmpty()) {
+                        editor.remove("user_custom_photo_$uid")
+                    }
+                    editor.apply()
                     updateDrawerHeader()
                     Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show()
                 }

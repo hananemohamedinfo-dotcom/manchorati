@@ -54,7 +54,7 @@ class CategoriesFragment : Fragment() {
             }
 
             // 2. فتح منشورات القسم
-            (activity as? MainActivity)?.openCategoryPosts(selectedCat.id, selectedCat.name)
+            (activity as? MainActivity)?.openCategoryPosts(selectedCat.id, selectedCat.getLocalizedName(requireContext()))
         }
 
         recyclerView.adapter = categoryAdapter

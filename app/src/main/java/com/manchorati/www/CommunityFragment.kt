@@ -62,7 +62,33 @@ enum class MoodType(
         listOf(2, 3, 21, 23), "شعر وأدب"),
     PEACE("peace", "أدعية وسكينة", "", "ألا بذكر الله تطمئن القلوب.. سكينة ونور ودعوات مستجابة",
         listOf("أدعية", "أذكار", "دعاء", "طمأنينة", "ذكر", "قرآن", "استغفار", "الله", "يارب", "اللهم", "الحمدلله", "سبحان", "سكينة", "إيمان", "صلاة", "رسول", "نبي", "تسبيح", "رحمة", "مغفرة", "جنة", "نور", "أجر"),
-        listOf(1, 17, 10), "أدعية وأذكار")
+        listOf(1, 17, 10), "أدعية وأذكار");
+
+    fun getLocalizedTitle(context: Context): String {
+        return when (this) {
+            ALL -> context.getString(R.string.mood_all)
+            CHILL -> context.getString(R.string.mood_calm)
+            MOTIVATED -> context.getString(R.string.mood_motivation)
+            SAD -> context.getString(R.string.mood_sad)
+            HAPPY -> context.getString(R.string.mood_happy)
+            LOVE -> context.getString(R.string.mood_love)
+            PEACE -> context.getString(R.string.mood_dua)
+        }
+    }
+
+    fun getLocalizedBannerPhrase(context: Context): String {
+        val lang = context.resources.configuration.locales.get(0).language
+        if (lang == "ar") return bannerPhrase
+        return when (this) {
+            ALL -> ""
+            CHILL -> if (lang == "fr") "Une tasse de café et une paix intérieure.. Lisez avec sérénité" else "A cup of coffee and inner calm.. Read in tranquility"
+            MOTIVATED -> if (lang == "fr") "Debout ! Rien n'est impossible face à votre détermination" else "Rise up! Nothing is impossible with your determination"
+            SAD -> if (lang == "fr") "« Ne sois pas triste, Dieu est avec nous » — Des mots pour apaiser votre cœur" else "“Do not grieve; indeed Allah is with us” — Words to soothe your heart"
+            HAPPY -> if (lang == "fr") "Souriez, la vie est plus belle quand on la regarde avec joie" else "Smile, life is brighter through joy and contentment"
+            LOVE -> if (lang == "fr") "L'amour et la gratitude sont la clé du bonheur.. Partagez des mots doux" else "Love and gratitude are the secret to happiness.. Share kindness"
+            PEACE -> if (lang == "fr") "N'est-ce point par l'évocation de Dieu que les cœurs se tranquillisent ?" else "Unquestionably, by the remembrance of Allah hearts are assured"
+        }
+    }
 }
 
 fun Post.toCuratedCommunityPost(mood: MoodType, context: Context): CommunityPost {
@@ -184,7 +210,7 @@ class CommunityFragment : Fragment() {
                                             // المستخدم يملك اسم مستخدم بالفعل
                                             loginDialog?.dismiss()
                                             communityAdapter.updateCurrentUserId(currentUid)
-                                            Toast.makeText(requireContext(), "تم تسجيل الدخول بنجاح", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(requireContext(), getString(R.string.login_success), Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                     .addOnFailureListener {
@@ -194,7 +220,7 @@ class CommunityFragment : Fragment() {
                             }
                         },
                         onFailure = { error ->
-                            Toast.makeText(requireContext(), "فشل الدخول: $error", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), getString(R.string.login_failed, error), Toast.LENGTH_LONG).show()
                         }
                     )
                 }
@@ -365,7 +391,7 @@ class CommunityFragment : Fragment() {
         fun updateSortUI() {
             tvActiveSortLabel.text = when (sortMode) {
                 1 -> getString(R.string.sort_trending)
-                2 -> "أتابعهم"
+                2 -> getString(R.string.following_feed_menu)
                 else -> getString(R.string.sort_latest)
             }
         }
@@ -391,14 +417,14 @@ class CommunityFragment : Fragment() {
                         sortMode = 0
                         isTrendingSort = false
                         updateSortUI()
-                        applyFilterAndSort()
+                        applyFilterAndSort(resetScroll = true)
                         true
                     }
                     2 -> {
                         sortMode = 1
                         isTrendingSort = true
                         updateSortUI()
-                        applyFilterAndSort()
+                        applyFilterAndSort(resetScroll = true)
                         true
                     }
                     3 -> {
@@ -410,7 +436,7 @@ class CommunityFragment : Fragment() {
                             sortMode = 2
                             isTrendingSort = false
                             updateSortUI()
-                            applyFilterAndSort()
+                            applyFilterAndSort(resetScroll = true)
                         }
                         true
                     }
@@ -477,11 +503,11 @@ class CommunityFragment : Fragment() {
             } else {
                 layoutMoodBanner.visibility = View.VISIBLE
                 tvMoodBannerEmoji.visibility = View.GONE
-                tvMoodBannerText.text = mood.bannerPhrase
-                tvActiveMoodSubtitle.text = getString(R.string.mood_active_display, mood.title)
+                tvMoodBannerText.text = mood.getLocalizedBannerPhrase(requireContext())
+                tvActiveMoodSubtitle.text = getString(R.string.mood_active_display, mood.getLocalizedTitle(requireContext()))
             }
 
-            applyFilterAndSort()
+            applyFilterAndSort(resetScroll = true)
         }
 
         for ((chip, mood) in chips) {
@@ -508,7 +534,7 @@ class CommunityFragment : Fragment() {
         btnClearTag.setOnClickListener {
             currentTagFilter = "الكل"
             updateTagSelectorUI()
-            applyFilterAndSort()
+            applyFilterAndSort(resetScroll = true)
         }
     }
 
@@ -615,7 +641,7 @@ class CommunityFragment : Fragment() {
             row.setOnClickListener {
                 currentTagFilter = tagValue
                 updateTagSelectorUI()
-                applyFilterAndSort()
+                applyFilterAndSort(resetScroll = true)
                 dialog.dismiss()
             }
 
@@ -650,7 +676,7 @@ class CommunityFragment : Fragment() {
         }
     }
 
-    private fun applyFilterAndSort() {
+    private fun applyFilterAndSort(resetScroll: Boolean = false) {
         var list = allPostsList
 
         // 1. تصفية حسب الوسم المختار (Tag filter)
@@ -719,9 +745,9 @@ class CommunityFragment : Fragment() {
 
         // 3. ترتيب وتصفية التبويب مع احترام الأولويات الصارمة: (المتابعون غير المشاهدين -> المتابعون المشاهدين -> المستخدمون الحقيقيون -> البقية)
         list = when (sortMode) {
-            1 -> { // الأكثر تفاعلاً
+            1 -> { // الأكثر تفاعلاً: ترتيب دقيق حسب إجمالي التفاعل (الإعجابات والتعليقات)
                 list.sortedWith(
-                    compareBy<CommunityPost> { getPostPriorityRank(it) }
+                    compareByDescending<CommunityPost> { (it.likesCount * 2L) + it.commentsCount }
                         .thenByDescending { it.likesCount }
                         .thenByDescending { it.getTimeMillis() }
                 )
@@ -742,6 +768,14 @@ class CommunityFragment : Fragment() {
 
         communityAdapter.updateData(list)
 
+        if (resetScroll) {
+            val lm = rvCommunity.layoutManager as? LinearLayoutManager
+            lm?.scrollToPositionWithOffset(0, 0) ?: rvCommunity.scrollToPosition(0)
+            rvCommunity.post {
+                (rvCommunity.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(0, 0) ?: rvCommunity.scrollToPosition(0)
+            }
+        }
+
         // 4. معالجة الحالة الفارغة (Empty State UI)
         if (list.isEmpty()) {
             layoutEmptyCommunity.visibility = View.VISIBLE
@@ -753,7 +787,7 @@ class CommunityFragment : Fragment() {
                 tvEmptySubtitle.text = getString(R.string.no_posts_yet)
             } else if (selectedMood != MoodType.ALL) {
                 tvEmptyTitle.text = getString(R.string.mood_empty_title)
-                tvEmptySubtitle.text = getString(R.string.mood_empty_subtitle, selectedMood.title)
+                tvEmptySubtitle.text = getString(R.string.mood_empty_subtitle, selectedMood.getLocalizedTitle(requireContext()))
             } else if (currentTagFilter != "الكل") {
                 tvEmptyTitle.text = "${getString(R.string.no_posts_yet)} (${getLocalizedTagLabel(currentTagFilter)})"
                 tvEmptySubtitle.text = getString(R.string.share_first_post)
@@ -820,7 +854,7 @@ class CommunityFragment : Fragment() {
                     if (isInitialLoad || isRefreshingFeed) {
                         isInitialLoad = false
                         isRefreshingFeed = false
-                        applyFilterAndSort()
+                        applyFilterAndSort(resetScroll = true)
                     } else {
                         // المستخدم يتصفح حالياً: تحديث الإحصائيات في مكانها دون أي قفز أو إعادة ترتيب
                         val currentAdapterPosts = communityAdapter.getPosts()
@@ -915,7 +949,7 @@ class CommunityFragment : Fragment() {
                             textColor = "",
                             tag = if (selectedMood != MoodType.ALL) selectedMood.title else (post.categoryName.ifEmpty { "خواطر" }),
                             likesCount = baseLikes,
-                            commentsCount = (1 + (Math.abs(post.id.hashCode()) % 3)).toLong(),
+                            commentsCount = 0L,
                             reportCount = 0L,
                             likedBy = emptyList(),
                             authorBadge = persona.badge,
@@ -1025,15 +1059,18 @@ class CommunityFragment : Fragment() {
             .getBoolean("is_blocked", false)
         if (cachedBlocked) {
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("حسابك محظور")
-                .setMessage("تم حظر حسابك من النشر في المجتمع لمخالفته شروط وقواعد الاستخدام.")
-                .setPositiveButton("حسناً", null)
+                .setTitle(R.string.account_banned_title)
+                .setMessage(R.string.account_banned_desc)
+                .setPositiveButton(android.R.string.ok, null)
                 .show()
             return
         }
 
         val baseUsername = AuthManager.generateBaseUsername(user.displayName, user.email)
-        val defaultDisplayName = user.displayName ?: getString(R.string.default_user_name)
+        val prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val defaultDisplayName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+            ?: user.displayName
+            ?: getString(R.string.default_user_name)
 
         FirebaseFirestore.getInstance().collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
@@ -1046,21 +1083,24 @@ class CommunityFragment : Fragment() {
 
                 if (isBlocked) {
                     androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                        .setTitle("حسابك محظور")
-                        .setMessage("تم حظر حسابك من النشر في المجتمع لمخالفته شروط وقواعد الاستخدام.")
-                        .setPositiveButton("حسناً", null)
+                        .setTitle(R.string.account_banned_title)
+                        .setMessage(R.string.account_banned_desc)
+                        .setPositiveButton(android.R.string.ok, null)
                         .show()
                     return@addOnSuccessListener
                 }
 
                 val username = doc.getString("username")
+                val docDisplayName = doc.getString("displayName")?.takeIf { it.isNotBlank() }
+                if (docDisplayName != null) {
+                    requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                        .edit().putString("user_name", docDisplayName).apply()
+                }
+                val finalDisplayName = docDisplayName ?: defaultDisplayName
                 if (doc.exists() && !username.isNullOrEmpty()) {
-                    val displayName = doc.getString("displayName")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: defaultDisplayName
-                    showPostBottomSheet(user.uid, displayName, username, null, initialTag, initialContent)
+                    showPostBottomSheet(user.uid, finalDisplayName, username, null, initialTag, initialContent)
                 } else {
-                    showPostBottomSheet(user.uid, defaultDisplayName, baseUsername, null, initialTag, initialContent)
+                    showPostBottomSheet(user.uid, finalDisplayName, baseUsername, null, initialTag, initialContent)
                 }
             }
             .addOnFailureListener {
@@ -1261,7 +1301,7 @@ class CommunityFragment : Fragment() {
         rvCommunity.scrollToPosition(0)
         val cleanTag = rawTag.replace(Regex("[^\\p{L}\\p{Nd}\\s]"), "").trim()
         val displayTag = if (cleanTag.isNotEmpty()) "#" + cleanTag.replace("\\s+".toRegex(), "_") else "#$rawTag"
-        Toast.makeText(requireContext(), "تصفية حسب الهاشتاغ: $displayTag", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.filter_by_hashtag, displayTag), Toast.LENGTH_SHORT).show()
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -1407,13 +1447,35 @@ class CommunityFragment : Fragment() {
 
         val user = AuthManager.currentUser
         val authorId = user?.uid ?: return
-        val fallbackAuthorName = user.displayName ?: "فاعل خير"
-
-        // تحميل صورة المستخدم في شريط التعليق
         val prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val currentPhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+        val savedName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+        var currentLiveAuthorName = savedName
+            ?: user.displayName?.takeIf { it.isNotBlank() }
+            ?: getString(R.string.default_user_name)
+
+        var currentLivePhotoUrl = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
             ?: user.photoUrl?.toString() ?: ""
-        ivCurrentUserAvatar?.loadUserAvatar(currentPhotoUrl)
+        ivCurrentUserAvatar?.loadUserAvatar(currentLivePhotoUrl)
+
+        // جلب أحدث اسم وصورة مباشرة من Firestore لتفادي أي تعارض مع بيانات Gmail
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("users").document(authorId).get()
+            .addOnSuccessListener { uDoc ->
+                if (uDoc.exists()) {
+                    val dName = uDoc.getString("displayName")?.takeIf { it.isNotBlank() }
+                        ?: uDoc.getString("name")?.takeIf { it.isNotBlank() }
+                    val pUrl = uDoc.getString("photoUrl")?.takeIf { it.isNotBlank() }
+                    if (dName != null) {
+                        currentLiveAuthorName = dName
+                        prefs.edit().putString("user_name", dName).apply()
+                    }
+                    if (pUrl != null) {
+                        currentLivePhotoUrl = pUrl
+                        prefs.edit().putString("user_photo", pUrl).apply()
+                        ivCurrentUserAvatar?.loadUserAvatar(pUrl)
+                    }
+                }
+            }
 
         val resetBannerState = {
             replyingToComment = null
@@ -1446,10 +1508,12 @@ class CommunityFragment : Fragment() {
         })
 
         rvComments.layoutManager = LinearLayoutManager(requireContext())
-        val commentsAdapter = CommentsAdapter(
+        lateinit var commentsAdapter: CommentsAdapter
+        commentsAdapter = CommentsAdapter(
             comments = emptyList(),
             currentUserId = authorId,
             postAuthorId = post.authorId,
+            postId = post.id,
             onUserClicked = { userId, userName ->
                 dialog.dismiss()
                 val intent = Intent(requireContext(), UserProfileActivity::class.java).apply {
@@ -1487,51 +1551,89 @@ class CommunityFragment : Fragment() {
                 imm?.showSoftInput(etInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             },
             onDeleteClicked = { comment ->
-                AlertDialog.Builder(requireContext())
+                // إخفاء لوحة المفاتيح فوراً لمنع تداخل اللمسات
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+                etInput.clearFocus()
+
+                val alertDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.delete_button)
                     .setMessage(R.string.confirm_delete_comment)
-                    .setPositiveButton(R.string.delete_button) { _, _ ->
-                        FirestoreManager.deleteComment(post.id, comment.id) {}
+                    .setPositiveButton(R.string.delete_button) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                        // استجابة بصرية فورية وسلسة (Optimistic UI)
+                        commentsAdapter.removeComment(comment.id)
+                        Toast.makeText(requireContext(), R.string.comment_deleting, Toast.LENGTH_SHORT).show()
+                        FirestoreManager.deleteComment(post.id, comment.id) { success ->
+                            activity?.runOnUiThread {
+                                if (success) {
+                                    Toast.makeText(requireContext(), R.string.comment_deleted_success, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireContext(), R.string.comment_delete_error, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
+                    .setNegativeButton(R.string.no) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                    }
+                    .create()
+
+                alertDialog.setOnShowListener {
+                    alertDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)
+                        ?.setTextColor(Color.parseColor("#EF4444"))
+                    alertDialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
+                        ?.setTextColor(Color.parseColor("#94A3B8"))
+                }
+                alertDialog.show()
+            },
+            onLikeCommentClicked = { comment, isLiked ->
+                if (authorId.isNotEmpty()) {
+                    val currentUserName = prefs.getString("user_name", "")?.takeIf { it.isNotEmpty() }
+                        ?: currentLiveAuthorName
+                    FirestoreManager.toggleCommentLike(
+                        postId = post.id,
+                        comment = comment,
+                        userId = authorId,
+                        userName = currentUserName,
+                        isLiked = isLiked
+                    )
+                }
             }
         )
         rvComments.adapter = commentsAdapter
 
+        val formatCommentCountText: (Long) -> String = { count ->
+            when {
+                count <= 0L -> getString(R.string.no_comments_title)
+                count == 1L -> getString(R.string.comments_count_one)
+                count == 2L -> getString(R.string.comments_count_two)
+                count in 3L..10L -> String.format(getString(R.string.comments_count_plural), count)
+                else -> String.format(getString(R.string.comments_count_many), count)
+            }
+        }
+
         FirestoreManager.listenToComments(post.id) { list ->
             activity?.runOnUiThread {
-                val displayList = if (list.isEmpty() && (post.id.startsWith("vpost_") || post.id.startsWith("curated_"))) {
-                    val p1 = VirtualCommunityManager.getPersonaForId(post.id.hashCode() + 1)
-                    val p2 = VirtualCommunityManager.getPersonaForId(post.id.hashCode() + 3)
-                    listOf(
-                        Comment(
-                            id = "seed_c1_${post.id}",
-                            authorId = p1.id,
-                            authorName = p1.name,
-                            authorPhotoUrl = p1.avatarResource,
-                            content = VirtualCommunityManager.getContextualComment(post.content, post.tag),
-                            timestamp = post.getTimeMillis() + 180000L
-                        ),
-                        Comment(
-                            id = "seed_c2_${post.id}",
-                            authorId = p2.id,
-                            authorName = p2.name,
-                            authorPhotoUrl = p2.avatarResource,
-                            content = "ما شاء الله، ذوق راقٍ واختيار مميز",
-                            timestamp = post.getTimeMillis() + 450000L
-                        )
-                    )
-                } else {
-                    list
+                val displayList = list
+
+                // مزامنة العداد التلقائي فوراً في الواجهة وقاعدة البيانات
+                val currentSize = displayList.size.toLong()
+                if (currentSize != post.commentsCount) {
+                    post.commentsCount = currentSize
+                    communityAdapter.updatePostStats(post)
+                    if (!post.id.startsWith("vpost_") && !post.id.startsWith("curated_")) {
+                        FirestoreManager.updatePostCommentsCount(post.id, currentSize)
+                    }
                 }
+
                 commentsAdapter.updateData(displayList)
                 if (displayList.isEmpty()) {
                     layoutEmptyComments?.visibility = View.VISIBLE
-                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), 0)
+                    tvCommentsCountHeader?.text = formatCommentCountText(0L)
                 } else {
                     layoutEmptyComments?.visibility = View.GONE
-                    tvCommentsCountHeader?.text = String.format(getString(R.string.comments_count_format), displayList.size)
+                    tvCommentsCountHeader?.text = formatCommentCountText(displayList.size.toLong())
                     rvComments.post {
                         rvComments.scrollToPosition(displayList.size - 1)
                     }
@@ -1575,8 +1677,13 @@ class CommunityFragment : Fragment() {
 
             // حالة إضافة تعليق جديد (أو رد)
             val currentAuthorId = currentUser.uid
-            val currentAuthorName = currentUser.displayName ?: fallbackAuthorName
-            val currentPhoto = prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
+            val savedProfileName = prefs.getString("user_name", "")?.takeIf { it.isNotBlank() }
+            val currentAuthorName = currentLiveAuthorName.takeIf { it.isNotBlank() }
+                ?: savedProfileName
+                ?: currentUser.displayName?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.default_user_name)
+            val currentPhoto = currentLivePhotoUrl.takeIf { it.isNotEmpty() }
+                ?: prefs.getString("user_photo", "")?.takeIf { it.isNotEmpty() }
                 ?: currentUser.photoUrl?.toString() ?: ""
 
             val replyAuthorName = replyingToComment?.authorName ?: ""
@@ -1603,9 +1710,9 @@ class CommunityFragment : Fragment() {
                             recipientId = targetRepliedComment.authorId,
                             senderId = currentAuthorId,
                             senderName = currentAuthorName,
-                            type = "COMMENT",
+                            type = "REPLY",
                             postId = post.id,
-                            message = "رد $currentAuthorName على تعليقك: \"${text.take(30)}...\""
+                            message = getString(R.string.notif_replied_comment, currentAuthorName)
                         )
                     }
 

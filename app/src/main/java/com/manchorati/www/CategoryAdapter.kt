@@ -13,6 +13,7 @@ class CategoryAdapter(
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle: TextView = itemView.findViewById(R.id.tvCategoryTitle)
+        val badgeNew: TextView = itemView.findViewById(R.id.badgeNew)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -22,7 +23,8 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categories[position]
-        holder.tvTitle.text = category.name.trim()
+        holder.tvTitle.text = category.getLocalizedName(holder.itemView.context)
+        holder.badgeNew.visibility = if (category.hasNew) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {
             holder.itemView.animate()

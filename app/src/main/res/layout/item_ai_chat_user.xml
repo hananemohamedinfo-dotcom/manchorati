@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:gravity="start"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="horizontal">
 
     <LinearLayout

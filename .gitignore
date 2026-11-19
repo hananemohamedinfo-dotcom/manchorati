@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+local.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -8,15 +9,35 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
+build/
 /build
+app/build/
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 .kotlin
-
 .idea/
-
 graphify-out/cache/
 
+# Binary artifacts & builds
+*.apk
 *.aab
+.backups/
+
+# Scratch & temporary development files
+*.ps1
+screen_*.png
+test_*.png
+current_phone_screen.png
+crash_dump.txt
+dump.xml
+*_part*.txt
+*_part.txt
+action_row_audio.txt
+get_audio_title.txt
+init_views.txt
+intent_data.txt
+load_custom_video.txt
+mute_*.txt
+oncreate_*.txt
+theme_init_part.txt

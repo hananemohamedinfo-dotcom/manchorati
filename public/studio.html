@@ -1,0 +1,1422 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو التصميم • منشوراتي (Manchorati)</title>
+    <meta name="description" content="صمم أجمل بطاقات الاقتباسات والخواطر والستوريات لإنستغرام وواتساب عبر استوديو منشوراتي الإبداعي مجاناً.">
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+/* ==========================================================================
+   منشوراتي (MANCHORATI) - STYLESHEET
+   الهوية الرسمية لتطبيق منشوراتي المستوحاة من نظام أندرويد (تطابق 100%)
+   ========================================================================== */
+
+:root {
+    /* الألوان الرسمية من colors.xml في تطبيق منشوراتي */
+    --bg-main: #0B131F;
+    --bg-card: #141E2E;
+    --bg-surface: #1E2A3A;
+    --bg-card-hover: #19263A;
+    --divider-color: #1E2A3A;
+    --border-light: rgba(255, 255, 255, 0.08);
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-faint: #64748B;
+
+    --brand-primary: #38BDF8;
+    --brand-primary-blue: #0284C7;
+    --brand-gold: #F59E0B;
+    --brand-gold-warm: #D4AF37;
+    --brand-rose: #EF4444;
+    --brand-emerald: #10B981;
+
+    --chip-idle-bg: #1E2A3A;
+    --chip-idle-stroke: #334155;
+    --chip-idle-text: #CBD5E1;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-card: 16px;
+    --radius-pill: 9999px;
+
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.25);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-surface);
+    border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary-blue);
+}
+
+/* ==========================================================================
+   HEADER (TOP APP BAR)
+   ========================================================================== */
+header.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(11, 19, 31, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--divider-color);
+    height: 64px;
+}
+
+.header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.brand-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    border: 1.5px solid var(--brand-primary);
+}
+
+.brand-texts {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.1;
+}
+
+.brand-tag {
+    font-size: 10px;
+    color: var(--brand-primary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Desktop Navigation Links */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link.active {
+    color: var(--brand-primary);
+    background: rgba(56, 189, 248, 0.12);
+    font-weight: 700;
+}
+
+/* Header Action */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-download-app {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-download-app:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    background: linear-gradient(135deg, #0369A1, var(--brand-primary-blue));
+}
+
+.btn-download-app svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* ==========================================================================
+   MAIN 3-COLUMN APP CONTAINER (FACEBOOK / TWITTER STYLE)
+   ========================================================================== */
+.main-wrapper {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px 16px 40px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 680px) 280px;
+    gap: 20px;
+    align-items: start;
+    flex: 1;
+}
+
+/* For sub-pages with 2 columns or 1 column */
+.main-wrapper.single-column {
+    grid-template-columns: minmax(0, 840px);
+    justify-content: center;
+}
+
+/* Sidebars */
+.sidebar {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    box-shadow: var(--shadow-card);
+}
+
+.sidebar-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 8px;
+}
+
+/* Side Menu Links */
+.side-menu-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.side-menu-item a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.side-menu-item a:hover {
+    background: var(--bg-surface);
+    color: #FFFFFF;
+}
+
+.side-menu-item.active a {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.side-menu-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Writer of the Week Spotlight Widget */
+.writer-spotlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.laurel-avatar-frame {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.laurel-wreath-img {
+    position: absolute;
+    inset: -6px;
+    width: 84px;
+    height: 84px;
+    pointer-events: none;
+}
+
+.spotlight-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--brand-gold);
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.spotlight-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.spotlight-badge {
+    font-size: 11px;
+    color: var(--brand-gold);
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* Daily Streak Widget */
+.streak-widget {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.08));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.streak-flame {
+    font-size: 32px;
+    line-height: 1;
+    animation: flameBounce 1.5s infinite ease-in-out;
+}
+
+@keyframes flameBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.streak-text h4 {
+    font-size: 14px;
+    color: var(--brand-gold);
+    font-family: 'Cairo', sans-serif;
+}
+
+.streak-text p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   CENTER FEED (COLONNE PRINCIPALE - 1 POST PAR LIGNE)
+   ========================================================================== */
+.feed-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Create Post / Studio Trigger Bar (Like Facebook "بماذا تفكر؟") */
+.create-post-box {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-card);
+}
+
+.user-mini-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.create-post-input {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-pill);
+    padding: 10px 18px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.create-post-input:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+}
+
+.btn-open-studio-header {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--brand-primary);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 9px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.btn-open-studio-header:hover {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+}
+
+/* Mood & Category horizontal chips */
+.chips-bar-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chips-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+}
+
+.chips-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.chip-item {
+    background: var(--chip-idle-bg);
+    border: 1px solid var(--chip-idle-stroke);
+    color: var(--chip-idle-text);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    user-select: none;
+}
+
+.chip-item:hover {
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+}
+
+.chip-item.active {
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    border-color: var(--brand-primary);
+    box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+}
+
+/* ==========================================================================
+   POST CARD (EXACT ITEM_COMMUNITY_POST.XML MATCH)
+   ========================================================================== */
+.post-item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.post-item-card:hover {
+    border-color: rgba(56, 189, 248, 0.35);
+}
+
+/* Post Header */
+.card-author-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 8px;
+}
+
+.author-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.author-avatar-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-primary-blue), var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    border: 1.5px solid var(--divider-color);
+    flex-shrink: 0;
+}
+
+.author-name-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-name-text {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.author-badge-pill {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.author-streak-badge {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.author-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-top: 1px;
+}
+
+.btn-card-menu {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-card-menu:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+/* Inner Quote Card (layoutPostCard) */
+.inner-quote-card {
+    margin: 6px 12px;
+    padding: 24px 20px;
+    border-radius: var(--radius-md);
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.quote-body-text {
+    font-size: 18.5px;
+    line-height: 1.85;
+    color: var(--text-primary);
+    word-break: break-word;
+    white-space: pre-line;
+    text-align: center;
+}
+
+/* Double click heart animation */
+.heart-pop {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    fill: var(--brand-rose);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.heart-pop.active {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Hashtag row */
+.card-tag-row {
+    padding: 6px 16px 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag-badge-link {
+    color: var(--brand-primary);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.tag-badge-link:hover {
+    text-decoration: underline;
+}
+
+/* Card Bottom Action Bar */
+.card-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 14px;
+    border-top: 1px solid var(--border-light);
+    margin-top: 6px;
+}
+
+.action-bar-left, .action-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.card-action-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+.card-action-btn.liked {
+    color: var(--brand-rose);
+}
+
+.card-action-btn.bookmarked {
+    color: var(--brand-gold);
+}
+
+.card-action-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.card-action-btn.liked svg {
+    fill: var(--brand-rose);
+    stroke: var(--brand-rose);
+}
+
+.card-action-btn.bookmarked svg {
+    fill: var(--brand-gold);
+    stroke: var(--brand-gold);
+}
+
+/* Collapsible Comments Section */
+.card-comments-drawer {
+    display: none;
+    border-top: 1px solid var(--border-light);
+    background: rgba(11, 19, 31, 0.4);
+    padding: 16px;
+}
+
+.card-comments-drawer.open {
+    display: block;
+}
+
+.comment-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.comment-text-box {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    outline: none;
+}
+
+.comment-text-box:focus {
+    border-color: var(--brand-primary);
+}
+
+.btn-send-comment {
+    background: var(--brand-primary-blue);
+    border: none;
+    color: #FFFFFF;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-item {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.comment-author-name {
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+.comment-time {
+    color: var(--text-faint);
+}
+
+.comment-content {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+/* AdSense In-feed Placement */
+.feed-adsense-slot {
+    background: rgba(19, 29, 46, 0.5);
+    border: 1px dashed var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 180px;
+    color: var(--text-faint);
+}
+
+.feed-adsense-slot span {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   MOBILE BOTTOM NAVIGATION BAR (PHOTOCOPY OF ANDROID APP)
+   ========================================================================== */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(11, 19, 31, 0.98);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--divider-color);
+    z-index: 200;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+}
+
+.bottom-nav-item.active {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.bottom-nav-item svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* ==========================================================================
+   PAGES CONTENT (ABOUT, CONTACT, CATEGORIES, WRITERS)
+   ========================================================================== */
+.page-container {
+    background: var(--bg-card);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-card);
+    padding: 32px 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.page-header {
+    text-align: center;
+    border-bottom: 1px solid var(--divider-color);
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    font-size: 15px;
+    color: var(--brand-primary);
+}
+
+.page-content p {
+    margin-bottom: 16px;
+    font-size: 15.5px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.page-content h2 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 28px 0 12px;
+    border-right: 4px solid var(--brand-primary);
+    padding-right: 12px;
+}
+
+.page-content ul {
+    padding-right: 24px;
+    margin-bottom: 20px;
+}
+
+.page-content li {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-input, .form-textarea {
+    background: var(--bg-surface);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-input:focus, .form-textarea:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.btn-submit-form {
+    background: linear-gradient(135deg, var(--brand-primary-blue), #0369A1);
+    color: #FFFFFF;
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-start;
+}
+
+.btn-submit-form:hover {
+    background: linear-gradient(135deg, #0369A1, var(--brand-primary-blue));
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (BREAKPOINTS)
+   ========================================================================== */
+@media (max-width: 1080px) {
+    .main-wrapper {
+        grid-template-columns: 240px minmax(0, 1fr);
+    }
+    .sidebar-right {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    header.app-header .header-nav {
+        display: none;
+    }
+    .main-wrapper {
+        grid-template-columns: 1fr;
+        padding: 12px 10px 80px; /* space for mobile bottom nav */
+    }
+    .sidebar-left, .sidebar-right {
+        display: none;
+    }
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    .card-author-header {
+        padding: 12px 12px 6px;
+    }
+    .inner-quote-card {
+        margin: 4px 8px;
+        padding: 18px 14px;
+    }
+    .quote-body-text {
+        font-size: 16.5px;
+    }
+    .card-action-bar {
+        padding: 0 8px;
+    }
+}
+
+</style>
+<link rel="stylesheet" href="assets/style.css">
+    <style>
+        .studio-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 16px 80px;
+            width: 100%;
+        }
+        .canvas-area {
+            background: var(--bg-card);
+            border: 1px solid var(--divider-color);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-card);
+        }
+        #webStudioCanvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+        }
+        .controls-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--divider-color);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-shadow: var(--shadow-card);
+        }
+        .ratio-selector {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-surface);
+            padding: 4px;
+            border-radius: var(--radius-md);
+        }
+        .ratio-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .ratio-btn.active {
+            background: var(--brand-primary-blue);
+            color: #FFFFFF;
+        }
+        .gradient-palette {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+        .palette-item {
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .palette-item.active {
+            border-color: #FFFFFF;
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(255,255,255,0.4);
+        }
+        @media (max-width: 900px) {
+            .studio-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <a href="index.html" class="brand-section">
+                <img src="assets/logo.png" alt="منشوراتي" class="brand-logo-img">
+                <div class="brand-texts">
+                    <span class="brand-name">منشوراتي</span>
+                    <span class="brand-tag">MANCHORATI</span>
+                </div>
+            </a>
+
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">المجتمع</a>
+                <a href="studio.html" class="nav-link active">الاستوديو</a>
+                <a href="categories.html" class="nav-link">الأقسام</a>
+                <a href="writers.html" class="nav-link">الكُتّاب</a>
+                <a href="about.html" class="nav-link">عن المنصة</a>
+                <a href="contact.html" class="nav-link">اتصل بنا</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.manchorati.www" target="_blank" class="btn-download-app">
+                    <svg viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+                    <span>التطبيق</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Studio Main Interface -->
+    <div class="studio-container">
+        <!-- Canvas Live Preview -->
+        <div class="canvas-area">
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h2 style="font-family: 'Cairo', sans-serif; font-size: 18px; color: #FFFFFF;">المعاينة الحية للبطاقة</h2>
+                <span id="canvasDimsBadge" style="font-size: 12px; color: var(--brand-primary); background: rgba(56,189,248,0.1); padding: 4px 10px; border-radius: var(--radius-pill);">1080 × 1080 (مربع)</span>
+            </div>
+
+            <canvas id="webStudioCanvas" width="1080" height="1080"></canvas>
+
+            <div style="margin-top: 20px; display: flex; gap: 12px; width: 100%; max-width: 500px;">
+                <button class="btn-submit-form" id="btnDownload" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>تحميل الصورة عالية الدقة</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <h3 style="font-family: 'Cairo', sans-serif; font-size: 17px; color: #FFFFFF; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">إعدادات التصميم</h3>
+
+            <!-- Aspect Ratio -->
+            <div class="form-group">
+                <label class="form-label">أبعاد التصميم:</label>
+                <div class="ratio-selector">
+                    <button class="ratio-btn active" id="btnRatioSquare" onclick="setStudioRatio('1:1')">1:1 (مربع للبوست)</button>
+                    <button class="ratio-btn" id="btnRatioStory" onclick="setStudioRatio('9:16')">9:16 (عمودي للستوري)</button>
+                </div>
+            </div>
+
+            <!-- Quote Text -->
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label">نص الخاطرة / الاقتباس:</label>
+                    <button type="button" onclick="loadRandomStudioQuote()" style="background: none; border: none; color: var(--brand-gold); font-size: 12px; cursor: pointer; font-weight: 700;">اقتباس مقترح</button>
+                </div>
+                <textarea class="form-textarea" id="studioTextInput" placeholder="اكتب نص الاقتباس هنا...">ليس من يكتب بالحبر كمن يكتب بدم قلبه، ولا من ينطق بالحكمة كمن يعيشها في صمت ألمه وعمقه.</textarea>
+            </div>
+
+            <!-- Author Name -->
+            <div class="form-group">
+                <label class="form-label">اسم الكاتب أو المصدر:</label>
+                <input type="text" class="form-input" id="studioAuthorInput" value="جبران خليل جبران">
+            </div>
+
+            <!-- Font Selector -->
+            <div class="form-group">
+                <label class="form-label">نوع الخط العربي:</label>
+                <select class="form-input" id="studioFontSelect">
+                    <option value="Tajawal" selected>خط تجوال (أنيق وسلس)</option>
+                    <option value="Cairo">خط كايرو (عصري وقوي)</option>
+                    <option value="Amiri">خط أميري (أدبي وكلاسيكي)</option>
+                </select>
+            </div>
+
+            <!-- Font Size -->
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between;">
+                    <label class="form-label">حجم الخط:</label>
+                    <span id="fontSizeDisplay" style="font-size: 12px; color: var(--brand-primary);">48px</span>
+                </div>
+                <input type="range" id="studioFontSizeRange" min="32" max="64" value="48" style="width: 100%; accent-color: var(--brand-primary);">
+            </div>
+
+            <!-- Background Palette -->
+            <div class="form-group">
+                <label class="form-label">خلفية البطاقة (تدرجات منشوراتي الرسمية):</label>
+                <div class="gradient-palette" id="paletteGrid">
+                    <div class="palette-item active" style="background: linear-gradient(135deg, #0F172A, #1E293B);" data-from="#0F172A" data-to="#1E293B"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #0284C7, #0369A1);" data-from="#0284C7" data-to="#0369A1"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #78350F, #B45309);" data-from="#78350F" data-to="#B45309"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #3B0764, #6B21A8);" data-from="#3B0764" data-to="#6B21A8"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #064E3B, #047857);" data-from="#064E3B" data-to="#047857"></div>
+                    <div class="palette-item" style="background: linear-gradient(135deg, #881337, #9F1239);" data-from="#881337" data-to="#9F1239"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>المجتمع</span>
+        </a>
+        <a href="studio.html" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            <span>الاستوديو</span>
+        </a>
+        <a href="categories.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+            <span>الأقسام</span>
+        </a>
+        <a href="writers.html" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+            <span>الكُتّاب</span>
+        </a>
+    </nav>
+
+    <!-- Studio Canvas Logic -->
+    <script>
+        const canvas = document.getElementById("webStudioCanvas");
+        const ctx = canvas.getContext("2d");
+        const textInput = document.getElementById("studioTextInput");
+        const authorInput = document.getElementById("studioAuthorInput");
+        const fontSelect = document.getElementById("studioFontSelect");
+        const fontSizeRange = document.getElementById("studioFontSizeRange");
+        const fontSizeDisplay = document.getElementById("fontSizeDisplay");
+        const btnDownload = document.getElementById("btnDownload");
+        const canvasDimsBadge = document.getElementById("canvasDimsBadge");
+
+        let currentRatio = "1:1";
+        let currentGradient = { from: "#0F172A", to: "#1E293B" };
+
+        const randomQuotesSample = [
+            { text: "الخوف لا يمنع من الموت، ولكنه يمنع من الحياة.", author: "نجيب محفوظ" },
+            { text: "سنصير يوماً ما نريد، لا رحلة تبتدئ ولا درب ينتهي.", author: "محمود درويش" },
+            { text: "إذا لم تزد شيئاً على الدنيا، كنتَ أنتَ زائداً عليها.", author: "مصطفى صادق الرافعي" },
+            { text: "دع الأيام تفعل ما تشاءُ وطب نفساً إذا حكم القضاءُ.", author: "الإمام الشافعي" }
+        ];
+
+        function setStudioRatio(ratio) {
+            currentRatio = ratio;
+            document.getElementById("btnRatioSquare").classList.toggle("active", ratio === "1:1");
+            document.getElementById("btnRatioStory").classList.toggle("active", ratio === "9:16");
+
+            if (ratio === "1:1") {
+                canvas.width = 1080;
+                canvas.height = 1080;
+                canvasDimsBadge.innerText = "1080 × 1080 (مربع)";
+            } else {
+                canvas.width = 1080;
+                canvas.height = 1920;
+                canvasDimsBadge.innerText = "1080 × 1920 (ستوري 9:16)";
+            }
+            redrawCanvas();
+        }
+
+        function redrawCanvas() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const text = textInput.value.trim() || "اكتب خاطرتك هنا...";
+            const author = authorInput.value.trim() || "كاتب منشوراتي";
+            const fontName = fontSelect.value;
+            const fontSize = parseInt(fontSizeRange.value);
+
+            // 1. Background
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, currentGradient.from);
+            grad.addColorStop(1, currentGradient.to);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Frame borders
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+            ctx.lineWidth = 14;
+            ctx.strokeRect(36, 36, w - 72, h - 72);
+
+            // Brand Watermark
+            ctx.font = "bold 34px 'Cairo', sans-serif";
+            ctx.fillStyle = "#38BDF8";
+            ctx.textAlign = "center";
+            ctx.fillText("منشوراتي • MANCHORATI", w / 2, currentRatio === "1:1" ? 110 : 180);
+
+            // Quote Symbol
+            ctx.font = "bold 90px 'Amiri', serif";
+            ctx.fillStyle = "rgba(56, 189, 248, 0.4)";
+            ctx.fillText("«", w / 2, currentRatio === "1:1" ? 280 : 420);
+
+            // Main Quote Text
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = `600 ${fontSize}px '${fontName}', sans-serif`;
+            const startY = currentRatio === "1:1" ? 380 : 650;
+            const lineHeight = fontSize * 1.55;
+            wrapText(ctx, text, w / 2, startY, w - 240, lineHeight);
+
+            // Author Name
+            ctx.font = "bold 38px 'Cairo', sans-serif";
+            ctx.fillStyle = "#F59E0B";
+            const authorY = currentRatio === "1:1" ? h - 160 : h - 280;
+            ctx.fillText(`— ${author}`, w / 2, authorY);
+
+            // Bottom Domain
+            ctx.font = "400 22px 'Tajawal', sans-serif";
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.fillText("صمم عبر تطبيق منشوراتي • manchorati.com", w / 2, h - 80);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(" ");
+            let line = "";
+            let currentY = y;
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + " ";
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, currentY);
+                    line = words[n] + " ";
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, currentY);
+        }
+
+        function loadRandomStudioQuote() {
+            const q = randomQuotesSample[Math.floor(Math.random() * randomQuotesSample.length)];
+            textInput.value = q.text;
+            authorInput.value = q.author;
+            redrawCanvas();
+        }
+
+        // Palette click
+        document.querySelectorAll(".palette-item").forEach(item => {
+            item.addEventListener("click", () => {
+                document.querySelectorAll(".palette-item").forEach(p => p.classList.remove("active"));
+                item.classList.add("active");
+                currentGradient = {
+                    from: item.getAttribute("data-from"),
+                    to: item.getAttribute("data-to")
+                };
+                redrawCanvas();
+            });
+        });
+
+        textInput.addEventListener("input", redrawCanvas);
+        authorInput.addEventListener("input", redrawCanvas);
+        fontSelect.addEventListener("change", redrawCanvas);
+        fontSizeRange.addEventListener("input", (e) => {
+            fontSizeDisplay.innerText = `${e.target.value}px`;
+            redrawCanvas();
+        });
+
+        btnDownload.addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.download = `manchorati_card_${Date.now()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+
+        window.addEventListener("DOMContentLoaded", () => {
+            // Check URL param ?id=
+            const urlParams = new URLSearchParams(window.location.search);
+            const quoteText = urlParams.get("text");
+            const author = urlParams.get("author");
+            if (quoteText) textInput.value = quoteText;
+            if (author) authorInput.value = author;
+            redrawCanvas();
+        });
+    </script>
+</body>
+</html>

@@ -89,14 +89,20 @@
 
                     <TextView
                         android:id="@+id/tvPreviewAuthorName"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_weight="1"
                         android:text="@string/you_author"
                         android:textColor="@color/text_primary"
                         android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textAlignment="viewStart"
+                        android:gravity="start|center_vertical" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <!-- شارة الوسم داخل البطاقة -->
                     <TextView
@@ -219,7 +225,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="11dp"
                     android:singleLine="true"
-                    android:text="قوالب البطاقة"
+                    android:text="@string/dialog_post_templates"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -235,7 +241,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="11dp"
                     android:singleLine="true"
-                    android:text="الخلفية"
+                    android:text="@string/dialog_post_background"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -250,7 +256,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="11dp"
                     android:singleLine="true"
-                    android:text="الوسم"
+                    android:text="@string/dialog_post_tag"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -265,7 +271,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="11dp"
                     android:singleLine="true"
-                    android:text="لون النص"
+                    android:text="@string/dialog_post_text_color"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -280,7 +286,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="11dp"
                     android:singleLine="true"
-                    android:text="نوع الخط"
+                    android:text="@string/dialog_post_font"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>

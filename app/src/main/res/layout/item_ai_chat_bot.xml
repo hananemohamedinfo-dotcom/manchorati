@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="14dp"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:orientation="horizontal">
 
     <!-- أيقونة المساعد في دائرة صغيرة -->
@@ -51,7 +51,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="مساعد منشوراتي الأدبي"
+                    android:text="@string/ai_writer_helper_title"
                     android:textColor="#38BDF8"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -108,7 +108,7 @@
                     android:paddingVertical="0dp"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:text="نسخ"
+                    android:text="@string/ai_action_copy"
                     android:textColor="#38BDF8"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -135,7 +135,7 @@
                     android:paddingVertical="0dp"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:text="صورة"
+                    android:text="@string/ai_action_image"
                     android:textColor="#34D399"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -162,7 +162,7 @@
                     android:paddingVertical="0dp"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:text="فيديو"
+                    android:text="@string/ai_action_video"
                     android:textColor="#F472B6"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -188,7 +188,7 @@
                     android:paddingVertical="0dp"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:text="نشر"
+                    android:text="@string/ai_action_publish"
                     android:textColor="#38BDF8"
                     android:textSize="11sp"
                     android:textStyle="bold"

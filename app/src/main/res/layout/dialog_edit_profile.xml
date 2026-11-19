@@ -310,7 +310,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="إظهار مستواي الأدبي (الرتبة)"
+                    android:text="@string/profile_show_badges_title"
                     android:textColor="@color/text_primary"
                     android:textSize="13.5sp"
                     android:textStyle="bold" />
@@ -319,7 +319,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="إظهار وسام ورتبة الكاتب بجانب اسمك في المنشورات وقائمة المتصدرين"
+                    android:text="@string/profile_show_badges_subtitle"
                     android:textColor="@color/text_secondary"
                     android:textSize="11.5sp" />
             </LinearLayout>

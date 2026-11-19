@@ -24,11 +24,11 @@ object LocaleHelper {
 
     fun setLocale(context: Context, langCode: String): Context {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putString(KEY_LANG, langCode).apply()
+        prefs.edit().putString(KEY_LANG, langCode).commit()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        try {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode))
-        }
+        } catch (_: Exception) {}
 
         return updateResources(context, langCode)
     }
@@ -61,11 +61,18 @@ object LocaleHelper {
         config.setLocale(locale)
         config.setLayoutDirection(locale)
 
+        @Suppress("DEPRECATION")
+        res.updateConfiguration(config, res.displayMetrics)
+
+        val appCtx = context.applicationContext
+        if (appCtx != null && appCtx.resources != res) {
+            @Suppress("DEPRECATION")
+            appCtx.resources.updateConfiguration(config, appCtx.resources.displayMetrics)
+        }
+
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             context.createConfigurationContext(config)
         } else {
-            @Suppress("DEPRECATION")
-            res.updateConfiguration(config, res.displayMetrics)
             context
         }
     }

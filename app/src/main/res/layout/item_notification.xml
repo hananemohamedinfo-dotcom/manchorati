@@ -7,23 +7,22 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:layoutDirection="rtl"
     android:orientation="horizontal"
     android:paddingHorizontal="16dp"
     android:paddingVertical="12dp">
 
-    <!-- دائرة الأيقونة حسب نوع الإشعار (لايك، تعليق، متابعة) -->
+    <!-- دائرة الأيقونة حسب نوع الإشعار (لايك، تعليق، رد، متابعة) -->
     <FrameLayout
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/bg_search_bar">
 
         <ImageView
             android:id="@+id/ivNotificationIcon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_notification_bell"
             app:tint="@color/text_secondary" />
     </FrameLayout>
 
@@ -54,14 +53,14 @@
             tools:text="منذ 5 دقائق" />
     </LinearLayout>
 
-    <!-- نقطة زرقاء تبين أن الإشعار غير مقروء -->
+    <!-- نقطة حمراء تبين أن الإشعار غير مقروء -->
     <View
         android:id="@+id/viewUnreadDot"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/bg_search_bar"
-        android:backgroundTint="#2563EB"
+        android:backgroundTint="#EF4444"
         android:visibility="gone"
         tools:visibility="visible" />
 </LinearLayout>

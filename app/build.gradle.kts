@@ -15,10 +15,14 @@ android {
         applicationId = "com.manchorati.www"
         minSdk = 24
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.1.5"
+        versionCode = 16
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    androidResources {
+        localeFilters += listOf("ar", "fr", "en")
     }
 
     signingConfigs {

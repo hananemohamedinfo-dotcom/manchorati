@@ -84,8 +84,9 @@ class NotificationSettingsActivity : AppCompatActivity() {
         val dbHelper = DatabaseHelper(this)
         val dbCategories = dbHelper.getAllCategoryNames()
         categories = listOf(getString(R.string.default_all)) + dbCategories
+        val displayCategories = categories.map { if (it == getString(R.string.default_all)) it else Category.getLocalizedCategoryName(this, it) }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, displayCategories)
         spinnerMorningCategory.adapter = adapter
         spinnerEveningCategory.adapter = adapter
     }

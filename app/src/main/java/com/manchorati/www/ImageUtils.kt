@@ -212,7 +212,7 @@ object ImageUtils {
 
             etContent?.setSelection(currentText.length)
 
-            tvCharCount?.text = "${currentText.length} حرف"
+            tvCharCount?.text = context.getString(R.string.card_editor_chars_count, currentText.length)
 
             etContent?.addTextChangedListener(object : android.text.TextWatcher {
 
@@ -222,7 +222,7 @@ object ImageUtils {
 
                     val len = s?.length ?: 0
 
-                    tvCharCount?.text = "$len حرف"
+                    tvCharCount?.text = context.getString(R.string.card_editor_chars_count, len)
 
                 }
 
@@ -2277,12 +2277,12 @@ fun applyEditorTheme(isDark: Boolean) {
 
         val handleExitEditor = {
             com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-                .setTitle("إغلاق محرر الصور؟")
-                .setMessage("هل أنت متأكد من رغبتك في الخروج؟ سيتم فقدان التصميم الحالي.")
-                .setPositiveButton("متابعة التصميم") { d, _ ->
+                .setTitle(context.getString(R.string.card_editor_close_title))
+                .setMessage(context.getString(R.string.card_editor_close_message))
+                .setPositiveButton(context.getString(R.string.card_editor_keep_editing)) { d, _ ->
                     d.dismiss()
                 }
-                .setNegativeButton("خروج") { _, _ ->
+                .setNegativeButton(context.getString(R.string.card_editor_exit)) { _, _ ->
                     dialog.dismiss()
                 }
                 .show()
