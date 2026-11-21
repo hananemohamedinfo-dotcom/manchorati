@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي للكاتب • منشوراتي</title>
+    <meta name="description" content="الملف الشخصي والخواطر والمنشورات المحفوظة في منصة منشوراتي.">
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <!-- Firebase SDK (Compat Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="assets/firebase-config.js"></script>
+
+    <style>
+        :root {
+            --profile-bg: #0B131F;
+            --profile-card: #141E2E;
+            --profile-surface: #1E2A3A;
+            --profile-border: rgba(255, 255, 255, 0.08);
+            --profile-cyan: #38BDF8;
+            --profile-gold: #F59E0B;
+            --profile-rose: #EF4444;
+        }
+
+        body {
+            background-color: var(--profile-bg);
+            color: #F8FAFC;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 60px;
+        }
+
+        /* Profile Header Card */
+        .profile-header-card {
+            background: var(--profile-card);
+            border: 1px solid var(--profile-border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .profile-cover {
+            height: 200px;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 40%, #0369A1 100%);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-header-body {
+            padding: 0 28px 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .profile-avatar-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-top: -60px;
+        }
+
+        .profile-avatar-wrap {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--profile-card);
+            background: #1E293B;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--profile-cyan);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .profile-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-name-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-badge-chip {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            color: var(--profile-cyan);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-username-tag {
+            font-size: 14px;
+            color: #94A3B8;
+            direction: ltr;
+            text-align: right;
+            display: inline-block;
+        }
+
+        .profile-bio-text {
+            font-size: 15px;
+            color: #CBD5E1;
+            line-height: 1.6;
+            max-width: 680px;
+        }
+
+        .profile-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-top: 14px;
+            border-top: 1px solid var(--profile-border);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #94A3B8;
+        }
+
+        .stat-item strong {
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+
+        /* Profile Tabs Navigation */
+        .profile-tabs-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--profile-card);
+            border: 1px solid var(--profile-border);
+            border-radius: 16px;
+            padding: 6px;
+            margin: 20px 0;
+        }
+
+        .profile-tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: #94A3B8;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-tab-btn:hover {
+            color: #FFF;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .profile-tab-btn.active {
+            background: var(--profile-surface);
+            color: var(--profile-cyan);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-tab-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Post Items */
+        .profile-posts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Edit Form Card */
+        .profile-edit-card {
+            background: var(--profile-card);
+            border: 1px solid var(--profile-border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-profile {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-profile-cyan {
+            background: var(--profile-cyan);
+            color: #0B131F;
+        }
+        .btn-profile-cyan:hover {
+            background: #7DD3FC;
+        }
+
+        .btn-profile-surface {
+            background: var(--profile-surface);
+            color: #E2E8F0;
+            border-color: var(--profile-border);
+        }
+        .btn-profile-surface:hover {
+            background: #2D3E53;
+            color: #FFF;
+        }
+
+        .btn-profile-rose {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #F87171;
+        }
+        .btn-profile-rose:hover {
+            background: var(--profile-rose);
+            color: #FFF;
+        }
+
+        @media (max-width: 600px) {
+            .profile-avatar-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .profile-actions-bar {
+                justify-content: center;
+            }
+            .profile-stats-row {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Facebook Sticky Navbar -->
+    <header class="facebook-top-navbar">
+        <div class="fb-navbar-inner">
+            <div class="fb-nav-left">
+                <a href="index.html" class="fb-brand-link">
+                    <img src="assets/icon.png" alt="منشوراتي" class="fb-brand-logo">
+                    <span class="fb-brand-title">منشوراتي</span>
+                </a>
+            </div>
+
+            <!-- Center Tabs -->
+            <nav class="fb-nav-center">
+                <a href="index.html" class="fb-center-tab" title="الرئيسية">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </a>
+                <a href="categories.html" class="fb-center-tab" title="الأقسام والتصنيفات">
+                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                </a>
+                <a href="studio.html" class="fb-center-tab" title="استوديو التصميم">
+                    <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+                </a>
+                <a href="writers.html" class="fb-center-tab" title="كتاب الأسبوع">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </a>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="fb-nav-right">
+                <div id="navAuthSection"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="profile-container">
+
+        <!-- Profile Hero Card -->
+        <div class="profile-header-card">
+            <div class="profile-cover"></div>
+            <div class="profile-header-body">
+                <div class="profile-avatar-row">
+                    <div class="profile-avatar-wrap" id="userAvatarWrap">
+                        <span id="userAvatarInitial">ك</span>
+                    </div>
+                    <div class="profile-actions-bar" id="profileHeaderActions">
+                        <button onclick="switchProfileTab('edit')" class="btn-profile btn-profile-surface">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            <span>تعديل الملف الشخصي</span>
+                        </button>
+                        <a href="studio.html" class="btn-profile btn-profile-cyan">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            <span>نشر خاطرة جديدة</span>
+                        </a>
+                        <button onclick="signOutUser()" class="btn-profile btn-profile-rose">
+                            <span>خروج</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="profile-name-title">
+                        <span id="profileDisplayName">جاري التحميل...</span>
+                        <span id="profileBadgeChip" class="profile-badge-chip">
+                            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <span id="profileBadgeText">كاتب جديد</span>
+                        </span>
+                    </div>
+                    <div class="profile-username-tag" id="profileUsername">@user</div>
+                </div>
+
+                <p class="profile-bio-text" id="profileBio">
+                    محب للكلمة الطيبة والاقتباسات الراقية في مجتمع منشوراتي.
+                </p>
+
+                <div class="profile-stats-row">
+                    <div class="stat-item">
+                        <strong id="statProfilePostsCount">0</strong>
+                        <span>منشور في المجتمع</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="statProfileLikesCount">0</strong>
+                        <span>إعجاب حصل عليه</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="statProfileStreak">🔥 1</strong>
+                        <span>أيام متواصلة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="profile-tabs-nav">
+            <button class="profile-tab-btn active" onclick="switchProfileTab('posts')">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                <span>منشوراتي في المجتمع</span>
+            </button>
+            <button class="profile-tab-btn" onclick="switchProfileTab('saved')">
+                <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                <span>المحفوظات المفضلة</span>
+            </button>
+            <button id="tabBtnEdit" class="profile-tab-btn" onclick="switchProfileTab('edit')">
+                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                <span>تعديل الحساب</span>
+            </button>
+        </div>
+
+        <!-- TAB CONTENT: POSTS -->
+        <div id="pane-posts" class="profile-tab-pane">
+            <div id="userPostsList" class="profile-posts-grid">
+                <p style="text-align:center;color:#64748B;padding:40px;">جاري تحميل منشوراتك...</p>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: SAVED POSTS -->
+        <div id="pane-saved" class="profile-tab-pane" style="display:none;">
+            <div id="savedQuotesList" class="profile-posts-grid">
+                <p style="text-align:center;color:#64748B;padding:40px;">جاري استرجاع المحفوظات...</p>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: EDIT PROFILE -->
+        <div id="pane-edit" class="profile-tab-pane" style="display:none;">
+            <div class="profile-edit-card">
+                <h3 style="font-family:'Cairo',sans-serif;font-size:20px;font-weight:800;color:#FFF;margin-bottom:20px;">تعديل معلومات الملف الشخصي</h3>
+                <form id="editProfileForm" onsubmit="handleSaveProfileUpdates(event)">
+                    <div style="margin-bottom:18px;">
+                        <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">الاسم الظاهر للجمهور *</label>
+                        <input type="text" id="inputEditName" required class="fb-search-input" style="width:100%;height:44px;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 16px;color:#FFF;">
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">النبذة الشخصية (Bio)</label>
+                        <textarea id="inputEditBio" rows="3" class="fb-search-input" style="width:100%;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 16px;color:#FFF;resize:vertical;" placeholder="اكتب نبذة قصيرة عن نفسك واهتماماتك..."></textarea>
+                    </div>
+                    <div style="margin-bottom:24px;">
+                        <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">رابط الصورة الشخصية (Photo URL)</label>
+                        <input type="url" id="inputEditPhoto" class="fb-search-input" style="width:100%;height:44px;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 16px;color:#FFF;" placeholder="https://example.com/photo.jpg">
+                    </div>
+                    <div style="display:flex;gap:12px;justify-content:flex-end;">
+                        <button type="button" onclick="switchProfileTab('posts')" class="btn-profile btn-profile-surface">إلغاء</button>
+                        <button type="submit" id="btnSaveProfile" class="btn-profile btn-profile-cyan">حفظ التغييرات ✔️</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- App Toast -->
+    <div id="profileToast" style="display:none;position:fixed;bottom:24px;left:24px;background:#1E293B;color:#FFF;border-left:4px solid var(--profile-cyan);padding:14px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);font-size:14px;font-weight:700;z-index:9999;"></div>
+
+    <script>
+        let viewingUid = null;
+        let isOwnProfile = true;
+
+        function showProfileToast(msg) {
+            const toast = document.getElementById("profileToast");
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3500);
+        }
+
+        // Listen for Auth changes
+        window.addEventListener('manchorati-auth-changed', (e) => {
+            const { user, profile } = e.detail;
+            checkProfileTarget(user, profile);
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const user = auth.currentUser;
+                checkProfileTarget(user, currentProfileData);
+            }, 800);
+        });
+
+        async function checkProfileTarget(authUser, authProfile) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramUid = urlParams.get('uid');
+
+            if (paramUid && authUser && paramUid !== authUser.uid) {
+                // Viewing someone else's profile
+                viewingUid = paramUid;
+                isOwnProfile = false;
+                document.getElementById("tabBtnEdit").style.display = "none";
+                document.getElementById("profileHeaderActions").innerHTML = `
+                    <button onclick="toggleFollowUser('${paramUid}')" class="btn-profile btn-profile-cyan">
+                        <span>+ متابعة الكاتب</span>
+                    </button>
+                `;
+                loadOtherUserProfile(paramUid);
+            } else if (authUser) {
+                // Viewing own profile
+                viewingUid = authUser.uid;
+                isOwnProfile = true;
+                populateProfileUI(authProfile || {
+                    authorName: authUser.displayName || 'الكاتب',
+                    authorUsername: 'user_' + authUser.uid.slice(0, 5),
+                    authorBio: 'محب للكلمة الطيبة والاقتباسات الراقية في منشوراتي.',
+                    authorBadge: 'كاتب جديد',
+                    authorStreak: 1
+                });
+                loadUserPosts(authUser.uid);
+                loadSavedQuotes();
+            } else {
+                // Not logged in
+                window.location.href = "index.html";
+            }
+        }
+
+        async function loadOtherUserProfile(uid) {
+            try {
+                const snap = await db.collection('users').doc(uid).get();
+                if (snap.exists) {
+                    populateProfileUI(snap.data());
+                    loadUserPosts(uid);
+                } else {
+                    document.getElementById("profileDisplayName").textContent = "المستخدم غير موجود";
+                }
+            } catch (err) {
+                console.error("Load other profile error:", err);
+            }
+        }
+
+        function populateProfileUI(data) {
+            if (!data) return;
+            document.getElementById("profileDisplayName").textContent = data.authorName || 'مستخدم منشوراتي';
+            document.getElementById("profileUsername").textContent = '@' + (data.authorUsername || 'user');
+            document.getElementById("profileBio").textContent = data.authorBio || 'محب للكلمة الطيبة والاقتباسات الراقية.';
+            document.getElementById("profileBadgeText").textContent = data.authorBadge || 'كاتب جديد';
+            document.getElementById("statProfilePostsCount").textContent = data.postsCount || 0;
+            document.getElementById("statProfileLikesCount").textContent = data.totalLikes || 0;
+            document.getElementById("statProfileStreak").textContent = `🔥 ${data.authorStreak || 1}`;
+
+            // Avatar
+            const avatarWrap = document.getElementById("userAvatarWrap");
+            if (data.authorPhotoUrl && data.authorPhotoUrl.startsWith('http')) {
+                avatarWrap.innerHTML = `<img src="${data.authorPhotoUrl}" alt="${data.authorName}">`;
+            } else {
+                avatarWrap.innerHTML = `<span>${(data.authorName || 'ك')[0]}</span>`;
+            }
+
+            // Fill Edit Form if own profile
+            if (isOwnProfile) {
+                document.getElementById("inputEditName").value = data.authorName || '';
+                document.getElementById("inputEditBio").value = data.authorBio || '';
+                document.getElementById("inputEditPhoto").value = data.authorPhotoUrl || '';
+            }
+        }
+
+        async function loadUserPosts(uid) {
+            const container = document.getElementById("userPostsList");
+            try {
+                const snap = await db.collection('community_posts')
+                    .where('authorId', '==', uid)
+                    .orderBy('timestamp', 'desc')
+                    .limit(30)
+                    .get();
+
+                if (snap.empty) {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:48px 20px;background:var(--profile-card);border:1px solid var(--profile-border);border-radius:18px;">
+                            <div style="font-size:36px;margin-bottom:12px;">✍️</div>
+                            <h3 style="font-family:'Cairo',sans-serif;font-size:18px;color:#FFF;margin-bottom:8px;">لا توجد منشورات حتى الآن</h3>
+                            <p style="font-size:13px;color:#94A3B8;margin-bottom:20px;">شارك أول خاطرة أو مقولة من استوديو منشوراتي لتظهر هنا في ملفك الشخصي!</p>
+                            <a href="studio.html" class="btn-profile btn-profile-cyan">فتح استوديو التصميم 🎨</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = "";
+                snap.docs.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('ar-MA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "--";
+                    
+                    html += `
+                        <div class="fb-feed-card" style="margin-bottom:0;">
+                            <div class="fb-post-header">
+                                <div class="fb-post-author-row">
+                                    <div class="fb-user-thumb">${(post.authorName || 'ك')[0]}</div>
+                                    <div>
+                                        <div style="font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;color:#FFF;">${escapeHtml(post.authorName || 'الكاتب')}</div>
+                                        <div style="font-size:12px;color:#94A3B8;">${dateStr} • <span style="color:var(--profile-cyan);">${post.tag || 'خواطر'}</span></div>
+                                    </div>
+                                </div>
+                                ${isOwnProfile ? `
+                                <button onclick="deleteMyPost('${post.id}')" title="حذف المنشور" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:16px;">
+                                    🗑️
+                                </button>
+                                ` : ''}
+                            </div>
+                            <div class="fb-post-quote-box theme-${post.bgId || 'card_luxury'}" style="margin:14px 0;padding:24px 20px;border-radius:14px;">
+                                <p style="font-size:17px;line-height:1.7;color:${post.textColor || '#FFF'};font-family:'${post.fontId || 'tajawal'}',sans-serif;text-align:center;">
+                                    ${escapeHtml(post.content || '')}
+                                </p>
+                            </div>
+                            <div class="fb-actions-bar" style="border-top:1px solid var(--profile-border);padding-top:10px;display:flex;justify-content:space-between;">
+                                <span style="color:#EF4444;font-size:13px;font-weight:700;">❤️ ${post.likesCount || 0} إعجاب</span>
+                                <div style="display:flex;gap:8px;">
+                                    <button onclick="copyPostText('${escapeJs(post.content)}')" class="btn-profile btn-profile-surface" style="padding:4px 10px;font-size:12px;">نسخ 📋</button>
+                                    <a href="studio.html?text=${encodeURIComponent(post.content || '')}" class="btn-profile btn-profile-cyan" style="padding:4px 10px;font-size:12px;">استوديو 🎨</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                console.error("Load user posts error:", err);
+                container.innerHTML = `<p style="text-align:center;color:#EF4444;padding:30px;">خطأ أثناء جلب المنشورات: ${err.message}</p>`;
+            }
+        }
+
+        function loadSavedQuotes() {
+            const container = document.getElementById("savedQuotesList");
+            try {
+                const favs = JSON.parse(localStorage.getItem("manchorati_fav_quotes") || "[]");
+                if (favs.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:48px 20px;background:var(--profile-card);border:1px solid var(--profile-border);border-radius:18px;">
+                            <div style="font-size:36px;margin-bottom:12px;">📑</div>
+                            <h3 style="font-family:'Cairo',sans-serif;font-size:18px;color:#FFF;margin-bottom:8px;">لا توجد اقتباسات محفوظة</h3>
+                            <p style="font-size:13px;color:#94A3B8;margin-bottom:20px;">اضغط على أيقونة الحفظ (🔖) في أي مقولة أثناء التصفح لحفظها والرجوع إليها هنا.</p>
+                            <a href="categories.html" class="btn-profile btn-profile-cyan">تصفح الأقسام الـ 24 📚</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = "";
+                favs.forEach((fav, idx) => {
+                    html += `
+                        <div class="fb-feed-card" style="margin-bottom:0;">
+                            <div style="font-size:16px;line-height:1.7;color:#FFF;margin-bottom:14px;">
+                                "${escapeHtml(fav.text || fav)}"
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--profile-border);padding-top:10px;">
+                                <span style="font-size:12px;color:var(--profile-cyan);">${fav.category || 'اقتباس مميز'}</span>
+                                <div style="display:flex;gap:8px;">
+                                    <button onclick="copyPostText('${escapeJs(fav.text || fav)}')" class="btn-profile btn-profile-surface" style="padding:4px 10px;font-size:12px;">نسخ 📋</button>
+                                    <button onclick="removeFavoriteQuote(${idx})" class="btn-profile btn-profile-rose" style="padding:4px 10px;font-size:12px;">إزالة ✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                console.error("Saved quotes error:", err);
+            }
+        }
+
+        function removeFavoriteQuote(idx) {
+            let favs = JSON.parse(localStorage.getItem("manchorati_fav_quotes") || "[]");
+            favs.splice(idx, 1);
+            localStorage.setItem("manchorati_fav_quotes", JSON.stringify(favs));
+            loadSavedQuotes();
+            showProfileToast("تمت إزالة الاقتباس من محفوظاتك.");
+        }
+
+        async function handleSaveProfileUpdates(e) {
+            e.preventDefault();
+            if (!auth.currentUser) return;
+            const name = document.getElementById("inputEditName").value.trim();
+            const bio = document.getElementById("inputEditBio").value.trim();
+            const photo = document.getElementById("inputEditPhoto").value.trim();
+            const btn = document.getElementById("btnSaveProfile");
+
+            btn.disabled = true;
+            btn.textContent = "جاري الحفظ...";
+
+            try {
+                const updates = {
+                    authorName: name,
+                    authorBio: bio,
+                    authorPhotoUrl: photo
+                };
+
+                await db.collection('users').doc(auth.currentUser.uid).update(updates);
+                if (auth.currentUser.updateProfile) {
+                    await auth.currentUser.updateProfile({ displayName: name, photoURL: photo });
+                }
+
+                currentProfileData = { ...currentProfileData, ...updates };
+                populateProfileUI(currentProfileData);
+                showProfileToast("تم تحديث معلومات حسابك بنجاح! 🎉");
+                switchProfileTab('posts');
+            } catch (err) {
+                showProfileToast("تعذر حفظ التغييرات: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "حفظ التغييرات ✔️";
+            }
+        }
+
+        async function deleteMyPost(postId) {
+            if (!confirm("هل أنت متأكد من حذف هذا المنشور نهائياً من مجتمع منشوراتي؟")) return;
+            try {
+                await db.collection('community_posts').doc(postId).delete();
+                showProfileToast("تم حذف المنشور بنجاح! 🗑️");
+                loadUserPosts(auth.currentUser.uid);
+            } catch (err) {
+                showProfileToast("تعذر حذف المنشور: " + err.message);
+            }
+        }
+
+        function copyPostText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showProfileToast("تم نسخ الاقتباس إلى الحافظة! 📋");
+            });
+        }
+
+        function switchProfileTab(tabName) {
+            document.querySelectorAll(".profile-tab-pane").forEach(p => p.style.display = "none");
+            document.querySelectorAll(".profile-tab-btn").forEach(b => b.classList.remove("active"));
+
+            const targetPane = document.getElementById("pane-" + tabName);
+            if (targetPane) targetPane.style.display = "block";
+
+            const clicked = event?.currentTarget;
+            if (clicked && clicked.classList.contains("profile-tab-btn")) {
+                clicked.classList.add("active");
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function escapeJs(str) {
+            if (!str) return '';
+            return String(str).replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
+        }
+    </script>
+</body>
+</html>

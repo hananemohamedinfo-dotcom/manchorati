@@ -1820,6 +1820,12 @@ header.app-header {
 
     </style>
     <link rel="stylesheet" href="assets/style.css">
+
+    <!-- Firebase SDK (Compat Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="assets/firebase-config.js"></script>
 </head>
 <body>
 
@@ -1877,9 +1883,12 @@ header.app-header {
                     <span class="fb-badge-dot"></span>
                 </button>
 
-                <!-- User Profile Avatar -->
-                <div class="fb-user-avatar-btn" id="btnProfileToggle" onclick="toggleProfileDropdown()">
-                    أ
+                <!-- User Auth Section (Managed by firebase-config.js) -->
+                <div id="navAuthSection">
+                    <button onclick="openLoginModal()" class="btn-browse-category" style="padding: 7px 16px; font-size: 13px; font-weight: 700; gap: 6px;">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        <span>تسجيل الدخول</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -9987,7 +9996,7 @@ function renderFeed() {
                     </div>
                 </a>
 
-                <button class="btn-card-menu" onclick="copyPostText('${post.id}')" title="نسخ أو خيارات">
+                <button class="btn-card-menu" onclick="openPostOptionsMenu('${post.id}')" title="خيارات المنشور أو إبلاغ">
                     <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 </button>
             </div>
@@ -10206,6 +10215,53 @@ function copyPostText(postId) {
     });
 }
 
+function openPostOptionsMenu(postId) {
+    const post = communityPosts.find(p => p.id === postId);
+    if (!post) return;
+    const canDelete = isCurrentAdmin || (currentAuthUser && currentAuthUser.uid === post.authorId);
+    
+    const choice = confirm(`خيارات منشور "${post.authorName}":\n\n- اضغط [موافق OK] لنسخ نص المنشور إلى الحافظة 📋\n- اضغط [إلغاء Cancel] للخيارات المتقدمة (إبلاغ، استوديو${canDelete ? '، حذف' : ''})`);
+    if (choice) {
+        copyPostText(postId);
+    } else {
+        const action = prompt(`اختر الإجراء المناسب:\n1. إبلاغ الإدارة عن مخالفة أو محتوى غير لائق 🚨\n2. فتح وتصميم في استوديو البطاقات 🎨\n${canDelete ? '3. حذف المنشور نهائياً 🗑️\n' : ''}\nاكتب الرقم (1 أو 2${canDelete ? ' أو 3' : ''}):`);
+        if (action === '1') {
+            promptReportPost(postId);
+        } else if (action === '2') {
+            openStudioWithPost(postId);
+        } else if (action === '3' && canDelete) {
+            deleteCommunityPostFromFeed(postId);
+        }
+    }
+}
+
+async function promptReportPost(postId) {
+    const post = communityPosts.find(p => p.id === postId);
+    if (!post) return;
+    const reason = prompt("يرجى توضيح سبب الإبلاغ عن هذا المنشور للإدارة (مثال: محتوى غير لائق، سب وشتم، تضليل):", "محتوى غير لائق");
+    if (!reason) return;
+    
+    try {
+        await reportPostToFirestore(postId, reason, post.content, post.authorName);
+    } catch (err) {
+        showAppToast("تعذر إرسال البلاغ: " + err.message);
+    }
+}
+
+async function deleteCommunityPostFromFeed(postId) {
+    if (!confirm("هل أنت متأكد من حذف هذا المنشور نهائياً من مجتمع منشوراتي؟")) return;
+    try {
+        await db.collection('community_posts').doc(postId).delete();
+        communityPosts = communityPosts.filter(p => p.id !== postId);
+        userCustomPosts = userCustomPosts.filter(p => p.id !== postId);
+        localStorage.setItem("manchorati_user_posts", JSON.stringify(userCustomPosts));
+        renderFeed();
+        showAppToast("تم حذف المنشور بنجاح! 🗑️");
+    } catch (err) {
+        showAppToast("تعذر حذف المنشور: " + err.message);
+    }
+}
+
 function openStudioWithPost(postId) {
     const post = communityPosts.find(p => p.id === postId);
     if (!post) return;
@@ -10254,7 +10310,7 @@ function updateCreatePostPreview() {
     previewText.style.fontFamily = `'${tpl.font}', sans-serif`;
 }
 
-function submitNewCommunityPost() {
+async function submitNewCommunityPost() {
     const textarea = document.getElementById("createPostTextarea");
     const catSelect = document.getElementById("createPostCategorySelect");
     if (!textarea) return;
@@ -10265,32 +10321,34 @@ function submitNewCommunityPost() {
         return;
     }
 
-    const newPost = {
-        id: 'local-' + Date.now(),
-        authorName: 'أنا',
-        authorUsername: 'my_profile',
-        authorPhotoUrl: '',
-        authorBadge: 'كاتب نشط',
-        authorStreak: 4,
+    if (!currentAuthUser) {
+        openLoginModal();
+        showAppToast("يرجى تسجيل الدخول أولاً لنشر خاطرتك في المجتمع!");
+        return;
+    }
+
+    const postData = {
         content: text,
         bgId: activeCreatePostTheme,
         fontId: getTemplate(activeCreatePostTheme).font.toLowerCase(),
         textColor: '#FFFFFF',
         tag: catSelect ? catSelect.value : 'خواطر عميقة',
-        mood: 'CHILL',
-        likesCount: 1,
-        commentsCount: 0,
-        timestamp: Date.now()
+        mood: 'CHILL'
     };
 
-    userCustomPosts.unshift(newPost);
-    localStorage.setItem("manchorati_user_posts", JSON.stringify(userCustomPosts));
+    try {
+        const publishedPost = await publishPostToFirestore(postData);
+        communityPosts.unshift(publishedPost);
+        userCustomPosts.unshift(publishedPost);
+        localStorage.setItem("manchorati_user_posts", JSON.stringify(userCustomPosts));
 
-    communityPosts.unshift(newPost);
-    textarea.value = "";
-    closeCreatePostModal();
-    renderFeed();
-    showAppToast("تم نشر منشورك في مجتمع منشوراتي بنجاح! 🎉");
+        textarea.value = "";
+        closeCreatePostModal();
+        renderFeed();
+        showAppToast("تم نشر خاطرتك في مجتمع منشوراتي ومزامنتها فوراً مع جميع الهواتف! 🚀");
+    } catch (err) {
+        console.error("Publish error:", err);
+    }
 }
 
 // AI Literary Assistant

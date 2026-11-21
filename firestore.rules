@@ -13,9 +13,11 @@ service cloud.firestore {
 
     // Check if caller is a verified administrator
     function isAdmin() {
-      return isAuthenticated() &&
-        'email' in request.auth.token &&
-        request.auth.token.email in ['hananemohamedinfo@gmail.com', 'admin@manchorati.com'];
+      return isAuthenticated() && (
+        ('email' in request.auth.token &&
+         request.auth.token.email in ['hananemohamedinfo@gmail.com', 'admin@manchorati.com']) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
     }
 
     // ===============================================================
@@ -47,7 +49,7 @@ service cloud.firestore {
                        request.resource.data.content is string &&
                        request.resource.data.content.size() > 0;
       allow update: if true;
-      allow delete: if true;
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.authorId == request.auth.uid);
 
       // Subcollection: Comments (/community_posts/{postId}/comments/{commentId})
       match /comments/{commentId} {
@@ -74,24 +76,44 @@ service cloud.firestore {
     // 5. Reports collection (/reports/{reportId})
     // Anyone can submit abuse reports; reads and management restricted to admins
     match /reports/{reportId} {
-      allow read, delete: if isAdmin();
+      allow read, update, delete: if isAdmin();
       allow create: if request.resource.data.postId is string &&
                        request.resource.data.postId.size() > 0;
-      allow update: if false;
     }
 
     // 6. Feedback collection (/feedback/{feedbackId})
     // Anyone can submit suggestions/feedback; reads and management restricted to admins
     match /feedback/{feedbackId} {
-      allow read, delete: if isAdmin();
+      allow read, update, delete: if isAdmin();
       allow create: if request.resource.data.message is string &&
                        request.resource.data.message.size() > 0;
-      allow update: if false;
     }
 
     // 7. Category updates collection (/category_updates/{docId})
     // Public read for remote category quotes sync; writes restricted to admins
     match /category_updates/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 8. Remote app configuration collection (/app_config/{configId})
+    // Public read so all app users (including guests) can fetch dynamic settings (ads configuration, feature flags)
+    // Writes restricted to verified administrators
+    match /app_config/{configId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 9. Dedicated Administrators collection (/admins/{adminId})
+    // Allow read if authenticated user; allow write (create, update, delete) if isAdmin()
+    match /admins/{adminId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 10. Remote app announcements collection (/app_announcements/{announcementId})
+    // Public read so all app users can receive broadcast announcements; writes restricted to admins
+    match /app_announcements/{announcementId} {
       allow read: if true;
       allow write: if isAdmin();
     }
