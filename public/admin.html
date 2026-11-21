@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم والإدارة الشاملة (Admin Dashboard) • منشوراتي</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    
+    <!-- Firebase SDK (Compat Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="assets/firebase-config.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #070D17;
+            --admin-card: #0F1A2A;
+            --admin-surface: #172437;
+            --admin-border: #1E314B;
+            --admin-cyan: #38BDF8;
+            --admin-gold: #F59E0B;
+            --admin-rose: #EF4444;
+            --admin-emerald: #10B981;
+        }
+
+        body {
+            background-color: var(--admin-bg);
+            color: #F8FAFC;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Top Admin Navbar */
+        .admin-navbar {
+            background: rgba(15, 26, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--admin-border);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .admin-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #FFF;
+        }
+
+        .admin-brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+        }
+
+        .admin-brand-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, var(--admin-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-badge-role {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: var(--admin-gold);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .admin-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Layout Grid */
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 260px;
+            background: #0B1320;
+            border-left: 1px solid var(--admin-border);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .admin-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .admin-menu-item:hover {
+            background: var(--admin-surface);
+            color: #FFFFFF;
+        }
+
+        .admin-menu-item.active {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: var(--admin-cyan);
+            font-weight: 700;
+        }
+
+        .admin-menu-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .menu-count-badge {
+            margin-right: auto;
+            background: var(--admin-rose);
+            color: #FFF;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 999px;
+        }
+
+        /* Main Content View */
+        .admin-main {
+            flex: 1;
+            padding: 28px;
+            overflow-y: auto;
+            background: var(--admin-bg);
+        }
+
+        .admin-tab-pane {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .admin-tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Stat Cards Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--admin-cyan);
+        }
+
+        .stat-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon-wrap svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-num {
+            font-family: 'Cairo', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFFFFF;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 4px;
+        }
+
+        /* Section Cards */
+        .admin-card-box {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.3);
+        }
+
+        .admin-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+        .admin-card-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Modern Tables */
+        .admin-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--admin-border);
+        }
+
+        table.admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 13px;
+        }
+
+        table.admin-table th {
+            background: var(--admin-surface);
+            color: #CBD5E1;
+            font-weight: 700;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--admin-border);
+            white-space: nowrap;
+        }
+
+        table.admin-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #E2E8F0;
+            vertical-align: middle;
+        }
+
+        table.admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Action Buttons */
+        .btn-admin {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-admin-cyan {
+            background: var(--admin-cyan);
+            color: #0B131F;
+        }
+        .btn-admin-cyan:hover {
+            background: #7DD3FC;
+        }
+
+        .btn-admin-rose {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #F87171;
+        }
+        .btn-admin-rose:hover {
+            background: var(--admin-rose);
+            color: #FFF;
+        }
+
+        .btn-admin-gold {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.35);
+            color: var(--admin-gold);
+        }
+        .btn-admin-gold:hover {
+            background: var(--admin-gold);
+            color: #000;
+        }
+
+        .btn-admin-surface {
+            background: var(--admin-surface);
+            color: #E2E8F0;
+            border-color: var(--admin-border);
+        }
+        .btn-admin-surface:hover {
+            background: #25384F;
+            color: #FFF;
+        }
+
+        /* Form Inputs */
+        .admin-form-group {
+            margin-bottom: 18px;
+        }
+
+        .admin-label {
+            display: block;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #CBD5E1;
+        }
+
+        .admin-input, .admin-select, .admin-textarea {
+            width: 100%;
+            background: var(--admin-surface);
+            border: 1px solid var(--admin-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #FFF;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .admin-input:focus, .admin-select:focus, .admin-textarea:focus {
+            border-color: var(--admin-cyan);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        /* Auth Gate Screens */
+        #authCheckingScreen, #authRequiredScreen, #unauthorizedScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 64px);
+            text-align: center;
+            padding: 30px;
+        }
+
+        .login-card-gate {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .admin-layout {
+                flex-direction: column;
+            }
+            .admin-sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid var(--admin-border);
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            .admin-menu-item {
+                white-space: nowrap;
+            }
+            .admin-main {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Admin Header -->
+    <header class="admin-navbar">
+        <div class="admin-nav-left">
+            <a href="index.html" class="admin-brand">
+                <img src="assets/icon.png" alt="منشوراتي">
+                <div>
+                    <div class="admin-brand-title">منشوراتي • لوحة التحكم</div>
+                    <div style="font-size: 11px; color: #94A3B8;">نظام الإدارة المركزي (Central Admin Suite)</div>
+                </div>
+            </a>
+            <span id="adminRoleBadge" class="admin-badge-role" style="display:none;">
+                <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <span id="adminRoleText">مدير عام (Super Admin)</span>
+            </span>
+        </div>
+        <div class="admin-nav-right">
+            <a href="index.html" class="btn-admin btn-admin-surface">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>العودة للموقع</span>
+            </a>
+            <button onclick="signOutUser()" class="btn-admin btn-admin-rose" style="border:none;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                <span>خروج</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- State 1: Checking Authentication -->
+    <div id="authCheckingScreen">
+        <div class="spinner-brand" style="width:48px;height:48px;border:4px solid var(--admin-surface);border-top-color:var(--admin-cyan);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        <p style="margin-top:20px; font-size:16px; color:#94A3B8;">جاري التحقق من هوية المشرف والصلاحيات...</p>
+    </div>
+
+    <!-- State 2: Login Gate Required -->
+    <div id="authRequiredScreen" style="display:none;">
+        <div class="login-card-gate">
+            <img src="assets/icon.png" alt="منشوراتي" style="width:68px;height:68px;border-radius:18px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+            <h2 style="font-family:'Cairo',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;">دخول إدارة منشوراتي</h2>
+            <p style="font-size:13px;color:#94A3B8;margin-bottom:24px;">لوحة التحكم مخصصة لمدراء ومشرفي المنصة فقط. يرجى تسجيل الدخول بحسابك الإداري المعتمد.</p>
+
+            <button onclick="signInWithGoogle()" class="btn-admin btn-admin-surface" style="width:100%;justify-content:center;padding:12px;margin-bottom:16px;font-size:14px;border-color:rgba(255,255,255,0.15);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
+                <span>الدخول عبر Google (للمدير العام)</span>
+            </button>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                <div style="flex:1;height:1px;background:var(--admin-border);"></div>
+                <span style="font-size:12px;color:#64748B;">أو بالبريد وكلمة المرور</span>
+                <div style="flex:1;height:1px;background:var(--admin-border);"></div>
+            </div>
+
+            <form id="adminLoginForm" onsubmit="handleAdminEmailLogin(event)">
+                <div class="admin-form-group" style="text-align:right;">
+                    <label class="admin-label">البريد الإلكتروني للإدارة</label>
+                    <input type="email" id="adminLoginEmail" required class="admin-input" placeholder="admin@manchorati.com">
+                </div>
+                <div class="admin-form-group" style="text-align:right;">
+                    <label class="admin-label">كلمة المرور</label>
+                    <input type="password" id="adminLoginPassword" required class="admin-input" placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-admin btn-admin-cyan" style="width:100%;justify-content:center;padding:12px;font-size:14px;">
+                    <span>تسجيل الدخول للوحة التحكم</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- State 3: Unauthorized Screen -->
+    <div id="unauthorizedScreen" style="display:none;">
+        <div class="login-card-gate" style="border-color:var(--admin-rose);">
+            <div style="width:64px;height:64px;border-radius:50%;background:rgba(239,68,68,0.15);color:var(--admin-rose);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                <svg viewBox="0 0 24 24" style="width:34px;height:34px;fill:currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <h2 style="font-family:'Cairo',sans-serif;font-size:20px;font-weight:800;color:#FFF;margin-bottom:8px;">غير مصرح بالدخول</h2>
+            <p style="font-size:13px;color:#94A3B8;margin-bottom:20px;">حسابك الحالي (<span id="unauthorizedEmail" style="color:#FFF;font-weight:700;"></span>) ليس لديه صلاحيات الإدارة في منشوراتي. يرجى مراجعة المدير العام لإضافتك.</p>
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="signOutUser()" class="btn-admin btn-admin-rose">تبديل الحساب</button>
+                <a href="index.html" class="btn-admin btn-admin-surface">العودة للرئيسية</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- State 4: Authenticated Admin Dashboard -->
+    <div id="adminMainDashboard" class="admin-layout" style="display:none;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="admin-menu-item active" onclick="switchAdminTab('overview')">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span>الإحصائيات العامة</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminTab('reports')">
+                <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span>إدارة البلاغات</span>
+                <span id="reportsCountBadge" class="menu-count-badge" style="display:none;">0</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminTab('posts')">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/></svg>
+                <span>منشورات المجتمع</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminTab('users')">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span>إدارة المستخدمين</span>
+            </div>
+            <div id="adminRbacMenuItem" class="admin-menu-item" onclick="switchAdminTab('admins')">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                <span>المشرفين والصلاحيات</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminTab('add-quote')">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                <span>إضافة اقتباس للأقسام</span>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="admin-main">
+            
+            <!-- TAB 1: OVERVIEW & STATS -->
+            <div id="tab-overview" class="admin-tab-pane active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon-wrap" style="background:rgba(56, 189, 248, 0.15); color:var(--admin-cyan);">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span id="statPostsCount" class="stat-num">--</span>
+                            <span class="stat-label">منشورات المجتمع الحية</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrap" style="background:rgba(16, 185, 129, 0.15); color:var(--admin-emerald);">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span id="statUsersCount" class="stat-num">--</span>
+                            <span class="stat-label">المستخدمين المسجلين</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrap" style="background:rgba(239, 68, 68, 0.15); color:var(--admin-rose);">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span id="statReportsCount" class="stat-num">--</span>
+                            <span class="stat-label">بلاغات معلقة تحتاج فحص</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrap" style="background:rgba(245, 158, 11, 0.15); color:var(--admin-gold);">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-num">21,612</span>
+                            <span class="stat-label">اقتباس في 24 قسماً</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Grid -->
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-cyan);"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.04-4.09l-2.54-1.52C16.14 17.74 14.21 19 12 19z"/></svg>
+                            <span>الإجراءات السريعة</span>
+                        </h3>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                        <button onclick="switchAdminTab('reports')" class="btn-admin btn-admin-rose">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                            <span>فحص البلاغات الواردة</span>
+                        </button>
+                        <button onclick="switchAdminTab('add-quote')" class="btn-admin btn-admin-cyan">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            <span>إضافة اقتباس للأقسام</span>
+                        </button>
+                        <button onclick="switchAdminTab('posts')" class="btn-admin btn-admin-surface">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                            <span>استعراض وحذف المنشورات</span>
+                        </button>
+                        <a href="studio.html" target="_blank" class="btn-admin btn-admin-gold">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+                            <span>فتح استوديو التصميم 🎨</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Live Community Feed Snapshot -->
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">أحدث المنشورات في مجتمع منشوراتي</h3>
+                        <button onclick="loadAdminPostsList()" class="btn-admin btn-admin-surface" style="font-size:12px;padding:4px 10px;">تحديث 🔄</button>
+                    </div>
+                    <div id="recentPostsSnapshot" style="display:flex;flex-direction:column;gap:12px;">
+                        <p style="color:#64748B;font-size:13px;">جاري تحميل أحدث المنشورات...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: REPORTS & MODERATION -->
+            <div id="tab-reports" class="admin-tab-pane">
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-rose);"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                            <span>سجل بلاغات المحتوى والمخالفات (Abuse Reports)</span>
+                        </h3>
+                        <button onclick="loadAdminReports()" class="btn-admin btn-admin-surface" style="font-size:12px;">تحديث القائمة 🔄</button>
+                    </div>
+                    <p style="font-size:13px;color:#94A3B8;margin-bottom:16px;">
+                        يمكنك هنا مراجعة البلاغات المقدمة من المستخدمين على المنشورات المخالفة، وحذف المنشور المخالف بضغطة زر واحدة.
+                    </p>
+
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>تاريخ البلاغ</th>
+                                    <th>سبب البلاغ</th>
+                                    <th>محتوى المنشور المبلغ عنه</th>
+                                    <th>كاتب المنشور</th>
+                                    <th>المُبلغ</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminReportsTableBody">
+                                <tr><td colspan="7" style="text-align:center;padding:24px;color:#64748B;">جاري جلب البلاغات من Firestore...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: COMMUNITY POSTS -->
+            <div id="tab-posts" class="admin-tab-pane">
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-cyan);"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                            <span>إدارة منشورات المجتمع (Community Posts)</span>
+                        </h3>
+                        <div style="display:flex;gap:10px;">
+                            <input type="text" id="postsSearchInput" oninput="filterAdminPostsTable()" placeholder="ابحث في المنشورات أو أسماء الكتاب..." class="admin-input" style="width:260px;padding:6px 12px;font-size:13px;">
+                            <button onclick="loadAdminPostsList()" class="btn-admin btn-admin-surface" style="font-size:12px;">تحديث 🔄</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>الكاتب</th>
+                                    <th>نص المنشور</th>
+                                    <th>القالب / التصنيف</th>
+                                    <th>الإعجابات</th>
+                                    <th>التعليقات</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminPostsTableBody">
+                                <tr><td colspan="7" style="text-align:center;padding:24px;color:#64748B;">جاري تحميل المنشورات...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: USERS MANAGEMENT -->
+            <div id="tab-users" class="admin-tab-pane">
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-emerald);"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg>
+                            <span>إدارة حسابات المستخدمين (User Accounts)</span>
+                        </h3>
+                        <div style="display:flex;gap:10px;">
+                            <input type="text" id="usersSearchInput" oninput="filterAdminUsersTable()" placeholder="ابحث بالاسم أو المعرف..." class="admin-input" style="width:240px;padding:6px 12px;font-size:13px;">
+                            <button onclick="loadAdminUsersList()" class="btn-admin btn-admin-surface" style="font-size:12px;">تحديث 🔄</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>المستخدم</th>
+                                    <th>المعرف (@username)</th>
+                                    <th>البريد الإلكتروني</th>
+                                    <th>الشارة</th>
+                                    <th>المنشورات</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTableBody">
+                                <tr><td colspan="7" style="text-align:center;padding:24px;color:#64748B;">جاري تحميل حسابات المستخدمين من Firestore...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: ADMINS & RBAC -->
+            <div id="tab-admins" class="admin-tab-pane">
+                <div class="admin-card-box">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-gold);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            <span>إدارة المشرفين والصلاحيات (Role-Based Access Control)</span>
+                        </h3>
+                        <button onclick="openAddAdminModal()" class="btn-admin btn-admin-gold" style="font-size:13px;">
+                            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            <span>إضافة مشرف جديد +</span>
+                        </button>
+                    </div>
+
+                    <div style="background:rgba(245, 158, 11, 0.08);border:1px solid rgba(245, 158, 11, 0.25);border-radius:12px;padding:14px;margin-bottom:20px;font-size:13px;color:#FDE68A;display:flex;align-items:center;gap:10px;">
+                        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:currentColor;flex-shrink:0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        <span>
+                            <strong>توزيع الصلاحيات (RBAC):</strong> يمكنك تعيين مشرفين لمساعدتك في مراقبة البلاغات، حذف المنشورات المخالفة، أو إضافة اقتباسات جديدة دون منحهم صلاحية حذف أو إضافة مشرفين آخرين.
+                        </span>
+                    </div>
+
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>اسم المشرف</th>
+                                    <th>البريد الإلكتروني</th>
+                                    <th>الدور (Role)</th>
+                                    <th>الصلاحيات الممنوحة</th>
+                                    <th>تاريخ التعيين</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminsListTableBody">
+                                <tr>
+                                    <td><strong>المدير العام (Owner)</strong></td>
+                                    <td>hananemohamedinfo@gmail.com</td>
+                                    <td><span class="admin-badge-role">مدير عام (Super Admin)</span></td>
+                                    <td><span style="color:var(--admin-emerald);font-weight:700;">تحكم كامل شامل (جميع الصلاحيات)</span></td>
+                                    <td>مؤسس المنصة</td>
+                                    <td><span style="color:#64748B;">حساب رئيسي ثابت</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: ADD QUOTE TO CATEGORIES -->
+            <div id="tab-add-quote" class="admin-tab-pane">
+                <div class="admin-card-box" style="max-width:760px;margin:0 auto;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--admin-cyan);"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            <span>إضافة اقتباس رسمي لأقسام التطبيق والموقع</span>
+                        </h3>
+                    </div>
+                    <p style="font-size:13px;color:#94A3B8;margin-bottom:20px;">
+                        عند إضافة اقتباس جديد هنا، تتم مزامنته فورياً مع قاعدة بيانات التطبيق على أجهزة المستخدمين عبر Firestore ومكتبة الويب.
+                    </p>
+
+                    <form id="addCategoryQuoteForm" onsubmit="handleAddNewCategoryQuote(event)">
+                        <div class="admin-form-group">
+                            <label class="admin-label">اختر القسم (من بين الأقسام الـ 24 الرسمية) *</label>
+                            <select id="quoteCategorySelect" required class="admin-select">
+                                <option value="">-- اضغط لاختيار القسم --</option>
+                                <option value="اقتباسات عميقة">1. اقتباسات عميقة</option>
+                                <option value="كلام عن الحب">2. كلام عن الحب</option>
+                                <option value="أقوال الفلاسفة">3. أقوال الفلاسفة</option>
+                                <option value="بوستات فيسبوك راقية">4. بوستات فيسبوك راقية</option>
+                                <option value="حكم وأمثال شعبية">5. حكم وأمثال شعبية</option>
+                                <option value="كبرياء وغرور">6. كبرياء وغرور</option>
+                                <option value="خواطر حزينة">7. خواطر حزينة</option>
+                                <option value="تحفيز ونجاح">8. تحفيز ونجاح</option>
+                                <option value="عن الصداقة والأوفياء">9. عن الصداقة والأوفياء</option>
+                                <option value="عبارات عن الأم والأب">10. عبارات عن الأم والأب</option>
+                                <option value="أدعية وأذكار إسلامية">11. أدعية وأذكار إسلامية</option>
+                                <option value="أقوال مأثورة عالمية">12. أقوال مأثورة عالمية</option>
+                                <option value="عتاب ولوم">13. عتاب ولوم</option>
+                                <option value="أمل وتفاؤل">14. أمل وتفاؤل</option>
+                                <option value="شعر ونصوص أدبية">15. شعر ونصوص أدبية</option>
+                                <option value="كلام عن الخيانة والغدر">16. كلام عن الخيانة والغدر</option>
+                                <option value="صباحيات ومسائيات">17. صباحيات ومسائيات</option>
+                                <option value="خواطر ليلية وهدوء">18. خواطر ليلية وهدوء</option>
+                                <option value="عن الحياة والواقع">19. عن الحياة والواقع</option>
+                                <option value="كلام موزون وثقيل">20. كلام موزون وثقيل</option>
+                                <option value="نكت وطرائف">21. نكت وطرائف</option>
+                                <option value="اقتباسات سينمائية">22. اقتباسات سينمائية</option>
+                                <option value="عبارات الجمعة المباركة">23. عبارات الجمعة المباركة</option>
+                                <option value="شكر وتقدير">24. شكر وتقدير</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-label">نص الاقتباس أو الحكمة *</label>
+                            <textarea id="quoteContentInput" required rows="4" class="admin-textarea" placeholder="اكتب نص المقولة هنا بصياغة دقيقة وراقية..."></textarea>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-label">القائل أو المؤلف (اختياري)</label>
+                            <input type="text" id="quoteAuthorInput" class="admin-input" placeholder="مثال: محمود درويش، نيتشه، نجيب محفوظ...">
+                        </div>
+
+                        <div class="admin-form-group" style="background:var(--admin-surface);padding:14px;border-radius:12px;border:1px solid var(--admin-border);">
+                            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:#FFF;">
+                                <input type="checkbox" id="quotePublishToCommunity" checked style="width:18px;height:18px;accent-color:var(--admin-cyan);">
+                                <span>نشر أيضاً كمنشور رسمي في مجتمع منشوراتي باسم "إدارة منشوراتي" 🌟</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" id="btnAddQuoteSubmit" class="btn-admin btn-admin-cyan" style="width:100%;justify-content:center;padding:12px;font-size:15px;">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                            <span>حفظ ونشر الاقتباس فوراً</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal: Add New Admin (RBAC) -->
+    <div id="addAdminModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;">
+        <div class="login-card-gate" style="max-width:500px;width:90%;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid var(--admin-border);padding-bottom:12px;">
+                <h3 style="font-family:'Cairo',sans-serif;font-size:18px;font-weight:800;color:#FFF;">إضافة مشرف جديد وتحديد الصلاحيات</h3>
+                <button onclick="closeAddAdminModal()" style="background:none;border:none;color:#94A3B8;cursor:pointer;font-size:20px;">✕</button>
+            </div>
+
+            <form id="saveNewAdminForm" onsubmit="handleSaveNewAdmin(event)">
+                <div class="admin-form-group" style="text-align:right;">
+                    <label class="admin-label">البريد الإلكتروني للمشرف *</label>
+                    <input type="email" id="newAdminEmail" required class="admin-input" placeholder="example@gmail.com">
+                </div>
+                <div class="admin-form-group" style="text-align:right;">
+                    <label class="admin-label">الاسم الكامل *</label>
+                    <input type="text" id="newAdminName" required class="admin-input" placeholder="محمد أمين">
+                </div>
+                <div class="admin-form-group" style="text-align:right;">
+                    <label class="admin-label">الدور الوظيفي (Role) *</label>
+                    <select id="newAdminRoleSelect" onchange="updateRoleCheckboxes(this.value)" required class="admin-select">
+                        <option value="moderator">مشرف محتوى وبلاغات (Moderator)</option>
+                        <option value="editor">محرر ومصمم (Editor)</option>
+                        <option value="super_admin">مدير عام مساعد (Super Admin)</option>
+                    </select>
+                </div>
+
+                <div class="admin-form-group" style="text-align:right;background:var(--admin-surface);padding:14px;border-radius:12px;">
+                    <label class="admin-label" style="margin-bottom:10px;">الصلاحيات المفعلة:</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="permDeletePosts" checked style="accent-color:var(--admin-cyan);">
+                            <span>صلاحية حذف المنشورات المخالفة</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="permResolveReports" checked style="accent-color:var(--admin-cyan);">
+                            <span>صلاحية مراجعة ومعالجة البلاغات</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="permBlockUsers" checked style="accent-color:var(--admin-cyan);">
+                            <span>صلاحية حظر المستخدمين المسيئين</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="permAddQuotes" checked style="accent-color:var(--admin-cyan);">
+                            <span>صلاحية إضافة اقتباسات للأقسام</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:10px;justify-content:flex-end;">
+                    <button type="button" onclick="closeAddAdminModal()" class="btn-admin btn-admin-surface">إلغاء</button>
+                    <button type="submit" class="btn-admin btn-admin-gold">حفظ وإضافة المشرف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="adminToast" style="display:none;position:fixed;bottom:24px;left:24px;background:#1E293B;color:#FFF;border-left:4px solid var(--admin-cyan);padding:14px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);font-size:14px;font-weight:700;z-index:9999;"></div>
+
+    <script>
+        // Global Admin State
+        let adminPostsData = [];
+        let adminUsersData = [];
+        let adminReportsData = [];
+        let adminList = [];
+
+        function showAdminToast(msg, isError = false) {
+            const toast = document.getElementById("adminToast");
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.style.borderLeftColor = isError ? "var(--admin-rose)" : "var(--admin-cyan)";
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3500);
+        }
+
+        // Listen for Auth changes dispatched by firebase-config.js
+        window.addEventListener('manchorati-auth-changed', (e) => {
+            handleAuthState(e.detail);
+        });
+
+        // Also check directly on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const user = auth.currentUser;
+                if (!user && !currentAuthUser) {
+                    showAuthScreen('login');
+                }
+            }, 1200);
+        });
+
+        function handleAuthState(detail) {
+            const { user, isAdmin, role } = detail;
+            const checking = document.getElementById("authCheckingScreen");
+            const required = document.getElementById("authRequiredScreen");
+            const unauthorized = document.getElementById("unauthorizedScreen");
+            const dashboard = document.getElementById("adminMainDashboard");
+
+            checking.style.display = "none";
+
+            if (!user) {
+                required.style.display = "flex";
+                unauthorized.style.display = "none";
+                dashboard.style.display = "none";
+                return;
+            }
+
+            if (!isAdmin) {
+                required.style.display = "none";
+                unauthorized.style.display = "flex";
+                dashboard.style.display = "none";
+                document.getElementById("unauthorizedEmail").textContent = user.email || user.uid;
+                return;
+            }
+
+            // User is authenticated and is an Admin!
+            required.style.display = "none";
+            unauthorized.style.display = "none";
+            dashboard.style.display = "flex";
+
+            // Update Header Badge
+            const badge = document.getElementById("adminRoleBadge");
+            const roleText = document.getElementById("adminRoleText");
+            if (badge && roleText) {
+                badge.style.display = "inline-flex";
+                if (role === 'super_admin') {
+                    roleText.textContent = "مدير عام (Super Admin)";
+                } else if (role === 'moderator') {
+                    roleText.textContent = "مشرف محتوى وبلاغات";
+                } else {
+                    roleText.textContent = "محرر محتوى";
+                }
+            }
+
+            // Load all Dashboard data
+            initDashboardData();
+        }
+
+        function showAuthScreen(type) {
+            document.getElementById("authCheckingScreen").style.display = "none";
+            if (type === 'login') {
+                document.getElementById("authRequiredScreen").style.display = "flex";
+            }
+        }
+
+        async function handleAdminEmailLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById("adminLoginEmail").value.trim();
+            const pass = document.getElementById("adminLoginPassword").value;
+            try {
+                await signInWithEmail(email, pass);
+            } catch (err) {
+                showAdminToast("خطأ في تسجيل الدخول: " + err.message, true);
+            }
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll(".admin-tab-pane").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".admin-menu-item").forEach(m => m.classList.remove("active"));
+
+            const targetPane = document.getElementById("tab-" + tabName);
+            if (targetPane) targetPane.classList.add("active");
+
+            const clickedItem = event?.currentTarget;
+            if (clickedItem && clickedItem.classList.contains("admin-menu-item")) {
+                clickedItem.classList.add("active");
+            }
+        }
+
+        async function initDashboardData() {
+            loadDashboardStats();
+            loadAdminReports();
+            loadAdminPostsList();
+            loadAdminUsersList();
+            loadAdminsCollection();
+        }
+
+        async function loadDashboardStats() {
+            try {
+                // 1. Posts count
+                const postsSnap = await db.collection('community_posts').get();
+                document.getElementById("statPostsCount").textContent = postsSnap.size.toLocaleString();
+
+                // 2. Users count
+                const usersSnap = await db.collection('users').get();
+                document.getElementById("statUsersCount").textContent = usersSnap.size.toLocaleString();
+
+                // 3. Pending reports count
+                const reportsSnap = await db.collection('reports').where('status', '==', 'PENDING').get();
+                const count = reportsSnap.size;
+                document.getElementById("statReportsCount").textContent = count;
+                const badge = document.getElementById("reportsCountBadge");
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? "inline-block" : "none";
+                }
+            } catch (err) {
+                console.error("Stats load error:", err);
+            }
+        }
+
+        // ==========================================
+        // REPORTS MODERATION
+        // ==========================================
+        async function loadAdminReports() {
+            const tbody = document.getElementById("adminReportsTableBody");
+            try {
+                const snap = await db.collection('reports').orderBy('timestamp', 'desc').limit(50).get();
+                if (snap.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#10B981;">🎉 لا توجد أي بلاغات معلقة حالياً، المجتمع نظيف!</td></tr>`;
+                    return;
+                }
+
+                adminReportsData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderReportsTable(adminReportsData);
+            } catch (err) {
+                console.error("Reports error:", err);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#EF4444;">تعذر تحميل البلاغات: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderReportsTable(reports) {
+            const tbody = document.getElementById("adminReportsTableBody");
+            let html = "";
+            reports.forEach(r => {
+                const dateStr = r.timestamp ? new Date(r.timestamp).toLocaleDateString('ar-MA', { hour: '2-digit', minute: '2-digit' }) : "--";
+                const isResolved = r.status === 'RESOLVED_DELETED' || r.status === 'DISMISSED';
+                const statusBadge = r.status === 'RESOLVED_DELETED' ? '<span style="color:#EF4444;font-weight:700;">تم حذف المنشور</span>' :
+                                   r.status === 'DISMISSED' ? '<span style="color:#64748B;">تم التجاهل</span>' :
+                                   '<span style="color:#F59E0B;font-weight:700;">قيد المراجعة</span>';
+
+                html += `
+                    <tr>
+                        <td style="white-space:nowrap;font-size:12px;">${dateStr}</td>
+                        <td><span style="color:#EF4444;font-weight:700;">${r.reason || 'مخالفة'}</span></td>
+                        <td style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(r.postContent || '')}">
+                            ${escapeHtml(r.postContent || '(منشور بلا نص)')}
+                        </td>
+                        <td>${escapeHtml(r.postAuthor || 'غير معروف')}</td>
+                        <td style="font-size:12px;color:#94A3B8;">${escapeHtml(r.reporterEmail || r.reporterId || 'زائر')}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            ${!isResolved ? `
+                            <div style="display:flex;gap:6px;">
+                                <button onclick="deleteReportedPost('${r.id}', '${r.postId}')" class="btn-admin btn-admin-rose" style="padding:4px 8px;font-size:11px;">
+                                    حذف المنشور 🗑️
+                                </button>
+                                <button onclick="dismissReport('${r.id}')" class="btn-admin btn-admin-surface" style="padding:4px 8px;font-size:11px;">
+                                    تجاهل ✔️
+                                </button>
+                            </div>
+                            ` : '<span style="color:#64748B;font-size:12px;">مكتمل</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        async function deleteReportedPost(reportId, postId) {
+            if (!confirm("هل أنت متأكد من حذف هذا المنشور المخالف نهائياً من مجتمع منشوراتي؟")) return;
+            try {
+                // Delete from community_posts
+                await db.collection('community_posts').doc(postId).delete();
+                // Update report status
+                await db.collection('reports').doc(reportId).update({
+                    status: 'RESOLVED_DELETED',
+                    resolvedAt: Date.now(),
+                    resolvedBy: auth.currentUser.email
+                });
+                showAdminToast("تم حذف المنشور المخالف بنجاح وتحديث البلاغ! 🗑️");
+                loadAdminReports();
+                loadAdminPostsList();
+                loadDashboardStats();
+            } catch (err) {
+                showAdminToast("تعذر حذف المنشور: " + err.message, true);
+            }
+        }
+
+        async function dismissReport(reportId) {
+            try {
+                await db.collection('reports').doc(reportId).update({
+                    status: 'DISMISSED',
+                    dismissedAt: Date.now(),
+                    dismissedBy: auth.currentUser.email
+                });
+                showAdminToast("تم تجاهل البلاغ.");
+                loadAdminReports();
+                loadDashboardStats();
+            } catch (err) {
+                showAdminToast("تعذر تحديث البلاغ: " + err.message, true);
+            }
+        }
+
+        // ==========================================
+        // COMMUNITY POSTS MANAGER
+        // ==========================================
+        async function loadAdminPostsList() {
+            const tbody = document.getElementById("adminPostsTableBody");
+            const snapshotContainer = document.getElementById("recentPostsSnapshot");
+            try {
+                const snap = await db.collection('community_posts').orderBy('timestamp', 'desc').limit(60).get();
+                adminPostsData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                renderPostsTable(adminPostsData);
+
+                // Render Snapshot in Overview
+                if (snapshotContainer) {
+                    if (adminPostsData.length === 0) {
+                        snapshotContainer.innerHTML = "<p style='color:#64748B;'>لا توجد منشورات حتى الآن.</p>";
+                    } else {
+                        snapshotContainer.innerHTML = adminPostsData.slice(0, 4).map(p => `
+                            <div style="background:var(--admin-surface);padding:12px 16px;border-radius:12px;border:1px solid var(--admin-border);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <div style="width:34px;height:34px;border-radius:50%;background:var(--admin-card);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--admin-cyan);">
+                                        ${(p.authorName || 'ك')[0]}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:700;font-size:13px;color:#FFF;">${escapeHtml(p.authorName || 'كاتب')} <span style="font-size:11px;color:#94A3B8;">@${escapeHtml(p.authorUsername || '')}</span></div>
+                                        <div style="font-size:12px;color:#CBD5E1;max-width:480px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.content || '')}</div>
+                                    </div>
+                                </div>
+                                <button onclick="deleteCommunityPost('${p.id}')" class="btn-admin btn-admin-rose" style="padding:4px 10px;font-size:11px;">حذف 🗑️</button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Posts load error:", err);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#EF4444;">خطأ في جلب المنشورات: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderPostsTable(posts) {
+            const tbody = document.getElementById("adminPostsTableBody");
+            if (posts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#64748B;">لا توجد منشورات مطابقة.</td></tr>`;
+                return;
+            }
+
+            let html = "";
+            posts.forEach(p => {
+                const dateStr = p.timestamp ? new Date(p.timestamp).toLocaleDateString('ar-MA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "--";
+                html += `
+                    <tr>
+                        <td style="white-space:nowrap;">
+                            <strong>${escapeHtml(p.authorName || 'مجهول')}</strong>
+                            <div style="font-size:11px;color:#94A3B8;">@${escapeHtml(p.authorUsername || '')}</div>
+                        </td>
+                        <td style="max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(p.content || '')}">
+                            ${escapeHtml(p.content || '')}
+                        </td>
+                        <td><span style="background:var(--admin-surface);padding:3px 8px;border-radius:6px;font-size:11px;">${p.tag || p.bgId || 'افتراضي'}</span></td>
+                        <td><span style="color:#EF4444;font-weight:700;">❤️ ${p.likesCount || 0}</span></td>
+                        <td><span style="color:var(--admin-cyan);font-weight:700;">💬 ${p.commentsCount || 0}</span></td>
+                        <td style="font-size:12px;color:#94A3B8;white-space:nowrap;">${dateStr}</td>
+                        <td>
+                            <button onclick="deleteCommunityPost('${p.id}')" class="btn-admin btn-admin-rose" style="padding:4px 8px;font-size:11px;">
+                                حذف 🗑️
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function filterAdminPostsTable() {
+            const q = document.getElementById("postsSearchInput").value.toLowerCase();
+            const filtered = adminPostsData.filter(p => 
+                (p.content && p.content.toLowerCase().includes(q)) ||
+                (p.authorName && p.authorName.toLowerCase().includes(q)) ||
+                (p.authorUsername && p.authorUsername.toLowerCase().includes(q))
+            );
+            renderPostsTable(filtered);
+        }
+
+        async function deleteCommunityPost(postId) {
+            if (!confirm("هل أنت متأكد من حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+            try {
+                await db.collection('community_posts').doc(postId).delete();
+                showAdminToast("تم حذف المنشور بنجاح! 🗑️");
+                loadAdminPostsList();
+                loadDashboardStats();
+            } catch (err) {
+                showAdminToast("تعذر حذف المنشور: " + err.message, true);
+            }
+        }
+
+        // ==========================================
+        // USERS MANAGEMENT
+        // ==========================================
+        async function loadAdminUsersList() {
+            const tbody = document.getElementById("adminUsersTableBody");
+            try {
+                const snap = await db.collection('users').limit(100).get();
+                adminUsersData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderUsersTable(adminUsersData);
+            } catch (err) {
+                console.error("Users load error:", err);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#EF4444;">تعذر تحميل المستخدمين: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById("adminUsersTableBody");
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#64748B;">لا يوجد مستخدمين مسجلين.</td></tr>`;
+                return;
+            }
+
+            let html = "";
+            users.forEach(u => {
+                const isBlocked = !!u.isBlocked;
+                html += `
+                    <tr>
+                        <td style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:34px;height:34px;border-radius:50%;background:var(--admin-surface);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--admin-cyan);">
+                                ${(u.authorName || 'م')[0]}
+                            </div>
+                            <div>
+                                <strong style="color:#FFF;">${escapeHtml(u.authorName || 'مستخدم')}</strong>
+                            </div>
+                        </td>
+                        <td style="color:var(--admin-cyan);font-weight:700;">@${escapeHtml(u.authorUsername || '')}</td>
+                        <td style="font-size:12px;color:#94A3B8;">${escapeHtml(u.email || 'غير معلن')}</td>
+                        <td><span style="background:rgba(56,189,248,0.12);color:var(--admin-cyan);padding:2px 8px;border-radius:6px;font-size:11px;">${escapeHtml(u.authorBadge || 'كاتب')}</span></td>
+                        <td><strong style="color:#FFF;">${u.postsCount || 0}</strong></td>
+                        <td>
+                            ${isBlocked ? 
+                                '<span style="color:#EF4444;font-weight:700;background:rgba(239,68,68,0.15);padding:2px 8px;border-radius:6px;font-size:11px;">محظور 🚫</span>' : 
+                                '<span style="color:#10B981;font-weight:700;background:rgba(16,185,129,0.15);padding:2px 8px;border-radius:6px;font-size:11px;">نشط ✔️</span>'}
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:6px;">
+                                <button onclick="toggleUserBlock('${u.id}', ${!isBlocked})" class="btn-admin ${isBlocked ? 'btn-admin-surface' : 'btn-admin-rose'}" style="padding:4px 8px;font-size:11px;">
+                                    ${isBlocked ? 'إلغاء الحظر 🔓' : 'حظر 🚫'}
+                                </button>
+                                <button onclick="grantUserVerifiedBadge('${u.id}')" class="btn-admin btn-admin-gold" style="padding:4px 8px;font-size:11px;" title="منح شارة التوثيق">
+                                    ⭐ توثيق
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function filterAdminUsersTable() {
+            const q = document.getElementById("usersSearchInput").value.toLowerCase();
+            const filtered = adminUsersData.filter(u =>
+                (u.authorName && u.authorName.toLowerCase().includes(q)) ||
+                (u.authorUsername && u.authorUsername.toLowerCase().includes(q)) ||
+                (u.email && u.email.toLowerCase().includes(q))
+            );
+            renderUsersTable(filtered);
+        }
+
+        async function toggleUserBlock(userId, blockState) {
+            try {
+                await db.collection('users').doc(userId).update({ isBlocked: blockState });
+                showAdminToast(blockState ? "تم حظر المستخدم بنجاح." : "تم إلغاء حظر المستخدم.");
+                loadAdminUsersList();
+            } catch (err) {
+                showAdminToast("تعذر تحديث حالة الحظر: " + err.message, true);
+            }
+        }
+
+        async function grantUserVerifiedBadge(userId) {
+            const badge = prompt("اكتب الشارة المراد منحها للكاتب:", "كاتب موثق ⭐");
+            if (!badge) return;
+            try {
+                await db.collection('users').doc(userId).update({ authorBadge: badge });
+                showAdminToast("تم منح الشارة بنجاح! ⭐");
+                loadAdminUsersList();
+            } catch (err) {
+                showAdminToast("تعذر منح الشارة: " + err.message, true);
+            }
+        }
+
+        // ==========================================
+        // ADMINS & RBAC
+        // ==========================================
+        async function loadAdminsCollection() {
+            const tbody = document.getElementById("adminsListTableBody");
+            try {
+                const snap = await db.collection('admins').get();
+                adminList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                let html = `
+                    <tr>
+                        <td><strong>المدير العام (Owner)</strong></td>
+                        <td>hananemohamedinfo@gmail.com</td>
+                        <td><span class="admin-badge-role">مدير عام (Super Admin)</span></td>
+                        <td><span style="color:var(--admin-emerald);font-weight:700;">تحكم كامل شامل (جميع الصلاحيات)</span></td>
+                        <td>مؤسس المنصة</td>
+                        <td><span style="color:#64748B;">حساب رئيسي ثابت</span></td>
+                    </tr>
+                `;
+
+                adminList.forEach(adm => {
+                    const roleBadge = adm.role === 'super_admin' ? '<span class="admin-badge-role">مدير عام مساعد</span>' :
+                                      adm.role === 'moderator' ? '<span class="admin-badge-role" style="color:var(--admin-cyan);border-color:var(--admin-cyan);">مشرف محتوى</span>' :
+                                      '<span class="admin-badge-role" style="color:var(--admin-emerald);border-color:var(--admin-emerald);">محرر ومصمم</span>';
+                    
+                    const permsText = [];
+                    if (adm.canDeletePosts) permsText.push("حذف منشورات");
+                    if (adm.canModerateReports) permsText.push("معالجة بلاغات");
+                    if (adm.canBlockUsers) permsText.push("حظر مستخدمين");
+                    if (adm.canAddQuotes) permsText.push("إضافة اقتباسات");
+
+                    const dateStr = adm.createdAt ? new Date(adm.createdAt).toLocaleDateString('ar-MA') : "--";
+
+                    html += `
+                        <tr>
+                            <td><strong>${escapeHtml(adm.name || 'مشرف')}</strong></td>
+                            <td>${escapeHtml(adm.email || '')}</td>
+                            <td>${roleBadge}</td>
+                            <td style="font-size:12px;color:#CBD5E1;">${permsText.join(' • ') || 'صلاحيات محدودة'}</td>
+                            <td style="font-size:12px;color:#94A3B8;">${dateStr}</td>
+                            <td>
+                                <button onclick="deleteAdmin('${adm.id}')" class="btn-admin btn-admin-rose" style="padding:4px 8px;font-size:11px;">
+                                    حذف المشرف ✕
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            } catch (err) {
+                console.warn("Could not load admins collection:", err);
+            }
+        }
+
+        function openAddAdminModal() {
+            document.getElementById("addAdminModal").style.display = "flex";
+        }
+
+        function closeAddAdminModal() {
+            document.getElementById("addAdminModal").style.display = "none";
+        }
+
+        function updateRoleCheckboxes(role) {
+            const pDelete = document.getElementById("permDeletePosts");
+            const pReports = document.getElementById("permResolveReports");
+            const pBlock = document.getElementById("permBlockUsers");
+            const pQuotes = document.getElementById("permAddQuotes");
+
+            if (role === 'super_admin') {
+                pDelete.checked = true;
+                pReports.checked = true;
+                pBlock.checked = true;
+                pQuotes.checked = true;
+            } else if (role === 'moderator') {
+                pDelete.checked = true;
+                pReports.checked = true;
+                pBlock.checked = true;
+                pQuotes.checked = false;
+            } else if (role === 'editor') {
+                pDelete.checked = false;
+                pReports.checked = false;
+                pBlock.checked = false;
+                pQuotes.checked = true;
+            }
+        }
+
+        async function handleSaveNewAdmin(e) {
+            e.preventDefault();
+            const email = document.getElementById("newAdminEmail").value.trim().toLowerCase();
+            const name = document.getElementById("newAdminName").value.trim();
+            const role = document.getElementById("newAdminRoleSelect").value;
+            const canDeletePosts = document.getElementById("permDeletePosts").checked;
+            const canModerateReports = document.getElementById("permResolveReports").checked;
+            const canBlockUsers = document.getElementById("permBlockUsers").checked;
+            const canAddQuotes = document.getElementById("permAddQuotes").checked;
+
+            try {
+                // Look up user UID by email in users collection if exists
+                let uid = null;
+                const userQuery = await db.collection('users').where('email', '==', email).limit(1).get();
+                if (!userQuery.empty) {
+                    uid = userQuery.docs[0].id;
+                }
+
+                const docId = uid || email.replace(/[^a-z0-9]/g, '_');
+
+                const adminData = {
+                    email: email,
+                    name: name,
+                    role: role,
+                    canDeletePosts: canDeletePosts,
+                    canModerateReports: canModerateReports,
+                    canBlockUsers: canBlockUsers,
+                    canAddQuotes: canAddQuotes,
+                    createdAt: Date.now(),
+                    addedBy: auth.currentUser ? auth.currentUser.email : 'super_admin'
+                };
+
+                await db.collection('admins').doc(docId).set(adminData, { merge: true });
+                showAdminToast("تمت إضافة المشرف وتحديد صلاحياته بنجاح! 🛡️");
+                closeAddAdminModal();
+                loadAdminsCollection();
+            } catch (err) {
+                showAdminToast("خطأ أثناء إضافة المشرف: " + err.message, true);
+            }
+        }
+
+        async function deleteAdmin(adminId) {
+            if (!confirm("هل أنت متأكد من حذف هذا المشرف وسحب صلاحياته؟")) return;
+            try {
+                await db.collection('admins').doc(adminId).delete();
+                showAdminToast("تم سحب صلاحيات المشرف بنجاح.");
+                loadAdminsCollection();
+            } catch (err) {
+                showAdminToast("تعذر حذف المشرف: " + err.message, true);
+            }
+        }
+
+        // ==========================================
+        // ADD QUOTE TO CATEGORIES
+        // ==========================================
+        async function handleAddNewCategoryQuote(e) {
+            e.preventDefault();
+            const catName = document.getElementById("quoteCategorySelect").value;
+            const content = document.getElementById("quoteContentInput").value.trim();
+            const author = document.getElementById("quoteAuthorInput").value.trim();
+            const publishCommunity = document.getElementById("quotePublishToCommunity").checked;
+            const submitBtn = document.getElementById("btnAddQuoteSubmit");
+
+            if (!catName || !content) {
+                alert("يرجى اختيار القسم وإدخال نص الاقتباس.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = "جاري الحفظ والمزامنة...";
+
+            try {
+                const timestamp = Date.now();
+                const quoteUpdateData = {
+                    category_name: catName,
+                    content: content,
+                    author: author || 'منشوراتي',
+                    timestamp: timestamp,
+                    addedBy: auth.currentUser ? auth.currentUser.email : 'admin'
+                };
+
+                // 1. Write to Firestore 'category_updates' (syncs to mobile apps)
+                await db.collection('category_updates').add(quoteUpdateData);
+
+                // 2. Optionally publish to community_posts
+                if (publishCommunity) {
+                    await db.collection('community_posts').add({
+                        authorId: auth.currentUser ? auth.currentUser.uid : "admin_official",
+                        authorName: "إدارة منشوراتي",
+                        authorUsername: "manchorati_admin",
+                        authorBadge: "محرر رسمي 🌟",
+                        authorStreak: 100,
+                        content: content,
+                        bgId: "card_luxury",
+                        fontId: "tajawal",
+                        textColor: "#FFFFFF",
+                        tag: catName,
+                        likesCount: 1,
+                        commentsCount: 0,
+                        reportCount: 0,
+                        postType: "TEXT",
+                        timestamp: timestamp
+                    });
+                }
+
+                showAdminToast(`تم نشر الاقتباس بنجاح في قسم "${catName}" ومزامنته! 🎉`);
+                document.getElementById("addCategoryQuoteForm").reset();
+                loadDashboardStats();
+            } catch (err) {
+                showAdminToast("تعذر حفظ الاقتباس: " + err.message, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                    <span>حفظ ونشر الاقتباس فوراً</span>
+                `;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
