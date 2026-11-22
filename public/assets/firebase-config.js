@@ -159,13 +159,56 @@ async function checkAdminPermissions(user) {
     }
 }
 
+// Google Sign-In In-Progress Flag to prevent duplicate clicks & conflicting popup requests
+let isGoogleSignInInProgress = false;
+
+function showAuthError(msg) {
+    const el = document.getElementById("authErrorMessage");
+    if (el) {
+        el.textContent = msg;
+        el.style.display = "block";
+    } else {
+        showAppToast(msg, true);
+    }
+}
+
+function clearAuthError() {
+    const el = document.getElementById("authErrorMessage");
+    if (el) {
+        el.textContent = "";
+        el.style.display = "none";
+    }
+}
+
 /**
  * Sign in with Google (Popup)
  */
 async function signInWithGoogle() {
+    if (isGoogleSignInInProgress) {
+        console.warn("Google sign-in already in progress, ignoring extra click.");
+        return;
+    }
+    isGoogleSignInInProgress = true;
+    clearAuthError();
+
+    const gBtn = document.getElementById("btnGoogleAuth");
+    let originalHtml = "";
+    if (gBtn) {
+        originalHtml = gBtn.innerHTML;
+        gBtn.disabled = true;
+        gBtn.style.opacity = "0.75";
+        gBtn.style.cursor = "wait";
+        gBtn.innerHTML = `
+            <svg style="width:16px; height:16px; animation:spin 1s linear infinite;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+            <span>جاري الاتصال بـ Google...</span>
+        `;
+    }
+
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
+    provider.setCustomParameters({ prompt: 'select_account' });
+
     try {
         const result = await auth.signInWithPopup(provider);
         showAppToast(`مرحباً بك مجدداً ${result.user.displayName || ''}! 🎉`);
@@ -173,8 +216,26 @@ async function signInWithGoogle() {
         return result.user;
     } catch (err) {
         console.error("Google sign in error:", err);
-        alert("تعذر تسجيل الدخول بـ Google: " + (err.message || err));
-        throw err;
+        // Harmless cancellations (e.g. user closed popup or duplicate click superseded)
+        if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+            console.log("Google popup was closed or superseded.");
+            return null;
+        } else if (err.code === 'auth/popup-blocked') {
+            showAuthError("⚠️ المتصفح حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة (Pop-ups) من شريط العنوان للمتابعة.");
+        } else if (err.code === 'auth/network-request-failed') {
+            showAuthError("تعذر الاتصال بخوادم Google. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.");
+        } else {
+            showAuthError("تعذر تسجيل الدخول بـ Google: " + (err.message || err.code));
+        }
+        return null;
+    } finally {
+        isGoogleSignInInProgress = false;
+        if (gBtn) {
+            gBtn.disabled = false;
+            gBtn.style.opacity = "1";
+            gBtn.style.cursor = "pointer";
+            if (originalHtml) gBtn.innerHTML = originalHtml;
+        }
     }
 }
 
@@ -182,6 +243,7 @@ async function signInWithGoogle() {
  * Sign in with Email and Password
  */
 async function signInWithEmail(email, password) {
+    clearAuthError();
     try {
         const result = await auth.signInWithEmailAndPassword(email.trim(), password);
         showAppToast("تم تسجيل الدخول بنجاح! 🌟");
@@ -192,7 +254,9 @@ async function signInWithEmail(email, password) {
         let msg = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
         if (err.code === 'auth/user-not-found') msg = "هذا الحساب غير موجود، يرجى إنشاء حساب جديد.";
         if (err.code === 'auth/wrong-password') msg = "كلمة المرور غير صحيحة.";
-        alert(msg);
+        if (err.code === 'auth/invalid-email') msg = "صيغة البريد الإلكتروني غير صحيحة.";
+        if (err.code === 'auth/network-request-failed') msg = "مشكلة في الاتصال بالإنترنت، يرجى المحاولة ثانية.";
+        showAuthError(msg);
         throw err;
     }
 }
@@ -201,6 +265,7 @@ async function signInWithEmail(email, password) {
  * Sign up with Email and Password
  */
 async function signUpWithEmail(email, password, displayName, customUsername) {
+    clearAuthError();
     try {
         const result = await auth.createUserWithEmailAndPassword(email.trim(), password);
         const user = result.user;
@@ -231,10 +296,12 @@ async function signUpWithEmail(email, password, displayName, customUsername) {
         return user;
     } catch (err) {
         console.error("Sign up error:", err);
-        let msg = "تعذر إنشاء الحساب: " + err.message;
+        let msg = "تعذر إنشاء الحساب: " + (err.message || '');
         if (err.code === 'auth/email-already-in-use') msg = "هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول.";
         if (err.code === 'auth/weak-password') msg = "كلمة المرور ضعيفة جداً (يجب أن تكون 6 أحرف على الأقل).";
-        alert(msg);
+        if (err.code === 'auth/invalid-email') msg = "صيغة البريد الإلكتروني غير صحيحة.";
+        if (err.code === 'auth/network-request-failed') msg = "مشكلة في الاتصال بالإنترنت، يرجى المحاولة ثانية.";
+        showAuthError(msg);
         throw err;
     }
 }
@@ -421,8 +488,11 @@ function ensureLoginModalInDOM() {
                 </div>
             </div>
 
+            <!-- Inline Error Message Display -->
+            <div id="authErrorMessage" style="display:none; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:12px; font-weight:700; padding:8px 12px; border-radius:8px; margin-bottom:10px; text-align:center; line-height:1.4;"></div>
+
             <!-- Google One-Click Login -->
-            <button type="button" onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px; background:#172437; border:1px solid #1E314B; border-radius:8px; color:#FFFFFF; font-size:12.5px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:10px;">
+            <button type="button" id="btnGoogleAuth" onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px; background:#172437; border:1px solid #1E314B; border-radius:8px; color:#FFFFFF; font-size:12.5px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:10px;">
                 <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:currentColor;"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
                 <span>المتابعة بـ Google (سريع)</span>
             </button>
@@ -533,14 +603,8 @@ if (!window._manchoratiEscKeyRegistered) {
     });
 }
 
-if (!window._manchoratiEscKeyRegistered) {
-    window._manchoratiEscKeyRegistered = true;
-    window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeLoginModal();
-    });
-}
-
 function switchAuthTab(tab) {
+    clearAuthError();
     const loginForm = document.getElementById("firebaseLoginForm");
     const signupForm = document.getElementById("firebaseSignupForm");
     const loginBtn = document.getElementById("tabAuthLoginBtn");
