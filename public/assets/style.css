@@ -1638,14 +1638,17 @@ header.app-header {
 .manchorati-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(4, 9, 16, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 1000;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .manchorati-modal-overlay.show {
@@ -1658,12 +1661,38 @@ header.app-header {
     border-radius: 20px;
     max-width: 580px;
     width: 100%;
-    max-height: 90vh;
+    margin: auto;
+    max-height: calc(100vh - 36px);
     overflow-y: auto;
+    overscroll-behavior: contain;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
     animation: modalPop 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     padding: 20px;
     position: relative;
+    box-sizing: border-box;
+}
+
+/* Custom Sleek Scrollbars for Modals */
+.manchorati-modal-box::-webkit-scrollbar,
+.manchorati-auth-card::-webkit-scrollbar,
+#manchoratiLoginModal::-webkit-scrollbar {
+    width: 6px;
+}
+.manchorati-modal-box::-webkit-scrollbar-track,
+.manchorati-auth-card::-webkit-scrollbar-track,
+#manchoratiLoginModal::-webkit-scrollbar-track {
+    background: transparent;
+}
+.manchorati-modal-box::-webkit-scrollbar-thumb,
+.manchorati-auth-card::-webkit-scrollbar-thumb,
+#manchoratiLoginModal::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+.manchorati-modal-box::-webkit-scrollbar-thumb:hover,
+.manchorati-auth-card::-webkit-scrollbar-thumb:hover,
+#manchoratiLoginModal::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 @keyframes modalPop {

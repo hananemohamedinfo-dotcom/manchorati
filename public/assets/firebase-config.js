@@ -405,66 +405,66 @@ function ensureLoginModalInDOM() {
     if (document.getElementById("manchoratiLoginModal")) return;
 
     const modalHtml = `
-    <div id="manchoratiLoginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
-        <div style="background:#0F1A2A; border:1px solid #1E314B; border-radius:24px; max-width:440px; width:100%; padding:32px 28px; box-shadow:0 10px 40px rgba(0,0,0,0.6); position:relative; text-align:right; font-family:'Tajawal', sans-serif;">
-            <button onclick="closeLoginModal()" style="position:absolute; top:20px; left:20px; background:none; border:none; color:#94A3B8; font-size:24px; cursor:pointer; line-height:1;">✕</button>
+    <div id="manchoratiLoginModal" onclick="if(event.target === this) closeLoginModal();" style="display:none; position:fixed; inset:0; background:rgba(4,9,16,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:99999; overflow-y:auto; overflow-x:hidden; padding:20px 14px; box-sizing:border-box; align-items:center; justify-content:center;">
+        <div class="manchorati-auth-card" style="background:#0F1A2A; border:1px solid #1E314B; border-radius:20px; max-width:440px; width:100%; margin:auto; padding:22px 22px; box-shadow:0 16px 50px rgba(0,0,0,0.75); position:relative; text-align:right; font-family:'Tajawal', sans-serif; box-sizing:border-box; max-height:calc(100vh - 36px); overflow-y:auto; overscroll-behavior:contain;">
+            <button type="button" onclick="closeLoginModal()" title="إغلاق" style="position:absolute; top:14px; left:14px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid #1E314B; color:#94A3B8; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; transition:all 0.2s;">✕</button>
             
-            <div style="text-align:center; margin-bottom:20px;">
-                <img src="assets/icon.png" alt="منشوراتي" style="width:60px; height:60px; border-radius:16px; margin-bottom:12px; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
-                <h2 style="font-family:'Cairo', sans-serif; font-size:20px; font-weight:800; color:#FFFFFF; margin-bottom:6px;">انضم إلى مجتمع منشوراتي</h2>
-                <p style="font-size:13px; color:#94A3B8;">سجّل الدخول لنشر خواطرك، حفظ اقتباساتك المفضلة، والتفاعل مع الكتاب.</p>
+            <div style="text-align:center; margin-bottom:14px;">
+                <img src="assets/icon.png" alt="منشوراتي" style="width:46px; height:46px; border-radius:13px; margin-bottom:8px; box-shadow:0 4px 15px rgba(0,0,0,0.3); display:inline-block;">
+                <h2 style="font-family:'Cairo', sans-serif; font-size:18px; font-weight:800; color:#FFFFFF; margin-bottom:4px; line-height:1.3;">انضم إلى مجتمع منشوراتي</h2>
+                <p style="font-size:12px; color:#94A3B8; margin:0; line-height:1.4;">سجّل الدخول لنشر خواطرك، حفظ اقتباساتك والتفاعل مع الكتاب.</p>
             </div>
 
             <!-- Google One-Click Login -->
-            <button onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; background:#172437; border:1px solid #1E314B; border-radius:12px; color:#FFFFFF; font-size:14px; font-weight:700; cursor:pointer; transition:background 0.2s; margin-bottom:18px;">
-                <svg viewBox="0 0 24 24" style="width:18px; height:18px; fill:currentColor;"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
+            <button type="button" onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:9px 12px; background:#172437; border:1px solid #1E314B; border-radius:10px; color:#FFFFFF; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:12px;">
+                <svg viewBox="0 0 24 24" style="width:17px; height:17px; fill:currentColor;"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
                 <span>المتابعة باستخدام Google</span>
             </button>
 
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
                 <div style="flex:1; height:1px; background:#1E314B;"></div>
-                <span style="font-size:12px; color:#64748B;">أو عبر البريد الإلكتروني</span>
+                <span style="font-size:11.5px; color:#64748B;">أو عبر البريد الإلكتروني</span>
                 <div style="flex:1; height:1px; background:#1E314B;"></div>
             </div>
 
             <!-- Tab Switcher: Sign in / Sign up -->
-            <div style="display:flex; background:#172437; border-radius:10px; padding:4px; margin-bottom:16px;">
-                <button type="button" id="tabAuthLoginBtn" onclick="switchAuthTab('login')" style="flex:1; padding:8px; border:none; border-radius:8px; background:#38BDF8; color:#0B131F; font-weight:700; font-size:13px; cursor:pointer;">تسجيل الدخول</button>
-                <button type="button" id="tabAuthSignupBtn" onclick="switchAuthTab('signup')" style="flex:1; padding:8px; border:none; border-radius:8px; background:transparent; color:#94A3B8; font-weight:700; font-size:13px; cursor:pointer;">حساب جديد</button>
+            <div style="display:flex; background:#172437; border-radius:10px; padding:3px; margin-bottom:12px; border:1px solid #1E314B;">
+                <button type="button" id="tabAuthLoginBtn" onclick="switchAuthTab('login')" style="flex:1; padding:7px; border:none; border-radius:7px; background:#38BDF8; color:#0B131F; font-weight:700; font-size:12.5px; cursor:pointer; transition:all 0.2s; font-family:'Tajawal', sans-serif;">تسجيل الدخول</button>
+                <button type="button" id="tabAuthSignupBtn" onclick="switchAuthTab('signup')" style="flex:1; padding:7px; border:none; border-radius:7px; background:transparent; color:#94A3B8; font-weight:700; font-size:12.5px; cursor:pointer; transition:all 0.2s; font-family:'Tajawal', sans-serif;">حساب جديد</button>
             </div>
 
             <!-- Login Form -->
             <form id="firebaseLoginForm" onsubmit="handleFirebaseLoginForm(event)">
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">البريد الإلكتروني</label>
+                    <input type="email" id="loginFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
+                </div>
                 <div style="margin-bottom:14px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">البريد الإلكتروني</label>
-                    <input type="email" id="loginFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">كلمة المرور</label>
+                    <input type="password" id="loginFormPassword" required placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
                 </div>
-                <div style="margin-bottom:18px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">كلمة المرور</label>
-                    <input type="password" id="loginFormPassword" required placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
-                </div>
-                <button type="submit" id="btnLoginSubmit" style="width:100%; padding:12px; background:#38BDF8; color:#0B131F; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif;">دخول</button>
+                <button type="submit" id="btnLoginSubmit" style="width:100%; padding:10px; background:#38BDF8; color:#0B131F; border:none; border-radius:10px; font-size:13.5px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;">دخول</button>
             </form>
 
             <!-- Signup Form (Hidden by default) -->
             <form id="firebaseSignupForm" onsubmit="handleFirebaseSignupForm(event)" style="display:none;">
-                <div style="margin-bottom:12px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">الاسم الكامل (الظاهر للجمهور) *</label>
-                    <input type="text" id="signupFormName" required placeholder="محمد أمين" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
+                <div style="margin-bottom:8px;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">الاسم الكامل (الظاهر للجمهور) *</label>
+                    <input type="text" id="signupFormName" required placeholder="محمد أمين" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
+                </div>
+                <div style="margin-bottom:8px;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">اسم المستخدم (@username) *</label>
+                    <input type="text" id="signupFormUsername" required placeholder="mohamed_amine" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
+                </div>
+                <div style="margin-bottom:8px;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">البريد الإلكتروني *</label>
+                    <input type="email" id="signupFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
                 </div>
                 <div style="margin-bottom:12px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">اسم المستخدم (@username) *</label>
-                    <input type="text" id="signupFormUsername" required placeholder="mohamed_amine" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
+                    <label style="display:block; font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:4px;">كلمة المرور (6 أحرف فأكثر) *</label>
+                    <input type="password" id="signupFormPassword" required minlength="6" placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:8px 12px; color:#FFF; font-size:13px; outline:none; transition:border 0.2s;">
                 </div>
-                <div style="margin-bottom:12px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">البريد الإلكتروني *</label>
-                    <input type="email" id="signupFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
-                </div>
-                <div style="margin-bottom:18px;">
-                    <label style="display:block; font-size:12.5px; font-weight:700; color:#CBD5E1; margin-bottom:6px;">كلمة المرور (6 أحرف فأكثر) *</label>
-                    <input type="password" id="signupFormPassword" required minlength="6" placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:10px; padding:10px 14px; color:#FFF; font-size:13.5px; outline:none;">
-                </div>
-                <button type="submit" id="btnSignupSubmit" style="width:100%; padding:12px; background:#10B981; color:#FFFFFF; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif;">إنشاء الحساب فوراً</button>
+                <button type="submit" id="btnSignupSubmit" style="width:100%; padding:10px; background:#10B981; color:#FFFFFF; border:none; border-radius:10px; font-size:13.5px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;">إنشاء الحساب فوراً</button>
             </form>
         </div>
     </div>
@@ -476,12 +476,25 @@ function ensureLoginModalInDOM() {
 function openLoginModal() {
     ensureLoginModalInDOM();
     const m = document.getElementById("manchoratiLoginModal");
-    if (m) m.style.display = "flex";
+    if (m) {
+        m.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
 }
 
 function closeLoginModal() {
     const m = document.getElementById("manchoratiLoginModal");
-    if (m) m.style.display = "none";
+    if (m) {
+        m.style.display = "none";
+        document.body.style.overflow = "";
+    }
+}
+
+if (!window._manchoratiEscKeyRegistered) {
+    window._manchoratiEscKeyRegistered = true;
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLoginModal();
+    });
 }
 
 function switchAuthTab(tab) {
