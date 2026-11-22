@@ -1937,3 +1937,12 @@ body {
         max-width: 100% !important;
     }
 }
+
+/* Lock background scrolling when any modal is open */
+html.modal-open,
+body.modal-open {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    touch-action: none !important;
+}
