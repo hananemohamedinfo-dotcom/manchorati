@@ -20,6 +20,11 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Enforce Local Persistence so sessions survive page refreshes and browser restarts
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch((err) => {
+    console.warn("Firebase setPersistence error:", err);
+});
+
 // Global Auth State
 let currentAuthUser = null;
 let currentProfileData = null;
@@ -231,20 +236,27 @@ async function signInWithGoogle() {
     } catch (err) {
         clearTimeout(safetyTimer);
         console.warn("Google sign in catch handled:", err);
+        const code = (err && err.code) || '';
+        const msg = (err && err.message) || '';
+
         // Harmless cancellations: user closed popup or duplicate popup was cancelled
         if (
-            err.code === 'auth/popup-closed-by-user' || 
-            err.code === 'auth/cancelled-popup-request' ||
-            err.code === 'auth/user-cancelled'
+            code === 'auth/popup-closed-by-user' || 
+            code === 'auth/cancelled-popup-request' ||
+            code === 'auth/user-cancelled' ||
+            code === 'auth/popup-closed' ||
+            msg.includes('cancelled-popup-request') ||
+            msg.includes('popup-closed-by-user') ||
+            msg.includes('user-cancelled')
         ) {
             console.log("Google popup cancelled or closed cleanly by user. No error displayed.");
             return null;
-        } else if (err.code === 'auth/popup-blocked') {
+        } else if (code === 'auth/popup-blocked' || msg.includes('popup-blocked')) {
             showAuthError("⚠️ المتصفح حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة (Pop-ups) من شريط العنوان للمتابعة.");
-        } else if (err.code === 'auth/network-request-failed') {
+        } else if (code === 'auth/network-request-failed') {
             showAuthError("تعذر الاتصال بخوادم Google. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.");
         } else {
-            showAuthError("تعذر تسجيل الدخول بـ Google: " + (err.message || err.code));
+            showAuthError("تعذر تسجيل الدخول بـ Google: " + (msg || code));
         }
         return null;
     } finally {
@@ -461,6 +473,118 @@ async function publishPostToFirestore(postData) {
 }
 
 /**
+ * Update an Existing Post in Firestore
+ */
+async function editPostInFirestore(postId, updateData) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        throw new Error("User not authenticated");
+    }
+
+    const payload = {
+        content: updateData.content.trim(),
+        bgId: updateData.bgId || "card_luxury",
+        fontId: updateData.fontId || "tajawal",
+        textColor: updateData.textColor || "#FFFFFF",
+        tag: updateData.tag || "خواطر عميقة",
+        isEdited: true,
+        editedAt: Date.now()
+    };
+
+    await db.collection('community_posts').doc(postId).update(payload);
+    return payload;
+}
+
+/**
+ * Delete a Post from Firestore
+ */
+async function deletePostFromFirestore(postId) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        throw new Error("User not authenticated");
+    }
+
+    await db.collection('community_posts').doc(postId).delete();
+    
+    // Decrement user post count if own post
+    await db.collection('users').doc(currentAuthUser.uid).update({
+        postsCount: firebase.firestore.FieldValue.increment(-1)
+    }).catch(() => {});
+}
+
+/**
+ * Real Comments CRUD in Firestore
+ */
+async function addCommentToFirestore(postId, commentText) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        showAppToast("يرجى تسجيل الدخول أولاً لإضافة تعليقك!");
+        throw new Error("User not authenticated");
+    }
+
+    const authorName = currentProfileData?.authorName || currentAuthUser.displayName || "كاتب";
+    const authorUsername = currentProfileData?.authorUsername || "user";
+    const authorPhotoUrl = currentProfileData?.authorPhotoUrl || currentAuthUser.photoURL || "";
+
+    const commentData = {
+        postId: postId,
+        authorId: currentAuthUser.uid,
+        authorName: authorName,
+        authorUsername: authorUsername,
+        authorPhotoUrl: authorPhotoUrl,
+        content: commentText.trim(),
+        likesCount: 0,
+        timestamp: Date.now()
+    };
+
+    const docRef = await db.collection('community_posts').doc(postId).collection('comments').add(commentData);
+
+    // Increment commentsCount on the post
+    await db.collection('community_posts').doc(postId).update({
+        commentsCount: firebase.firestore.FieldValue.increment(1)
+    }).catch(() => {});
+
+    return { id: docRef.id, ...commentData };
+}
+
+async function fetchCommentsForPost(postId) {
+    try {
+        const snap = await db.collection('community_posts').doc(postId).collection('comments').orderBy('timestamp', 'asc').get();
+        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (err) {
+        console.warn("Could not fetch comments from Firestore:", err);
+        return [];
+    }
+}
+
+async function deleteCommentFromFirestore(postId, commentId) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        throw new Error("User not authenticated");
+    }
+
+    await db.collection('community_posts').doc(postId).collection('comments').doc(commentId).delete();
+
+    // Decrement commentsCount on the post
+    await db.collection('community_posts').doc(postId).update({
+        commentsCount: firebase.firestore.FieldValue.increment(-1)
+    }).catch(() => {});
+}
+
+async function editCommentInFirestore(postId, commentId, newText) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        throw new Error("User not authenticated");
+    }
+
+    await db.collection('community_posts').doc(postId).collection('comments').doc(commentId).update({
+        content: newText.trim(),
+        isEdited: true,
+        editedAt: Date.now()
+    });
+}
+
+/**
  * Report a Post to Admins
  */
 async function reportPostToFirestore(postId, reason, postContent, authorName) {
@@ -495,8 +619,8 @@ function ensureLoginModalInDOM() {
     }
 
     const modalHtml = `
-    <div id="manchoratiLoginModal" onclick="if(event.target === this) closeLoginModal();" style="display:none; position:fixed; inset:0; background:rgba(4,9,16,0.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:99999; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; padding:20px 12px; box-sizing:border-box;">
-        <div class="manchorati-auth-card" style="background:#0F1A2A; border:1px solid #1E314B; border-radius:18px; max-width:430px; width:100%; margin:min(4vh, 24px) auto; padding:18px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.8); position:relative; text-align:right; font-family:'Tajawal', sans-serif; box-sizing:border-box;">
+    <div id="manchoratiLoginModal" onclick="if(event.target === this) closeLoginModal();" onwheel="event.stopPropagation();" ontouchmove="if(event.target === this) event.preventDefault();" style="display:none; position:fixed; inset:0; background:rgba(4,9,16,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:999999; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; padding:20px 12px 60px 12px; box-sizing:border-box;">
+        <div class="manchorati-auth-card" style="background:#0F1A2A; border:1px solid #1E314B; border-radius:18px; max-width:430px; width:100%; margin:20px auto; padding:18px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.8); position:relative; text-align:right; font-family:'Tajawal', sans-serif; box-sizing:border-box; flex-shrink:0;">
             <button type="button" onclick="closeLoginModal()" title="إغلاق" style="position:absolute; top:12px; left:12px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid #1E314B; color:#94A3B8; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; transition:all 0.2s;">✕</button>
             
             <!-- Compact Header -->
@@ -591,14 +715,17 @@ function openLoginModal() {
     ensureLoginModalInDOM();
     const m = document.getElementById("manchoratiLoginModal");
     if (m) {
-        m.style.display = "block";
+        m.style.display = "flex";
+        m.style.flexDirection = "column";
+        m.style.alignItems = "center";
         const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
         document.body.dataset.authModalScrollY = scrollY;
+        document.body.classList.add("modal-open");
+        document.documentElement.classList.add("modal-open");
         document.body.style.position = "fixed";
         document.body.style.top = `-${scrollY}px`;
         document.body.style.width = "100%";
         document.body.style.overflow = "hidden";
-        document.documentElement.classList.add("modal-open");
     }
 }
 
@@ -607,11 +734,12 @@ function closeLoginModal() {
     if (m) {
         m.style.display = "none";
         const scrollY = parseInt(document.body.dataset.authModalScrollY || "0", 10);
+        document.body.classList.remove("modal-open");
+        document.documentElement.classList.remove("modal-open");
         document.body.style.position = "";
         document.body.style.top = "";
         document.body.style.width = "";
         document.body.style.overflow = "";
-        document.documentElement.classList.remove("modal-open");
         window.scrollTo(0, scrollY);
     }
 }

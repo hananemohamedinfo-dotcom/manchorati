@@ -9,13 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/style.css?v=3.2">
+    <link rel="stylesheet" href="assets/style.css?v=3.5">
 
     <!-- Firebase SDK (Compat Mode) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="assets/firebase-config.js?v=3.2"></script>
+    <script src="assets/firebase-config.js?v=3.5"></script>
 
     <style>
         :root {
@@ -417,17 +417,31 @@
             <div class="profile-edit-card">
                 <h3 style="font-family:'Cairo',sans-serif;font-size:20px;font-weight:800;color:#FFF;margin-bottom:20px;">تعديل معلومات الملف الشخصي</h3>
                 <form id="editProfileForm" onsubmit="handleSaveProfileUpdates(event)">
+                    <!-- Profile Avatar Upload Section -->
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">الصورة الشخصية (Avatar)</label>
+                        <div style="display:flex; align-items:center; gap:16px; background:#1E2A3A; padding:14px; border-radius:14px; border:1px solid rgba(255,255,255,0.1);">
+                            <div id="editAvatarPreview" style="width:68px; height:68px; border-radius:50%; background:#141E2E; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:2px solid var(--profile-cyan);">
+                                <span id="editAvatarInitial" style="font-size:24px; color:#FFF;">ك</span>
+                            </div>
+                            <div style="flex:1;">
+                                <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none;" onchange="handleAvatarFileSelect(event)">
+                                <button type="button" onclick="document.getElementById('avatarFileInput').click()" class="btn-profile btn-profile-cyan" style="font-size:12.5px; padding:7px 16px; margin-bottom:6px;">
+                                    📷 اختيار صورة من جهازك
+                                </button>
+                                <div style="font-size:11.5px; color:#94A3B8;">يدعم صور PNG, JPG, WebP حتى 5MB (تُضغط وتُحفظ تلقائياً بدون بطء)</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="inputEditPhoto">
+                    </div>
+
                     <div style="margin-bottom:18px;">
                         <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">الاسم الظاهر للجمهور *</label>
                         <input type="text" id="inputEditName" required class="fb-search-input" style="width:100%;height:44px;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 16px;color:#FFF;">
                     </div>
-                    <div style="margin-bottom:18px;">
+                    <div style="margin-bottom:24px;">
                         <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">النبذة الشخصية (Bio)</label>
                         <textarea id="inputEditBio" rows="3" class="fb-search-input" style="width:100%;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 16px;color:#FFF;resize:vertical;" placeholder="اكتب نبذة قصيرة عن نفسك واهتماماتك..."></textarea>
-                    </div>
-                    <div style="margin-bottom:24px;">
-                        <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#CBD5E1;">رابط الصورة الشخصية (Photo URL)</label>
-                        <input type="url" id="inputEditPhoto" class="fb-search-input" style="width:100%;height:44px;background:#1E2A3A;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 16px;color:#FFF;" placeholder="https://example.com/photo.jpg">
                     </div>
                     <div style="display:flex;gap:12px;justify-content:flex-end;">
                         <button type="button" onclick="switchProfileTab('posts')" class="btn-profile btn-profile-surface">إلغاء</button>
@@ -454,6 +468,57 @@
             setTimeout(() => { toast.style.display = "none"; }, 3500);
         }
 
+        // HTML5 Canvas Avatar Compression & Square Crop
+        function handleAvatarFileSelect(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showProfileToast("⚠️ يرجى اختيار ملف صورة صالح (PNG, JPG, WebP)");
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showProfileToast("⚠️ حجم الصورة يجب ألا يتجاوز 5 ميجابايت");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const size = 256;
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+
+                    const minDim = Math.min(img.width, img.height);
+                    const sx = (img.width - minDim) / 2;
+                    const sy = (img.height - minDim) / 2;
+
+                    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+                    let dataUrl = '';
+                    try {
+                        dataUrl = canvas.toDataURL('image/webp', 0.85);
+                    } catch (err) {
+                        dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    }
+
+                    document.getElementById("inputEditPhoto").value = dataUrl;
+
+                    const preview = document.getElementById("editAvatarPreview");
+                    if (preview) {
+                        preview.innerHTML = `<img src="${dataUrl}" alt="Preview" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                    }
+                    showProfileToast("تم اختيار وضغط الصورة بنجاح! اضغط 'حفظ التغييرات' لاعتمادها.");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // Listen for Auth changes
         window.addEventListener('manchorati-auth-changed', (e) => {
             const { user, profile } = e.detail;
@@ -471,13 +536,17 @@
             const urlParams = new URLSearchParams(window.location.search);
             const paramUid = urlParams.get('uid');
 
-            if (paramUid && authUser && paramUid !== authUser.uid) {
-                // Viewing someone else's profile
+            if (paramUid && (!authUser || paramUid !== authUser.uid)) {
+                // Public view of another author's profile
                 viewingUid = paramUid;
                 isOwnProfile = false;
-                document.getElementById("tabBtnEdit").style.display = "none";
+                const tabEdit = document.getElementById("tabBtnEdit");
+                if (tabEdit) tabEdit.style.display = "none";
+                const tabSaved = document.getElementById("tabBtnSaved");
+                if (tabSaved) tabSaved.style.display = "none";
+
                 document.getElementById("profileHeaderActions").innerHTML = `
-                    <button onclick="toggleFollowUser('${paramUid}')" class="btn-profile btn-profile-cyan">
+                    <button onclick="handleFollowAuthor('${paramUid}')" class="btn-profile btn-profile-cyan">
                         <span>+ متابعة الكاتب</span>
                     </button>
                 `;
@@ -486,19 +555,34 @@
                 // Viewing own profile
                 viewingUid = authUser.uid;
                 isOwnProfile = true;
+                const tabEdit = document.getElementById("tabBtnEdit");
+                if (tabEdit) tabEdit.style.display = "inline-flex";
+                const tabSaved = document.getElementById("tabBtnSaved");
+                if (tabSaved) tabSaved.style.display = "inline-flex";
+
                 populateProfileUI(authProfile || {
                     authorName: authUser.displayName || 'الكاتب',
                     authorUsername: 'user_' + authUser.uid.slice(0, 5),
                     authorBio: 'محب للكلمة الطيبة والاقتباسات الراقية في منشوراتي.',
                     authorBadge: 'كاتب جديد',
-                    authorStreak: 1
+                    authorStreak: 1,
+                    authorPhotoUrl: authUser.photoURL || ''
                 });
                 loadUserPosts(authUser.uid);
                 loadSavedQuotes();
             } else {
-                // Not logged in
-                window.location.href = "index.html";
+                // Protected route: unauthenticated guest trying to visit /profile.html
+                window.location.href = "index.html?action=login";
             }
+        }
+
+        function handleFollowAuthor(authorUid) {
+            if (!auth.currentUser) {
+                openLoginModal();
+                showProfileToast("يرجى تسجيل الدخول أولاً لمتابعة الكاتب!");
+                return;
+            }
+            showProfileToast("تمت متابعة الكاتب بنجاح! ستصلك إشعارات بمنشوراته الجديدة. 🌟");
         }
 
         async function loadOtherUserProfile(uid) {
@@ -525,10 +609,10 @@
             document.getElementById("statProfileLikesCount").textContent = data.totalLikes || 0;
             document.getElementById("statProfileStreak").textContent = `🔥 ${data.authorStreak || 1}`;
 
-            // Avatar
+            // Avatar Handling (support data:image/ and https://)
             const avatarWrap = document.getElementById("userAvatarWrap");
-            if (data.authorPhotoUrl && data.authorPhotoUrl.startsWith('http')) {
-                avatarWrap.innerHTML = `<img src="${data.authorPhotoUrl}" alt="${data.authorName}">`;
+            if (data.authorPhotoUrl && (data.authorPhotoUrl.startsWith('http') || data.authorPhotoUrl.startsWith('data:image'))) {
+                avatarWrap.innerHTML = `<img src="${data.authorPhotoUrl}" alt="${data.authorName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
             } else {
                 avatarWrap.innerHTML = `<span>${(data.authorName || 'ك')[0]}</span>`;
             }
@@ -538,6 +622,15 @@
                 document.getElementById("inputEditName").value = data.authorName || '';
                 document.getElementById("inputEditBio").value = data.authorBio || '';
                 document.getElementById("inputEditPhoto").value = data.authorPhotoUrl || '';
+
+                const editPreview = document.getElementById("editAvatarPreview");
+                if (editPreview) {
+                    if (data.authorPhotoUrl && (data.authorPhotoUrl.startsWith('http') || data.authorPhotoUrl.startsWith('data:image'))) {
+                        editPreview.innerHTML = `<img src="${data.authorPhotoUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    } else {
+                        editPreview.innerHTML = `<span id="editAvatarInitial" style="font-size:24px; color:#FFF;">${(data.authorName || 'ك')[0]}</span>`;
+                    }
+                }
             }
         }
 
@@ -654,14 +747,17 @@
 
         async function handleSaveProfileUpdates(e) {
             e.preventDefault();
-            if (!auth.currentUser) return;
+            if (!auth.currentUser) {
+                openLoginModal();
+                return;
+            }
             const name = document.getElementById("inputEditName").value.trim();
             const bio = document.getElementById("inputEditBio").value.trim();
             const photo = document.getElementById("inputEditPhoto").value.trim();
             const btn = document.getElementById("btnSaveProfile");
 
             btn.disabled = true;
-            btn.textContent = "جاري الحفظ...";
+            btn.textContent = "جاري الحفظ والمزامنة...";
 
             try {
                 const updates = {
@@ -670,14 +766,37 @@
                     authorPhotoUrl: photo
                 };
 
-                await db.collection('users').doc(auth.currentUser.uid).update(updates);
+                // 1. Update user document in Firestore
+                await db.collection('users').doc(auth.currentUser.uid).set(updates, { merge: true });
+                
+                // 2. Update Firebase Auth Profile
                 if (auth.currentUser.updateProfile) {
                     await auth.currentUser.updateProfile({ displayName: name, photoURL: photo });
                 }
 
+                // 3. Batch update past posts by this author so feed displays fresh avatar immediately
+                try {
+                    const snap = await db.collection('community_posts').where('authorId', '==', auth.currentUser.uid).limit(50).get();
+                    if (!snap.empty) {
+                        const batch = db.batch();
+                        snap.docs.forEach(d => {
+                            batch.update(d.ref, { authorName: name, authorPhotoUrl: photo });
+                        });
+                        await batch.commit();
+                    }
+                } catch (batchErr) {
+                    console.warn("Batch updating past posts avatar non-fatal error:", batchErr);
+                }
+
                 currentProfileData = { ...currentProfileData, ...updates };
                 populateProfileUI(currentProfileData);
-                showProfileToast("تم تحديث معلومات حسابك بنجاح! 🎉");
+                
+                // Dispatch auth change event to refresh navbar
+                window.dispatchEvent(new CustomEvent('manchorati-auth-changed', {
+                    detail: { user: auth.currentUser, profile: currentProfileData }
+                }));
+
+                showProfileToast("تم تحديث معلومات حسابك وصورتك الشخصية ومزامنتها بنجاح! 🎉");
                 switchProfileTab('posts');
             } catch (err) {
                 showProfileToast("تعذر حفظ التغييرات: " + err.message);

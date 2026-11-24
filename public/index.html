@@ -1921,13 +1921,13 @@ body {
     }
 }
     </style>
-    <link rel="stylesheet" href="assets/style.css?v=3.2">
+    <link rel="stylesheet" href="assets/style.css?v=3.5">
 
     <!-- Firebase SDK (Compat Mode) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="assets/firebase-config.js?v=3.2"></script>
+    <script src="assets/firebase-config.js?v=3.5"></script>
 </head>
 <body>
 
@@ -9661,6 +9661,78 @@ body {
         </div>
     </div>
 
+    <!-- Modal 1.5: Edit Post Modal -->
+    <div class="manchorati-modal-overlay" id="editPostModal" onclick="if(event.target === this) closeEditPostModal();">
+        <div class="manchorati-modal-box">
+            <div class="modal-header-bar">
+                <span class="modal-title-text">تعديل المنشور ✏️</span>
+                <button class="modal-close-btn" onclick="closeEditPostModal()">×</button>
+            </div>
+
+            <input type="hidden" id="editPostIdInput">
+
+            <textarea id="editPostTextarea" rows="4" placeholder="عدّل نص خاطرتك..." oninput="updateEditPostPreview()" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--divider-color); border-radius: 12px; padding: 12px; color: #FFFFFF; font-family: 'Tajawal', sans-serif; font-size: 14.5px; outline: none; resize: vertical; line-height: 1.6;"></textarea>
+
+            <!-- Real-time Live Preview Card -->
+            <div style="margin-top: 14px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; font-family: 'Cairo', sans-serif;">معاينة التعديلات:</div>
+                <div id="editPostPreviewCard" class="inner-quote-card" style="background: linear-gradient(135deg, #0B0F19, #1E293B); border: 1.5px solid #EAB308;">
+                    <p id="editPostPreviewText" class="quote-body-text" style="font-family: 'Tajawal', sans-serif; color: #F8FAFC; font-size: 15px;">هنا تظهر معاينة حية لمنشورك...</p>
+                </div>
+            </div>
+
+            <!-- Theme Picker -->
+            <div style="margin-top: 14px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; font-family: 'Cairo', sans-serif;">اختر مظهر البطاقة:</div>
+                <div class="theme-picker-row">
+                    <div class="theme-pill-chip" data-edittheme="card_luxury" onclick="selectEditPostTheme('card_luxury')" style="background: linear-gradient(135deg, #0B0F19, #1E293B);" title="فاخر ملكي"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_neon_cyber" onclick="selectEditPostTheme('card_neon_cyber')" style="background: linear-gradient(135deg, #091A28, #022C43);" title="نيون أزرق"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_sunset" onclick="selectEditPostTheme('card_sunset')" style="background: linear-gradient(135deg, #4A0E2E, #9A3412);" title="غروب ذهبي"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_crimson_brand" onclick="selectEditPostTheme('card_crimson_brand')" style="background: linear-gradient(135deg, #991B1B, #DC2626);" title="أحمر قرمزي"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_emerald" onclick="selectEditPostTheme('card_emerald')" style="background: linear-gradient(135deg, #064E3B, #047857);" title="زمرد أخضر"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_glass_royal" onclick="selectEditPostTheme('card_glass_royal')" style="background: linear-gradient(135deg, #1E1B4B, #312E81);" title="بنفسجي ملكي"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_ocean_breeze" onclick="selectEditPostTheme('card_ocean_breeze')" style="background: linear-gradient(135deg, #0F172A, #0369A1);" title="نسيم البحر"></div>
+                    <div class="theme-pill-chip" data-edittheme="card_classic_paper" onclick="selectEditPostTheme('card_classic_paper')" style="background: linear-gradient(135deg, #F6F0EA, #DFD2C0);" title="ورق كلاسيكي"></div>
+                </div>
+            </div>
+
+            <!-- Category Selector -->
+            <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between;">
+                <label style="font-size: 12.5px; font-weight: 700; color: var(--text-secondary); font-family: 'Cairo', sans-serif;">تحديد القسم:</label>
+                <select id="editPostCategorySelect" style="background: var(--bg-surface); border: 1px solid var(--divider-color); border-radius: 8px; color: #FFFFFF; font-family: 'Tajawal', sans-serif; padding: 6px 12px; font-size: 13px; outline: none;">
+                    <option value="خواطر عميقة">خواطر عميقة</option>
+                    <option value="حكم وأمثال">حكم وأمثال</option>
+                    <option value="حب وغرام">حب وغرام</option>
+                    <option value="تحفيز ونجاح">تحفيز ونجاح</option>
+                    <option value="شوق وحنين">شوق وحنين</option>
+                    <option value="إسلامية">إسلامية</option>
+                    <option value="صداقة">صداقة</option>
+                    <option value="أدب وشعر">أدب وشعر</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 18px;">
+                <button type="button" onclick="closeEditPostModal()" class="btn-browse-category" style="flex: 1; justify-content: center; padding: 10px; border-radius: var(--radius-pill); font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;">إلغاء</button>
+                <button type="button" id="btnSubmitEditPost" onclick="submitEditPost()" style="flex: 2; background: #38BDF8; color: #0B131F; border: none; padding: 12px; border-radius: var(--radius-pill); font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 14px; cursor: pointer; transition: var(--transition);">
+                    حفظ التعديلات ✔️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1.6: Post Options Menu Modal (Replaces native prompt/confirm) -->
+    <div class="manchorati-modal-overlay" id="postOptionsMenuModal" onclick="if(event.target === this) closePostOptionsMenu();">
+        <div class="manchorati-modal-box" style="max-width: 360px; padding: 18px 20px;">
+            <div class="modal-header-bar" style="margin-bottom: 14px;">
+                <span class="modal-title-text" id="postOptionsModalTitle">خيارات المنشور</span>
+                <button class="modal-close-btn" onclick="closePostOptionsMenu()">×</button>
+            </div>
+            <div id="postOptionsModalList" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically based on user ownership & role -->
+            </div>
+        </div>
+    </div>
+
     <!-- Modal 2: Story Viewer Modal -->
     <div class="manchorati-modal-overlay" id="storyViewerModal">
         <div class="story-viewer-content" id="storyViewerContentBox">
@@ -10198,11 +10270,23 @@ function renderFeed() {
             </div>
 
             <!-- Facebook Inline Comments Drawer -->
-            <div class="card-comments-drawer" id="comments-drawer-${post.id}" style="display:none;">
-                <div class="comment-input-row">
-                    <input type="text" class="comment-text-box" id="comment-input-${post.id}" placeholder="اكتب تعليقاً على منشور ${escapeHtml(post.authorName)}..." onkeydown="if(event.key==='Enter') submitComment('${post.id}')">
+            <div class="card-comments-drawer" id="comments-drawer-${post.id}" style="display:none; padding-top:12px;">
+                ${currentAuthUser ? `
+                <div class="comment-input-row" style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--brand-primary-blue); color:#FFF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; overflow:hidden;">
+                        ${(currentProfileData?.authorPhotoUrl || currentAuthUser.photoURL) ? `<img src="${currentProfileData?.authorPhotoUrl || currentAuthUser.photoURL}" alt="avatar" style="width:100%;height:100%;object-fit:cover;">` : `<span>${(currentProfileData?.authorName || currentAuthUser.displayName || 'أ')[0]}</span>`}
+                    </div>
+                    <input type="text" class="comment-text-box" id="comment-input-${post.id}" placeholder="اكتب تعليقاً على منشور ${escapeHtml(post.authorName)}..." onkeydown="if(event.key==='Enter') submitComment('${post.id}')" style="flex:1;">
                     <button class="btn-send-comment" onclick="submitComment('${post.id}')">إرسال</button>
                 </div>
+                ` : `
+                <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px dashed var(--divider-color); margin-bottom:12px;">
+                    <button type="button" onclick="openLoginModal()" class="btn-browse-category" style="margin:auto; font-size:12.5px; font-weight:700; gap:6px;">
+                        <span>💬</span>
+                        <span>سجّل الدخول للمشاركة بالتعليق</span>
+                    </button>
+                </div>
+                `}
                 <div class="comments-list" id="comments-list-${post.id}">
                     ${renderExistingCommentsHtml(post.id)}
                 </div>
@@ -10229,15 +10313,36 @@ function renderExistingCommentsHtml(postId) {
     if (comments.length === 0) {
         return `<p style="font-size: 12.5px; color: var(--text-faint); text-align: center; padding: 6px;">كن أول من يترك تعليقاً في المجتمع ✨</p>`;
     }
-    return comments.map(c => `
-        <div style="display:flex; gap:10px; margin-bottom:8px; align-items:flex-start;">
-            <div style="width:28px; height:28px; border-radius:50%; background:var(--brand-primary-blue); color:#FFF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">${(c.author || 'ك')[0]}</div>
-            <div style="background:var(--bg-surface); padding:8px 12px; border-radius:12px; flex:1;">
-                <div style="font-family:'Cairo', sans-serif; font-size:12px; font-weight:700; color:#FFFFFF;">${escapeHtml(c.author)} <span style="font-size:10px; color:var(--text-faint); font-weight:normal;">• ${c.time || 'الآن'}</span></div>
-                <div style="font-size:13px; color:var(--text-primary); margin-top:2px;">${escapeHtml(c.text)}</div>
+    return comments.map(c => {
+        const isCommentOwner = currentAuthUser && currentAuthUser.uid === c.authorId;
+        const canDeleteComment = isCommentOwner || isCurrentAdmin;
+        const timeAgo = formatTimeAgo(c.timestamp || Date.now());
+
+        let avatarContent = `<span>${(c.authorName || 'ك')[0]}</span>`;
+        if (c.authorPhotoUrl && (c.authorPhotoUrl.startsWith('http') || c.authorPhotoUrl.startsWith('data:'))) {
+            avatarContent = `<img src="${escapeHtml(c.authorPhotoUrl)}" alt="${escapeHtml(c.authorName)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        }
+
+        return `
+            <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+                <div style="width:30px; height:30px; border-radius:50%; background:var(--brand-primary-blue); color:#FFF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; overflow:hidden;">
+                    ${avatarContent}
+                </div>
+                <div style="background:var(--bg-surface); padding:8px 12px; border-radius:12px; flex:1; border:1px solid var(--divider-color);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
+                        <span style="font-family:'Cairo', sans-serif; font-size:12.5px; font-weight:700; color:#FFFFFF;">${escapeHtml(c.authorName || 'كاتب')}</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:10.5px; color:var(--text-faint);">${timeAgo}</span>
+                            ${canDeleteComment ? `
+                                <button onclick="deleteCommentFromFeed('${postId}', '${c.id}')" title="حذف التعليق" style="background:none; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:0 2px;">✕</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div style="font-size:13px; color:var(--text-primary); line-height:1.5;">${escapeHtml(c.content || c.text || '')}</div>
+                </div>
             </div>
-        </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
 // React to Post
@@ -10267,45 +10372,98 @@ function triggerDoubleTapLike(postId) {
     reactToPost(postId, 'LOVE');
 }
 
-// Submit Comment
-function submitComment(postId) {
+// Comments Toggle & Firestore Loader
+async function toggleCommentsDrawer(postId) {
+    const drawer = document.getElementById(`comments-drawer-${postId}`);
+    if (!drawer) return;
+    const isOpening = drawer.style.display === "none";
+    drawer.style.display = isOpening ? "block" : "none";
+
+    if (isOpening) {
+        await loadCommentsForFeedPost(postId);
+    }
+}
+
+async function loadCommentsForFeedPost(postId) {
+    const listEl = document.getElementById(`comments-list-${postId}`);
+    if (!listEl) return;
+
+    try {
+        const comments = await fetchCommentsForPost(postId);
+        postCommentsMap[postId] = comments;
+        listEl.innerHTML = renderExistingCommentsHtml(postId);
+
+        const countEl = document.getElementById(`comment-count-${postId}`);
+        if (countEl) countEl.textContent = comments.length;
+    } catch (err) {
+        console.warn("Could not load comments from Firestore:", err);
+    }
+}
+
+// Submit Comment with Real Firestore Persistence
+async function submitComment(postId) {
+    if (!currentAuthUser) {
+        openLoginModal();
+        showAppToast("يرجى تسجيل الدخول أولاً لإضافة تعليقك! 💬");
+        return;
+    }
+
     const input = document.getElementById(`comment-input-${postId}`);
     if (!input) return;
     const val = input.value.trim();
     if (!val) return;
 
-    if (!postCommentsMap[postId]) {
-        postCommentsMap[postId] = [];
+    input.disabled = true;
+
+    try {
+        const newComment = await addCommentToFirestore(postId, val);
+        input.value = "";
+
+        if (!postCommentsMap[postId]) {
+            postCommentsMap[postId] = [];
+        }
+        postCommentsMap[postId].push(newComment);
+
+        const listEl = document.getElementById(`comments-list-${postId}`);
+        if (listEl) {
+            listEl.innerHTML = renderExistingCommentsHtml(postId);
+        }
+
+        const counter = document.getElementById(`comment-count-${postId}`);
+        if (counter) {
+            counter.textContent = postCommentsMap[postId].length;
+        }
+
+        showAppToast("تمت إضافة تعليقك بنجاح! 💬");
+    } catch (err) {
+        console.error("Submit comment error:", err);
+        showAppToast("تعذر إرسال التعليق: " + err.message);
+    } finally {
+        input.disabled = false;
+        input.focus();
     }
-
-    postCommentsMap[postId].push({
-        author: 'أنا',
-        text: val,
-        time: 'الآن'
-    });
-
-    localStorage.setItem("manchorati_post_comments", JSON.stringify(postCommentsMap));
-    input.value = "";
-
-    const list = document.getElementById(`comments-list-${postId}`);
-    if (list) {
-        list.innerHTML = renderExistingCommentsHtml(postId);
-    }
-
-    const counter = document.getElementById(`comment-count-${postId}`);
-    if (counter) {
-        const post = communityPosts.find(p => p.id === postId);
-        const total = (post ? (post.commentsCount || 0) : 0) + postCommentsMap[postId].length;
-        counter.textContent = total;
-    }
-
-    showAppToast("تمت إضافة تعليقك بنجاح! 💬");
 }
 
-function toggleCommentsDrawer(postId) {
-    const drawer = document.getElementById(`comments-drawer-${postId}`);
-    if (!drawer) return;
-    drawer.style.display = drawer.style.display === "none" ? "block" : "none";
+async function deleteCommentFromFeed(postId, commentId) {
+    if (!confirm("هل أنت متأكد من حذف هذا التعليق؟")) return;
+    try {
+        await deleteCommentFromFirestore(postId, commentId);
+        if (postCommentsMap[postId]) {
+            postCommentsMap[postId] = postCommentsMap[postId].filter(c => c.id !== commentId);
+        }
+        const listEl = document.getElementById(`comments-list-${postId}`);
+        if (listEl) {
+            listEl.innerHTML = renderExistingCommentsHtml(postId);
+        }
+        const counter = document.getElementById(`comment-count-${postId}`);
+        if (counter && postCommentsMap[postId]) {
+            counter.textContent = postCommentsMap[postId].length;
+        }
+        showAppToast("تم حذف التعليق بنجاح.");
+    } catch (err) {
+        console.error("Delete comment error:", err);
+        showAppToast("تعذر حذف التعليق: " + err.message);
+    }
 }
 
 // Bookmark / Save
@@ -10347,24 +10505,70 @@ function copyPostText(postId) {
     });
 }
 
+// Clean Post Options Modal (No prompt or confirm)
 function openPostOptionsMenu(postId) {
     const post = communityPosts.find(p => p.id === postId);
     if (!post) return;
-    const canDelete = isCurrentAdmin || (currentAuthUser && currentAuthUser.uid === post.authorId);
-    
-    const choice = confirm(`خيارات منشور "${post.authorName}":\n\n- اضغط [موافق OK] لنسخ نص المنشور إلى الحافظة 📋\n- اضغط [إلغاء Cancel] للخيارات المتقدمة (إبلاغ، استوديو${canDelete ? '، حذف' : ''})`);
-    if (choice) {
-        copyPostText(postId);
-    } else {
-        const action = prompt(`اختر الإجراء المناسب:\n1. إبلاغ الإدارة عن مخالفة أو محتوى غير لائق 🚨\n2. فتح وتصميم في استوديو البطاقات 🎨\n${canDelete ? '3. حذف المنشور نهائياً 🗑️\n' : ''}\nاكتب الرقم (1 أو 2${canDelete ? ' أو 3' : ''}):`);
-        if (action === '1') {
-            promptReportPost(postId);
-        } else if (action === '2') {
-            openStudioWithPost(postId);
-        } else if (action === '3' && canDelete) {
-            deleteCommunityPostFromFeed(postId);
-        }
+
+    const modal = document.getElementById("postOptionsMenuModal");
+    const title = document.getElementById("postOptionsModalTitle");
+    const list = document.getElementById("postOptionsModalList");
+    if (!modal || !list) return;
+
+    title.textContent = `منشور ${post.authorName || 'الكاتب'}`;
+
+    const isOwner = Boolean(currentAuthUser && currentAuthUser.uid === post.authorId);
+    const canDelete = isOwner || isCurrentAdmin;
+
+    let itemsHtml = `
+        <button class="btn-browse-category" onclick="copyPostText('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px;">
+            <span>📋</span>
+            <span>نسخ نص المنشور إلى الحافظة</span>
+        </button>
+        <button class="btn-browse-category" onclick="openStudioWithPost('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px;">
+            <span>🎨</span>
+            <span>تصميم في استوديو البطاقات</span>
+        </button>
+        <button class="btn-browse-category" onclick="sharePost('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px;">
+            <span>🔗</span>
+            <span>مشاركة الرابط</span>
+        </button>
+    `;
+
+    if (isOwner) {
+        itemsHtml = `
+            <button class="btn-browse-category" onclick="openEditPostModal('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px; background:rgba(56,189,248,0.1); border-color:#38BDF8; color:#38BDF8; font-weight:700;">
+                <span>✏️</span>
+                <span>تعديل المنشور</span>
+            </button>
+        ` + itemsHtml;
     }
+
+    if (canDelete) {
+        itemsHtml += `
+            <button class="btn-browse-category" onclick="deleteCommunityPostFromFeed('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px; background:rgba(239,68,68,0.1); border-color:#EF4444; color:#EF4444; font-weight:700;">
+                <span>🗑️</span>
+                <span>حذف المنشور نهائياً</span>
+            </button>
+        `;
+    }
+
+    if (!isOwner) {
+        itemsHtml += `
+            <button class="btn-browse-category" onclick="promptReportPost('${postId}'); closePostOptionsMenu();" style="width:100%; justify-content:flex-start; padding:10px 14px; gap:10px; font-size:13.5px; color:#F59E0B;">
+                <span>🚨</span>
+                <span>إبلاغ الإدارة عن مخالفة</span>
+            </button>
+        `;
+    }
+
+    list.innerHTML = itemsHtml;
+    modal.classList.add("show");
+}
+
+function closePostOptionsMenu() {
+    const modal = document.getElementById("postOptionsMenuModal");
+    if (modal) modal.classList.remove("show");
 }
 
 async function promptReportPost(postId) {
@@ -10381,15 +10585,24 @@ async function promptReportPost(postId) {
 }
 
 async function deleteCommunityPostFromFeed(postId) {
-    if (!confirm("هل أنت متأكد من حذف هذا المنشور نهائياً من مجتمع منشوراتي؟")) return;
+    const post = communityPosts.find(p => p.id === postId);
+    if (!post) return;
+
+    const isOwner = Boolean(currentAuthUser && currentAuthUser.uid === post.authorId);
+    if (!isOwner && !isCurrentAdmin) {
+        showAppToast("عذراً، لا تملك صلاحية حذف هذا المنشور.");
+        return;
+    }
+
+    if (!confirm(`هل أنت متأكد من حذف منشور "${post.authorName}" نهائياً من مجتمع منشوراتي؟`)) return;
+
     try {
-        await db.collection('community_posts').doc(postId).delete();
+        await deletePostFromFirestore(postId);
         communityPosts = communityPosts.filter(p => p.id !== postId);
-        userCustomPosts = userCustomPosts.filter(p => p.id !== postId);
-        localStorage.setItem("manchorati_user_posts", JSON.stringify(userCustomPosts));
         renderFeed();
         showAppToast("تم حذف المنشور بنجاح! 🗑️");
     } catch (err) {
+        console.error("Delete post error:", err);
         showAppToast("تعذر حذف المنشور: " + err.message);
     }
 }
@@ -10400,10 +10613,124 @@ function openStudioWithPost(postId) {
     window.location.href = `studio.html?quote=${encodeURIComponent(post.content)}&author=${encodeURIComponent(post.authorName)}&bg=${encodeURIComponent(post.bgId || 'card_luxury')}`;
 }
 
-// Create Post Modal State
+// Edit Post Modal State & Controller
+let activeEditingPostId = null;
+let activeEditPostTheme = 'card_luxury';
+
+function openEditPostModal(postId) {
+    const post = communityPosts.find(p => p.id === postId);
+    if (!post) return;
+
+    const isOwner = Boolean(currentAuthUser && currentAuthUser.uid === post.authorId);
+    if (!isOwner && !isCurrentAdmin) {
+        showAppToast("عذراً، ليس لديك صلاحية تعديل هذا المنشور.");
+        return;
+    }
+
+    activeEditingPostId = postId;
+    activeEditPostTheme = post.bgId || 'card_luxury';
+
+    const modal = document.getElementById("editPostModal");
+    const textarea = document.getElementById("editPostTextarea");
+    const catSelect = document.getElementById("editPostCategorySelect");
+    const idInput = document.getElementById("editPostIdInput");
+
+    if (idInput) idInput.value = postId;
+    if (textarea) textarea.value = post.content || '';
+    if (catSelect && post.tag) catSelect.value = post.tag;
+
+    selectEditPostTheme(activeEditPostTheme);
+    updateEditPostPreview();
+
+    if (modal) modal.classList.add("show");
+}
+
+function closeEditPostModal() {
+    const modal = document.getElementById("editPostModal");
+    if (modal) modal.classList.remove("show");
+    activeEditingPostId = null;
+}
+
+function selectEditPostTheme(themeKey) {
+    activeEditPostTheme = themeKey;
+    document.querySelectorAll("[data-edittheme]").forEach(chip => {
+        chip.classList.toggle("selected", chip.getAttribute("data-edittheme") === themeKey);
+    });
+    updateEditPostPreview();
+}
+
+function updateEditPostPreview() {
+    const textarea = document.getElementById("editPostTextarea");
+    const previewBox = document.getElementById("editPostPreviewCard");
+    const previewText = document.getElementById("editPostPreviewText");
+    if (!textarea || !previewBox || !previewText) return;
+
+    const val = textarea.value.trim();
+    previewText.textContent = val || "هنا تظهر معاينة حية لمنشورك...";
+    const tpl = getTemplate(activeEditPostTheme);
+    previewBox.style.background = tpl.bg;
+    previewBox.style.borderColor = tpl.border;
+    previewText.style.color = tpl.text;
+    previewText.style.fontFamily = `'${tpl.font}', sans-serif`;
+}
+
+async function submitEditPost() {
+    if (!activeEditingPostId) return;
+    const textarea = document.getElementById("editPostTextarea");
+    const catSelect = document.getElementById("editPostCategorySelect");
+    const btn = document.getElementById("btnSubmitEditPost");
+    if (!textarea) return;
+
+    const text = textarea.value.trim();
+    if (!text) {
+        showAppToast("الرجاء إدخال نص المنشور أولاً");
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = "جاري الحفظ والمزامنة...";
+    }
+
+    try {
+        const updateData = {
+            content: text,
+            bgId: activeEditPostTheme,
+            fontId: getTemplate(activeEditPostTheme).font.toLowerCase(),
+            textColor: '#FFFFFF',
+            tag: catSelect ? catSelect.value : 'خواطر عميقة'
+        };
+
+        await editPostInFirestore(activeEditingPostId, updateData);
+
+        const idx = communityPosts.findIndex(p => p.id === activeEditingPostId);
+        if (idx !== -1) {
+            communityPosts[idx] = { ...communityPosts[idx], ...updateData, isEdited: true };
+        }
+
+        closeEditPostModal();
+        renderFeed();
+        showAppToast("تم حفظ وتحديث المنشور في المجتمع بنجاح! ✏️");
+    } catch (err) {
+        console.error("Edit post error:", err);
+        showAppToast("تعذر تعديل المنشور: " + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "حفظ التعديلات ✔️";
+        }
+    }
+}
+
+// Create Post Modal State & Controller
 let activeCreatePostTheme = 'card_luxury';
 
 function openCreatePostModal(prefilledTopic = '') {
+    if (!currentAuthUser) {
+        openLoginModal();
+        showAppToast("يرجى تسجيل الدخول أولاً لتتمكن من إنشاء منشور في المجتمع! ✨");
+        return;
+    }
     const modal = document.getElementById("createPostModal");
     if (!modal) return;
     modal.classList.add("show");
@@ -10449,7 +10776,7 @@ async function submitNewCommunityPost() {
 
     const text = textarea.value.trim();
     if (!text) {
-        alert("الرجاء كتابة نص المنشور أولاً");
+        showAppToast("الرجاء كتابة نص المنشور أولاً");
         return;
     }
 
@@ -10460,25 +10787,36 @@ async function submitNewCommunityPost() {
     }
 
     const postData = {
+        authorId: currentAuthUser.uid,
+        authorName: currentProfileData?.authorName || currentAuthUser.displayName || 'الكاتب',
+        authorUsername: currentProfileData?.authorUsername || ('user_' + currentAuthUser.uid.slice(0, 5)),
+        authorPhotoUrl: currentProfileData?.authorPhotoUrl || currentAuthUser.photoURL || '',
+        authorBadge: currentProfileData?.authorBadge || 'كاتب جديد',
+        authorStreak: currentProfileData?.authorStreak || 1,
         content: text,
         bgId: activeCreatePostTheme,
         fontId: getTemplate(activeCreatePostTheme).font.toLowerCase(),
         textColor: '#FFFFFF',
         tag: catSelect ? catSelect.value : 'خواطر عميقة',
-        mood: 'CHILL'
+        mood: 'CHILL',
+        likesCount: 0,
+        commentsCount: 0,
+        timestamp: Date.now()
     };
 
     try {
         const publishedPost = await publishPostToFirestore(postData);
         communityPosts.unshift(publishedPost);
-        userCustomPosts.unshift(publishedPost);
-        localStorage.setItem("manchorati_user_posts", JSON.stringify(userCustomPosts));
 
         textarea.value = "";
         closeCreatePostModal();
         renderFeed();
         showAppToast("تم نشر خاطرتك في مجتمع منشوراتي ومزامنتها فوراً مع جميع الهواتف! 🚀");
     } catch (err) {
+        console.error("Publish error:", err);
+        showAppToast("تعذر نشر المنشور: " + err.message);
+    }
+}
         console.error("Publish error:", err);
     }
 }
@@ -10714,6 +11052,5 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
     </script>
-    <script src="assets/app.js"></script>
 </body>
 </html>
