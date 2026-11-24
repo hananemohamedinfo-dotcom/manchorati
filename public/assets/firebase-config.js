@@ -204,6 +204,19 @@ async function signInWithGoogle() {
         `;
     }
 
+    // Failsafe timer to unlock button if popup hangs or is closed without callback
+    const safetyTimer = setTimeout(() => {
+        if (isGoogleSignInInProgress) {
+            isGoogleSignInInProgress = false;
+            if (gBtn) {
+                gBtn.disabled = false;
+                gBtn.style.opacity = "1";
+                gBtn.style.cursor = "pointer";
+                if (originalHtml) gBtn.innerHTML = originalHtml;
+            }
+        }
+    }, 12000);
+
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
@@ -211,14 +224,20 @@ async function signInWithGoogle() {
 
     try {
         const result = await auth.signInWithPopup(provider);
+        clearTimeout(safetyTimer);
         showAppToast(`مرحباً بك مجدداً ${result.user.displayName || ''}! 🎉`);
         closeLoginModal();
         return result.user;
     } catch (err) {
-        console.error("Google sign in error:", err);
-        // Harmless cancellations (e.g. user closed popup or duplicate click superseded)
-        if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-            console.log("Google popup was closed or superseded.");
+        clearTimeout(safetyTimer);
+        console.warn("Google sign in catch handled:", err);
+        // Harmless cancellations: user closed popup or duplicate popup was cancelled
+        if (
+            err.code === 'auth/popup-closed-by-user' || 
+            err.code === 'auth/cancelled-popup-request' ||
+            err.code === 'auth/user-cancelled'
+        ) {
+            console.log("Google popup cancelled or closed cleanly by user. No error displayed.");
             return null;
         } else if (err.code === 'auth/popup-blocked') {
             showAuthError("⚠️ المتصفح حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة (Pop-ups) من شريط العنوان للمتابعة.");
@@ -229,6 +248,7 @@ async function signInWithGoogle() {
         }
         return null;
     } finally {
+        clearTimeout(safetyTimer);
         isGoogleSignInInProgress = false;
         if (gBtn) {
             gBtn.disabled = false;
@@ -475,8 +495,8 @@ function ensureLoginModalInDOM() {
     }
 
     const modalHtml = `
-    <div id="manchoratiLoginModal" onclick="if(event.target === this) closeLoginModal();" style="display:none; position:fixed; inset:0; background:rgba(4,9,16,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:99999; overflow-y:auto; overflow-x:hidden; padding:16px 12px; box-sizing:border-box; align-items:flex-start; justify-content:center;">
-        <div class="manchorati-auth-card" style="background:#0F1A2A; border:1px solid #1E314B; border-radius:18px; max-width:420px; width:100%; margin:auto; padding:18px 20px; box-shadow:0 16px 50px rgba(0,0,0,0.75); position:relative; text-align:right; font-family:'Tajawal', sans-serif; box-sizing:border-box; max-height:calc(100vh - 32px); overflow-y:auto; overscroll-behavior:contain;">
+    <div id="manchoratiLoginModal" onclick="if(event.target === this) closeLoginModal();" style="display:none; position:fixed; inset:0; background:rgba(4,9,16,0.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:99999; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; padding:20px 12px; box-sizing:border-box;">
+        <div class="manchorati-auth-card" style="background:#0F1A2A; border:1px solid #1E314B; border-radius:18px; max-width:430px; width:100%; margin:min(4vh, 24px) auto; padding:18px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.8); position:relative; text-align:right; font-family:'Tajawal', sans-serif; box-sizing:border-box;">
             <button type="button" onclick="closeLoginModal()" title="إغلاق" style="position:absolute; top:12px; left:12px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid #1E314B; color:#94A3B8; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; transition:all 0.2s;">✕</button>
             
             <!-- Compact Header -->
@@ -492,7 +512,7 @@ function ensureLoginModalInDOM() {
             <div id="authErrorMessage" style="display:none; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:12px; font-weight:700; padding:8px 12px; border-radius:8px; margin-bottom:10px; text-align:center; line-height:1.4;"></div>
 
             <!-- Google One-Click Login -->
-            <button type="button" id="btnGoogleAuth" onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px; background:#172437; border:1px solid #1E314B; border-radius:8px; color:#FFFFFF; font-size:12.5px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:10px;">
+            <button type="button" id="btnGoogleAuth" onclick="signInWithGoogle()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:9px 12px; background:#172437; border:1px solid #1E314B; border-radius:8px; color:#FFFFFF; font-size:12.5px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-bottom:10px;">
                 <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:currentColor;"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
                 <span>المتابعة بـ Google (سريع)</span>
             </button>
@@ -504,7 +524,7 @@ function ensureLoginModalInDOM() {
             </div>
 
             <!-- Tab Switcher: Sign in / Sign up -->
-            <div style="display:flex; background:#172437; border-radius:8px; padding:3px; margin-bottom:10px; border:1px solid #1E314B;">
+            <div id="authTabsContainer" style="display:flex; background:#172437; border-radius:8px; padding:3px; margin-bottom:10px; border:1px solid #1E314B;">
                 <button type="button" id="tabAuthLoginBtn" onclick="switchAuthTab('login')" style="flex:1; padding:6px; border:none; border-radius:6px; background:#38BDF8; color:#0B131F; font-weight:700; font-size:12px; cursor:pointer; transition:all 0.2s; font-family:'Tajawal', sans-serif;">تسجيل الدخول</button>
                 <button type="button" id="tabAuthSignupBtn" onclick="switchAuthTab('signup')" style="flex:1; padding:6px; border:none; border-radius:6px; background:transparent; color:#94A3B8; font-weight:700; font-size:12px; cursor:pointer; transition:all 0.2s; font-family:'Tajawal', sans-serif;">حساب جديد</button>
             </div>
@@ -515,9 +535,12 @@ function ensureLoginModalInDOM() {
                     <label style="display:block; font-size:11px; font-weight:700; color:#CBD5E1; margin-bottom:3px;">البريد الإلكتروني</label>
                     <input type="email" id="loginFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:7px 11px; color:#FFF; font-size:12.5px; outline:none; transition:border 0.2s;">
                 </div>
-                <div style="margin-bottom:12px;">
+                <div style="margin-bottom:6px;">
                     <label style="display:block; font-size:11px; font-weight:700; color:#CBD5E1; margin-bottom:3px;">كلمة المرور</label>
                     <input type="password" id="loginFormPassword" required placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:7px 11px; color:#FFF; font-size:12.5px; outline:none; transition:border 0.2s;">
+                </div>
+                <div style="text-align:left; margin-bottom:12px;">
+                    <a href="#" onclick="switchAuthTab('reset'); return false;" style="font-size:11px; color:#38BDF8; text-decoration:none; font-weight:600;">نسيت كلمة المرور؟</a>
                 </div>
                 <button type="submit" id="btnLoginSubmit" style="width:100%; padding:9px; background:#38BDF8; color:#0B131F; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;">دخول</button>
             </form>
@@ -542,46 +565,40 @@ function ensureLoginModalInDOM() {
                     <label style="display:block; font-size:11px; font-weight:700; color:#CBD5E1; margin-bottom:3px;">كلمة المرور (6 أحرف فأكثر) *</label>
                     <input type="password" id="signupFormPassword" required minlength="6" placeholder="••••••••" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:7px 10px; color:#FFF; font-size:12.5px; outline:none; transition:border 0.2s;">
                 </div>
-                <button type="submit" id="btnSignupSubmit" style="width:100%; padding:9px; background:#10B981; color:#FFFFFF; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;">إنشاء الحساب فوراً</button>
+                <button type="submit" id="btnSignupSubmit" style="width:100%; padding:9px; background:#10B981; color:#FFFFFF; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(16,185,129,0.3);">إنشاء الحساب فوراً</button>
+            </form>
+
+            <!-- Password Reset Form (Hidden by default) -->
+            <form id="firebaseResetForm" onsubmit="handleFirebaseResetForm(event)" style="display:none;">
+                <div style="margin-bottom:10px;">
+                    <label style="display:block; font-size:11px; font-weight:700; color:#CBD5E1; margin-bottom:3px;">البريد الإلكتروني المسجل للحساب</label>
+                    <input type="email" id="resetFormEmail" required placeholder="name@example.com" style="width:100%; box-sizing:border-box; background:#172437; border:1px solid #1E314B; border-radius:8px; padding:7px 11px; color:#FFF; font-size:12.5px; outline:none; transition:border 0.2s;">
+                </div>
+                <div id="authSuccessMessage" style="display:none; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#6EE7B7; font-size:11.5px; font-weight:700; padding:8px 10px; border-radius:8px; margin-bottom:10px; text-align:center; line-height:1.4;"></div>
+                <button type="submit" id="btnResetSubmit" style="width:100%; padding:9px; background:#0284C7; color:#FFFFFF; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s; margin-bottom:10px;">إرسال رابط الاستعادة 📬</button>
+                <div style="text-align:center;">
+                    <a href="#" onclick="switchAuthTab('login'); return false;" style="font-size:11.5px; color:#94A3B8; text-decoration:none; font-weight:600;">العودة إلى تسجيل الدخول</a>
+                </div>
             </form>
         </div>
     </div>
     `;
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    // Prevent wheel scroll bleed to the main background feed
-    modalEl = document.getElementById("manchoratiLoginModal");
-    if (modalEl) {
-        modalEl.addEventListener("wheel", (e) => {
-            const card = modalEl.querySelector(".manchorati-auth-card");
-            if (!card) {
-                e.preventDefault();
-                return;
-            }
-            const isScrollable = card.scrollHeight > card.clientHeight;
-            if (!isScrollable) {
-                e.preventDefault();
-            } else {
-                const atTop = card.scrollTop <= 0 && e.deltaY < 0;
-                const atBottom = (card.scrollTop + card.clientHeight >= card.scrollHeight - 1) && e.deltaY > 0;
-                if (atTop || atBottom) {
-                    e.preventDefault();
-                }
-            }
-        }, { passive: false });
-    }
 }
 
 function openLoginModal() {
     ensureLoginModalInDOM();
     const m = document.getElementById("manchoratiLoginModal");
     if (m) {
-        m.style.display = "flex";
-        document.documentElement.classList.add("modal-open");
-        document.body.classList.add("modal-open");
+        m.style.display = "block";
+        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        document.body.dataset.authModalScrollY = scrollY;
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = "100%";
         document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
+        document.documentElement.classList.add("modal-open");
     }
 }
 
@@ -589,10 +606,13 @@ function closeLoginModal() {
     const m = document.getElementById("manchoratiLoginModal");
     if (m) {
         m.style.display = "none";
-        document.documentElement.classList.remove("modal-open");
-        document.body.classList.remove("modal-open");
+        const scrollY = parseInt(document.body.dataset.authModalScrollY || "0", 10);
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
         document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
+        document.documentElement.classList.remove("modal-open");
+        window.scrollTo(0, scrollY);
     }
 }
 
@@ -605,26 +625,122 @@ if (!window._manchoratiEscKeyRegistered) {
 
 function switchAuthTab(tab) {
     clearAuthError();
+    const successMsg = document.getElementById("authSuccessMessage");
+    if (successMsg) successMsg.style.display = "none";
+
     const loginForm = document.getElementById("firebaseLoginForm");
     const signupForm = document.getElementById("firebaseSignupForm");
+    const resetForm = document.getElementById("firebaseResetForm");
+    const tabsContainer = document.getElementById("authTabsContainer");
     const loginBtn = document.getElementById("tabAuthLoginBtn");
     const signupBtn = document.getElementById("tabAuthSignupBtn");
 
     if (tab === 'login') {
-        loginForm.style.display = "block";
-        signupForm.style.display = "none";
-        loginBtn.style.background = "#38BDF8";
-        loginBtn.style.color = "#0B131F";
-        signupBtn.style.background = "transparent";
-        signupBtn.style.color = "#94A3B8";
-    } else {
-        loginForm.style.display = "none";
-        signupForm.style.display = "block";
-        signupBtn.style.background = "#10B981";
-        signupBtn.style.color = "#FFFFFF";
-        loginBtn.style.background = "transparent";
-        loginBtn.style.color = "#94A3B8";
+        if (tabsContainer) tabsContainer.style.display = "flex";
+        if (loginForm) loginForm.style.display = "block";
+        if (signupForm) signupForm.style.display = "none";
+        if (resetForm) resetForm.style.display = "none";
+        if (loginBtn) { loginBtn.style.background = "#38BDF8"; loginBtn.style.color = "#0B131F"; }
+        if (signupBtn) { signupBtn.style.background = "transparent"; signupBtn.style.color = "#94A3B8"; }
+    } else if (tab === 'signup') {
+        if (tabsContainer) tabsContainer.style.display = "flex";
+        if (loginForm) loginForm.style.display = "none";
+        if (signupForm) signupForm.style.display = "block";
+        if (resetForm) resetForm.style.display = "none";
+        if (signupBtn) { signupBtn.style.background = "#10B981"; signupBtn.style.color = "#FFFFFF"; }
+        if (loginBtn) { loginBtn.style.background = "transparent"; loginBtn.style.color = "#94A3B8"; }
+    } else if (tab === 'reset') {
+        if (tabsContainer) tabsContainer.style.display = "none";
+        if (loginForm) loginForm.style.display = "none";
+        if (signupForm) signupForm.style.display = "none";
+        if (resetForm) resetForm.style.display = "block";
     }
+}
+
+async function handleFirebaseResetForm(e) {
+    e.preventDefault();
+    const email = document.getElementById("resetFormEmail").value;
+    await sendPasswordReset(email);
+}
+
+/**
+ * Send Password Reset Email via Firebase Auth
+ */
+async function sendPasswordReset(email) {
+    clearAuthError();
+    if (!email || !email.trim()) {
+        showAuthError("يرجى إدخال البريد الإلكتروني أولاً.");
+        return;
+    }
+    const btn = document.getElementById("btnResetSubmit");
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = "جاري الإرسال...";
+    }
+    try {
+        await auth.sendPasswordResetEmail(email.trim());
+        showAppToast("تم إرسال رابط استعادة كلمة المرور إلى بريدك! 📬");
+        const box = document.getElementById("authSuccessMessage");
+        if (box) {
+            box.textContent = "تم إرسال الرابط بنجاح. تفقد صندوق الوارد ومجلد الرسائل غير المرغوب فيها (Spam).";
+            box.style.display = "block";
+        }
+    } catch (err) {
+        console.error("Password reset error:", err);
+        let msg = "تعذر إرسال رابط الاستعادة: " + (err.message || '');
+        if (err.code === 'auth/user-not-found') msg = "لا يوجد حساب مسجل بهذا البريد الإلكتروني.";
+        if (err.code === 'auth/invalid-email') msg = "صيغة البريد الإلكتروني غير صحيحة.";
+        showAuthError(msg);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "إرسال رابط الاستعادة 📬";
+        }
+    }
+}
+
+/**
+ * Bottom Nav Profile click handler for Mobile
+ */
+function handleBottomNavProfile() {
+    if (currentAuthUser) {
+        window.location.href = "profile.html";
+    } else {
+        openLoginModal();
+    }
+}
+
+/**
+ * Cookie Consent Manager (GDPR / CCPA / Google AdSense Compliance)
+ */
+function initCookieConsent() {
+    const consent = localStorage.getItem('manchorati_cookie_consent');
+    if (!consent) {
+        const banner = document.getElementById("manchoratiCookieBanner");
+        if (banner) {
+            banner.style.display = "flex";
+        }
+    }
+}
+
+function acceptCookieConsent() {
+    localStorage.setItem('manchorati_cookie_consent', 'accepted');
+    const banner = document.getElementById("manchoratiCookieBanner");
+    if (banner) banner.style.display = "none";
+    showAppToast("تم حفظ تفضيلات ملفات تعريف الارتباط بنجاح 🍪");
+}
+
+function rejectCookieConsent() {
+    localStorage.setItem('manchorati_cookie_consent', 'essential_only');
+    const banner = document.getElementById("manchoratiCookieBanner");
+    if (banner) banner.style.display = "none";
+    showAppToast("تم تفعيل الكوكيز الضرورية فقط.");
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initCookieConsent);
+} else {
+    initCookieConsent();
 }
 
 async function handleFirebaseLoginForm(e) {

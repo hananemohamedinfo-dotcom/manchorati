@@ -835,7 +835,7 @@ header.app-header {
 }
 
 /* ==========================================================================
-   MOBILE BOTTOM NAVIGATION BAR (PHOTOCOPY OF ANDROID APP)
+   MOBILE BOTTOM NAVIGATION BAR (NATIVE APP FEEL)
    ========================================================================== */
 .mobile-bottom-nav {
     display: none;
@@ -843,13 +843,16 @@ header.app-header {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background: rgba(11, 19, 31, 0.98);
-    backdrop-filter: blur(16px);
+    height: 64px;
+    background: rgba(11, 19, 31, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--divider-color);
-    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    z-index: 999;
     align-items: center;
     justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .bottom-nav-item {
@@ -857,13 +860,26 @@ header.app-header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     text-decoration: none;
     color: var(--text-secondary);
     font-size: 11px;
     font-weight: 600;
     flex: 1;
     height: 100%;
+    min-width: 54px;
+    min-height: 48px;
+    position: relative;
+    transition: var(--transition);
+    user-select: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item:active {
+    color: var(--text-primary);
 }
 
 .bottom-nav-item.active {
@@ -871,10 +887,26 @@ header.app-header {
     font-weight: 700;
 }
 
+.bottom-nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    width: 20px;
+    height: 3px;
+    background: var(--brand-primary);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 10px var(--brand-primary);
+}
+
 .bottom-nav-item svg {
     width: 22px;
     height: 22px;
     fill: currentColor;
+    transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.bottom-nav-item:active svg {
+    transform: scale(0.9);
 }
 
 /* ==========================================================================
@@ -1942,12 +1974,199 @@ body {
 html.modal-open,
 body.modal-open {
     overflow: hidden !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    touch-action: none !important;
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+#manchoratiLoginModal {
+    touch-action: pan-y !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   GOOGLE ADSENSE SAFE ARCHITECTURE (ZERO CLS CONTAINERS)
+   ========================================================================== */
+.ads-slot {
+    position: relative;
+    background: rgba(15, 26, 42, 0.5);
+    border: 1px dashed rgba(30, 49, 75, 0.8);
+    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 18px 0;
+    box-sizing: border-box;
+    transition: var(--transition);
+}
+
+.ads-slot::before {
+    content: "إعلان ممول • Sponsored";
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    padding: 4px 8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(11, 19, 31, 0.7);
+    border-bottom-left-radius: 8px;
+}
+
+/* Reserved dimensions to prevent Cumulative Layout Shift (CLS = 0) */
+.ads-slot-sidebar {
+    min-height: 280px;
+    width: 100%;
+}
+
+.ads-slot-infeed {
+    min-height: 120px;
+    width: 100%;
+}
+
+.ads-slot-mobile {
+    min-height: 90px;
+    width: 100%;
+}
+
+.ads-slot-header {
+    min-height: 90px;
+    max-width: 970px;
+    width: 100%;
+    margin: 12px auto;
+}
+
+/* ==========================================================================
+   COOKIE CONSENT BANNER (GDPR / CCPA COMPLIANT)
+   ========================================================================== */
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    max-width: 640px;
+    margin: 0 auto;
+    background: rgba(15, 26, 42, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--divider-color);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+    padding: 16px 20px;
+    z-index: 99998;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: cookieSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    text-align: right;
+    font-family: 'Tajawal', sans-serif;
+}
+
+@keyframes cookieSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cookie-consent-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.cookie-consent-icon {
+    font-size: 26px;
+    line-height: 1;
+    flex-shrink: 0;
+    padding-top: 2px;
+}
+
+.cookie-consent-text h4 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.cookie-consent-text p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cookie-consent-text a {
+    color: var(--brand-primary);
+    text-decoration: underline;
+}
+
+.cookie-consent-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cookie-accept {
+    background: var(--brand-primary-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-cookie-accept:hover {
+    background: #0274b0;
+}
+
+.btn-cookie-reject {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--divider-color);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-cookie-reject:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+    .cookie-consent-banner {
+        bottom: 74px; /* above mobile bottom nav */
+        left: 12px;
+        right: 12px;
+        padding: 14px;
+    }
+    .cookie-consent-actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+    .btn-cookie-accept,
+    .btn-cookie-reject {
+        width: 100%;
+        text-align: center;
+    }
 }

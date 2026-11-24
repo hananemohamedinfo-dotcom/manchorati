@@ -1,0 +1,23 @@
+# robots.txt for Manchorati (منشوراتي)
+# https://manchorati.com/
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /categories.html
+Allow: /writers.html
+Allow: /studio.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+
+# Protect Administrative & User-Private Dashboards
+Disallow: /admin.html
+Disallow: /profile.html
+
+# Crawl-delay for polite indexing
+Crawl-delay: 1
+
+# XML Sitemap
+Sitemap: https://manchorati.com/sitemap.xml
