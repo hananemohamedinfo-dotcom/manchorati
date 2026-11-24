@@ -83,7 +83,27 @@ async function loadOrCreateUserProfile(user) {
     const snap = await userDocRef.get();
 
     if (snap.exists) {
-        currentProfileData = snap.data();
+        currentProfileData = snap.data() || {};
+        let needsSync = false;
+        const syncUpdates = {};
+
+        // Backfill name & photo from Google / Auth user if missing or generic
+        if (!currentProfileData.authorName || currentProfileData.authorName === 'مستخدم منشوراتي') {
+            if (user.displayName || user.email) {
+                currentProfileData.authorName = user.displayName || user.email.split('@')[0];
+                syncUpdates.authorName = currentProfileData.authorName;
+                needsSync = true;
+            }
+        }
+        if (!currentProfileData.authorPhotoUrl && user.photoURL) {
+            currentProfileData.authorPhotoUrl = user.photoURL;
+            syncUpdates.authorPhotoUrl = user.photoURL;
+            needsSync = true;
+        }
+
+        if (needsSync) {
+            userDocRef.set(syncUpdates, { merge: true }).catch(() => {});
+        }
     } else {
         // Auto-generate profile from Google or Email info
         const cleanName = user.displayName || user.email.split('@')[0];

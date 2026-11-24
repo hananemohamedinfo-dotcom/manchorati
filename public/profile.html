@@ -9,13 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/style.css?v=3.5">
+    <link rel="stylesheet" href="assets/style.css?v=3.6">
 
     <!-- Firebase SDK (Compat Mode) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="assets/firebase-config.js?v=3.5"></script>
+    <script src="assets/firebase-config.js?v=3.6"></script>
 
     <style>
         :root {
@@ -600,35 +600,44 @@
         }
 
         function populateProfileUI(data) {
-            if (!data) return;
-            document.getElementById("profileDisplayName").textContent = data.authorName || 'مستخدم منشوراتي';
-            document.getElementById("profileUsername").textContent = '@' + (data.authorUsername || 'user');
-            document.getElementById("profileBio").textContent = data.authorBio || 'محب للكلمة الطيبة والاقتباسات الراقية.';
-            document.getElementById("profileBadgeText").textContent = data.authorBadge || 'كاتب جديد';
-            document.getElementById("statProfilePostsCount").textContent = data.postsCount || 0;
-            document.getElementById("statProfileLikesCount").textContent = data.totalLikes || 0;
-            document.getElementById("statProfileStreak").textContent = `🔥 ${data.authorStreak || 1}`;
+            const user = auth.currentUser;
+            const displayName = (data && data.authorName) || (user && user.displayName) || 'مستخدم منشوراتي';
+            const username = (data && data.authorUsername) || (user && user.email ? user.email.split('@')[0] : 'user');
+            const bio = (data && data.authorBio) || 'محب للكلمة الطيبة والاقتباسات الراقية.';
+            const badge = (data && data.authorBadge) || 'كاتب جديد';
+            const photoUrl = (data && data.authorPhotoUrl) || (user && user.photoURL) || '';
+            const streak = (data && data.authorStreak) || 1;
+            const postsCount = (data && data.postsCount) || 0;
+            const likesCount = (data && data.totalLikes) || 0;
+
+            document.getElementById("profileDisplayName").textContent = displayName;
+            document.getElementById("profileUsername").textContent = '@' + username;
+            document.getElementById("profileBio").textContent = bio;
+            document.getElementById("profileBadgeText").textContent = badge;
+            document.getElementById("statProfilePostsCount").textContent = postsCount;
+            document.getElementById("statProfileLikesCount").textContent = likesCount;
+            document.getElementById("statProfileStreak").textContent = `🔥 ${streak}`;
 
             // Avatar Handling (support data:image/ and https://)
             const avatarWrap = document.getElementById("userAvatarWrap");
-            if (data.authorPhotoUrl && (data.authorPhotoUrl.startsWith('http') || data.authorPhotoUrl.startsWith('data:image'))) {
-                avatarWrap.innerHTML = `<img src="${data.authorPhotoUrl}" alt="${data.authorName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('data:image'))) {
+                avatarWrap.innerHTML = `<img src="${photoUrl}" alt="${displayName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
             } else {
-                avatarWrap.innerHTML = `<span>${(data.authorName || 'ك')[0]}</span>`;
+                avatarWrap.innerHTML = `<span>${(displayName || 'ك')[0]}</span>`;
             }
 
             // Fill Edit Form if own profile
             if (isOwnProfile) {
-                document.getElementById("inputEditName").value = data.authorName || '';
-                document.getElementById("inputEditBio").value = data.authorBio || '';
-                document.getElementById("inputEditPhoto").value = data.authorPhotoUrl || '';
+                document.getElementById("inputEditName").value = displayName;
+                document.getElementById("inputEditBio").value = bio;
+                document.getElementById("inputEditPhoto").value = photoUrl;
 
                 const editPreview = document.getElementById("editAvatarPreview");
                 if (editPreview) {
-                    if (data.authorPhotoUrl && (data.authorPhotoUrl.startsWith('http') || data.authorPhotoUrl.startsWith('data:image'))) {
-                        editPreview.innerHTML = `<img src="${data.authorPhotoUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('data:image'))) {
+                        editPreview.innerHTML = `<img src="${photoUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                     } else {
-                        editPreview.innerHTML = `<span id="editAvatarInitial" style="font-size:24px; color:#FFF;">${(data.authorName || 'ك')[0]}</span>`;
+                        editPreview.innerHTML = `<span id="editAvatarInitial" style="font-size:24px; color:#FFF;">${(displayName || 'ك')[0]}</span>`;
                     }
                 }
             }
@@ -636,14 +645,37 @@
 
         async function loadUserPosts(uid) {
             const container = document.getElementById("userPostsList");
-            try {
-                const snap = await db.collection('community_posts')
-                    .where('authorId', '==', uid)
-                    .orderBy('timestamp', 'desc')
-                    .limit(30)
-                    .get();
+            if (!container) return;
+            container.innerHTML = `<p style="text-align:center;color:#94A3B8;padding:24px;">جاري جلب منشوراتك...</p>`;
 
-                if (snap.empty) {
+            try {
+                let posts = [];
+                try {
+                    // 1. Try server-side ordering (if composite index exists in Firestore)
+                    const snap = await db.collection('community_posts')
+                        .where('authorId', '==', uid)
+                        .orderBy('timestamp', 'desc')
+                        .limit(50)
+                        .get();
+                    posts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                } catch (idxErr) {
+                    console.warn("Composite index not available, using automatic single-field query + client sort:", idxErr);
+                    // 2. Resilient Fallback: single-field index query (Never fails, zero Firebase console index config needed!)
+                    const snap = await db.collection('community_posts')
+                        .where('authorId', '==', uid)
+                        .limit(50)
+                        .get();
+                    posts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+
+                // Update real posts count in stat bar
+                const statCount = document.getElementById("statProfilePostsCount");
+                if (statCount) {
+                    statCount.textContent = posts.length;
+                }
+
+                if (posts.length === 0) {
                     container.innerHTML = `
                         <div style="text-align:center;padding:48px 20px;background:var(--profile-card);border:1px solid var(--profile-border);border-radius:18px;">
                             <div style="font-size:36px;margin-bottom:12px;">✍️</div>
@@ -656,15 +688,19 @@
                 }
 
                 let html = "";
-                snap.docs.forEach(doc => {
-                    const post = { id: doc.id, ...doc.data() };
+                posts.forEach(post => {
                     const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('ar-MA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "--";
                     
+                    let postAvatarHtml = `<div class="fb-user-thumb">${(post.authorName || 'ك')[0]}</div>`;
+                    if (post.authorPhotoUrl && (post.authorPhotoUrl.startsWith('http') || post.authorPhotoUrl.startsWith('data:'))) {
+                        postAvatarHtml = `<div class="fb-user-thumb" style="padding:0; overflow:hidden;"><img src="${escapeHtml(post.authorPhotoUrl)}" alt="${escapeHtml(post.authorName)}" style="width:100%; height:100%; object-fit:cover;"></div>`;
+                    }
+
                     html += `
-                        <div class="fb-feed-card" style="margin-bottom:0;">
+                        <div class="fb-feed-card" style="margin-bottom:14px;">
                             <div class="fb-post-header">
                                 <div class="fb-post-author-row">
-                                    <div class="fb-user-thumb">${(post.authorName || 'ك')[0]}</div>
+                                    ${postAvatarHtml}
                                     <div>
                                         <div style="font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;color:#FFF;">${escapeHtml(post.authorName || 'الكاتب')}</div>
                                         <div style="font-size:12px;color:#94A3B8;">${dateStr} • <span style="color:var(--profile-cyan);">${post.tag || 'خواطر'}</span></div>
